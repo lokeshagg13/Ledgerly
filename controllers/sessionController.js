@@ -1,6 +1,3 @@
-/* eslint-disable guard-for-in */
-/* eslint-disable no-console */
-/* eslint-disable node/no-unsupported-features/es-syntax */
 const jwt = require("jsonwebtoken");
 const UserModel = require("../models/User");
 
