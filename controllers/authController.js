@@ -59,8 +59,8 @@ exports.loginUser = async (req, res) => {
     // Refresh tokens will be HTTP only so that they cant be accessed within Javascript
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
-      sameSite: "None",
-      secure: true,
+      sameSite: "Lax",
+      secure: false,
       maxAge: 24 * 60 * 60 * 1000,
     });
     // Send back in response body only the accessToken

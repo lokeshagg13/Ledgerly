@@ -80,7 +80,7 @@ function RegisterUserForm() {
 
     try {
       await axios.post(
-        "/api/user/register",
+        "/user/register",
         JSON.stringify({
           name: formData.name,
           email: formData.email,

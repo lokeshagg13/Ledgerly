@@ -13,7 +13,7 @@ function NavbarComponent() {
 
   async function handleLogout() {
     try {
-      await axiosPrivate.get("/api/user/logout");
+      await axiosPrivate.get("/user/logout");
       setAuth({});
       navigate("/", { replace: true });
     } catch (error) {

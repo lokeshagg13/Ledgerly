@@ -63,7 +63,7 @@ function LoginForm() {
 
     try {
       const response = await axiosPrivate.post(
-        "/api/user/login",
+        "/user/login",
         JSON.stringify({
           email: formData.email,
           password: formData.password,

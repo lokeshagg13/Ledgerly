@@ -2,6 +2,7 @@
   "name": "ledgerly-frontend",
   "homepage": "https://lokeshagg13.github.io/ledgerly",
   "main": "src/index.jsx",
+  "proxy": "http://localhost:9000",
   "version": "0.1.0",
   "dependencies": {
     "axios": "^1.10.0",

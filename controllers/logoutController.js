@@ -20,8 +20,8 @@ exports.logoutUser = async (req, res) => {
       // Clear the JWT cookie
       res.clearCookie("jwt", {
         httpOnly: true,
-        sameSite: "None",
-        secure: true,
+        sameSite: "Lax",
+        secure: false,
       });
       return res.status(204).json({ message: "Logout successful" });
     }
@@ -36,7 +36,7 @@ exports.logoutUser = async (req, res) => {
       }
     );
     // Clear the JWT cookie
-    res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
+    res.clearCookie("jwt", { httpOnly: true, sameSite: "Lax", secure: true });
     return res.status(204).json({ message: "Logout successful" });
   } catch (error) {
     res

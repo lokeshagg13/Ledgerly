@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const backend = "http://localhost:9000";
+const backend = "/api";
 // Axios server handle for simpler requests (login and register)
 export default axios.create({
   baseURL: `${backend}`,
