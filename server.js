@@ -11,6 +11,9 @@ const userRouter = require("./routes/userRoutes");
 const authRouter = require("./routes/authRoutes");
 const sessionRouter = require("./routes/sessionRoutes");
 const logoutRouter = require("./routes/logoutRoutes");
+const transactionRouter = require("./routes/transactionRoutes");
+const categoryRouter = require("./routes/categoryRoutes");
+const subcategoryRouter = require("./routes/subcategoryRoutes");
 
 require("dotenv").config();
 
@@ -39,6 +42,11 @@ app.use("/api/user", userRouter);
 app.use("/api/user", authRouter);
 app.use("/api/user", sessionRouter);
 app.use("/api/user", logoutRouter);
+
+app.use("/api/user/transactions", transactionRouter);
+app.use("/api/user/transactions", categoryRouter);
+app.use("/api/user/transactions", subcategoryRouter);
+
 
 // Custom Middleware for handling invalid api paths
 app.all("*", (req, res, next) => {

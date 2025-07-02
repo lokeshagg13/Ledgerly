@@ -16,8 +16,8 @@ exports.handleRefreshToken = async (req, res) => {
     const refreshToken = cookies.jwt;
 
     // Check if refresh token exist in the DB
-    const user = await UserModel.find({ refreshToken: refreshToken });
-    if (user.length == 0) {
+    const user = await UserModel.findOne({ refreshToken: refreshToken });
+    if (!user) {
       return res.status(401).json({ error: "Refresh token is invalid" });
     }
 
@@ -26,12 +26,13 @@ exports.handleRefreshToken = async (req, res) => {
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET,
       (err, decoded) => {
-        if (err || decoded.email !== user[0].email) {
+        if (err || decoded.email !== user.email) {
           return res.status(403).json({ error: "Refresh token is invalid" });
         }
         const accessToken = jwt.sign(
           {
             email: decoded.email,
+            userId: user._id
           },
           process.env.ACCESS_TOKEN_SECRET,
           { expiresIn: `${process.env.ACCESS_TOKEN_EXPIRY}` }

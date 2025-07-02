@@ -15,13 +15,13 @@ exports.logoutUser = async (req, res) => {
     const refreshToken = cookies.jwt;
 
     // Check if email is registered or not
-    const user = await UserModel.find({ refreshToken: refreshToken });
-    if (user.length == 0) {
+    const user = await UserModel.findOne({ refreshToken });
+    if (!user) {
       // Clear the JWT cookie
       res.clearCookie("jwt", {
         httpOnly: true,
-        sameSite: "Lax",
-        secure: false,
+        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+        secure: process.env.NODE_ENV === "production",
       });
       return res.status(204).json({ message: "Logout successful" });
     }
@@ -29,14 +29,18 @@ exports.logoutUser = async (req, res) => {
     // Set the refresh token in DB to ""
     await UserModel.updateOne(
       {
-        email: user[0].email,
+        _id: user._id,
       },
       {
         $set: { refreshToken: "" },
       }
     );
     // Clear the JWT cookie
-    res.clearCookie("jwt", { httpOnly: true, sameSite: "Lax", secure: true });
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      secure: process.env.NODE_ENV === "production"
+    });
     return res.status(204).json({ message: "Logout successful" });
   } catch (error) {
     res
