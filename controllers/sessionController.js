@@ -37,7 +37,7 @@ exports.handleRefreshToken = async (req, res) => {
             email: decoded.email,
           },
           process.env.ACCESS_TOKEN_SECRET,
-          { expiresIn: "15m" }
+          { expiresIn: `${process.env.ACCESS_TOKEN_EXPIRY}` }
         );
         res.status(200).json({
           email: decoded.email,

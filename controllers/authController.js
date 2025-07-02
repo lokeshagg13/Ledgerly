@@ -39,7 +39,7 @@ exports.loginUser = async (req, res) => {
         email: email,
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "15m" }
+      { expiresIn: `${process.env.ACCESS_TOKEN_EXPIRY}` }
     );
     // Create refresh token to allow user to refresh their accessToken 
     const refreshToken = jwt.sign(
@@ -47,7 +47,7 @@ exports.loginUser = async (req, res) => {
         email: email,
       },
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: `${process.env.REFRESH_TOKEN_EXPIRY}` }
     );
 
     // Set refresh tokens in the user DB so as to allow early logouts from user (when user logs out before the expiry of

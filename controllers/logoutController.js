@@ -1,6 +1,3 @@
-/* eslint-disable guard-for-in */
-/* eslint-disable no-console */
-/* eslint-disable node/no-unsupported-features/es-syntax */
 const jwt = require("jsonwebtoken");
 const UserModel = require("../models/User");
 
@@ -10,10 +7,8 @@ require("dotenv").config();
 exports.logoutUser = async (req, res) => {
   try {
     const cookies = req.cookies;
-    console.log(cookies)
     // Check if jwt cookie exist in the request
     if (!cookies?.jwt) {
-      console.log('FAILS HERE!! no cookie found')// fails here
       return res.status(401).json({ error: "Auth failed" });
     }
 

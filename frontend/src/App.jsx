@@ -22,21 +22,41 @@ function App() {
           path="/"
           element={
             auth?.email && auth?.accessToken ? (
-              <Navigate to="/homeLogged" replace />
+              <Navigate to="/dashboard" replace />
             ) : (
-              <Navigate to="/ledgerly" replace />
+              <Navigate to="/home" replace />
             )
           }
         />
-        <Route path="/ledgerly" element={<Home />} />
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/home" element={<Home />} />
 
         {/* Protected Routes */}
         <Route element={<PersistLogin />}>
+          <Route
+            path="/login"
+            element={
+              auth?.email && auth?.accessToken ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <Login />
+              )
+            }
+          />
+
+          <Route
+            path="/register"
+            element={
+              auth?.email && auth?.accessToken ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <Register />
+              )
+            }
+          />
+
           <Route element={<RequireAuth />}>
-            <Route path="/homeLogged" element={<HomeLogged />} />
+            <Route path="/dashboard" element={<HomeLogged />} />
           </Route>
         </Route>
 

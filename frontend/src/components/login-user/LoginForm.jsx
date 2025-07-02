@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-import axios from "../../api/axios";
+import { axiosPrivate } from "../../api/axios";
 import useAuth from "../../store/hooks/useAuth";
 import EyeOpenIcon from "../ui/icons/EyeOpenIcon";
 import EyeSlashIcon from "../ui/icons/EyeSlashIcon";
@@ -62,7 +62,7 @@ function LoginForm() {
     }
 
     try {
-      const response = await axios.post(
+      const response = await axiosPrivate.post(
         "/api/user/login",
         JSON.stringify({
           email: formData.email,
@@ -83,7 +83,7 @@ function LoginForm() {
       });
       setFormData({ email: "", password: "" });
 
-      navigate("/homeLogged", { replace: true });
+      navigate("/dashboard", { replace: true });
     } catch (error) {
       console.log(error);
       if (!error?.response) {

@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
+const logger = require("./middlewares/logger");
 const errorHandler = require("./middlewares/errorHandler");
 const credentials = require("./middlewares/credentials");
 const corsOptions = require("./config/corsOptions");
@@ -29,6 +30,9 @@ app.use(express.json());
 
 // built-in middleware cookie parser
 app.use(cookieParser());
+
+// logger middleware
+app.use(logger);
 
 // Mounting Routers
 app.use("/api/user", userRouter);
