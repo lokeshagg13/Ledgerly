@@ -4,7 +4,8 @@ const transactionSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true
+        required: true,
+        index: true
     },
     amount: {
         type: Number,
@@ -13,11 +14,13 @@ const transactionSchema = new mongoose.Schema({
     type: {
         type: String,
         enum: ["credit", "debit"],
-        required: true
+        required: true,
+        index: true
     },
     date: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        index: true
     },
     remarks: {
         type: String,
@@ -26,12 +29,14 @@ const transactionSchema = new mongoose.Schema({
     categoryId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category",
-        default: null
+        default: null,
+        index: true
     },
     subcategoryId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Subcategory",
-        default: null
+        default: null,
+        index: true
     }
 });
 
