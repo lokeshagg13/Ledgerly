@@ -41,12 +41,15 @@ exports.addSubcategory = async (req, res) => {
         const userId = req.userId;
 
         if (!name || !categoryId) {
-            return res.status(400).json({ error: "Name and categoryId are required" });
+            return res.status(400).json({ error: "Subcategory name and category are required." });
         }
 
-        const exists = await Subcategory.findOne({ name: name.trim(), categoryId, userId });
+        const exists = await Subcategory.findOne({
+            name: { $regex: `^${name.trim()}$`, $options: "i" },
+            categoryId, userId
+        });
         if (exists) {
-            return res.status(409).json({ error: "Subcategory already exists in this category" });
+            return res.status(409).json({ error: `Subcategory ${exists.name} already exists in this category.` });
         }
 
         const newSubcategory = await Subcategory.create({

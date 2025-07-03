@@ -17,13 +17,17 @@ exports.addCategory = async (req, res) => {
     const { name } = req.body;
 
     if (!name || name.trim() === "") {
-      return res.status(400).json({ error: "Category name is required" });
+      return res.status(400).json({ error: "Category name is required." });
     }
 
     // Check for duplicate
-    const existing = await CategoriesModel.findOne({ name: name.trim(), userId: req.userId });
+    const existing = await CategoriesModel.findOne({
+      name: { $regex: `^${name.trim()}$`, $options: "i" },
+      userId: req.userId
+    });
     if (existing) {
-      return res.status(409).json({ error: "Category already exists" });
+      return res.status(409).json({
+        error: `Category ${existing.name} already exists.` });
     }
 
     const newCategory = await CategoriesModel.create({
