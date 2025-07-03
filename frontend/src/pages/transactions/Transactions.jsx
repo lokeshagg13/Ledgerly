@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import AddTransactionModal from "../../components/transactions/AddTransactionModal";
 import TransactionContext from "../../store/context/transactionContext";
 

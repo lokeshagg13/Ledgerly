@@ -9,7 +9,7 @@ function AddTransactionModal() {
   const handleSubmit = () => {
     transactionContext.handleAddTransaction();
     transactionContext.closeAddTransactionModal();
-    transactionContext.resetFormData();
+    transactionContext.resetTransactionFormData();
   };
 
   return (

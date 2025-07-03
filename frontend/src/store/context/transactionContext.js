@@ -1,19 +1,35 @@
 import { createContext, useState } from "react";
+import { axiosPrivate } from "../../api/axios";
 
 const TransactionContext = createContext({
-    formData: {},
-    categories: [],
     showAddTransactionModal: false,
-    resetFormData: () => { },
-    updateFormData: (key, value) => { },
-    updateCategories: (categories) => { },
+    transactionFormData: {},
+    categories: [],
+    isCategoriesLoading: false,
+    subcategories: [],
+    isSubcategoriesLoading: false,
+    showAddCategoryForm: false,
+    newCategoryInput: "",
+    showAddSubcategoryForm: false,
+    newSubcategoryInput: "",
     openAddTransactionModal: () => { },
     closeAddTransactionModal: () => { },
+    resetTransactionFormData: () => { },
+    updateTransactionFormData: (key, value) => { },
+    openAddCategoryForm: () => { },
+    closeAddCategoryForm: () => { },
+    setNewCategoryInput: (value) => { },
+    openAddSubcategoryForm: () => { },
+    closeAddSubcategoryForm: () => { },
+    setNewSubcategoryInput: (value) => { },
+    fetchCategoriesFromDB: () => { },
+    fetchSubcategoriesFromDB: () => { },
     handleAddTransaction: () => { }
 });
 
 export const TransactionProvider = ({ children }) => {
-    const [formData, setFormData] = useState({
+    const [showAddTransactionModal, setShowAddTransactionModal] = useState(false);
+    const [transactionFormData, setTransactionFormData] = useState({
         type: "debit",
         amount: "",
         date: "",
@@ -22,10 +38,24 @@ export const TransactionProvider = ({ children }) => {
         subcategory: "",
     });
     const [categories, setCategories] = useState([]);
-    const [showAddTransactionModal, setShowAddTransactionModal] = useState(false);
+    const [isCategoriesLoading, setIsCategoriesLoading] = useState(false);
+    const [subcategories, setSubcategories] = useState([]);
+    const [isSubcategoriesLoading, setIsSubcategoriesLoading] = useState(false);
+    const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
+    const [newCategoryInput, setNewCategoryInput] = useState("");
+    const [showAddSubcategoryForm, setShowAddSubcategoryForm] = useState(false);
+    const [newSubcategoryInput, setNewSubcategoryInput] = useState("");
 
-    function resetFormData() {
-        setFormData({
+    function openAddTransactionModal() {
+        setShowAddTransactionModal(true);
+    }
+
+    function closeAddTransactionModal() {
+        setShowAddTransactionModal(false);
+    }
+
+    function resetTransactionFormData() {
+        setTransactionFormData({
             type: "debit",
             amount: "",
             date: "",
@@ -35,36 +65,88 @@ export const TransactionProvider = ({ children }) => {
         });
     }
 
-    function updateFormData(key, value) {
-        setFormData((prev) => ({ ...prev, [key]: value }));
+    function updateTransactionFormData(key, value) {
+        setTransactionFormData((prev) => ({ ...prev, [key]: value }));
     }
 
-    function updateCategories(newCategories) {
-        setCategories(newCategories);
+    function openAddCategoryForm() {
+        setShowAddCategoryForm(true);
+        setNewCategoryInput("");
     }
 
-    function openAddTransactionModal() {
-        console.log('opening')
-        setShowAddTransactionModal(true);
+    function closeAddCategoryForm() {
+        setShowAddCategoryForm(false);
     }
 
-    function closeAddTransactionModal() {
-        setShowAddTransactionModal(false);
+    function openAddSubcategoryForm() {
+        setShowAddSubcategoryForm(true);
+        setNewSubcategoryInput("");
     }
+
+    function closeAddSubcategoryForm() {
+        setShowAddSubcategoryForm(false);
+    }
+
+    async function fetchCategoriesFromDB() {
+        setIsCategoriesLoading(true);
+        try {
+            const res = await axiosPrivate.get("/user/transactions/categories");
+            if (res?.data?.categories) setCategories(res.data.categories);
+        } catch (error) {
+            console.error("Error fetching categories", error);
+        } finally {
+            setIsCategoriesLoading(false);
+        }
+    };
+
+    async function fetchSubcategoriesFromDB() {
+        if (!transactionFormData.category) {
+            setSubcategories([]);
+            updateTransactionFormData("subcategory", null);
+            return;
+        }
+        setIsSubcategoriesLoading(true);
+        try {
+            const res = await axiosPrivate.get(`/user/transactions/subcategories/${transactionFormData.category}`);
+            const fetched = res.data.subcategories || [];
+            setSubcategories(fetched);
+            if (fetched.length === 0) {
+                updateTransactionFormData("subcategory", null);
+            }
+        } catch (error) {
+            console.error("Error fetching subcategories", error);
+        } finally {
+            setIsSubcategoriesLoading(false);
+        }
+    };
 
     async function handleAddTransaction() {
-        console.log(formData);
+        console.log(transactionFormData);
     }
 
     const currentTransactionContext = {
-        formData,
-        categories,
         showAddTransactionModal,
-        resetFormData,
-        updateFormData,
-        updateCategories,
+        transactionFormData,
+        categories,
+        isCategoriesLoading,
+        subcategories,
+        isSubcategoriesLoading,
+        showAddCategoryForm,
+        newCategoryInput,
+        showAddSubcategoryForm,
+        newSubcategoryInput,
         openAddTransactionModal,
         closeAddTransactionModal,
+        resetTransactionFormData,
+        updateTransactionFormData,
+        openAddCategoryForm,
+        closeAddCategoryForm,
+        setNewCategoryInput,
+        openAddSubcategoryForm,
+        closeAddSubcategoryForm,
+        setNewSubcategoryInput,
+        fetchCategoriesFromDB,
+        fetchSubcategoriesFromDB,
         handleAddTransaction
     }
 
