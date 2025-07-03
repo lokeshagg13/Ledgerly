@@ -96,7 +96,7 @@ function RegisterUserForm() {
       setRegisterSuccess(true);
       setFormData({ name: "", email: "", password: "", confirmPassword: "" });
     } catch (error) {
-      console.log(error);
+      console.log("Error while registering user:", error);
       const errorMsg = error.response?.data?.error || "Error creating user";
       setRegisterSuccess(false);
       setError(`${errorMsg}`);

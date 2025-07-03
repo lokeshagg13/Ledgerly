@@ -85,7 +85,7 @@ function LoginForm() {
 
       navigate("/dashboard", { replace: true });
     } catch (error) {
-      console.log(error);
+      console.log("Error while login:", error);
       if (!error?.response) {
         setError("No server response.");
       } else if (error.response?.status === 400) {

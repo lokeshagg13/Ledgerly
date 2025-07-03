@@ -17,7 +17,7 @@ function NavbarComponent() {
       setAuth({});
       navigate("/", { replace: true });
     } catch (error) {
-      console.log(error);
+      console.log("Error while logout:", error);
       if (!error?.response) {
         alert("No server response.");
       } else if (error.response?.error) {

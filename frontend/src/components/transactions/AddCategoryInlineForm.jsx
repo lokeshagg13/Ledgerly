@@ -35,7 +35,7 @@ function AddCategoryInlineForm() {
       transactionContext.fetchCategoriesFromDB();
       transactionContext.setNewCategoryInput("");
     } catch (error) {
-      console.log(error);
+      console.log("Error while adding category:", error);
       setVariant("danger");
       if (!error?.response) {
         setMessage("Failed to adding category: No server response.");

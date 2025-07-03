@@ -17,7 +17,7 @@ function PersistLogin() {
       try {
         await refresh();
       } catch (error) {
-        console.log(error);
+        console.log("Error while refreshing the login:", error);
       } finally {
         setIsLoading(false);
       }

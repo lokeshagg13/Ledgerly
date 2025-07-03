@@ -36,7 +36,7 @@ function AddSubcategoryInlineForm() {
       transactionContext.fetchSubcategoriesFromDB();
       transactionContext.setNewSubcategoryInput("");
     } catch (error) {
-      console.log(error);
+      console.log("Error while adding subcategory:", error);
       setVariant("danger");
       if (!error?.response) {
         setMessage("Failed to adding subcategory: No server response.");
