@@ -5,7 +5,12 @@ import { axiosPrivate } from "../../api/axios";
 import TransactionContext from "../../store/context/transactionContext";
 
 function AddSubcategoryInlineForm() {
-  const transactionContext = useContext(TransactionContext);
+  const {
+    transactionFormData,
+    fetchSubcategoriesFromDB,
+    closeAddSubcategoryForm,
+  } = useContext(TransactionContext);
+  const [newSubcategoryInput, setNewSubcategoryInput] = useState("");
   const [variant, setVariant] = useState("success");
   const [message, setMessage] = useState(null);
 
@@ -14,27 +19,25 @@ function AddSubcategoryInlineForm() {
       const messageTimeout = setTimeout(() => {
         setMessage(null);
       }, 4000);
-
       return () => clearTimeout(messageTimeout);
     }
   }, [variant, message]);
 
-  if (!transactionContext.showAddSubcategoryForm) return null;
-
   const handleAddSubcategory = async () => {
-    const categoryId = transactionContext.transactionFormData.category;
-    const newSubcategoryInput = transactionContext.newSubcategoryInput.trim();
-    if (!categoryId || !newSubcategoryInput) return;
-
+    const categoryId = transactionFormData.category;
+    const newSubcategoryInputTrimmed = newSubcategoryInput.trim();
+    if (!categoryId || !newSubcategoryInputTrimmed) return;
     try {
       await axiosPrivate.post("/user/transactions/subcategories", {
-        name: newSubcategoryInput,
+        name: newSubcategoryInputTrimmed,
         categoryId: categoryId,
       });
       setVariant("success");
-      setMessage(`Subcategory '${newSubcategoryInput}' added successfully.`);
-      transactionContext.fetchSubcategoriesFromDB();
-      transactionContext.setNewSubcategoryInput("");
+      setMessage(
+        `Subcategory '${newSubcategoryInputTrimmed}' added successfully.`
+      );
+      fetchSubcategoriesFromDB();
+      setNewSubcategoryInput("");
     } catch (error) {
       console.log("Error while adding subcategory:", error);
       setVariant("danger");
@@ -54,10 +57,8 @@ function AddSubcategoryInlineForm() {
         <Form.Control
           type="text"
           placeholder="Enter new subcategory name"
-          value={transactionContext.newSubcategoryInput}
-          onChange={(e) =>
-            transactionContext.setNewSubcategoryInput(e.target.value)
-          }
+          value={newSubcategoryInput}
+          onChange={(e) => setNewSubcategoryInput(e.target.value)}
         />
         <Button
           variant="success"
@@ -68,7 +69,7 @@ function AddSubcategoryInlineForm() {
         </Button>
         <Button
           variant="outline-danger"
-          onClick={transactionContext.closeAddSubcategoryForm}
+          onClick={closeAddSubcategoryForm}
           title="Cancel"
         >
           ✕

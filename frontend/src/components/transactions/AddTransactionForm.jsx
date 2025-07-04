@@ -10,21 +10,51 @@ import {
 import TransactionContext from "../../store/context/transactionContext";
 import AddCategoryInlineForm from "./AddCategoryInlineForm";
 import AddSubcategoryInlineForm from "./AddSubcategoryInlineForm";
+import { formatAmountWithCommas } from "../../logic/utils";
 
 function AddTransactionForm() {
-  const transactionContext = useContext(TransactionContext);
-  const formData = transactionContext.transactionFormData;
+  const {
+    transactionFormData: formData,
+    showAddCategoryForm,
+    showAddSubcategoryForm,
+    categories,
+    isCategoriesLoading,
+    subcategories,
+    isSubcategoriesLoading,
+    fetchCategoriesFromDB,
+    fetchSubcategoriesFromDB,
+    updateTransactionFormData,
+    openAddCategoryForm,
+    openAddSubcategoryForm,
+  } = useContext(TransactionContext);
 
   useEffect(() => {
-    transactionContext.fetchCategoriesFromDB();
+    fetchCategoriesFromDB();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    transactionContext.fetchSubcategoriesFromDB();
+    fetchSubcategoriesFromDB();
+    // eslint-disable-next-line
   }, [formData.category]);
 
   const handleChange = (e) => {
-    transactionContext.updateTransactionFormData(e.target.name, e.target.value);
+    const { name, value } = e.target;
+    switch (name) {
+      case "amount":
+        const rawValue = value.replace(/,/g, "");
+        const isValid = /^(\d+)?(\.\d{0,2})?$/.test(rawValue);
+        if (isValid || rawValue === "") {
+          updateTransactionFormData(name, rawValue);
+        }
+        break;
+      case "subcategory":
+        const newValue = value === "null" ? null : value;
+        updateTransactionFormData(name, newValue);
+        break;
+      default:
+        updateTransactionFormData(e.target.name, e.target.value);
+    }
   };
 
   return (
@@ -47,9 +77,13 @@ function AddTransactionForm() {
         <Form.Group className="mb-3">
           <Form.Label>Amount</Form.Label>
           <Form.Control
-            type="number"
+            type="text"
             name="amount"
-            value={formData.amount}
+            value={
+              formData.amount !== ""
+                ? formatAmountWithCommas(formData.amount)
+                : ""
+            }
             onChange={handleChange}
             placeholder="Enter amount"
             required
@@ -85,7 +119,7 @@ function AddTransactionForm() {
         <Form.Group className="mb-3">
           <Form.Label>Category</Form.Label>
           <InputGroup>
-            {transactionContext.isCategoriesLoading ? (
+            {isCategoriesLoading ? (
               <Spinner animation="border" size="sm" />
             ) : (
               <>
@@ -95,7 +129,7 @@ function AddTransactionForm() {
                   onChange={handleChange}
                 >
                   <option value="">Select a category</option>
-                  {transactionContext.categories.map((cat) => (
+                  {categories.map((cat) => (
                     <option key={cat._id} value={cat._id}>
                       {cat.name}
                     </option>
@@ -103,7 +137,7 @@ function AddTransactionForm() {
                 </Form.Select>
                 <Button
                   variant="outline-primary"
-                  onClick={transactionContext.openAddCategoryForm}
+                  onClick={openAddCategoryForm}
                   title="Add New Category"
                 >
                   +
@@ -111,31 +145,24 @@ function AddTransactionForm() {
               </>
             )}
           </InputGroup>
-          <AddCategoryInlineForm />
+          {showAddCategoryForm && <AddCategoryInlineForm />}
         </Form.Group>
 
         {/* Subcategory */}
         <Form.Group className="mb-3">
           <Form.Label>Subcategory</Form.Label>
           <InputGroup>
-            {transactionContext.isSubcategoriesLoading ? (
+            {isSubcategoriesLoading ? (
               <Spinner animation="border" size="sm" />
             ) : (
               <>
                 <Form.Select
                   name="subcategory"
                   value={formData.subcategory || "null"}
-                  onChange={(e) => {
-                    const value =
-                      e.target.value === "null" ? null : e.target.value;
-                    transactionContext.updateTransactionFormData(
-                      e.target.name,
-                      value
-                    );
-                  }}
+                  onChange={handleChange}
                 >
                   <option value="null">None</option>
-                  {transactionContext.subcategories.map((sub) => (
+                  {subcategories.map((sub) => (
                     <option key={sub._id} value={sub._id}>
                       {sub.name}
                     </option>
@@ -145,7 +172,7 @@ function AddTransactionForm() {
                 {formData.category ? (
                   <Button
                     variant="outline-primary"
-                    onClick={transactionContext.openAddSubcategoryForm}
+                    onClick={openAddSubcategoryForm}
                     title="Add New Category"
                   >
                     +
@@ -172,7 +199,9 @@ function AddTransactionForm() {
               </>
             )}
           </InputGroup>
-          {formData.category && <AddSubcategoryInlineForm />}
+          {formData.category && showAddSubcategoryForm && (
+            <AddSubcategoryInlineForm />
+          )}
         </Form.Group>
       </Form>
     </>

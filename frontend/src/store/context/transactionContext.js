@@ -9,19 +9,15 @@ const TransactionContext = createContext({
     subcategories: [],
     isSubcategoriesLoading: false,
     showAddCategoryForm: false,
-    newCategoryInput: "",
     showAddSubcategoryForm: false,
-    newSubcategoryInput: "",
     openAddTransactionModal: () => { },
     closeAddTransactionModal: () => { },
     resetTransactionFormData: () => { },
     updateTransactionFormData: (key, value) => { },
     openAddCategoryForm: () => { },
     closeAddCategoryForm: () => { },
-    setNewCategoryInput: (value) => { },
     openAddSubcategoryForm: () => { },
     closeAddSubcategoryForm: () => { },
-    setNewSubcategoryInput: (value) => { },
     fetchCategoriesFromDB: () => { },
     fetchSubcategoriesFromDB: () => { },
     handleAddTransaction: () => { }
@@ -42,9 +38,7 @@ export const TransactionProvider = ({ children }) => {
     const [subcategories, setSubcategories] = useState([]);
     const [isSubcategoriesLoading, setIsSubcategoriesLoading] = useState(false);
     const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
-    const [newCategoryInput, setNewCategoryInput] = useState("");
     const [showAddSubcategoryForm, setShowAddSubcategoryForm] = useState(false);
-    const [newSubcategoryInput, setNewSubcategoryInput] = useState("");
 
     function openAddTransactionModal() {
         setShowAddTransactionModal(true);
@@ -71,7 +65,6 @@ export const TransactionProvider = ({ children }) => {
 
     function openAddCategoryForm() {
         setShowAddCategoryForm(true);
-        setNewCategoryInput("");
     }
 
     function closeAddCategoryForm() {
@@ -80,7 +73,6 @@ export const TransactionProvider = ({ children }) => {
 
     function openAddSubcategoryForm() {
         setShowAddSubcategoryForm(true);
-        setNewSubcategoryInput("");
     }
 
     function closeAddSubcategoryForm() {
@@ -132,19 +124,15 @@ export const TransactionProvider = ({ children }) => {
         subcategories,
         isSubcategoriesLoading,
         showAddCategoryForm,
-        newCategoryInput,
         showAddSubcategoryForm,
-        newSubcategoryInput,
         openAddTransactionModal,
         closeAddTransactionModal,
         resetTransactionFormData,
         updateTransactionFormData,
         openAddCategoryForm,
         closeAddCategoryForm,
-        setNewCategoryInput,
         openAddSubcategoryForm,
         closeAddSubcategoryForm,
-        setNewSubcategoryInput,
         fetchCategoriesFromDB,
         fetchSubcategoriesFromDB,
         handleAddTransaction

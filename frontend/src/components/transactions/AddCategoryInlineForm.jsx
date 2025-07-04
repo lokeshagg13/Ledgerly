@@ -5,7 +5,9 @@ import { axiosPrivate } from "../../api/axios";
 import TransactionContext from "../../store/context/transactionContext";
 
 function AddCategoryInlineForm() {
-  const transactionContext = useContext(TransactionContext);
+  const { fetchCategoriesFromDB, closeAddCategoryForm } =
+    useContext(TransactionContext);
+  const [newCategoryInput, setNewCategoryInput] = useState("");
   const [variant, setVariant] = useState("success");
   const [message, setMessage] = useState(null);
 
@@ -14,26 +16,21 @@ function AddCategoryInlineForm() {
       const messageTimeout = setTimeout(() => {
         setMessage(null);
       }, 4000);
-
       return () => clearTimeout(messageTimeout);
     }
   }, [variant, message]);
 
-  if (!transactionContext.showAddCategoryForm) return null;
-
   const handleAddCategory = async () => {
-    const newCategoryInput = transactionContext.newCategoryInput.trim();
+    const newCategoryInputTrimmed = newCategoryInput.trim();
     if (!newCategoryInput) return;
-
     try {
       await axiosPrivate.post("/user/transactions/categories", {
-        name: newCategoryInput,
+        name: newCategoryInputTrimmed,
       });
-
       setVariant("success");
-      setMessage(`Category '${newCategoryInput}' added successfully.`);
-      transactionContext.fetchCategoriesFromDB();
-      transactionContext.setNewCategoryInput("");
+      setMessage(`Category '${newCategoryInputTrimmed}' added successfully.`);
+      fetchCategoriesFromDB();
+      setNewCategoryInput("");
     } catch (error) {
       console.log("Error while adding category:", error);
       setVariant("danger");
@@ -51,10 +48,8 @@ function AddCategoryInlineForm() {
         <Form.Control
           type="text"
           placeholder="Enter new category name"
-          value={transactionContext.newCategoryInput}
-          onChange={(e) =>
-            transactionContext.setNewCategoryInput(e.target.value)
-          }
+          value={newCategoryInput}
+          onChange={(e) => setNewCategoryInput(e.target.value)}
         />
         <Button
           variant="success"
@@ -65,7 +60,7 @@ function AddCategoryInlineForm() {
         </Button>
         <Button
           variant="outline-danger"
-          onClick={transactionContext.closeAddCategoryForm}
+          onClick={closeAddCategoryForm}
           title="Cancel"
         >
           ✕

@@ -26,7 +26,7 @@ const TransactionList = () => (
   </section>
 );
 
-const Transactions = () => {
+function Transactions() {
   const transactionContext = useContext(TransactionContext);
 
   return (
