@@ -11,6 +11,7 @@ import HomeLogged from "./pages/HomeLogged";
 import Page404 from "./pages/page404";
 import Transactions from "./pages/transactions/Transactions";
 import { TransactionProvider } from "./store/context/transactionContext";
+import Categories from "./pages/categories/Categories";
 
 function App() {
   const { auth } = useAuth();
@@ -67,6 +68,7 @@ function App() {
                 </TransactionProvider>
               }
             />
+            <Route path="/categories" element={<Categories />} />
           </Route>
         </Route>
 

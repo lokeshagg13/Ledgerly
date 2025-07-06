@@ -51,6 +51,8 @@ function NavbarComponent() {
             {auth?.email && auth.accessToken && (
               <>
                 <Nav.Link href="#features">Features</Nav.Link>
+                <Nav.Link href="/transactions">Your Transactions</Nav.Link>
+                <Nav.Link href="/categories">Categories</Nav.Link>
                 <Button onClick={handleLogout} className="logout-button">
                   Logout
                 </Button>

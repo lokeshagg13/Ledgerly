@@ -10,6 +10,7 @@ router.get("/subcategories", subcategoriesController.getAllGrouped);
 router.get("/subcategories/:categoryId", subcategoriesController.getByCategory);
 router.post("/subcategories", subcategoriesController.addSubcategory);
 router.put("/subcategories/:subcategoryId", subcategoriesController.updateSubcategory);
-router.delete("/subcategories/:subcategoryId", subcategoriesController.deleteSubcategory);
+router.delete("/subcategories/:subcategoryId", subcategoriesController.deleteSingleSubcategory);
+router.delete("/subcategories", subcategoriesController.deleteMultipleSubcategories);
 
 module.exports = router;

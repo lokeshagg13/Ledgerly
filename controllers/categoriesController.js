@@ -20,14 +20,18 @@ exports.addCategory = async (req, res) => {
       return res.status(400).json({ error: "Category name is required." });
     }
 
-    // Check for duplicate
+    if (name.trim().length > 20) {
+      return res.status(400).json({ error: "Category name must be under 20 characters." });
+    }
+
     const existing = await CategoriesModel.findOne({
       name: { $regex: `^${name.trim()}$`, $options: "i" },
       userId: req.userId
     });
     if (existing) {
       return res.status(409).json({
-        error: `Category ${existing.name} already exists.` });
+        error: `Category ${existing.name} already exists.`
+      });
     }
 
     const newCategory = await CategoriesModel.create({
@@ -51,24 +55,46 @@ exports.updateCategoryName = async (req, res) => {
       return res.status(400).json({ error: "New category name is required" });
     }
 
-    const updated = await CategoriesModel.findOneAndUpdate(
-      { _id: categoryId, userId: req.userId },
-      { $set: { name: newName.trim() } },
-      { new: true }
-    );
+    const trimmedName = newName.trim();
 
-    if (!updated) {
+    if (trimmedName.length > 20) {
+      return res.status(400).json({ error: "Category name must be under 20 characters." });
+    }
+
+    const current = await CategoriesModel.findOne({
+      _id: categoryId,
+      userId: req.userId,
+    });
+
+    if (!current) {
       return res.status(404).json({ error: "Category not found" });
     }
 
-    return res.status(200).json({ category: updated });
+    if (current.name === trimmedName) {
+      return res.status(200).json({ category: current });
+    }
+
+    const duplicate = await CategoriesModel.findOne({
+      _id: { $ne: categoryId },
+      name: { $regex: `^${trimmedName}$`, $options: "i" },
+      userId: req.userId,
+    });
+
+    if (duplicate) {
+      return res.status(409).json({ error: `Category ${duplicate.name} already exists.` });
+    }
+
+    current.name = trimmedName;
+    await current.save();
+
+    return res.status(200).json({ category: current });
   } catch (error) {
     res.status(500).json({ error: "Error updating category: " + error.message });
   }
 };
 
 // Delete category and corresponding subcategories
-exports.deleteCategory = async (req, res) => {
+exports.deleteSingleCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
 
@@ -81,11 +107,46 @@ exports.deleteCategory = async (req, res) => {
       return res.status(404).json({ error: "Category not found" });
     }
 
-    // 🧹 Delete subcategories tied to this category
-    await Subcategory.deleteMany({ categoryId, userId: req.userId });
+    await SubcategoryModel.deleteMany({ categoryId, userId: req.userId });
 
-    return res.status(200).json({ message: "Category and its subcategories deleted" });
+    return res.status(200).json({
+      message: "Category and its subcategories deleted"
+    });
   } catch (error) {
     res.status(500).json({ error: "Error deleting category: " + error.message });
+  }
+};
+
+exports.deleteMultipleCategories = async (req, res) => {
+  try {
+    let { categoryIds } = req.body;
+
+    if (!categoryIds) {
+      return res.status(400).json({ error: "categoryIds is required." });
+    }
+
+    if (!Array.isArray(categoryIds)) {
+      categoryIds = [categoryIds];
+    }
+
+    const deletedResult = await CategoriesModel.deleteMany({
+      _id: { $in: categoryIds },
+      userId: req.userId,
+    });
+
+    if (deletedResult.deletedCount === 0) {
+      return res.status(404).json({ error: "No matching categories found to delete." });
+    }
+
+    await SubcategoryModel.deleteMany({
+      categoryId: { $in: categoryIds },
+      userId: req.userId,
+    });
+
+    return res.status(200).json({
+      message: `${deletedResult.deletedCount} category(ies) and their subcategories deleted.`,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Error deleting category(ies): " + error.message });
   }
 };

@@ -14,7 +14,7 @@ exports.getAllGrouped = async (req, res) => {
             response[category.name] = subcategories;
         }
 
-        return res.status(200).json(response);
+        return res.status(200).json({ groupedSubcategories: response });
     } catch (error) {
         res.status(500).json({ error: "Error fetching grouped subcategories: " + error.message });
     }
@@ -44,16 +44,23 @@ exports.addSubcategory = async (req, res) => {
             return res.status(400).json({ error: "Subcategory name and category are required." });
         }
 
+        const trimmedName = name.trim();
+
+        if (trimmedName.length > 20) {
+            return res.status(400).json({ error: "Subcategory name must be under 20 characters." });
+        }
+
         const exists = await Subcategory.findOne({
             name: { $regex: `^${name.trim()}$`, $options: "i" },
             categoryId, userId
         });
+
         if (exists) {
             return res.status(409).json({ error: `Subcategory ${exists.name} already exists in this category.` });
         }
 
         const newSubcategory = await Subcategory.create({
-            name: name.trim(),
+            name: trimmedName,
             categoryId,
             userId
         });
@@ -70,9 +77,19 @@ exports.updateSubcategory = async (req, res) => {
         const { subcategoryId } = req.params;
         const { newName } = req.body;
 
+        if (!newName || newName.trim() === "") {
+            return res.status(400).json({ error: "New subcategory name is required." });
+        }
+
+        const trimmedName = newName.trim();
+
+        if (trimmedName.length > 20) {
+            return res.status(400).json({ error: "Subcategory name must be under 20 characters." });
+        }
+
         const updated = await Subcategory.findOneAndUpdate(
             { _id: subcategoryId, userId: req.userId },
-            { $set: { name: newName.trim() } },
+            { $set: { name: trimmedName } },
             { new: true }
         );
 
@@ -87,7 +104,7 @@ exports.updateSubcategory = async (req, res) => {
 };
 
 // Delete subcategory
-exports.deleteSubcategory = async (req, res) => {
+exports.deleteSingleSubcategory = async (req, res) => {
     try {
         const { subcategoryId } = req.params;
 
@@ -103,5 +120,41 @@ exports.deleteSubcategory = async (req, res) => {
         return res.status(200).json({ message: "Subcategory deleted successfully" });
     } catch (error) {
         res.status(500).json({ error: "Error deleting subcategory: " + error.message });
+    }
+};
+
+
+// Delete multiple subcategories
+exports.deleteMultipleSubcategories = async (req, res) => {
+    try {
+        let { subcategoryIds } = req.body;
+
+        if (!subcategoryIds) {
+            return res.status(400).json({ error: "subcategoryIds is required." });
+        }
+
+        if (!Array.isArray(subcategoryIds)) {
+            subcategoryIds = [subcategoryIds];
+        }
+
+        const deleteResult = await Subcategory.deleteMany({
+            _id: { $in: subcategoryIds },
+            userId: req.userId,
+        });
+
+        if (deleteResult.deletedCount === 0) {
+            return res
+                .status(404)
+                .json({ error: "No matching subcategories found to delete." });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: `${deleteResult.deletedCount} subcategory(ies) deleted successfully.`,
+        });
+    } catch (error) {
+        res
+            .status(500)
+            .json({ error: "Error deleting subcategories: " + error.message });
     }
 };

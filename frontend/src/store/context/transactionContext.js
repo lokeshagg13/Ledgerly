@@ -5,9 +5,9 @@ const TransactionContext = createContext({
     showAddTransactionModal: false,
     transactionFormData: {},
     categories: [],
-    isCategoriesLoading: false,
+    isLoadingCategories: false,
     subcategories: [],
-    isSubcategoriesLoading: false,
+    isLoadingSubcategories: false,
     showAddCategoryForm: false,
     showAddSubcategoryForm: false,
     openAddTransactionModal: () => { },
@@ -34,9 +34,9 @@ export const TransactionProvider = ({ children }) => {
         subcategory: "",
     });
     const [categories, setCategories] = useState([]);
-    const [isCategoriesLoading, setIsCategoriesLoading] = useState(false);
+    const [isLoadingCategories, setIsCategoriesLoading] = useState(false);
     const [subcategories, setSubcategories] = useState([]);
-    const [isSubcategoriesLoading, setIsSubcategoriesLoading] = useState(false);
+    const [isLoadingSubcategories, setIsSubcategoriesLoading] = useState(false);
     const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
     const [showAddSubcategoryForm, setShowAddSubcategoryForm] = useState(false);
 
@@ -120,9 +120,9 @@ export const TransactionProvider = ({ children }) => {
         showAddTransactionModal,
         transactionFormData,
         categories,
-        isCategoriesLoading,
+        isLoadingCategories,
         subcategories,
-        isSubcategoriesLoading,
+        isLoadingSubcategories,
         showAddCategoryForm,
         showAddSubcategoryForm,
         openAddTransactionModal,

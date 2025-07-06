@@ -1,0 +1,143 @@
+import { useContext, useEffect, useState } from "react";
+import { Modal, Button } from "react-bootstrap";
+
+import { axiosPrivate } from "../../../api/axios";
+import CategoryContext from "../../../store/context/categoryContext";
+
+function DeleteSelectedCategoriesModal() {
+  const {
+    selectedCategories,
+    showDeleteSelectedCategoriesModal,
+    fetchCategoriesFromDB,
+    closeDeleteSelectedCategoriesModal,
+  } = useContext(CategoryContext);
+  const [deleting, setDeleting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // Hiding error message after 4 seconds
+  useEffect(() => {
+    if (errorMessage) {
+      const messageTimeout = setTimeout(() => {
+        setErrorMessage("");
+      }, 4000);
+      return () => clearTimeout(messageTimeout);
+    }
+  }, [errorMessage]);
+
+  // Keyboard handling
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!showDeleteSelectedCategoriesModal || deleting) return;
+      if (e.key === "Escape") {
+        e.preventDefault();
+        handleCancel();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+    // eslint-disable-next-line
+  }, [showDeleteSelectedCategoriesModal, selectedCategories, deleting]);
+
+  const handleDeleteSelectedCategories = async () => {
+    setDeleting(true);
+    try {
+      await axiosPrivate.delete("/user/transactions/categories", {
+        data: {
+          categoryIds: selectedCategories,
+        },
+      });
+      setErrorMessage("");
+      closeDeleteSelectedCategoriesModal();
+      fetchCategoriesFromDB();
+    } catch (error) {
+      console.log("Error while deleting selected categories:", error);
+      if (!error?.response) {
+        setErrorMessage(
+          "Failed to delete selected categories: No server response."
+        );
+      } else {
+        setErrorMessage(
+          error?.response?.data?.error ||
+            "Failed to delete selected categories."
+        );
+      }
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handleCancel = () => {
+    if (deleting) return;
+    setErrorMessage("");
+    closeDeleteSelectedCategoriesModal();
+  };
+
+  if (
+    !selectedCategories ||
+    selectedCategories.length === 0 ||
+    !showDeleteSelectedCategoriesModal
+  ) {
+    return null;
+  }
+
+  return (
+    <>
+      <Modal
+        id="deleteSelectedCategoriesModal"
+        show={showDeleteSelectedCategoriesModal}
+        onHide={handleCancel}
+        centered
+        backdrop={deleting ? "static" : true}
+        keyboard={!deleting}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Delete Selected Categories</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="mb-2">
+            You are about to delete <strong>{selectedCategories.length}</strong>{" "}
+            {selectedCategories.length === 1 ? "category" : "categories"}.
+          </p>
+          <p className="text-danger fw-semibold mb-0">
+            This action cannot be undone. All associated subcategories will also
+            be removed.
+          </p>
+          {errorMessage && (
+            <div className="text-danger small mt-2">{errorMessage}</div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="outline-secondary"
+            onClick={handleCancel}
+            disabled={deleting}
+          >
+            Cancel
+          </Button>
+          <Button
+            className="btn-blue"
+            onClick={handleDeleteSelectedCategories}
+            disabled={deleting}
+          >
+            {deleting ? (
+              <>
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                Deleting...
+              </>
+            ) : (
+              "Delete"
+            )}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
+
+export default DeleteSelectedCategoriesModal;

@@ -9,6 +9,7 @@ router.use(verifyJWT);
 router.get("/categories", categoriesController.getCategories);
 router.post("/categories", categoriesController.addCategory);
 router.put("/categories/:categoryId", categoriesController.updateCategoryName);
-router.delete("/categories/:categoryId", categoriesController.deleteCategory);
+router.delete("/categories/:categoryId", categoriesController.deleteSingleCategory);
+router.delete("/categories", categoriesController.deleteMultipleCategories);
 
 module.exports = router;

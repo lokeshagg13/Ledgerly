@@ -7,10 +7,11 @@ import TransactionContext from "../../store/context/transactionContext";
 function AddSubcategoryInlineForm() {
   const {
     transactionFormData,
+    showAddSubcategoryForm,
     fetchSubcategoriesFromDB,
     closeAddSubcategoryForm,
   } = useContext(TransactionContext);
-  const [newSubcategoryInput, setNewSubcategoryInput] = useState("");
+  const [newSubcategoryName, setNewSubcategoryName] = useState("");
   const [variant, setVariant] = useState("success");
   const [message, setMessage] = useState(null);
 
@@ -25,19 +26,28 @@ function AddSubcategoryInlineForm() {
 
   const handleAddSubcategory = async () => {
     const categoryId = transactionFormData.category;
-    const newSubcategoryInputTrimmed = newSubcategoryInput.trim();
-    if (!categoryId || !newSubcategoryInputTrimmed) return;
+    const newSubcategoryNameTrimmed = newSubcategoryName.trim();
+    if (!categoryId) {
+      setVariant("danger");
+      setMessage("Select a category first.");
+      return;
+    }
+    if (!newSubcategoryNameTrimmed) {
+      setVariant("danger");
+      setMessage("Please enter a subcategory name.");
+      return;
+    }
     try {
       await axiosPrivate.post("/user/transactions/subcategories", {
-        name: newSubcategoryInputTrimmed,
+        name: newSubcategoryNameTrimmed,
         categoryId: categoryId,
       });
       setVariant("success");
       setMessage(
-        `Subcategory '${newSubcategoryInputTrimmed}' added successfully.`
+        `Subcategory '${newSubcategoryNameTrimmed}' added successfully.`
       );
       fetchSubcategoriesFromDB();
-      setNewSubcategoryInput("");
+      setNewSubcategoryName("");
     } catch (error) {
       console.log("Error while adding subcategory:", error);
       setVariant("danger");
@@ -51,14 +61,21 @@ function AddSubcategoryInlineForm() {
     }
   };
 
+  const handleCancel = () => {
+    setNewSubcategoryName("");
+    closeAddSubcategoryForm();
+  };
+
+  if (!showAddSubcategoryForm) return null;
+
   return (
     <div className="mt-4 mb-4">
       <InputGroup>
         <Form.Control
           type="text"
           placeholder="Enter new subcategory name"
-          value={newSubcategoryInput}
-          onChange={(e) => setNewSubcategoryInput(e.target.value)}
+          value={newSubcategoryName}
+          onChange={(e) => setNewSubcategoryName(e.target.value)}
         />
         <Button
           variant="success"
@@ -67,11 +84,7 @@ function AddSubcategoryInlineForm() {
         >
           Add
         </Button>
-        <Button
-          variant="outline-danger"
-          onClick={closeAddSubcategoryForm}
-          title="Cancel"
-        >
+        <Button variant="outline-danger" onClick={handleCancel} title="Cancel">
           ✕
         </Button>
       </InputGroup>

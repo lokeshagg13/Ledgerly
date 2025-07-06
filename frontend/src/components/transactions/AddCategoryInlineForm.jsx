@@ -5,9 +5,9 @@ import { axiosPrivate } from "../../api/axios";
 import TransactionContext from "../../store/context/transactionContext";
 
 function AddCategoryInlineForm() {
-  const { fetchCategoriesFromDB, closeAddCategoryForm } =
+  const { showAddCategoryForm, fetchCategoriesFromDB, closeAddCategoryForm } =
     useContext(TransactionContext);
-  const [newCategoryInput, setNewCategoryInput] = useState("");
+  const [newCategoryName, setNewCategoryName] = useState("");
   const [variant, setVariant] = useState("success");
   const [message, setMessage] = useState(null);
 
@@ -21,16 +21,20 @@ function AddCategoryInlineForm() {
   }, [variant, message]);
 
   const handleAddCategory = async () => {
-    const newCategoryInputTrimmed = newCategoryInput.trim();
-    if (!newCategoryInput) return;
+    const newCategoryNameTrimmed = newCategoryName.trim();
+    if (!newCategoryName) {
+      setVariant("danger");
+      setMessage("Please enter a category name.");
+      return;
+    }
     try {
       await axiosPrivate.post("/user/transactions/categories", {
-        name: newCategoryInputTrimmed,
+        name: newCategoryNameTrimmed,
       });
       setVariant("success");
-      setMessage(`Category '${newCategoryInputTrimmed}' added successfully.`);
+      setMessage(`Category '${newCategoryNameTrimmed}' added successfully.`);
+      setNewCategoryName("");
       fetchCategoriesFromDB();
-      setNewCategoryInput("");
     } catch (error) {
       console.log("Error while adding category:", error);
       setVariant("danger");
@@ -42,14 +46,21 @@ function AddCategoryInlineForm() {
     }
   };
 
+  const handleCancel = () => {
+    setNewCategoryName("");
+    closeAddCategoryForm();
+  };
+
+  if (!showAddCategoryForm) return null;
+
   return (
     <div className="mt-4 mb-4">
       <InputGroup>
         <Form.Control
           type="text"
           placeholder="Enter new category name"
-          value={newCategoryInput}
-          onChange={(e) => setNewCategoryInput(e.target.value)}
+          value={newCategoryName}
+          onChange={(e) => setNewCategoryName(e.target.value)}
         />
         <Button
           variant="success"
@@ -58,11 +69,7 @@ function AddCategoryInlineForm() {
         >
           Add
         </Button>
-        <Button
-          variant="outline-danger"
-          onClick={closeAddCategoryForm}
-          title="Cancel"
-        >
+        <Button variant="outline-danger" onClick={handleCancel} title="Cancel">
           ✕
         </Button>
       </InputGroup>

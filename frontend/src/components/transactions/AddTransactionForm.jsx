@@ -18,9 +18,9 @@ function AddTransactionForm() {
     showAddCategoryForm,
     showAddSubcategoryForm,
     categories,
-    isCategoriesLoading,
+    isLoadingCategories,
     subcategories,
-    isSubcategoriesLoading,
+    isLoadingSubcategories,
     fetchCategoriesFromDB,
     fetchSubcategoriesFromDB,
     updateTransactionFormData,
@@ -119,7 +119,7 @@ function AddTransactionForm() {
         <Form.Group className="mb-3">
           <Form.Label>Category</Form.Label>
           <InputGroup>
-            {isCategoriesLoading ? (
+            {isLoadingCategories ? (
               <Spinner animation="border" size="sm" />
             ) : (
               <>
@@ -152,7 +152,7 @@ function AddTransactionForm() {
         <Form.Group className="mb-3">
           <Form.Label>Subcategory</Form.Label>
           <InputGroup>
-            {isSubcategoriesLoading ? (
+            {isLoadingSubcategories ? (
               <Spinner animation="border" size="sm" />
             ) : (
               <>
