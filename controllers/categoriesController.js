@@ -1,10 +1,10 @@
-const CategoriesModel = require("../models/Category");
+const CategoryModel = require("../models/Category");
 const SubcategoryModel = require("../models/Subcategory");
 
 // Get all categories for the logged-in user
 exports.getCategories = async (req, res) => {
   try {
-    const categories = await CategoriesModel.find({ userId: req.userId });
+    const categories = await CategoryModel.find({ userId: req.userId });
     return res.status(200).json({ categories });
   } catch (error) {
     res.status(500).json({ error: "Error fetching categories: " + error.message });
@@ -24,7 +24,7 @@ exports.addCategory = async (req, res) => {
       return res.status(400).json({ error: "Category name must be under 20 characters." });
     }
 
-    const existing = await CategoriesModel.findOne({
+    const existing = await CategoryModel.findOne({
       name: { $regex: `^${name.trim()}$`, $options: "i" },
       userId: req.userId
     });
@@ -34,7 +34,7 @@ exports.addCategory = async (req, res) => {
       });
     }
 
-    const newCategory = await CategoriesModel.create({
+    const newCategory = await CategoryModel.create({
       name: name.trim(),
       userId: req.userId,
     });
@@ -61,7 +61,7 @@ exports.updateCategoryName = async (req, res) => {
       return res.status(400).json({ error: "Category name must be under 20 characters." });
     }
 
-    const current = await CategoriesModel.findOne({
+    const current = await CategoryModel.findOne({
       _id: categoryId,
       userId: req.userId,
     });
@@ -74,7 +74,7 @@ exports.updateCategoryName = async (req, res) => {
       return res.status(200).json({ category: current });
     }
 
-    const duplicate = await CategoriesModel.findOne({
+    const duplicate = await CategoryModel.findOne({
       _id: { $ne: categoryId },
       name: { $regex: `^${trimmedName}$`, $options: "i" },
       userId: req.userId,
@@ -98,13 +98,13 @@ exports.deleteSingleCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
 
-    const deleted = await CategoriesModel.findOneAndDelete({
+    const deleted = await CategoryModel.findOneAndDelete({
       _id: categoryId,
       userId: req.userId,
     });
 
     if (!deleted) {
-      return res.status(404).json({ error: "Category not found" });
+      return res.status(404).json({ error: "Category not found." });
     }
 
     await SubcategoryModel.deleteMany({ categoryId, userId: req.userId });
@@ -117,6 +117,7 @@ exports.deleteSingleCategory = async (req, res) => {
   }
 };
 
+// Delete multiple categories and their subcategories
 exports.deleteMultipleCategories = async (req, res) => {
   try {
     let { categoryIds } = req.body;
@@ -129,7 +130,7 @@ exports.deleteMultipleCategories = async (req, res) => {
       categoryIds = [categoryIds];
     }
 
-    const deletedResult = await CategoriesModel.deleteMany({
+    const deletedResult = await CategoryModel.deleteMany({
       _id: { $in: categoryIds },
       userId: req.userId,
     });
