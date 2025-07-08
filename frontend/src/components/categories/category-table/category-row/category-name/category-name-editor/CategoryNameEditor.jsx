@@ -65,7 +65,6 @@ function CategoryNameEditor({ categoryId, categoryName, onClose }) {
       await axiosPrivate.put(`/user/transactions/categories/${categoryId}`, {
         newName: editedName.trim(),
       });
-      console.log("updated");
       setErrorMessage("");
       onClose();
       fetchCategoriesFromDB();

@@ -1,22 +1,36 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 import TransactionContext from "../../store/context/transactionContext";
 import AddTransactionForm from "./AddTransactionForm";
 
 function AddTransactionModal() {
-  const transactionContext = useContext(TransactionContext);
+  const {
+    transactionFormData,
+    closeAddTransactionModal,
+    resetTransactionFormData,
+    showAddTransactionModal,
+  } = useContext(TransactionContext);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = () => {
-    transactionContext.handleAddTransaction();
-    transactionContext.closeAddTransactionModal();
-    transactionContext.resetTransactionFormData();
+    const { amount, date, type, remarks, category } = transactionFormData;
+    if (!amount || !date || !type || !remarks || !category) {
+      alert("Please fill all required fields.");
+      return;
+    }
+
+    handleAddTransaction();
+    closeAddTransactionModal();
+    resetTransactionFormData();
   };
 
   return (
     <Modal
-      show={transactionContext.showAddTransactionModal}
-      onHide={transactionContext.closeAddTransactionModal}
+      show={showAddTransactionModal}
+      onHide={closeAddTransactionModal}
       centered
+      size="lg"
     >
       <Modal.Header closeButton>
         <Modal.Title>Add New Transaction</Modal.Title>
@@ -25,14 +39,22 @@ function AddTransactionModal() {
         <AddTransactionForm />
       </Modal.Body>
       <Modal.Footer>
-        <Button
-          variant="secondary"
-          onClick={transactionContext.closeAddTransactionModal}
-        >
+        <Button variant="secondary" onClick={closeAddTransactionModal}>
           Cancel
         </Button>
         <Button variant="primary" onClick={handleSubmit}>
-          Add Transaction
+          {isSubmitting ? (
+            <>
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              Adding...
+            </>
+          ) : (
+            "Add Transaction"
+          )}
         </Button>
       </Modal.Footer>
     </Modal>

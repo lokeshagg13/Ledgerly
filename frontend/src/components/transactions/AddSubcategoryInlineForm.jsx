@@ -1,10 +1,12 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Button, Form, InputGroup, Alert } from "react-bootstrap";
 
 import { axiosPrivate } from "../../api/axios";
 import TransactionContext from "../../store/context/transactionContext";
+import CancelIcon from "../ui/icons/CancelIcon";
 
 function AddSubcategoryInlineForm() {
+  const newSubcategoryNameRef = useRef();
   const {
     transactionFormData,
     showAddSubcategoryForm,
@@ -12,56 +14,109 @@ function AddSubcategoryInlineForm() {
     closeAddSubcategoryForm,
   } = useContext(TransactionContext);
   const [newSubcategoryName, setNewSubcategoryName] = useState("");
-  const [variant, setVariant] = useState("success");
+  const [isAdding, setIsAdding] = useState(false);
   const [message, setMessage] = useState(null);
 
+  // Focus input field on mount
+  useEffect(() => {
+    if (showAddSubcategoryForm) {
+      newSubcategoryNameRef.current?.focus();
+    }
+  }, [showAddSubcategoryForm]);
+
+  // For hiding error message after 4 seconds
   useEffect(() => {
     if (message) {
-      const messageTimeout = setTimeout(() => {
+      const timeout = setTimeout(() => {
         setMessage(null);
       }, 4000);
-      return () => clearTimeout(messageTimeout);
+      return () => clearTimeout(timeout);
     }
-  }, [variant, message]);
+  }, [message]);
+
+  // For hiding empty input error message on user writes something
+  useEffect(() => {
+    if (newSubcategoryName && message?.text?.includes("cannot be empty")) {
+      setMessage(null);
+    }
+  }, [newSubcategoryName, message]);
+
+  // Keyboard support for closing modal and submitting
+  useEffect(() => {
+    if (!showAddSubcategoryForm) return;
+    const handleKeyDown = (e) => {
+      if (
+        e.key === "Enter" &&
+        document.activeElement === newSubcategoryNameRef.current &&
+        !isAdding
+      ) {
+        e.preventDefault();
+        handleAddSubcategory();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+    // eslint-disable-next-line
+  }, [showAddSubcategoryForm, isAdding]);
 
   const handleAddSubcategory = async () => {
     const categoryId = transactionFormData.category;
     const newSubcategoryNameTrimmed = newSubcategoryName.trim();
     if (!categoryId) {
-      setVariant("danger");
-      setMessage("Select a category first.");
+      setMessage({
+        variant: "danger",
+        message: "Select a category first.",
+      });
       return;
     }
     if (!newSubcategoryNameTrimmed) {
-      setVariant("danger");
-      setMessage("Please enter a subcategory name.");
+      setMessage({
+        variant: "danger",
+        text: "Subcategory name cannot be empty.",
+      });
       return;
     }
+    if (newSubcategoryNameTrimmed.length > 20) {
+      setMessage({
+        variant: "danger",
+        text: "Subcategory name is too long (max 20 characters).",
+      });
+      return;
+    }
+
+    setIsAdding(true);
     try {
       await axiosPrivate.post("/user/transactions/subcategories", {
         name: newSubcategoryNameTrimmed,
         categoryId: categoryId,
       });
-      setVariant("success");
-      setMessage(
-        `Subcategory '${newSubcategoryNameTrimmed}' added successfully.`
-      );
-      fetchSubcategoriesFromDB();
+      setMessage({
+        variant: "success",
+        text: `Subcategory '${newSubcategoryNameTrimmed}' added successfully.`,
+      });
       setNewSubcategoryName("");
+      fetchSubcategoriesFromDB();
     } catch (error) {
       console.log("Error while adding subcategory:", error);
-      setVariant("danger");
       if (!error?.response) {
-        setMessage("Failed to adding subcategory: No server response.");
+        setMessage({
+          variant: "danger",
+          text: "Failed to add subcategory: No server response.",
+        });
       } else {
-        setMessage(
-          error?.response?.data?.error || "Failed to add subcategory."
-        );
+        setMessage({
+          variant: "danger",
+          text: error?.response?.data?.error || "Failed to add subcategory.",
+        });
       }
     }
   };
 
   const handleCancel = () => {
+    if (isAdding) return;
+    setMessage(null);
     setNewSubcategoryName("");
     closeAddSubcategoryForm();
   };
@@ -69,28 +124,52 @@ function AddSubcategoryInlineForm() {
   if (!showAddSubcategoryForm) return null;
 
   return (
-    <div className="mt-4 mb-4">
+    <div className="add-subcategory-inline-form">
       <InputGroup>
         <Form.Control
+          aria-label="New subcategory name"
           type="text"
           placeholder="Enter new subcategory name"
           value={newSubcategoryName}
           onChange={(e) => setNewSubcategoryName(e.target.value)}
+          isInvalid={message?.variant === "danger"}
+          className={`${message?.variant === "danger" ? "shake" : ""}`}
+          ref={newSubcategoryNameRef}
+          maxLength={20}
         />
         <Button
           variant="success"
           onClick={handleAddSubcategory}
-          title="Add Category"
+          title="Add Subcategory"
+          disabled={isAdding}
+          className="add-button"
         >
-          Add
+          {isAdding ? (
+            <>
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              Adding...
+            </>
+          ) : (
+            "Add"
+          )}
         </Button>
-        <Button variant="outline-danger" onClick={handleCancel} title="Cancel">
-          ✕
+        <Button
+          variant="outline-danger"
+          onClick={handleCancel}
+          title="Cancel"
+          className="cancel-button"
+          disabled={isAdding}
+        >
+          <CancelIcon />
         </Button>
       </InputGroup>
       {message && (
-        <Alert variant={variant} className="py-1 mt-2 mb-0">
-          {message}
+        <Alert variant={message?.variant} className="alert-message">
+          {message?.text}
         </Alert>
       )}
     </div>

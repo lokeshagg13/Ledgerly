@@ -115,6 +115,7 @@ function AddCategoryModal() {
           <Form.Group controlId="categoryName">
             <Form.Label>Category Name</Form.Label>
             <Form.Control
+              aria-label="New category name"
               type="text"
               placeholder="e.g. Shopping, PPF, LIC"
               value={newCategoryName}

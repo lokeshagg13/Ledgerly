@@ -30,6 +30,17 @@ body {
 .shake {
   animation: shake 0.5s ease-in-out;
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 /* #endregion */
 
 /* #region - Navbar styles */
@@ -363,8 +374,96 @@ body {
 
 /* #endregion */
 
-/* #region - Add Transaction component */
+/* #region - Add transaction modal */
 
+/* #endregion */
+
+/* #region - Add transaction form */
+.transaction-form .form-control,
+.transaction-form .form-select {
+  font-size: 0.95rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.transaction-form .form-label {
+  font-weight: 500;
+}
+
+.transaction-form .input-group .btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+}
+
+.transaction-form .btn-disabled {
+  opacity: 0.4 !important;
+  border-color: #d1d5db !important;
+  background-color: #f3f4f6 !important;
+  cursor: not-allowed;
+  box-shadow: none;
+  pointer-events: auto;
+}
+/* #endregion */
+
+/* #region - Add category inline form */
+.add-category-inline-form {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.add-category-inline-form .add-button,
+.add-category-inline-form .cancel-button {
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+  font-size: 1rem !important;
+}
+
+.add-category-inline-form .cancel-button svg {
+  width: 1.2em;
+  height: 1.2em;
+}
+
+.add-category-inline-form .cancel-button:hover svg {
+  fill: white !important;
+}
+
+.add-category-inline-form .alert-message {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+/* #endregion */
+
+/* #region - Add subcategory inline form */
+.add-subcategory-inline-form {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.add-subcategory-inline-form .add-button,
+.add-subcategory-inline-form .cancel-button {
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+  font-size: 1rem !important;
+}
+
+.add-subcategory-inline-form .cancel-button svg {
+  width: 1.2em;
+  height: 1.2em;
+}
+
+.add-subcategory-inline-form .cancel-button:hover svg {
+  fill: white !important;
+}
+
+.add-subcategory-inline-form .alert-message {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
 /* #endregion */
 
 /* #region - Category page */
