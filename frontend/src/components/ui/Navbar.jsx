@@ -33,6 +33,7 @@ function NavbarComponent() {
       <Container>
         <Navbar.Brand href="/">
           <img src={logo} alt="Ledgerly Logo" className="logo" />
+          <span className="brand-text">Ledgerly</span>
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

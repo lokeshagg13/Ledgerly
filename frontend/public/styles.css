@@ -47,10 +47,17 @@ body {
 }
 
 .navbar .logo {
-  height: 36px;
+  height: 40px;
   width: auto;
   margin-right: 10px;
   object-fit: contain;
+}
+
+.navbar .brand-text {
+  font-family: "Nunito", sans-serif;
+  font-weight: 600;
+  font-size: 1.6rem;
+  color: #fff;
 }
 
 .navbar .nav-link {
