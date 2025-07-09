@@ -25,7 +25,7 @@ function CategoryTable() {
   if (categories.length === 0) {
     return (
       <div className="category-table-empty text-muted">
-        No categories found.
+        No categories added yet.
       </div>
     );
   }

@@ -9,9 +9,8 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import HomeLogged from "./pages/HomeLogged";
 import Page404 from "./pages/page404";
-import Transactions from "./pages/transactions/Transactions";
-import { TransactionProvider } from "./store/context/transactionContext";
-import Categories from "./pages/categories/Categories";
+import TransactionPage from "./pages/transaction-page/TransactionPage";
+import CategoryPage from "./pages/category-page/CategoryPage";
 
 function App() {
   const { auth } = useAuth();
@@ -60,15 +59,8 @@ function App() {
 
           <Route element={<RequireAuth />}>
             <Route path="/dashboard" element={<HomeLogged />} />
-            <Route
-              path="/transactions"
-              element={
-                <TransactionProvider>
-                  <Transactions />
-                </TransactionProvider>
-              }
-            />
-            <Route path="/categories" element={<Categories />} />
+            <Route path="/transactions" element={<TransactionPage />} />
+            <Route path="/categories" element={<CategoryPage />} />
           </Route>
         </Route>
 

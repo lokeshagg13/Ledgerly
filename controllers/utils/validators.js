@@ -10,9 +10,9 @@ exports.validateRequiredTransactionFields = (body, fields = []) => {
 };
 
 exports.normalizeDate = (date) => {
-    const d = new Date(date);
-    d.setHours(0, 0, 0, 0);
-    return d;
+    const [year, month, day] = new Date(date).toISOString().split("T")[0].split("-");
+    // Create a UTC date equivalent to the local date at midnight
+    return new Date(Date.UTC(year, month - 1, day));
 }
 
 exports.validateTransactionType = (type) => {
@@ -22,6 +22,9 @@ exports.validateTransactionType = (type) => {
 };
 
 exports.validateTransactionAmount = (amount) => {
+    if (typeof amount === "string") {
+        amount = parseFloat(amount)
+    }
     if (typeof amount !== "number" || amount <= 0) {
         throw new Error("Amount must be a positive number.");
     }

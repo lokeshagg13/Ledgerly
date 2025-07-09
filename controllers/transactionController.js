@@ -13,8 +13,22 @@ const {
 // Get all transactions for the logged-in user
 exports.getTransactions = async (req, res) => {
     try {
-        const transactions = await TransactionModel.find({ userId: req.userId }).sort({ date: -1 });
-        return res.status(200).json({ transactions });
+        const transactions = await TransactionModel
+            .find({ userId: req.userId })
+            .sort({ date: -1 })
+            .populate("categoryId", "name")
+            .populate("subcategoryId", "name");
+
+        const formattedTransactions = transactions.map((txn) => ({
+            _id: txn._id,
+            amount: txn.amount,
+            type: txn.type,
+            date: txn.date,
+            remarks: txn.remarks,
+            category: txn.categoryId?.name || null,
+            subcategory: txn.subcategoryId?.name || null,
+        }));
+        return res.status(200).json({ transactions: formattedTransactions });
     } catch (error) {
         return res.status(500).json({ error: "Error fetching transactions: " + error.message });
     }
@@ -181,7 +195,6 @@ exports.deleteSingleTransaction = async (req, res) => {
 exports.deleteMultipleTransactions = async (req, res) => {
     try {
         let { transactionIds } = req.body;
-
         if (!transactionIds) {
             return res.status(400).json({ error: "transactionIds is required." });
         }

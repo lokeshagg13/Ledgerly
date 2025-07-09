@@ -1,9 +1,9 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Button, Form, InputGroup, Alert } from "react-bootstrap";
 
-import { axiosPrivate } from "../../../../../../api/axios";
-import TransactionContext from "../../../../../../store/context/transactionContext";
-import CancelIcon from "../../../../../ui/icons/CancelIcon";
+import { axiosPrivate } from "../../../../../../../api/axios";
+import TransactionContext from "../../../../../../../store/context/transactionContext";
+import CancelIcon from "../../../../../../ui/icons/CancelIcon";
 
 function AddCategoryInlineForm() {
   const newCategoryNameRef = useRef();

@@ -20,10 +20,6 @@ function SubcategoryList({ categoryId }) {
       </div>
     );
 
-  if (subcategories.length === 0) {
-    return <span className="text-muted">None</span>;
-  }
-
   return (
     <div className="subcategory-list">
       {subcategories.map((sub) => (

@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { Button, Form, InputGroup, Spinner } from "react-bootstrap";
 import AddCategoryInlineForm from "./inline-forms/AddCategoryInlineForm";
-import TransactionContext from "../../../../../store/context/transactionContext";
-import AddIcon from "../../../../ui/icons/AddIcon";
+import TransactionContext from "../../../../../../store/context/transactionContext";
+import AddIcon from "../../../../../ui/icons/AddIcon";
 
 function CategorySelector({ value, onChange }) {
   const {
@@ -28,7 +28,7 @@ function CategorySelector({ value, onChange }) {
               aria-label="Select category"
               value={value}
               onChange={onChange}
-              disabled={isLoadingCategories || showAddCategoryForm}
+              disabled={isLoadingCategories}
               isInvalid={checkIfInputFieldInvalid("category")}
               className={checkIfInputFieldInvalid("category") ? "shake" : ""}
             >

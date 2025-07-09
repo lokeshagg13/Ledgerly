@@ -1,9 +1,9 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Button, Form, InputGroup, Alert } from "react-bootstrap";
 
-import { axiosPrivate } from "../../../../../../api/axios";
-import TransactionContext from "../../../../../../store/context/transactionContext";
-import CancelIcon from "../../../../../ui/icons/CancelIcon";
+import { axiosPrivate } from "../../../../../../../api/axios";
+import TransactionContext from "../../../../../../../store/context/transactionContext";
+import CancelIcon from "../../../../../../ui/icons/CancelIcon";
 
 function AddSubcategoryInlineForm() {
   const newSubcategoryNameRef = useRef();
@@ -111,6 +111,8 @@ function AddSubcategoryInlineForm() {
           text: error?.response?.data?.error || "Failed to add subcategory.",
         });
       }
+    } finally {
+      setIsAdding(false);
     }
   };
 

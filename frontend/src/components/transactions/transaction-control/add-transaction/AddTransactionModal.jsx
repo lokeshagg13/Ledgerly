@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { Modal, Button } from "react-bootstrap";
-import { axiosPrivate } from "../../../api/axios";
-import TransactionContext from "../../../store/context/transactionContext";
+import { axiosPrivate } from "../../../../api/axios";
+import TransactionContext from "../../../../store/context/transactionContext";
 import AddTransactionForm from "./add-transaction-form/AddTransactionForm";
 
 function AddTransactionModal() {
   const {
+    fetchTransactionsFromDB,
     transactionFormData,
     closeAddTransactionModal,
     resetTransactionFormData,
@@ -102,6 +103,7 @@ function AddTransactionModal() {
       });
       resetTransactionFormData();
       closeAddTransactionModal();
+      fetchTransactionsFromDB();
     } catch (error) {
       console.log("Error while adding transaction:", error);
       if (!error?.response) {

@@ -8,8 +8,8 @@ import {
   Tooltip,
 } from "react-bootstrap";
 import AddSubcategoryInlineForm from "./inline-forms/AddSubcategoryInlineForm";
-import TransactionContext from "../../../../../store/context/transactionContext";
-import AddIcon from "../../../../ui/icons/AddIcon";
+import TransactionContext from "../../../../../../store/context/transactionContext";
+import AddIcon from "../../../../../ui/icons/AddIcon";
 
 function SubcategorySelector({ value, onChange }) {
   const {

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef } from "react";
 import { Form, InputGroup } from "react-bootstrap";
-import TransactionContext from "../../../../store/context/transactionContext";
-import { formatAmountWithCommas } from "../../../../logic/utils";
+import TransactionContext from "../../../../../store/context/transactionContext";
+import { formatAmountWithCommas } from "../../../../../logic/utils";
 import CategorySelector from "./selectors/CategorySelector";
 import SubcategorySelector from "./selectors/SubcategorySelector";
 
@@ -96,6 +96,7 @@ function AddTransactionForm() {
                 ? formatAmountWithCommas(formData.amount)
                 : ""
             }
+            autoComplete="off"
             onChange={handleChange}
             placeholder="Enter amount"
             isInvalid={checkIfInputFieldInvalid("amount")}
