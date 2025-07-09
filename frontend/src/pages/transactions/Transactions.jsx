@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import AddTransactionModal from "../../components/transactions/AddTransactionModal";
+import AddTransactionModal from "../../components/transactions/add-transaction/AddTransactionModal";
 import TransactionContext from "../../store/context/transactionContext";
 
 const FilterSection = () => (
@@ -57,6 +57,6 @@ function Transactions() {
       <AddTransactionModal />
     </div>
   );
-};
+}
 
 export default Transactions;

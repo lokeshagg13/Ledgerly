@@ -1,24 +1,28 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Button, Form, InputGroup, Alert } from "react-bootstrap";
 
-import { axiosPrivate } from "../../api/axios";
-import TransactionContext from "../../store/context/transactionContext";
-import CancelIcon from "../ui/icons/CancelIcon";
+import { axiosPrivate } from "../../../../../../api/axios";
+import TransactionContext from "../../../../../../store/context/transactionContext";
+import CancelIcon from "../../../../../ui/icons/CancelIcon";
 
-function AddCategoryInlineForm() {
-  const newCategoryNameRef = useRef();
-  const { showAddCategoryForm, fetchCategoriesFromDB, closeAddCategoryForm } =
-    useContext(TransactionContext);
-  const [newCategoryName, setNewCategoryName] = useState("");
+function AddSubcategoryInlineForm() {
+  const newSubcategoryNameRef = useRef();
+  const {
+    transactionFormData,
+    showAddSubcategoryForm,
+    fetchSubcategoriesFromDB,
+    closeAddSubcategoryForm,
+  } = useContext(TransactionContext);
+  const [newSubcategoryName, setNewSubcategoryName] = useState("");
   const [isAdding, setIsAdding] = useState(false);
   const [message, setMessage] = useState(null);
 
   // Focus input field on mount
   useEffect(() => {
-    if (showAddCategoryForm) {
-      newCategoryNameRef.current?.focus();
+    if (showAddSubcategoryForm) {
+      newSubcategoryNameRef.current?.focus();
     }
-  }, [showAddCategoryForm]);
+  }, [showAddSubcategoryForm]);
 
   // For hiding error message after 4 seconds
   useEffect(() => {
@@ -32,22 +36,22 @@ function AddCategoryInlineForm() {
 
   // For hiding empty input error message on user writes something
   useEffect(() => {
-    if (newCategoryName && message?.text?.includes("cannot be empty")) {
+    if (newSubcategoryName && message?.text?.includes("cannot be empty")) {
       setMessage(null);
     }
-  }, [newCategoryName, message]);
+  }, [newSubcategoryName, message]);
 
   // Keyboard support for closing modal and submitting
   useEffect(() => {
-    if (!showAddCategoryForm) return;
+    if (!showAddSubcategoryForm) return;
     const handleKeyDown = (e) => {
       if (
         e.key === "Enter" &&
-        document.activeElement === newCategoryNameRef.current &&
+        document.activeElement === newSubcategoryNameRef.current &&
         !isAdding
       ) {
         e.preventDefault();
-        handleAddCategory();
+        handleAddSubcategory();
       }
     };
     document.addEventListener("keydown", handleKeyDown);
@@ -55,81 +59,88 @@ function AddCategoryInlineForm() {
       document.removeEventListener("keydown", handleKeyDown);
     };
     // eslint-disable-next-line
-  }, [showAddCategoryForm, isAdding]);
+  }, [showAddSubcategoryForm, isAdding]);
 
-  const handleAddCategory = async () => {
-    const newCategoryNameTrimmed = newCategoryName.trim();
-    if (!newCategoryNameTrimmed) {
+  const handleAddSubcategory = async () => {
+    const categoryId = transactionFormData.category;
+    const newSubcategoryNameTrimmed = newSubcategoryName.trim();
+    if (!categoryId) {
       setMessage({
         variant: "danger",
-        text: "Category name cannot be empty.",
+        message: "Select a category first.",
       });
       return;
     }
-    if (newCategoryNameTrimmed.length > 20) {
+    if (!newSubcategoryNameTrimmed) {
       setMessage({
         variant: "danger",
-        text: "Category name is too long (max 20 characters).",
+        text: "Subcategory name cannot be empty.",
+      });
+      return;
+    }
+    if (newSubcategoryNameTrimmed.length > 20) {
+      setMessage({
+        variant: "danger",
+        text: "Subcategory name is too long (max 20 characters).",
       });
       return;
     }
 
     setIsAdding(true);
     try {
-      await axiosPrivate.post("/user/transactions/categories", {
-        name: newCategoryNameTrimmed,
+      await axiosPrivate.post("/user/transactions/subcategories", {
+        name: newSubcategoryNameTrimmed,
+        categoryId: categoryId,
       });
       setMessage({
         variant: "success",
-        text: `Category '${newCategoryNameTrimmed}' added successfully.`,
+        text: `Subcategory '${newSubcategoryNameTrimmed}' added successfully.`,
       });
-      setNewCategoryName("");
-      fetchCategoriesFromDB();
+      setNewSubcategoryName("");
+      fetchSubcategoriesFromDB();
     } catch (error) {
-      console.log("Error while adding category:", error);
+      console.log("Error while adding subcategory:", error);
       if (!error?.response) {
         setMessage({
           variant: "danger",
-          text: "Failed to add category: No server response.",
+          text: "Failed to add subcategory: No server response.",
         });
       } else {
         setMessage({
           variant: "danger",
-          text: error?.response?.data?.error || "Failed to add category.",
+          text: error?.response?.data?.error || "Failed to add subcategory.",
         });
       }
-    } finally {
-      setIsAdding(false);
     }
   };
 
   const handleCancel = () => {
     if (isAdding) return;
     setMessage(null);
-    setNewCategoryName("");
-    closeAddCategoryForm();
+    setNewSubcategoryName("");
+    closeAddSubcategoryForm();
   };
 
-  if (!showAddCategoryForm) return null;
+  if (!showAddSubcategoryForm) return null;
 
   return (
-    <div className="add-category-inline-form">
+    <div className="add-subcategory-inline-form">
       <InputGroup>
         <Form.Control
-          aria-label="New category name"
+          aria-label="New subcategory name"
           type="text"
-          placeholder="Enter new category name e.g. Shopping, PPF"
-          value={newCategoryName}
-          onChange={(e) => setNewCategoryName(e.target.value)}
+          placeholder="Enter new subcategory name"
+          value={newSubcategoryName}
+          onChange={(e) => setNewSubcategoryName(e.target.value)}
           isInvalid={message?.variant === "danger"}
           className={`${message?.variant === "danger" ? "shake" : ""}`}
-          ref={newCategoryNameRef}
+          ref={newSubcategoryNameRef}
           maxLength={20}
         />
         <Button
           variant="success"
-          onClick={handleAddCategory}
-          title="Add Category"
+          onClick={handleAddSubcategory}
+          title="Add Subcategory"
           disabled={isAdding}
           className="add-button"
         >
@@ -165,4 +176,4 @@ function AddCategoryInlineForm() {
   );
 }
 
-export default AddCategoryInlineForm;
+export default AddSubcategoryInlineForm;

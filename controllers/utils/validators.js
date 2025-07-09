@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const CategoryModel = require("../models/Category");
-const SubcategoryModel = require("../models/Subcategory");
+const CategoryModel = require("../../models/Category");
+const SubcategoryModel = require("../../models/Subcategory");
 
 exports.validateRequiredTransactionFields = (body, fields = []) => {
     const missing = fields.filter((field) => !body[field]);

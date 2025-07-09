@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { Button, Form, InputGroup, Spinner } from "react-bootstrap";
-import AddCategoryInlineForm from "./AddCategoryInlineForm";
-import TransactionContext from "../../store/context/transactionContext";
-import AddIcon from "../ui/icons/AddIcon";
+import AddCategoryInlineForm from "./inline-forms/AddCategoryInlineForm";
+import TransactionContext from "../../../../../store/context/transactionContext";
+import AddIcon from "../../../../ui/icons/AddIcon";
 
 function CategorySelector({ value, onChange }) {
   const {

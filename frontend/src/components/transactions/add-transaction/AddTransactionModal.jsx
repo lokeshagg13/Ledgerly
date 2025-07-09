@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Modal, Button } from "react-bootstrap";
-import TransactionContext from "../../store/context/transactionContext";
-import AddTransactionForm from "./AddTransactionForm";
+import TransactionContext from "../../../store/context/transactionContext";
+import AddTransactionForm from "./add-transaction-form/AddTransactionForm";
 
 function AddTransactionModal() {
   const {
