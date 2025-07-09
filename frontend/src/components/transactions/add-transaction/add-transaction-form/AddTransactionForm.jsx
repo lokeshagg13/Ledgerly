@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { Form, InputGroup } from "react-bootstrap";
 import TransactionContext from "../../../../store/context/transactionContext";
 import { formatAmountWithCommas } from "../../../../logic/utils";
@@ -6,14 +6,19 @@ import CategorySelector from "./selectors/CategorySelector";
 import SubcategorySelector from "./selectors/SubcategorySelector";
 
 function AddTransactionForm() {
+  const amountInputRef = useRef();
   const {
     transactionFormData: formData,
+    inputFieldErrors,
     fetchCategoriesFromDB,
     fetchSubcategoriesFromDB,
     updateTransactionFormData,
+    checkIfInputFieldInvalid,
+    updateInputFieldErrors,
   } = useContext(TransactionContext);
 
   useEffect(() => {
+    amountInputRef.current.focus();
     fetchCategoriesFromDB();
     // eslint-disable-next-line
   }, []);
@@ -23,13 +28,28 @@ function AddTransactionForm() {
     // eslint-disable-next-line
   }, [formData.category]);
 
+  // For hiding input field error messages after 4 seconds
+  useEffect(() => {
+    if (Object.keys(inputFieldErrors).length > 0) {
+      const timeout = setTimeout(() => {
+        updateInputFieldErrors({});
+      }, 4000);
+      return () => clearTimeout(timeout);
+    }
+  }, [inputFieldErrors, updateInputFieldErrors]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+    updateInputFieldErrors({});
     switch (name) {
       case "amount":
         const rawValue = value.replace(/,/g, "");
         const isValid = /^(\d+)?(\.\d{0,2})?$/.test(rawValue);
-        if (isValid || rawValue === "") {
+        const numericValue = parseFloat(rawValue);
+        if (
+          (isValid || rawValue === "") &&
+          (rawValue === "" || numericValue <= Number.MAX_SAFE_INTEGER)
+        ) {
           updateTransactionFormData(name, rawValue);
         }
         break;
@@ -51,10 +71,15 @@ function AddTransactionForm() {
           id="transactionType"
           value={formData.type}
           onChange={handleChange}
+          isInvalid={checkIfInputFieldInvalid("type")}
+          className={checkIfInputFieldInvalid("type") ? "shake" : ""}
         >
           <option value="credit">Credit</option>
           <option value="debit">Debit</option>
         </Form.Select>
+        {checkIfInputFieldInvalid("type") && (
+          <div className="text-danger">{inputFieldErrors.type}</div>
+        )}
       </Form.Group>
 
       {/* Amount */}
@@ -73,9 +98,15 @@ function AddTransactionForm() {
             }
             onChange={handleChange}
             placeholder="Enter amount"
+            isInvalid={checkIfInputFieldInvalid("amount")}
+            className={checkIfInputFieldInvalid("amount") ? "shake" : ""}
+            ref={amountInputRef}
             required
           />
         </InputGroup>
+        {checkIfInputFieldInvalid("amount") && (
+          <div className="text-danger">{inputFieldErrors.amount}</div>
+        )}
       </Form.Group>
 
       {/* Date */}
@@ -87,8 +118,16 @@ function AddTransactionForm() {
           id="transactionDate"
           value={formData.date}
           onChange={handleChange}
+          max={new Date().toISOString().split("T")[0]}
+          isInvalid={checkIfInputFieldInvalid("date")}
+          className={`date-input ${
+            checkIfInputFieldInvalid("date") ? "shake" : ""
+          }`}
           required
         />
+        {checkIfInputFieldInvalid("date") && (
+          <div className="text-danger">{inputFieldErrors.date}</div>
+        )}
       </Form.Group>
 
       {/* Remarks */}
@@ -101,8 +140,14 @@ function AddTransactionForm() {
           value={formData.remarks}
           onChange={handleChange}
           placeholder="Remarks"
+          isInvalid={checkIfInputFieldInvalid("remarks")}
+          className={checkIfInputFieldInvalid("remarks") ? "shake" : ""}
+          maxLength={50}
           required
         />
+        {checkIfInputFieldInvalid("remarks") && (
+          <div className="text-danger">{inputFieldErrors.remarks}</div>
+        )}
       </Form.Group>
 
       {/* Category */}

@@ -105,7 +105,7 @@ body {
   }
 
   .navbar-collapse .nav-link {
-    text-align: left; /* Align links to left in desktop view */
+    text-align: left;
     margin: 0;
   }
 }
@@ -349,7 +349,7 @@ body {
 }
 
 .error {
-  color: #e53935; /* Red color for error */
+  color: #e53935;
   font-size: 0.9rem;
   margin-bottom: 1rem;
   text-align: left;
@@ -375,7 +375,12 @@ body {
 /* #endregion */
 
 /* #region - Add transaction modal */
-
+.add-transaction-modal .error-message {
+  color: #dc3545;
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 600;
+}
 /* #endregion */
 
 /* #region - Add transaction form */
@@ -383,6 +388,16 @@ body {
 .transaction-form .form-select {
   font-size: 0.95rem;
   padding: 0.5rem 0.75rem;
+}
+
+.transaction-form .date-input.is-invalid::-webkit-calendar-picker-indicator {
+  position: relative;
+  z-index: 2;
+}
+
+/* Optional: align better in Firefox too */
+.transaction-form .date-input.is-invalid {
+  padding-right: 2rem !important;
 }
 
 .transaction-form .form-label {
@@ -508,7 +523,7 @@ body {
 /* #endregion */
 
 /* #region - Category control */
-.categories-controls {
+.category-controls {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
@@ -516,7 +531,7 @@ body {
   margin-bottom: 1rem;
 }
 
-.categories-controls .control-btn {
+.category-controls .control-btn {
   white-space: nowrap;
   font-weight: 500;
   border-radius: 6px;
@@ -526,32 +541,32 @@ body {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
-.categories-controls .control-btn.btn-blue {
+.category-controls .control-btn.btn-blue {
   background-color: #2563eb;
   color: white;
   border: 1px solid #2563eb;
 }
 
-.categories-controls .control-btn.btn-blue:hover {
+.category-controls .control-btn.btn-blue:hover {
   background-color: #1d4ed8;
   border-color: #1d4ed8;
 }
 
-.categories-controls .control-btn.btn-outline-light {
+.category-controls .control-btn.btn-outline-light {
   background-color: white;
   color: #1f2937;
   border: 1px solid #d1d5db;
 }
 
-.categories-controls .control-btn.btn-outline-light:hover {
+.category-controls .control-btn.btn-outline-light:hover {
   color: #111827;
   border-color: #9ca3af;
   background-color: #f9fafb;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
-.categories-controls .control-btn:disabled,
-.categories-controls .control-btn[disabled] {
+.category-controls .control-btn:disabled,
+.category-controls .control-btn[disabled] {
   opacity: 0.4 !important;
   border-color: #d1d5db !important;
   background-color: #f3f4f6 !important;
@@ -561,14 +576,14 @@ body {
 /* #endregion */
 
 /* #region - Category table */
-.categories-table-wrapper {
+.category-table-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 0.75rem;
 }
 
-.categories-table {
+.category-table {
   margin-bottom: 0;
   border-collapse: separate;
   border-spacing: 0;
@@ -580,11 +595,11 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
 }
 
-.categories-table thead {
+.category-table thead {
   background-color: #f7f9fb;
 }
 
-.categories-table thead th {
+.category-table thead th {
   font-size: 1.2rem;
   font-weight: 600;
   padding: 14px 18px;
@@ -595,8 +610,8 @@ body {
   color: #333;
 }
 
-.categories-table-loading,
-.categories-table-empty {
+.category-table-loading,
+.category-table-empty {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -606,7 +621,7 @@ body {
 /* #endregion */
 
 /* #region - Category row */
-.categories-table td {
+.category-table td {
   padding: 16px 18px;
   vertical-align: middle;
   text-align: left;
@@ -615,16 +630,16 @@ body {
   color: #555;
 }
 
-.categories-table .category-checkbox input {
+.category-table .category-checkbox input {
   border: 1px solid #747482;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
 }
 
-.categories-table td:nth-child(2) {
+.category-table td:nth-child(2) {
   font-weight: 600;
 }
 
-.categories-table tbody tr:last-child td {
+.category-table tbody tr:last-child td {
   border-bottom: none;
 }
 /* #endregion */

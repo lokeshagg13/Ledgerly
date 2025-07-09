@@ -2,6 +2,8 @@ import { createContext, useState } from "react";
 import { axiosPrivate } from "../../api/axios";
 
 const TransactionContext = createContext({
+    transactions: [],
+    isLoadingTransactions: false,
     showAddTransactionModal: false,
     transactionFormData: {},
     categories: [],
@@ -10,6 +12,8 @@ const TransactionContext = createContext({
     isLoadingSubcategories: false,
     showAddCategoryForm: false,
     showAddSubcategoryForm: false,
+    inputFieldErrors: {},
+    fetchTransactionsFromDB: () => { },
     openAddTransactionModal: () => { },
     closeAddTransactionModal: () => { },
     resetTransactionFormData: () => { },
@@ -20,10 +24,13 @@ const TransactionContext = createContext({
     closeAddSubcategoryForm: () => { },
     fetchCategoriesFromDB: () => { },
     fetchSubcategoriesFromDB: () => { },
-    handleAddTransaction: () => { }
+    checkIfInputFieldInvalid: (fieldName) => { },
+    updateInputFieldErrors: (errors) => { }
 });
 
 export const TransactionProvider = ({ children }) => {
+    const [transactions, setTransactions] = useState([]);
+    const [isLoadingTransactions, setIsLoadingTransactions] = useState(false);
     const [showAddTransactionModal, setShowAddTransactionModal] = useState(false);
     const [transactionFormData, setTransactionFormData] = useState({
         type: "debit",
@@ -34,11 +41,24 @@ export const TransactionProvider = ({ children }) => {
         subcategory: "",
     });
     const [categories, setCategories] = useState([]);
-    const [isLoadingCategories, setIsCategoriesLoading] = useState(false);
+    const [isLoadingCategories, setIsLoadingCategories] = useState(false);
     const [subcategories, setSubcategories] = useState([]);
-    const [isLoadingSubcategories, setIsSubcategoriesLoading] = useState(false);
+    const [isLoadingSubcategories, setIsLoadingSubcategories] = useState(false);
     const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
     const [showAddSubcategoryForm, setShowAddSubcategoryForm] = useState(false);
+    const [inputFieldErrors, setInputFieldErrors] = useState({});
+
+    async function fetchTransactionsFromDB() {
+        setIsLoadingTransactions(true);
+        try {
+            const res = await axiosPrivate.get("/user/transactions");
+            if (res?.data?.transactions) setTransactions(res.data.transactions);
+        } catch (error) {
+            console.log("Error while fetching transactions:", error);
+        } finally {
+            setIsLoadingTransactions(false);
+        }
+    }
 
     function openAddTransactionModal() {
         setShowAddTransactionModal(true);
@@ -46,6 +66,7 @@ export const TransactionProvider = ({ children }) => {
 
     function closeAddTransactionModal() {
         setShowAddTransactionModal(false);
+        setInputFieldErrors({});
     }
 
     function resetTransactionFormData() {
@@ -80,14 +101,14 @@ export const TransactionProvider = ({ children }) => {
     }
 
     async function fetchCategoriesFromDB() {
-        setIsCategoriesLoading(true);
+        setIsLoadingCategories(true);
         try {
             const res = await axiosPrivate.get("/user/transactions/categories");
             if (res?.data?.categories) setCategories(res.data.categories);
         } catch (error) {
             console.log("Error while fetching categories:", error);
         } finally {
-            setIsCategoriesLoading(false);
+            setIsLoadingCategories(false);
         }
     };
 
@@ -97,7 +118,7 @@ export const TransactionProvider = ({ children }) => {
             updateTransactionFormData("subcategory", null);
             return;
         }
-        setIsSubcategoriesLoading(true);
+        setIsLoadingSubcategories(true);
         try {
             const res = await axiosPrivate.get(`/user/transactions/subcategories/${transactionFormData.category}`);
             const fetched = res.data.subcategories || [];
@@ -108,15 +129,21 @@ export const TransactionProvider = ({ children }) => {
         } catch (error) {
             console.log("Error while fetching subcategories:", error);
         } finally {
-            setIsSubcategoriesLoading(false);
+            setIsLoadingSubcategories(false);
         }
     };
 
-    async function handleAddTransaction() {
-        console.log(transactionFormData);
+    function checkIfInputFieldInvalid(fieldName) {
+        return (Object.keys(inputFieldErrors).includes(fieldName));
+    };
+
+    function updateInputFieldErrors(errors) {
+        setInputFieldErrors(errors);
     }
 
     const currentTransactionContext = {
+        transactions,
+        isLoadingTransactions,
         showAddTransactionModal,
         transactionFormData,
         categories,
@@ -125,6 +152,8 @@ export const TransactionProvider = ({ children }) => {
         isLoadingSubcategories,
         showAddCategoryForm,
         showAddSubcategoryForm,
+        inputFieldErrors,
+        fetchTransactionsFromDB,
         openAddTransactionModal,
         closeAddTransactionModal,
         resetTransactionFormData,
@@ -135,7 +164,8 @@ export const TransactionProvider = ({ children }) => {
         closeAddSubcategoryForm,
         fetchCategoriesFromDB,
         fetchSubcategoriesFromDB,
-        handleAddTransaction
+        checkIfInputFieldInvalid,
+        updateInputFieldErrors
     }
 
     return (

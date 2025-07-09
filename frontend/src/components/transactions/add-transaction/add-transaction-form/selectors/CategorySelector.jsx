@@ -9,7 +9,9 @@ function CategorySelector({ value, onChange }) {
     categories,
     isLoadingCategories,
     showAddCategoryForm,
+    inputFieldErrors,
     openAddCategoryForm,
+    checkIfInputFieldInvalid,
   } = useContext(TransactionContext);
   return (
     <Form.Group className="mb-3">
@@ -27,6 +29,8 @@ function CategorySelector({ value, onChange }) {
               value={value}
               onChange={onChange}
               disabled={isLoadingCategories || showAddCategoryForm}
+              isInvalid={checkIfInputFieldInvalid("category")}
+              className={checkIfInputFieldInvalid("category") ? "shake" : ""}
             >
               <option value="">Select a category</option>
               {categories.map((cat) => (
@@ -47,6 +51,9 @@ function CategorySelector({ value, onChange }) {
           </>
         )}
       </InputGroup>
+      {checkIfInputFieldInvalid("category") && (
+        <div className="text-danger">{inputFieldErrors.category}</div>
+      )}
       {showAddCategoryForm && <AddCategoryInlineForm />}
     </Form.Group>
   );
