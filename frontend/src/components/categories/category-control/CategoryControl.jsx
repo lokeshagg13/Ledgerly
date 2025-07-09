@@ -4,7 +4,7 @@ import CategoryContext from "../../../store/context/categoryContext";
 import AddCategoryModal from "../category-modals/AddCategoryModal";
 import DeleteSelectedCategoriesModal from "../category-modals/DeleteSelectedCategoriesModal";
 
-function CategoriesControl() {
+function CategoryControl() {
   const {
     isLoadingCategories,
     showAddCategoryModal,
@@ -15,7 +15,7 @@ function CategoriesControl() {
     fetchCategoriesFromDB,
   } = useContext(CategoryContext);
   return (
-    <div className="categories-controls">
+    <div className="category-controls">
       <Button
         type="button"
         className="control-btn btn-blue"
@@ -62,4 +62,4 @@ function CategoriesControl() {
   );
 }
 
-export default CategoriesControl;
+export default CategoryControl;

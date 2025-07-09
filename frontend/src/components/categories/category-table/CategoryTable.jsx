@@ -16,7 +16,7 @@ function CategoryTable() {
 
   if (isLoadingCategories) {
     return (
-      <div className="categories-table-loading">
+      <div className="category-table-loading">
         <Spinner animation="border" size="lg" />
       </div>
     );
@@ -24,16 +24,16 @@ function CategoryTable() {
 
   if (categories.length === 0) {
     return (
-      <div className="categories-table-empty text-muted">
+      <div className="category-table-empty text-muted">
         No categories found.
       </div>
     );
   }
 
   return (
-    <div className="categories-table-wrapper">
+    <div className="category-table-wrapper">
       <Table
-        className="categories-table"
+        className="category-table"
         borderless
         aria-label="User category list with subcategories"
       >

@@ -13,7 +13,8 @@ const CategoryContext = createContext({
     openAddCategoryModal: () => { },
     closeAddCategoryModal: () => { },
     openDeleteCategoryModal: () => { },
-    closeDeleteCategoryModal: () => { }, openDeleteSelectedCategoriesModal: () => { },
+    closeDeleteCategoryModal: () => { },
+    openDeleteSelectedCategoriesModal: () => { },
     closeDeleteSelectedCategoriesModal: () => { }
 });
 
