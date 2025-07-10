@@ -22,7 +22,7 @@ function CategoryNameEditor({ categoryId, categoryName, onClose }) {
     if (errorMessage) {
       const timeout = setTimeout(() => {
         setErrorMessage("");
-      }, 4000);
+      }, 6000);
       return () => clearTimeout(timeout);
     }
   }, [errorMessage]);
@@ -62,7 +62,7 @@ function CategoryNameEditor({ categoryId, categoryName, onClose }) {
     }
     try {
       setIsSaving(true);
-      await axiosPrivate.put(`/user/transactions/categories/${categoryId}`, {
+      await axiosPrivate.put(`/user/categories/${categoryId}`, {
         newName: editedName.trim(),
       });
       setErrorMessage("");

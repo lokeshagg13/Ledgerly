@@ -21,7 +21,7 @@ function EditTransactionModal() {
     if (commonErrorMessage) {
       const timeout = setTimeout(() => {
         setCommonErrorMessage("");
-      }, 4000);
+      }, 6000);
       return () => clearTimeout(timeout);
     }
   }, [commonErrorMessage, setCommonErrorMessage]);

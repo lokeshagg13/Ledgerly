@@ -1,16 +1,17 @@
-const Subcategory = require("../models/Subcategory");
-const Category = require("../models/Category");
+const CategoryModel = require("../models/Category");
+const SubcategoryModel = require("../models/Subcategory");
+const TransactionModel = require("../models/Transaction");
 
 // Get all subcategories grouped by category
 exports.getAllGrouped = async (req, res) => {
     try {
         const userId = req.userId;
-        const categories = await Category.find({ userId });
+        const categories = await CategoryModel.find({ userId });
 
         const response = {};
 
         for (let category of categories) {
-            const subcategories = await Subcategory.find({ userId, categoryId: category._id });
+            const subcategories = await SubcategoryModel.find({ userId, categoryId: category._id });
             response[category.name] = subcategories;
         }
 
@@ -26,7 +27,7 @@ exports.getByCategory = async (req, res) => {
         const userId = req.userId;
         const { categoryId } = req.params;
 
-        const subcategories = await Subcategory.find({ userId, categoryId });
+        const subcategories = await SubcategoryModel.find({ userId, categoryId });
 
         return res.status(200).json({ subcategories });
     } catch (error) {
@@ -50,7 +51,7 @@ exports.addSubcategory = async (req, res) => {
             return res.status(400).json({ error: "Subcategory name must be under 20 characters." });
         }
 
-        const exists = await Subcategory.findOne({
+        const exists = await SubcategoryModel.findOne({
             name: { $regex: `^${name.trim()}$`, $options: "i" },
             categoryId, userId
         });
@@ -59,7 +60,7 @@ exports.addSubcategory = async (req, res) => {
             return res.status(409).json({ error: `Subcategory ${exists.name} already exists in this category.` });
         }
 
-        const newSubcategory = await Subcategory.create({
+        const newSubcategory = await SubcategoryModel.create({
             name: trimmedName,
             categoryId,
             userId
@@ -87,7 +88,7 @@ exports.updateSubcategory = async (req, res) => {
             return res.status(400).json({ error: "Subcategory name must be under 20 characters." });
         }
 
-        const updated = await Subcategory.findOneAndUpdate(
+        const updated = await SubcategoryModel.findOneAndUpdate(
             { _id: subcategoryId, userId: req.userId },
             { $set: { name: trimmedName } },
             { new: true }
@@ -108,7 +109,19 @@ exports.deleteSingleSubcategory = async (req, res) => {
     try {
         const { subcategoryId } = req.params;
 
-        const deleted = await Subcategory.findOneAndDelete({
+        // Check if category is used in any transaction
+        const associatedTransaction = await TransactionModel.findOne({
+            subcategoryId,
+            userId: req.userId
+        });
+
+        if (associatedTransaction) {
+            return res.status(400).json({
+                error: "This subcategory is still linked to some transactions. Please update or remove those transactions before deleting it"
+            });
+        }
+
+        const deleted = await SubcategoryModel.findOneAndDelete({
             _id: subcategoryId,
             userId: req.userId
         });
@@ -123,7 +136,6 @@ exports.deleteSingleSubcategory = async (req, res) => {
     }
 };
 
-
 // Delete multiple subcategories
 exports.deleteMultipleSubcategories = async (req, res) => {
     try {
@@ -137,12 +149,30 @@ exports.deleteMultipleSubcategories = async (req, res) => {
             subcategoryIds = [subcategoryIds];
         }
 
-        const deleteResult = await Subcategory.deleteMany({
+        // Check which subcategoryIds are associated with existing transactions
+        const associatedSubcategoryIds = await TransactionModel.distinct("subcategoryId", {
+            userId: req.userId,
+            subcategoryId: { $in: subcategoryIds }
+        });
+
+        if (associatedSubcategoryIds.length > 0) {
+            const associatedSubcategories = await SubcategoryModel.find({
+                _id: { $in: associatedSubcategoryIds }
+            });
+
+            const subcategoryNames = associatedSubcategories.map(s => s.name).join(", ");
+            return res.status(400).json({
+                error: `The following subcategories are still linked to some transactions: ${subcategoryNames}. Please update or remove those transactions first.`
+            });
+        }
+
+
+        const deletedResult = await SubcategoryModel.deleteMany({
             _id: { $in: subcategoryIds },
             userId: req.userId,
         });
 
-        if (deleteResult.deletedCount === 0) {
+        if (deletedResult.deletedCount === 0) {
             return res
                 .status(404)
                 .json({ error: "No matching subcategories found to delete." });
@@ -150,7 +180,7 @@ exports.deleteMultipleSubcategories = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            message: `${deleteResult.deletedCount} subcategory(ies) deleted successfully.`,
+            message: `${deletedResult.deletedCount} subcategory(ies) deleted successfully.`,
         });
     } catch (error) {
         res

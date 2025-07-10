@@ -37,7 +37,7 @@ export const CategoryProvider = ({ children }) => {
     async function fetchCategoriesFromDB() {
         setIsLoadingCategories(true);
         try {
-            const res = await axiosPrivate.get("/user/transactions/categories");
+            const res = await axiosPrivate.get("/user/categories");
             if (res?.data?.categories) setCategories(res.data.categories);
             setSelectedCategories([]);
         } catch (error) {

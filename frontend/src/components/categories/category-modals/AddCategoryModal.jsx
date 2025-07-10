@@ -24,7 +24,7 @@ function AddCategoryModal() {
     if (errorMessage) {
       const timeout = setTimeout(() => {
         setErrorMessage("");
-      }, 4000);
+      }, 6000);
       return () => clearTimeout(timeout);
     }
   }, [errorMessage]);
@@ -68,10 +68,14 @@ function AddCategoryModal() {
       setErrorMessage("Category name is too long (max 20 characters).");
       return;
     }
+    if (newCategoryNameTrimmed.includes(',')) {
+      setErrorMessage("Category name cannnot contain commas.");
+      return;
+    }
 
     setIsAdding(true);
     try {
-      await axiosPrivate.post("/user/transactions/categories", {
+      await axiosPrivate.post("/user/categories", {
         name: newCategoryNameTrimmed,
       });
       setErrorMessage("");
@@ -130,7 +134,7 @@ function AddCategoryModal() {
             </Form.Text>
           </Form.Group>
           {errorMessage && (
-            <div className="text-danger small mt-1">{errorMessage}</div>
+            <div className="error-message">{errorMessage}</div>
           )}
         </Form>
       </Modal.Body>

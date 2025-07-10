@@ -25,7 +25,7 @@ function AddSubcategoryModal({ categoryId }) {
   // For hiding error message after 4 seconds
   useEffect(() => {
     if (errorMessage) {
-      const timeout = setTimeout(() => setErrorMessage(""), 4000);
+      const timeout = setTimeout(() => setErrorMessage(""), 6000);
       return () => clearTimeout(timeout);
     }
   }, [errorMessage]);
@@ -71,7 +71,7 @@ function AddSubcategoryModal({ categoryId }) {
 
     setIsAdding(true);
     try {
-      await axiosPrivate.post("/user/transactions/subcategories", {
+      await axiosPrivate.post("/user/subcategories", {
         categoryId: categoryId,
         name: newSubcategoryNameTrimmed,
       });
@@ -131,7 +131,7 @@ function AddSubcategoryModal({ categoryId }) {
             </Form.Text>
           </Form.Group>
           {errorMessage && (
-            <div className="text-danger small mt-1">{errorMessage}</div>
+            <div className="error-message">{errorMessage}</div>
           )}
         </Form>
       </Modal.Body>

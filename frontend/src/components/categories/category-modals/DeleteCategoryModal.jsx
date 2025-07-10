@@ -14,7 +14,7 @@ function DeleteCategoryModal({ categoryId, categoryName, onClose }) {
     if (errorMessage) {
       const messageTimeout = setTimeout(() => {
         setErrorMessage("");
-      }, 4000);
+      }, 6000);
       return () => clearTimeout(messageTimeout);
     }
   }, [errorMessage]);
@@ -37,7 +37,7 @@ function DeleteCategoryModal({ categoryId, categoryName, onClose }) {
   const handleDeleteCategory = async () => {
     setDeleting(true);
     try {
-      await axiosPrivate.delete(`/user/transactions/categories/${categoryId}`);
+      await axiosPrivate.delete(`/user/categories/${categoryId}`);
       setErrorMessage("");
       closeModal();
       fetchCategoriesFromDB();
@@ -77,12 +77,12 @@ function DeleteCategoryModal({ categoryId, categoryName, onClose }) {
         <p className="mb-2">
           You are about to delete the <strong>{categoryName}</strong> category.
         </p>
-        <p className="text-danger fw-semibold mb-0">
-          This action cannot be undone. All associated subcategories will also
+        <p className="warning-message">
+          Note: This action cannot be undone. All associated subcategories will also
           be removed.
         </p>
         {errorMessage && (
-          <div className="text-danger small mt-2">{errorMessage}</div>
+          <div className="error-message">{errorMessage}</div>
         )}
       </Modal.Body>
       <Modal.Footer>

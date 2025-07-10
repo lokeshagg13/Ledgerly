@@ -22,7 +22,7 @@ function SubcategoryNameEditor({ subcategoryId, subcategoryName, onClose }) {
     if (errorMessage) {
       const timeout = setTimeout(() => {
         setErrorMessage("");
-      }, 4000);
+      }, 6000);
       return () => clearTimeout(timeout);
     }
   }, [errorMessage]);
@@ -63,7 +63,7 @@ function SubcategoryNameEditor({ subcategoryId, subcategoryName, onClose }) {
     try {
       setIsSaving(true);
       await axiosPrivate.put(
-        `/user/transactions/subcategories/${subcategoryId}`,
+        `/user/subcategories/${subcategoryId}`,
         {
           newName: editedName.trim(),
         }

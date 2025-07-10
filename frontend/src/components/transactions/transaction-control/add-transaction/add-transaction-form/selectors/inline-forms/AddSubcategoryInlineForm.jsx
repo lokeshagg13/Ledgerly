@@ -29,7 +29,7 @@ function AddSubcategoryInlineForm() {
     if (message) {
       const timeout = setTimeout(() => {
         setMessage(null);
-      }, 4000);
+      }, 6000);
       return () => clearTimeout(timeout);
     }
   }, [message]);
@@ -88,7 +88,7 @@ function AddSubcategoryInlineForm() {
 
     setIsAdding(true);
     try {
-      await axiosPrivate.post("/user/transactions/subcategories", {
+      await axiosPrivate.post("/user/subcategories", {
         name: newSubcategoryNameTrimmed,
         categoryId: categoryId,
       });

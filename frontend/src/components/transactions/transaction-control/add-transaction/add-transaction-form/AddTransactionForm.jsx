@@ -33,7 +33,7 @@ function AddTransactionForm() {
     if (Object.keys(inputFieldErrors).length > 0) {
       const timeout = setTimeout(() => {
         updateInputFieldErrors({});
-      }, 4000);
+      }, 6000);
       return () => clearTimeout(timeout);
     }
   }, [inputFieldErrors, updateInputFieldErrors]);

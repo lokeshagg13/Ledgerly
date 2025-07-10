@@ -29,7 +29,7 @@ export const SubcategoryProvider = ({ categoryId, children }) => {
     async function fetchSubcategoriesFromDB() {
         setIsLoadingSubcategories(true);
         try {
-            const res = await axiosPrivate.get(`/user/transactions/subcategories/${categoryId}`);
+            const res = await axiosPrivate.get(`/user/subcategories/${categoryId}`);
             if (res?.data?.subcategories) setSubcategories(res.data.subcategories);
             setSelectedSubcategories([]);
         } catch (error) {

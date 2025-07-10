@@ -6,11 +6,11 @@ const router = express.Router();
 
 router.use(verifyJWT);
 
-router.get("/subcategories", subcategoriesController.getAllGrouped);
-router.get("/subcategories/:categoryId", subcategoriesController.getByCategory);
-router.post("/subcategories", subcategoriesController.addSubcategory);
-router.put("/subcategories/:subcategoryId", subcategoriesController.updateSubcategory);
-router.delete("/subcategories/:subcategoryId", subcategoriesController.deleteSingleSubcategory);
-router.delete("/subcategories", subcategoriesController.deleteMultipleSubcategories);
+router.get("/", subcategoriesController.getAllGrouped);
+router.get("/:categoryId", subcategoriesController.getByCategory);
+router.post("/", subcategoriesController.addSubcategory);
+router.put("/:subcategoryId", subcategoriesController.updateSubcategory);
+router.delete("/:subcategoryId", subcategoriesController.deleteSingleSubcategory);
+router.delete("/", subcategoriesController.deleteMultipleSubcategories);
 
 module.exports = router;

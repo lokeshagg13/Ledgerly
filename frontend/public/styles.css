@@ -41,6 +41,23 @@ body {
     transform: translateY(0);
   }
 }
+
+.warning-message {
+  color: #b45309;
+  background-color: #fff7ed;
+  border: 1px solid #fcd34d;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-weight: 600;
+  font-size: 0.925rem;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.875rem;
+  font-weight: 400;
+  padding: 0.25rem;
+}
 /* #endregion */
 
 /* #region - Navbar styles */
@@ -1295,10 +1312,6 @@ body {
 /* #region - Delete Selected Categories Modal */
 #deleteSelectedCategoriesModal .modal-body p {
   font-size: 1.1rem;
-}
-
-#deleteSelectedCategoriesModal .text-danger {
-  font-size: 0.75rem;
 }
 /* #endregion */
 

@@ -42,10 +42,9 @@ app.use("/api/user", userRouter);
 app.use("/api/user", authRouter);
 app.use("/api/user", sessionRouter);
 app.use("/api/user", logoutRouter);
-
 app.use("/api/user/transactions", transactionRouter);
-app.use("/api/user/transactions", categoryRouter);
-app.use("/api/user/transactions", subcategoryRouter);
+app.use("/api/user/categories", categoryRouter);
+app.use("/api/user/subcategories", subcategoryRouter);
 
 
 // Custom Middleware for handling invalid api paths

@@ -25,7 +25,7 @@ function AddCategoryInlineForm() {
     if (message) {
       const timeout = setTimeout(() => {
         setMessage(null);
-      }, 4000);
+      }, 6000);
       return () => clearTimeout(timeout);
     }
   }, [message]);
@@ -76,7 +76,7 @@ function AddCategoryInlineForm() {
 
     setIsAdding(true);
     try {
-      await axiosPrivate.post("/user/transactions/categories", {
+      await axiosPrivate.post("/user/categories", {
         name: newCategoryNameTrimmed,
       });
       setMessage({

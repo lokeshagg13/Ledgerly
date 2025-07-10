@@ -1,5 +1,7 @@
+const mongoose = require('mongoose');
 const CategoryModel = require("../models/Category");
 const SubcategoryModel = require("../models/Subcategory");
+const TransactionModel = require("../models/Transaction");
 
 // Get all categories for the logged-in user
 exports.getCategories = async (req, res) => {
@@ -98,6 +100,18 @@ exports.deleteSingleCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
 
+    // Check if category is used in any transaction
+    const associatedTransaction = await TransactionModel.findOne({
+      categoryId,
+      userId: req.userId
+    });
+
+    if (associatedTransaction) {
+      return res.status(400).json({
+        error: "This category is still linked to some transactions. Please update or remove those transactions before deleting it"
+      });
+    }
+
     const deleted = await CategoryModel.findOneAndDelete({
       _id: categoryId,
       userId: req.userId,
@@ -130,6 +144,24 @@ exports.deleteMultipleCategories = async (req, res) => {
       categoryIds = [categoryIds];
     }
 
+    // Check which categoryIds are associated with existing transactions
+    const associatedCategoryIds = await TransactionModel.distinct(
+      "categoryId", {
+      userId: req.userId,
+      categoryId: { $in: categoryIds }
+    });
+
+    if (associatedCategoryIds.length > 0) {
+      const associatedCategories = await CategoryModel.find({
+        _id: { $in: associatedCategoryIds }
+      });
+
+      const categoryNames = associatedCategories.map(c => c.name).join(", ");
+      return res.status(400).json({
+        error: `The following categories are still linked to some transactions: ${categoryNames}. Please update or remove those transactions first.`
+      });
+    }
+
     const deletedResult = await CategoryModel.deleteMany({
       _id: { $in: categoryIds },
       userId: req.userId,
@@ -145,6 +177,7 @@ exports.deleteMultipleCategories = async (req, res) => {
     });
 
     return res.status(200).json({
+      success: true,
       message: `${deletedResult.deletedCount} category(ies) and their subcategories deleted.`,
     });
   } catch (error) {

@@ -154,7 +154,7 @@ export const TransactionProvider = ({ children }) => {
     async function fetchCategoriesFromDB() {
         setIsLoadingCategories(true);
         try {
-            const res = await axiosPrivate.get("/user/transactions/categories");
+            const res = await axiosPrivate.get("/user/categories");
             if (res?.data?.categories) setCategories(res.data.categories);
         } catch (error) {
             console.log("Error while fetching categories:", error);
@@ -171,7 +171,7 @@ export const TransactionProvider = ({ children }) => {
         }
         setIsLoadingSubcategories(true);
         try {
-            const res = await axiosPrivate.get(`/user/transactions/subcategories/${addTransactionFormData.categoryId}`);
+            const res = await axiosPrivate.get(`/user/subcategories/${addTransactionFormData.categoryId}`);
             const fetched = res.data.subcategories || [];
             setSubcategories(fetched);
             if (fetched.length === 0) {

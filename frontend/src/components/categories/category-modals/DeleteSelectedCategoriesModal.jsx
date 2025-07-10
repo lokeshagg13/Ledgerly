@@ -3,6 +3,7 @@ import { Modal, Button } from "react-bootstrap";
 
 import { axiosPrivate } from "../../../api/axios";
 import CategoryContext from "../../../store/context/categoryContext";
+import { formatCategoryError } from "../../../logic/utils";
 
 function DeleteSelectedCategoriesModal() {
   const {
@@ -19,7 +20,7 @@ function DeleteSelectedCategoriesModal() {
     if (errorMessage) {
       const messageTimeout = setTimeout(() => {
         setErrorMessage("");
-      }, 4000);
+      }, 6000);
       return () => clearTimeout(messageTimeout);
     }
   }, [errorMessage]);
@@ -43,7 +44,7 @@ function DeleteSelectedCategoriesModal() {
   const handleDeleteSelectedCategories = async () => {
     setDeleting(true);
     try {
-      await axiosPrivate.delete("/user/transactions/categories", {
+      await axiosPrivate.delete("/user/categories", {
         data: {
           categoryIds: selectedCategories,
         },
@@ -100,12 +101,14 @@ function DeleteSelectedCategoriesModal() {
             You are about to delete <strong>{selectedCategories.length}</strong>{" "}
             {selectedCategories.length === 1 ? "category" : "categories"}.
           </p>
-          <p className="text-danger fw-semibold mb-0">
-            This action cannot be undone. All associated subcategories will also
-            be removed.
+          <p className="warning-message">
+            Note: This action cannot be undone. All associated subcategories
+            will also be removed.
           </p>
           {errorMessage && (
-            <div className="text-danger small mt-2">{errorMessage}</div>
+            <div className="error-message">
+              {formatCategoryError(errorMessage)}
+            </div>
           )}
         </Modal.Body>
         <Modal.Footer>

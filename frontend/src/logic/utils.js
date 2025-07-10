@@ -32,3 +32,33 @@ export function formatDateForDisplay(dateString) {
     const year = date.getUTCFullYear();
     return `${day}-${month}-${year}`;
 }
+
+export function formatCategoryError(errorMessage) {
+    const regex = /transactions:\s*(.*?)\.\s*Please/;
+    const match = errorMessage.match(regex);
+
+    if (!match) return <>{errorMessage}</>;
+
+    const before = errorMessage.split(match[0])[0];
+    const after = errorMessage.split(match[0])[1];
+    const categories = match[1].split(",");
+
+    const categoryItems = categories.slice(0, 4).map((cat, i) => (
+        <li key={i} style={{ fontWeight: 600 }}>
+            {cat.trim()}
+            {i === 3 && categories.length > 4 ? ", etc." : ""}
+        </li>
+    ));
+
+    return (
+        <>
+            {before}
+            {"transactions: "}
+            <ul style={{ marginBottom: 0 }}>
+                {categoryItems}
+            </ul>
+            {"Please"}
+            {after}
+        </>
+    );
+}

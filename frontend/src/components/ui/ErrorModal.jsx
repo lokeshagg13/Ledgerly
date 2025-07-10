@@ -9,7 +9,7 @@ function ErrorModal({
   return (
     <Modal show={show} onHide={onHide} centered backdrop="static">
       <Modal.Header closeButton>
-        <Modal.Title className="text-danger">{title}</Modal.Title>
+        <Modal.Title className="error-message">{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <p className="mb-0">{message}</p>

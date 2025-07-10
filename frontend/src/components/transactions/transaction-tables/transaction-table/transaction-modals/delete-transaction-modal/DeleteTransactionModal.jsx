@@ -18,7 +18,7 @@ function DeleteTransactionModal({ transactionId, transactionData, onClose }) {
     if (errorMessage) {
       const messageTimeout = setTimeout(() => {
         setErrorMessage("");
-      }, 4000);
+      }, 6000);
       return () => clearTimeout(messageTimeout);
     }
   }, [errorMessage]);
@@ -105,11 +105,11 @@ function DeleteTransactionModal({ transactionId, transactionData, onClose }) {
             </table>
           </div>
         </div>
-        <p className="text-danger fw-semibold mb-0">
-          This action cannot be undone.
+        <p className="warning-message">
+          Note: This action cannot be undone.
         </p>
         {errorMessage && (
-          <div className="text-danger small mt-2">{errorMessage}</div>
+          <div className="error-message">{errorMessage}</div>
         )}
       </Modal.Body>
       <Modal.Footer>
