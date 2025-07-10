@@ -12,7 +12,6 @@ function PaginationControl({ totalPages, currentPage, onPageChange }) {
       key={number}
       active={number === currentPage}
       onClick={() => handlePageChange(number)}
-      className="pagination-item"
     >
       {number}
     </Pagination.Item>
@@ -51,25 +50,25 @@ function PaginationControl({ totalPages, currentPage, onPageChange }) {
           <Pagination.First
             onClick={() => handlePageChange(1)}
             disabled={currentPage === 1}
-            className="pagination-nav"
+            className="page-nav"
           />
         )}
         <Pagination.Prev
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="pagination-nav"
+          className="page-nav"
         />
         {generatePageItems()}
         <Pagination.Next
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="pagination-nav"
+          className="page-nav"
         />
         {totalPages > 5 && (
           <Pagination.Last
             onClick={() => handlePageChange(totalPages)}
             disabled={currentPage === totalPages}
-            className="pagination-nav"
+            className="page-nav"
           />
         )}
       </Pagination>

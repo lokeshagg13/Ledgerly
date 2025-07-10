@@ -472,32 +472,32 @@ body {
 /* #endregion */
 
 /* #region - Add transaction form */
-.transaction-form .form-control,
-.transaction-form .form-select {
+.add-transaction-form .form-control,
+.add-transaction-form .form-select {
   font-size: 0.95rem;
   padding: 0.5rem 0.75rem;
 }
 
-.transaction-form .date-input.is-invalid::-webkit-calendar-picker-indicator {
+.add-transaction-form
+  .date-input.is-invalid::-webkit-calendar-picker-indicator {
   position: relative;
   z-index: 2;
 }
 
-/* Optional: align better in Firefox too */
-.transaction-form .date-input.is-invalid {
+.add-transaction-form .date-input.is-invalid {
   padding-right: 2rem !important;
 }
 
-.transaction-form .form-label {
+.add-transaction-form .form-label {
   font-weight: 500;
 }
 
-.transaction-form .input-group .btn {
+.add-transaction-form .input-group .btn {
   padding: 0.25rem 0.5rem;
   font-size: 0.9rem;
 }
 
-.transaction-form .btn-disabled {
+.add-transaction-form .btn-disabled {
   opacity: 0.4 !important;
   border-color: #d1d5db !important;
   background-color: #f3f4f6 !important;
@@ -607,6 +607,14 @@ body {
   transition: background-color 0.3s ease;
 }
 
+.transaction-section-dropdown {
+  transition: transform 0.5s ease;
+}
+
+.transaction-section-dropdown.up {
+  transform: rotate(-180deg);
+}
+
 .transaction-section-header:hover {
   background-color: #2c2f33;
 }
@@ -621,28 +629,6 @@ body {
 /* #region - Transaction table */
 .transaction-table-container {
   position: relative;
-}
-
-.transaction-table-scroller-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 1rem 0.4rem 0 0.4rem;
-}
-
-.transaction-table-scroll-btn {
-  background-color: #1d1f21;
-  border: none;
-  border-radius: 4px;
-  width: 32px;
-  height: 32px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  opacity: 0.8;
-  transition: background-color 0.2s;
-}
-
-.transaction-table-scroll-btn:hover {
-  background-color: #2c2f33;
 }
 
 .transaction-table-wrapper {
@@ -675,29 +661,11 @@ body {
   color: white;
 }
 
-.transaction-table th,
-.transaction-table td {
+.transaction-table th {
   text-align: center;
   vertical-align: middle;
   border: 1px solid black;
-}
-
-.transaction-table th {
   padding: 0.75rem;
-}
-
-.transaction-table td {
-  padding: 0 0.75rem;
-}
-
-.transaction-table td:nth-child(2) {
-  text-align: right;
-}
-
-.transaction-table td:nth-child(3) {
-  max-width: 250px;
-  word-wrap: break-word;
-  text-align: left;
 }
 
 .transaction-table-loading,
@@ -720,6 +688,157 @@ body {
 }
 /* #endregion */
 
+/* #region - Transaction row */
+.transaction-table td {
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid black;
+  padding: 0 0.75rem;
+}
+
+.transaction-table td:nth-child(2) {
+  text-align: right;
+}
+
+.transaction-table td:nth-child(3) {
+  max-width: 250px;
+  word-wrap: break-word;
+  text-align: left;
+}
+/* #endregion */
+
+/* #region - Delete transaction data row */
+#deleteTransactionModal .modal-content {
+  font-family: "Segoe UI", sans-serif;
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  background-color: #ffffff;
+  max-width: 650px;
+  margin: auto;
+}
+
+#deleteTransactionModal .modal-header {
+  padding: 1rem 1.5rem;
+}
+
+#deleteTransactionModal .modal-body {
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+}
+
+#deleteTransactionModal .modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.delete-transaction-data-wrapper {
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 1rem 0;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem;
+}
+
+.delete-transaction-data-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.delete-transaction-data-wrapper::-webkit-scrollbar-thumb {
+  background-color: #cbd5e0;
+  border-radius: 10px;
+}
+
+.delete-transaction-table {
+  width: 100%;
+  min-width: max-content;
+  border-collapse: collapse;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 0.95rem;
+  border: 1px solid black;
+}
+
+.delete-transaction-table thead {
+  background-color: #1d1f21;
+  color: white;
+}
+
+.delete-transaction-table th {
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid white;
+  padding: 0.1rem 0.5rem;
+}
+
+.delete-transaction-table td {
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid black;
+  padding: 0 0.75rem;
+}
+
+.delete-transaction-table td:nth-child(2) {
+  text-align: right;
+}
+
+.delete-transaction-table td:nth-child(3) {
+  max-width: 250px;
+  word-wrap: break-word;
+  text-align: left;
+}
+/* #endregion */
+
+/* #region - Transaction table scroller */
+.transaction-table-scroller-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0.4rem 0 0.4rem;
+}
+
+.transaction-table-scroll-btn {
+  background-color: #1d1f21;
+  border: none;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 4px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: background-color 0.2s, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.transaction-table-scroll-btn.left svg {
+  transform: rotate(90deg);
+}
+
+.transaction-table-scroll-btn.right svg {
+  transform: rotate(-90deg);
+}
+
+.transaction-table-scroll-btn:hover {
+  background-color: #2c2f33;
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+.transaction-table-scroll-btn:disabled,
+.transaction-table-scroll-btn.disabled {
+  background-color: #a1a1aa;
+  cursor: not-allowed;
+  opacity: 0.4;
+  box-shadow: none;
+  transform: none;
+}
+/* #endregion */
+
 /* #region - Transaction table pagination control */
 .pagination-wrapper {
   display: flex;
@@ -735,14 +854,23 @@ body {
   margin-bottom: 0;
 }
 
+.pagination .page-item {
+  width: 2rem;
+  height: 2rem;
+}
+
 .pagination .page-link {
   background-color: #ffffff;
   color: #1d1f21;
   border: 1px solid #d1d5db;
   transition: all 0.2s ease-in-out;
   border-radius: 6px;
-  font-size: 0.95rem;
-  padding: 0.35rem 0.75rem;
+  font-size: 1rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .pagination .page-link:hover {
@@ -758,9 +886,9 @@ body {
   font-weight: 600;
 }
 
-.pagination-nav .page-link {
+.pagination .page-nav .page-link {
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 1.4rem;
 }
 
 .pagination .page-item.disabled .page-link {
@@ -774,6 +902,52 @@ body {
 .pagination .page-link:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(29, 31, 33, 0.2);
+}
+/* #endregion */
+
+/* #region - Edit transaction modal */
+.edit-transaction-modal .error-message {
+  color: #dc3545;
+  margin-top: 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+/* #endregion */
+
+/* #region - Edit transaction form */
+.edit-transaction-form .form-control,
+.edit-transaction-form .form-select {
+  font-size: 0.95rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.edit-transaction-form
+  .date-input.is-invalid::-webkit-calendar-picker-indicator {
+  position: relative;
+  z-index: 2;
+}
+
+.edit-transaction-form .date-input.is-invalid {
+  padding-right: 2rem !important;
+}
+
+.edit-transaction-form .form-label {
+  font-weight: 500;
+}
+
+.edit-transaction-form .input-group .btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+}
+
+.edit-transaction-form .btn-disabled {
+  opacity: 0.4 !important;
+  border-color: #d1d5db !important;
+  background-color: #f3f4f6 !important;
+  cursor: not-allowed;
+  box-shadow: none;
+  pointer-events: auto;
 }
 /* #endregion */
 

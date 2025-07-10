@@ -12,7 +12,7 @@ function SubcategoryName({ subcategoryId, subcategoryName }) {
     handleCloseContextMenus,
   } = useContext(ContextMenuContext);
   const [isEditorOn, setIsEditorOn] = useState(false);
-  const [showDeleteSubcategoryModal, setShowDeleteSubcategoryModal] =
+  const [isDeleteSubcategoryModalVisible, setIsDeleteSubcategoryModalVisible] =
     useState(false);
 
   const isContextMenuVisible = checkIfContextMenuVisible(
@@ -22,7 +22,7 @@ function SubcategoryName({ subcategoryId, subcategoryName }) {
   const anchorRef = useRef(null);
 
   const handleRemoveAction = () => {
-    setShowDeleteSubcategoryModal(true);
+    setIsDeleteSubcategoryModalVisible(true);
     handleCloseContextMenus();
   };
 
@@ -66,11 +66,11 @@ function SubcategoryName({ subcategoryId, subcategoryName }) {
               onRemove={handleRemoveAction}
             />
           )}
-          {showDeleteSubcategoryModal && (
+          {isDeleteSubcategoryModalVisible && (
             <DeleteSubcategoryModal
               subcategoryId={subcategoryId}
               subcategoryName={subcategoryName}
-              onClose={() => setShowDeleteSubcategoryModal(false)}
+              onClose={() => setIsDeleteSubcategoryModalVisible(false)}
             />
           )}
         </>

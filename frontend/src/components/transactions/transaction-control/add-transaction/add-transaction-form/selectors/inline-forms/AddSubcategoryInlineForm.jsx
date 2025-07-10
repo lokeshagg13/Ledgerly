@@ -8,8 +8,8 @@ import CancelIcon from "../../../../../../ui/icons/CancelIcon";
 function AddSubcategoryInlineForm() {
   const newSubcategoryNameRef = useRef();
   const {
-    transactionFormData,
-    showAddSubcategoryForm,
+    addTransactionFormData,
+    isAddSubcategoryFormVisible,
     fetchSubcategoriesFromDB,
     closeAddSubcategoryForm,
   } = useContext(TransactionContext);
@@ -19,10 +19,10 @@ function AddSubcategoryInlineForm() {
 
   // Focus input field on mount
   useEffect(() => {
-    if (showAddSubcategoryForm) {
+    if (isAddSubcategoryFormVisible) {
       newSubcategoryNameRef.current?.focus();
     }
-  }, [showAddSubcategoryForm]);
+  }, [isAddSubcategoryFormVisible]);
 
   // For hiding error message after 4 seconds
   useEffect(() => {
@@ -43,7 +43,7 @@ function AddSubcategoryInlineForm() {
 
   // Keyboard support for closing modal and submitting
   useEffect(() => {
-    if (!showAddSubcategoryForm) return;
+    if (!isAddSubcategoryFormVisible) return;
     const handleKeyDown = (e) => {
       if (
         e.key === "Enter" &&
@@ -59,10 +59,10 @@ function AddSubcategoryInlineForm() {
       document.removeEventListener("keydown", handleKeyDown);
     };
     // eslint-disable-next-line
-  }, [showAddSubcategoryForm, isAdding]);
+  }, [isAddSubcategoryFormVisible, isAdding]);
 
   const handleAddSubcategory = async () => {
-    const categoryId = transactionFormData.category;
+    const { categoryId } = addTransactionFormData;
     const newSubcategoryNameTrimmed = newSubcategoryName.trim();
     if (!categoryId) {
       setMessage({
@@ -123,7 +123,7 @@ function AddSubcategoryInlineForm() {
     closeAddSubcategoryForm();
   };
 
-  if (!showAddSubcategoryForm) return null;
+  if (!isAddSubcategoryFormVisible) return null;
 
   return (
     <div className="add-subcategory-inline-form">

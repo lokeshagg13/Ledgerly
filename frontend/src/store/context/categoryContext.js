@@ -5,9 +5,9 @@ const CategoryContext = createContext({
     categories: [],
     selectedCategories: [],
     isLoadingCategories: false,
-    showAddCategoryModal: false,
-    showDeleteCategoryModal: false,
-    showDeleteSelectedCategoriesModal: false,
+    isAddCategoryModalVisible: false,
+    isDeleteCategoryModalVisible: false,
+    isDeleteSelectedCategoriesModalVisible: false,
     toggleCategorySelection: (categoryId) => { },
     fetchCategoriesFromDB: () => { },
     openAddCategoryModal: () => { },
@@ -22,9 +22,9 @@ export const CategoryProvider = ({ children }) => {
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [isLoadingCategories, setIsLoadingCategories] = useState(false);
-    const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
-    const [showDeleteCategoryModal, setShowDeleteCategoryModal] = useState(false);
-    const [showDeleteSelectedCategoriesModal, setShowDeleteSelectedCategoriesModal] = useState(false);
+    const [isAddCategoryModalVisible, setIsAddCategoryModalVisible] = useState(false);
+    const [isDeleteCategoryModalVisible, setIsDeleteCategoryModalVisible] = useState(false);
+    const [isDeleteSelectedCategoriesModalVisible, setIsDeleteSelectedCategoriesModalVisible] = useState(false);
 
     function toggleCategorySelection(categoryId) {
         setSelectedCategories((prev) =>
@@ -48,36 +48,36 @@ export const CategoryProvider = ({ children }) => {
     }
 
     function openAddCategoryModal() {
-        setShowAddCategoryModal(true);
+        setIsAddCategoryModalVisible(true);
     }
 
     function closeAddCategoryModal() {
-        setShowAddCategoryModal(false);
+        setIsAddCategoryModalVisible(false);
     }
 
     function openDeleteCategoryModal() {
-        setShowDeleteCategoryModal(true);
+        setIsDeleteCategoryModalVisible(true);
     }
 
     function closeDeleteCategoryModal() {
-        setShowDeleteCategoryModal(false);
+        setIsDeleteCategoryModalVisible(false);
     }
 
     function openDeleteSelectedCategoriesModal() {
-        setShowDeleteSelectedCategoriesModal(true);
+        setIsDeleteSelectedCategoriesModalVisible(true);
     }
 
     function closeDeleteSelectedCategoriesModal() {
-        setShowDeleteSelectedCategoriesModal(false);
+        setIsDeleteSelectedCategoriesModalVisible(false);
     }
 
     const currentCategoryContext = {
         categories,
         selectedCategories,
         isLoadingCategories,
-        showAddCategoryModal,
-        showDeleteCategoryModal,
-        showDeleteSelectedCategoriesModal,
+        isAddCategoryModalVisible,
+        isDeleteCategoryModalVisible,
+        isDeleteSelectedCategoriesModalVisible,
         toggleCategorySelection,
         fetchCategoriesFromDB,
         openAddCategoryModal,

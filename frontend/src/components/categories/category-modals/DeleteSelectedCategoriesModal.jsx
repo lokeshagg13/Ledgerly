@@ -7,7 +7,7 @@ import CategoryContext from "../../../store/context/categoryContext";
 function DeleteSelectedCategoriesModal() {
   const {
     selectedCategories,
-    showDeleteSelectedCategoriesModal,
+    isDeleteSelectedCategoriesModalVisible,
     fetchCategoriesFromDB,
     closeDeleteSelectedCategoriesModal,
   } = useContext(CategoryContext);
@@ -27,7 +27,7 @@ function DeleteSelectedCategoriesModal() {
   // Keyboard handling
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (!showDeleteSelectedCategoriesModal || deleting) return;
+      if (!isDeleteSelectedCategoriesModalVisible || deleting) return;
       if (e.key === "Escape") {
         e.preventDefault();
         handleCancel();
@@ -38,7 +38,7 @@ function DeleteSelectedCategoriesModal() {
       document.removeEventListener("keydown", handleKeyDown);
     };
     // eslint-disable-next-line
-  }, [showDeleteSelectedCategoriesModal, selectedCategories, deleting]);
+  }, [isDeleteSelectedCategoriesModalVisible, selectedCategories, deleting]);
 
   const handleDeleteSelectedCategories = async () => {
     setDeleting(true);
@@ -77,7 +77,7 @@ function DeleteSelectedCategoriesModal() {
   if (
     !selectedCategories ||
     selectedCategories.length === 0 ||
-    !showDeleteSelectedCategoriesModal
+    !isDeleteSelectedCategoriesModalVisible
   ) {
     return null;
   }
@@ -86,7 +86,7 @@ function DeleteSelectedCategoriesModal() {
     <>
       <Modal
         id="deleteSelectedCategoriesModal"
-        show={showDeleteSelectedCategoriesModal}
+        show={isDeleteSelectedCategoriesModalVisible}
         onHide={handleCancel}
         centered
         backdrop={deleting ? "static" : true}

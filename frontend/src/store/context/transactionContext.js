@@ -1,23 +1,30 @@
 import { createContext, useState } from "react";
 import { axiosPrivate } from "../../api/axios";
+import { formatDateForCalendarInput } from "../../logic/utils";
 
 const TransactionContext = createContext({
     transactions: [],
     isLoadingTransactions: false,
-    showAddTransactionModal: false,
-    transactionFormData: {},
+    isAddTransactionModalVisible: false,
+    addTransactionFormData: {},
+    isEditTransactionModalVisible: false,
+    editTransactionFormData: {},
     categories: [],
     isLoadingCategories: false,
     subcategories: [],
     isLoadingSubcategories: false,
-    showAddCategoryForm: false,
-    showAddSubcategoryForm: false,
+    isAddCategoryFormVisible: false,
+    isAddSubcategoryFormVisible: false,
     inputFieldErrors: {},
     fetchTransactionsFromDB: () => { },
     openAddTransactionModal: () => { },
     closeAddTransactionModal: () => { },
-    resetTransactionFormData: () => { },
-    updateTransactionFormData: (key, value) => { },
+    resetAddTransactionFormData: () => { },
+    modifyAddTransactionFormData: (key, value) => { },
+    openEditTransactionModal: (transaction) => { },
+    closeEditTransactionModal: () => { },
+    resetEditTransactionFormData: () => { },
+    modifyEditTransactionFormData: (key, value) => { },
     openAddCategoryForm: () => { },
     closeAddCategoryForm: () => { },
     openAddSubcategoryForm: () => { },
@@ -31,21 +38,30 @@ const TransactionContext = createContext({
 export const TransactionProvider = ({ children }) => {
     const [transactions, setTransactions] = useState([]);
     const [isLoadingTransactions, setIsLoadingTransactions] = useState(false);
-    const [showAddTransactionModal, setShowAddTransactionModal] = useState(false);
-    const [transactionFormData, setTransactionFormData] = useState({
+    const [isAddTransactionModalVisible, setIsAddTransactionModalVisible] = useState(false);
+    const [addTransactionFormData, setAddTransactionFormData] = useState({
         type: "debit",
         amount: "",
         date: "",
         remarks: "",
-        category: "",
-        subcategory: "",
+        categoryId: "",
+        subcategoryId: "",
+    });
+    const [isEditTransactionModalVisible, setIsEditTransactionModalVisible] = useState(false);
+    const [editTransactionFormData, setEditTransactionFormData] = useState({
+        type: "debit",
+        amount: "",
+        date: "",
+        remarks: "",
+        categoryId: "",
+        subcategoryId: "",
     });
     const [categories, setCategories] = useState([]);
     const [isLoadingCategories, setIsLoadingCategories] = useState(false);
     const [subcategories, setSubcategories] = useState([]);
     const [isLoadingSubcategories, setIsLoadingSubcategories] = useState(false);
-    const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
-    const [showAddSubcategoryForm, setShowAddSubcategoryForm] = useState(false);
+    const [isAddCategoryFormVisible, setIsAddCategoryFormVisible] = useState(false);
+    const [isAddSubcategoryFormVisible, setIsAddSubcategoryFormVisible] = useState(false);
     const [inputFieldErrors, setInputFieldErrors] = useState({});
 
     async function fetchTransactionsFromDB() {
@@ -61,43 +77,78 @@ export const TransactionProvider = ({ children }) => {
     }
 
     function openAddTransactionModal() {
-        setShowAddTransactionModal(true);
+        setIsAddTransactionModalVisible(true);
     }
 
     function closeAddTransactionModal() {
-        setShowAddTransactionModal(false);
         setInputFieldErrors({});
+        setIsAddTransactionModalVisible(false);
     }
 
-    function resetTransactionFormData() {
-        setTransactionFormData({
+    function resetAddTransactionFormData() {
+        setAddTransactionFormData({
             type: "debit",
             amount: "",
             date: "",
             remarks: "",
-            category: "",
-            subcategory: "",
+            categoryId: "",
+            subcategoryId: "",
         });
     }
 
-    function updateTransactionFormData(key, value) {
-        setTransactionFormData((prev) => ({ ...prev, [key]: value }));
+    function modifyAddTransactionFormData(key, value) {
+        setAddTransactionFormData((prev) => ({ ...prev, [key]: value }));
+    }
+
+    function openEditTransactionModal(transaction) {
+        setEditTransactionFormData({
+            _id: transaction._id,
+            type: transaction.type,
+            amount: transaction.amount,
+            date: formatDateForCalendarInput(transaction.date),
+            remarks: transaction.remarks,
+            categoryId: transaction.categoryId,
+            subcategoryId: transaction.subcategoryId,
+        });
+        setIsEditTransactionModalVisible(true);
+    }
+
+    function closeEditTransactionModal() {
+        resetEditTransactionFormData();
+        setInputFieldErrors({});
+        setIsEditTransactionModalVisible(false);
+    }
+
+    function resetEditTransactionFormData() {
+        setEditTransactionFormData({
+            _id: "",
+            type: "debit",
+            amount: "",
+            date: "",
+            remarks: "",
+            categoryId: "",
+            subcategoryId: "",
+        });
+    }
+
+    function modifyEditTransactionFormData(key, value) {
+        setEditTransactionFormData((prev) => ({ ...prev, [key]: value }));
     }
 
     function openAddCategoryForm() {
-        setShowAddCategoryForm(true);
+        setIsAddCategoryFormVisible(true);
     }
 
     function closeAddCategoryForm() {
-        setShowAddCategoryForm(false);
+        setIsAddCategoryFormVisible(false);
     }
 
     function openAddSubcategoryForm() {
-        setShowAddSubcategoryForm(true);
+        setIsAddSubcategoryFormVisible(true);
     }
 
     function closeAddSubcategoryForm() {
-        setShowAddSubcategoryForm(false);
+        setIsAddSubcategoryFormVisible(false);
     }
 
     async function fetchCategoriesFromDB() {
@@ -113,18 +164,18 @@ export const TransactionProvider = ({ children }) => {
     };
 
     async function fetchSubcategoriesFromDB() {
-        if (!transactionFormData.category) {
+        if (!addTransactionFormData.categoryId) {
             setSubcategories([]);
-            updateTransactionFormData("subcategory", null);
+            modifyAddTransactionFormData("subcategory", null);
             return;
         }
         setIsLoadingSubcategories(true);
         try {
-            const res = await axiosPrivate.get(`/user/transactions/subcategories/${transactionFormData.category}`);
+            const res = await axiosPrivate.get(`/user/transactions/subcategories/${addTransactionFormData.categoryId}`);
             const fetched = res.data.subcategories || [];
             setSubcategories(fetched);
             if (fetched.length === 0) {
-                updateTransactionFormData("subcategory", null);
+                modifyAddTransactionFormData("subcategory", null);
             }
         } catch (error) {
             console.log("Error while fetching subcategories:", error);
@@ -144,20 +195,26 @@ export const TransactionProvider = ({ children }) => {
     const currentTransactionContext = {
         transactions,
         isLoadingTransactions,
-        showAddTransactionModal,
-        transactionFormData,
+        isAddTransactionModalVisible,
+        addTransactionFormData,
+        isEditTransactionModalVisible,
+        editTransactionFormData,
         categories,
         isLoadingCategories,
         subcategories,
         isLoadingSubcategories,
-        showAddCategoryForm,
-        showAddSubcategoryForm,
+        isAddCategoryFormVisible,
+        isAddSubcategoryFormVisible,
         inputFieldErrors,
         fetchTransactionsFromDB,
         openAddTransactionModal,
         closeAddTransactionModal,
-        resetTransactionFormData,
-        updateTransactionFormData,
+        resetAddTransactionFormData,
+        modifyAddTransactionFormData,
+        openEditTransactionModal,
+        closeEditTransactionModal,
+        resetEditTransactionFormData,
+        modifyEditTransactionFormData,
         openAddCategoryForm,
         closeAddCategoryForm,
         openAddSubcategoryForm,

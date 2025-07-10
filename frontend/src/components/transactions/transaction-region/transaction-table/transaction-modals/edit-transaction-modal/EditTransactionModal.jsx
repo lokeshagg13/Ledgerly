@@ -1,19 +1,19 @@
 import { useContext, useEffect, useState } from "react";
 import { Modal, Button } from "react-bootstrap";
-import { axiosPrivate } from "../../../../api/axios";
-import TransactionContext from "../../../../store/context/transactionContext";
-import AddTransactionForm from "./add-transaction-form/AddTransactionForm";
+import { axiosPrivate } from "../../../../../../api/axios";
+import TransactionContext from "../../../../../../store/context/transactionContext";
+import EditTransactionForm from "./edit-transaction-form/EditTransactionForm";
 
-function AddTransactionModal() {
+function EditTransactionModal() {
   const {
-    isAddTransactionModalVisible,
-    addTransactionFormData,
+    isEditTransactionModalVisible,
+    editTransactionFormData,
     fetchTransactionsFromDB,
-    closeAddTransactionModal,
-    resetAddTransactionFormData,
+    closeEditTransactionModal,
+    resetEditTransactionFormData,
     updateInputFieldErrors,
   } = useContext(TransactionContext);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [commonErrorMessage, setCommonErrorMessage] = useState("");
 
   // For hiding error message after 4 seconds
@@ -28,14 +28,10 @@ function AddTransactionModal() {
 
   // Keyboard support for closing modal and submitting
   useEffect(() => {
-    if (!isAddTransactionModalVisible) return;
+    if (!isEditTransactionModalVisible) return;
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
-        closeAddTransactionModal();
-      }
-      if (e.key === "Enter" && !isSubmitting) {
-        e.preventDefault();
-        handleSubmit();
+        closeEditTransactionModal();
       }
     };
     document.addEventListener("keydown", handleKeyDown);
@@ -43,10 +39,10 @@ function AddTransactionModal() {
       document.removeEventListener("keydown", handleKeyDown);
     };
     // eslint-disable-next-line
-  }, [isAddTransactionModalVisible, isSubmitting, closeAddTransactionModal]);
+  }, [isEditTransactionModalVisible, isUpdating, closeEditTransactionModal]);
 
   const validateTransactionFormData = () => {
-    const { amount, date, type, remarks, categoryId } = addTransactionFormData;
+    const { amount, date, type, remarks, categoryId } = editTransactionFormData;
     const errors = {};
 
     // Validate amount field
@@ -84,53 +80,58 @@ function AddTransactionModal() {
   };
 
   const handleSubmit = async () => {
-    if (isSubmitting) return;
+    if (isUpdating) return;
     const errors = validateTransactionFormData();
     updateInputFieldErrors(errors);
     if (Object.keys(errors).length > 0) return;
 
     const { amount, date, type, remarks, categoryId, subcategoryId } =
-      addTransactionFormData;
-    setIsSubmitting(true);
+      editTransactionFormData;
+    setIsUpdating(true);
     try {
-      await axiosPrivate.post("/user/transactions", {
-        type,
-        amount,
-        date,
-        remarks,
-        categoryId,
-        subcategoryId,
-      });
-      resetAddTransactionFormData();
-      closeAddTransactionModal();
+      await axiosPrivate.put(
+        `/user/transactions/${editTransactionFormData._id}`,
+        {
+          type,
+          amount,
+          date,
+          remarks,
+          categoryId,
+          subcategoryId,
+        }
+      );
+      resetEditTransactionFormData();
+      closeEditTransactionModal();
       fetchTransactionsFromDB();
     } catch (error) {
-      console.log("Error while adding transaction:", error);
+      console.log("Error while edit transaction:", error);
       if (!error?.response) {
-        setCommonErrorMessage("Failed to add transaction: No server response.");
+        setCommonErrorMessage(
+          "Failed to edit transaction: No server response."
+        );
       } else {
         setCommonErrorMessage(
-          error?.response?.data?.error || "Failed to add transaction."
+          error?.response?.data?.error || "Failed to edit transaction."
         );
       }
     } finally {
-      setIsSubmitting(false);
+      setIsUpdating(false);
     }
   };
 
   return (
     <Modal
-      show={isAddTransactionModalVisible}
-      onHide={closeAddTransactionModal}
+      show={isEditTransactionModalVisible}
+      onHide={closeEditTransactionModal}
       centered
       size="lg"
-      className="add-transaction-modal"
+      className="edit-transaction-modal"
     >
       <Modal.Header closeButton>
-        <Modal.Title>Add New Transaction</Modal.Title>
+        <Modal.Title>Update Transaction</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <AddTransactionForm />
+        <EditTransactionForm />
         {commonErrorMessage && (
           <div className="error-message" aria-live="assertive">
             {commonErrorMessage}
@@ -141,22 +142,22 @@ function AddTransactionModal() {
         <Button
           type="button"
           variant="secondary"
-          onClick={closeAddTransactionModal}
+          onClick={closeEditTransactionModal}
         >
           Cancel
         </Button>
         <Button type="button" variant="primary" onClick={handleSubmit}>
-          {isSubmitting ? (
+          {isUpdating ? (
             <>
               <span
                 className="spinner-border spinner-border-sm me-2"
                 role="status"
                 aria-hidden="true"
               ></span>
-              Adding...
+              Updating...
             </>
           ) : (
-            "Add Transaction"
+            "Update Transaction"
           )}
         </Button>
       </Modal.Footer>
@@ -164,4 +165,4 @@ function AddTransactionModal() {
   );
 }
 
-export default AddTransactionModal;
+export default EditTransactionModal;

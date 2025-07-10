@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
 import TransactionContext from "../../../store/context/transactionContext";
 import TransactionTable from "./transaction-table/TransactionTable";
+import CaretDownIcon from "../../ui/icons/CaretDownIcon";
 
 function TransactionRegion() {
   const { transactions, isLoadingTransactions, fetchTransactionsFromDB } =
@@ -38,6 +39,11 @@ function TransactionRegion() {
           onClick={() => setShowDebit(!showDebit)}
         >
           <h4>Debit Transactions</h4>
+          <div
+            className={`transaction-section-dropdown ${showDebit ? "up" : ""}`}
+          >
+            <CaretDownIcon fill="white" width="1.4em" height="1.4em" />
+          </div>
         </div>
         {showDebit && <TransactionTable type="debit" />}
       </div>
@@ -48,6 +54,11 @@ function TransactionRegion() {
           onClick={() => setShowCredit(!showCredit)}
         >
           <h4>Credit Transactions</h4>
+          <div
+            className={`transaction-section-dropdown ${showCredit ? "up" : ""}`}
+          >
+            <CaretDownIcon fill="white" width="1.4em" height="1.4em" />
+          </div>
         </div>
         {showCredit && <TransactionTable type="credit" />}
       </div>

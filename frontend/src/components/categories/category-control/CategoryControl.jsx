@@ -7,8 +7,8 @@ import DeleteSelectedCategoriesModal from "../category-modals/DeleteSelectedCate
 function CategoryControl() {
   const {
     isLoadingCategories,
-    showAddCategoryModal,
-    showDeleteSelectedCategoriesModal,
+    isAddCategoryModalVisible,
+    isDeleteSelectedCategoriesModalVisible,
     selectedCategories,
     openAddCategoryModal,
     openDeleteSelectedCategoriesModal,
@@ -56,8 +56,8 @@ function CategoryControl() {
           "Refresh Categories"
         )}
       </Button>
-      {showAddCategoryModal && <AddCategoryModal />}
-      {showDeleteSelectedCategoriesModal && <DeleteSelectedCategoriesModal />}
+      {isAddCategoryModalVisible && <AddCategoryModal />}
+      {isDeleteSelectedCategoriesModalVisible && <DeleteSelectedCategoriesModal />}
     </div>
   );
 }

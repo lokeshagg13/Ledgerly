@@ -4,7 +4,7 @@ import AddSubcategoryModal from "../subcategory-modals/AddSubcategoryModal";
 import SubcategoryContext from "../../../../../store/context/subcategoryContext";
 
 function CategoryRowControl({ categoryId, categoryName }) {
-  const { showAddSubcategoryModal, openAddSubcategoryModal } =
+  const { isAddSubcategoryModalVisible, openAddSubcategoryModal } =
     useContext(SubcategoryContext);
   return (
     <div className="category-row-controls">
@@ -25,7 +25,7 @@ function CategoryRowControl({ categoryId, categoryName }) {
           Add Subcategory
         </Button>
       </OverlayTrigger>
-      {showAddSubcategoryModal && (
+      {isAddSubcategoryModalVisible && (
         <AddSubcategoryModal
           categoryId={categoryId}
           categoryName={categoryName}

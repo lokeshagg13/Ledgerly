@@ -7,7 +7,7 @@ import AddTransactionModal from "./add-transaction/AddTransactionModal";
 function TransactionControl() {
   const {
     isLoadingTransactions,
-    showAddTransactionModal,
+    isAddTransactionModalVisible,
     openAddTransactionModal,
     fetchTransactionsFromDB,
   } = useContext(TransactionContext);
@@ -45,7 +45,7 @@ function TransactionControl() {
         )}
       </Button>
 
-      {showAddTransactionModal && <AddTransactionModal />}
+      {isAddTransactionModalVisible && <AddTransactionModal />}
     </div>
   );
 }

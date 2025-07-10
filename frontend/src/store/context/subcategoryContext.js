@@ -5,7 +5,7 @@ const SubcategoryContext = createContext({
     subcategories: [],
     selectedSubcategories: [],
     isLoadingSubcategories: false,
-    showAddSubcategoryModal: false,
+    isAddSubcategoryModalVisible: false,
     toggleSubcategorySelection: (subcategoryId) => { },
     fetchSubcategoriesFromDB: () => { },
     openAddSubcategoryModal: () => { },
@@ -16,7 +16,7 @@ export const SubcategoryProvider = ({ categoryId, children }) => {
     const [subcategories, setSubcategories] = useState([]);
     const [selectedSubcategories, setSelectedSubcategories] = useState([]);
     const [isLoadingSubcategories, setIsLoadingSubcategories] = useState(false);
-    const [showAddSubcategoryModal, setShowAddSubcategoryModal] = useState(false);
+    const [isAddSubcategoryModalVisible, setIsAddSubcategoryModalVisible] = useState(false);
 
     function toggleSubcategorySelection(subcategoryId) {
         setSelectedSubcategories((prev) =>
@@ -40,18 +40,18 @@ export const SubcategoryProvider = ({ categoryId, children }) => {
     }
 
     function openAddSubcategoryModal() {
-        setShowAddSubcategoryModal(true);
+        setIsAddSubcategoryModalVisible(true);
     }
 
     function closeAddSubcategoryModal() {
-        setShowAddSubcategoryModal(false);
+        setIsAddSubcategoryModalVisible(false);
     }
 
     const currentSubcategoryContext = {
         subcategories,
         selectedSubcategories,
         isLoadingSubcategories,
-        showAddSubcategoryModal,
+        isAddSubcategoryModalVisible,
         toggleSubcategorySelection,
         fetchSubcategoriesFromDB,
         openAddSubcategoryModal,

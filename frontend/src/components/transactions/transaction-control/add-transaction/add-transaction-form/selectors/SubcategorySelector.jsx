@@ -13,14 +13,14 @@ import AddIcon from "../../../../../ui/icons/AddIcon";
 
 function SubcategorySelector({ value, onChange }) {
   const {
-    transactionFormData,
+    addTransactionFormData,
     subcategories,
     isLoadingSubcategories,
-    showAddSubcategoryForm,
+    isAddSubcategoryFormVisible,
     openAddSubcategoryForm,
   } = useContext(TransactionContext);
 
-  const selectedCategory = transactionFormData.category;
+  const selectedCategory = addTransactionFormData.categoryId;
   const isDisabled = !selectedCategory || isLoadingSubcategories;
 
   return (
@@ -54,7 +54,7 @@ function SubcategorySelector({ value, onChange }) {
                 aria-label="Add new subcategory"
                 onClick={openAddSubcategoryForm}
                 title="Add New Category"
-                disabled={showAddSubcategoryForm}
+                disabled={isAddSubcategoryFormVisible}
               >
                 <AddIcon />
               </Button>
@@ -80,7 +80,7 @@ function SubcategorySelector({ value, onChange }) {
           </>
         )}
       </InputGroup>
-      {selectedCategory && showAddSubcategoryForm && (
+      {selectedCategory && isAddSubcategoryFormVisible && (
         <AddSubcategoryInlineForm />
       )}
     </Form.Group>

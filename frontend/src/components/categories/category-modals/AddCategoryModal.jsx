@@ -6,7 +6,7 @@ import CategoryContext from "../../../store/context/categoryContext";
 
 function AddCategoryModal() {
   const newCategoryNameRef = useRef();
-  const { showAddCategoryModal, fetchCategoriesFromDB, closeAddCategoryModal } =
+  const { isAddCategoryModalVisible, fetchCategoriesFromDB, closeAddCategoryModal } =
     useContext(CategoryContext);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [isAdding, setIsAdding] = useState(false);
@@ -14,10 +14,10 @@ function AddCategoryModal() {
 
   // Focus input field on mount
   useEffect(() => {
-    if (showAddCategoryModal) {
+    if (isAddCategoryModalVisible) {
       newCategoryNameRef.current?.focus();
     }
-  }, [showAddCategoryModal]);
+  }, [isAddCategoryModalVisible]);
 
   // For hiding error message after 4 seconds
   useEffect(() => {
@@ -37,7 +37,7 @@ function AddCategoryModal() {
 
   // Keyboard support for closing modal and submitting
   useEffect(() => {
-    if (!showAddCategoryModal) return;
+    if (!isAddCategoryModalVisible) return;
     const handleKeyDown = (e) => {
       if (e.key === "Escape" && !isAdding) {
         e.preventDefault();
@@ -56,7 +56,7 @@ function AddCategoryModal() {
       document.removeEventListener("keydown", handleKeyDown);
     };
     // eslint-disable-next-line
-  }, [showAddCategoryModal, isAdding]);
+  }, [isAddCategoryModalVisible, isAdding]);
 
   const handleAddCategory = async () => {
     const newCategoryNameTrimmed = newCategoryName.trim();
@@ -101,7 +101,7 @@ function AddCategoryModal() {
 
   return (
     <Modal
-      show={showAddCategoryModal}
+      show={isAddCategoryModalVisible}
       onHide={handleCancel}
       centered
       backdrop={isAdding ? "static" : true}

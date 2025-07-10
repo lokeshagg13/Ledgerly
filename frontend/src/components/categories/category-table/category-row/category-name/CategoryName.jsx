@@ -12,7 +12,7 @@ function CategoryName({ categoryId, categoryName }) {
     handleCloseContextMenus,
   } = useContext(ContextMenuContext);
   const [isEditorOn, setIsEditorOn] = useState(false);
-  const [showDeleteCategoryModal, setShowDeleteCategoryModal] = useState(false);
+  const [isDeleteCategoryModalVisible, setIsDeleteCategoryModalVisible] = useState(false);
 
   const isContextMenuVisible = checkIfContextMenuVisible(
     "category",
@@ -21,7 +21,7 @@ function CategoryName({ categoryId, categoryName }) {
   const anchorRef = useRef(null);
 
   const handleRemoveAction = () => {
-    setShowDeleteCategoryModal(true);
+    setIsDeleteCategoryModalVisible(true);
     handleCloseContextMenus();
   };
 
@@ -64,11 +64,11 @@ function CategoryName({ categoryId, categoryName }) {
               onRemove={handleRemoveAction}
             />
           )}
-          {showDeleteCategoryModal && (
+          {isDeleteCategoryModalVisible && (
             <DeleteCategoryModal
               categoryId={categoryId}
               categoryName={categoryName}
-              onClose={() => setShowDeleteCategoryModal(false)}
+              onClose={() => setIsDeleteCategoryModalVisible(false)}
             />
           )}
         </>

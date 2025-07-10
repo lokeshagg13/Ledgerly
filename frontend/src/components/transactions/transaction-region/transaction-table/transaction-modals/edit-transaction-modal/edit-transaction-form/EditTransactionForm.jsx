@@ -1,18 +1,20 @@
 import { useContext, useEffect, useRef } from "react";
 import { Form, InputGroup } from "react-bootstrap";
-import TransactionContext from "../../../../../store/context/transactionContext";
-import { formatAmountWithCommas } from "../../../../../logic/utils";
-import CategorySelector from "./selectors/CategorySelector";
-import SubcategorySelector from "./selectors/SubcategorySelector";
+import TransactionContext from "../../../../../../../store/context/transactionContext";
+import { formatAmountWithCommas } from "../../../../../../../logic/utils";
 
-function AddTransactionForm() {
+function EditTransactionForm() {
   const amountInputRef = useRef();
   const {
-    addTransactionFormData: formData,
+    editTransactionFormData: formData,
     inputFieldErrors,
+    isLoadingCategories,
+    categories,
+    isLoadingSubcategories,
+    subcategories,
     fetchCategoriesFromDB,
     fetchSubcategoriesFromDB,
-    modifyAddTransactionFormData,
+    modifyEditTransactionFormData,
     checkIfInputFieldInvalid,
     updateInputFieldErrors,
   } = useContext(TransactionContext);
@@ -50,22 +52,22 @@ function AddTransactionForm() {
           (isValid || rawValue === "") &&
           (rawValue === "" || numericValue <= Number.MAX_SAFE_INTEGER)
         ) {
-          modifyAddTransactionFormData(name, rawValue);
+          modifyEditTransactionFormData(name, rawValue);
         }
         break;
       case "category":
-        modifyAddTransactionFormData("categoryId", value || null);
+        modifyEditTransactionFormData("categoryId", value || null);
         break;
       case "subcategory":
-        modifyAddTransactionFormData("subcategoryId", value || null);
+        modifyEditTransactionFormData("subcategoryId", value || null);
         break;
       default:
-        modifyAddTransactionFormData(e.target.name, e.target.value);
+        modifyEditTransactionFormData(e.target.name, e.target.value);
     }
   };
 
   return (
-    <Form className="add-transaction-form">
+    <Form className="update-transaction-form">
       {/* Type */}
       <Form.Group className="mb-3">
         <Form.Label>Type</Form.Label>
@@ -155,15 +157,46 @@ function AddTransactionForm() {
       </Form.Group>
 
       {/* Category */}
-      <CategorySelector value={formData.categoryId} onChange={handleChange} />
+      <Form.Group className="mb-3">
+        <Form.Label>Category</Form.Label>
+        <Form.Select
+          name="category"
+          aria-label="Select category"
+          value={formData.categoryId}
+          onChange={handleChange}
+          disabled={isLoadingCategories}
+          isInvalid={checkIfInputFieldInvalid("category")}
+          className={checkIfInputFieldInvalid("category") ? "shake" : ""}
+        >
+          <option value="">Select a category</option>
+          {categories.map((cat) => (
+            <option key={cat._id} value={cat._id}>
+              {cat.name}
+            </option>
+          ))}
+        </Form.Select>
+      </Form.Group>
 
       {/* Subcategory */}
-      <SubcategorySelector
-        value={formData.subcategoryId}
-        onChange={handleChange}
-      />
+      <Form.Group className="mb-3">
+        <Form.Label>Subcategory</Form.Label>
+        <Form.Select
+          name="subcategory"
+          aria-label="Select subcategory"
+          value={formData.subcategoryId ?? ""}
+          onChange={handleChange}
+          disabled={!formData.categoryId || isLoadingSubcategories}
+        >
+          <option value="">None</option>
+          {subcategories.map((sub) => (
+            <option key={sub._id} value={sub._id}>
+              {sub.name}
+            </option>
+          ))}
+        </Form.Select>
+      </Form.Group>
     </Form>
   );
 }
 
-export default AddTransactionForm;
+export default EditTransactionForm;

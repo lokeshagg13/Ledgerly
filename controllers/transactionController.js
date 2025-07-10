@@ -25,8 +25,10 @@ exports.getTransactions = async (req, res) => {
             type: txn.type,
             date: txn.date,
             remarks: txn.remarks,
-            category: txn.categoryId?.name || null,
-            subcategory: txn.subcategoryId?.name || null,
+            categoryId: txn.categoryId?._id || null,
+            subcategoryId: txn.subcategoryId?._id || null,
+            categoryName: txn.categoryId?.name || null,
+            subcategoryName: txn.subcategoryId?.name || null,
         }));
         return res.status(200).json({ transactions: formattedTransactions });
     } catch (error) {

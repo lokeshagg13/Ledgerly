@@ -7,7 +7,7 @@ import SubcategoryContext from "../../../../../store/context/subcategoryContext"
 function AddSubcategoryModal({ categoryId }) {
   const newSubcategoryNameRef = useRef();
   const {
-    showAddSubcategoryModal,
+    isAddSubcategoryModalVisible,
     fetchSubcategoriesFromDB,
     closeAddSubcategoryModal,
   } = useContext(SubcategoryContext);
@@ -17,10 +17,10 @@ function AddSubcategoryModal({ categoryId }) {
 
   // Focus input field on mount
   useEffect(() => {
-    if (showAddSubcategoryModal) {
+    if (isAddSubcategoryModalVisible) {
       newSubcategoryNameRef.current?.focus();
     }
-  }, [showAddSubcategoryModal]);
+  }, [isAddSubcategoryModalVisible]);
 
   // For hiding error message after 4 seconds
   useEffect(() => {
@@ -38,7 +38,7 @@ function AddSubcategoryModal({ categoryId }) {
 
   // Keyboard support for closing modal and submitting
   useEffect(() => {
-    if (!showAddSubcategoryModal) return;
+    if (!isAddSubcategoryModalVisible) return;
     const handleKeyDown = (e) => {
       if (e.key === "Escape" && !isAdding) {
         e.preventDefault();
@@ -55,7 +55,7 @@ function AddSubcategoryModal({ categoryId }) {
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
     //eslint-disable-next-line
-  }, [showAddSubcategoryModal, isAdding]);
+  }, [isAddSubcategoryModalVisible, isAdding]);
 
   const handleAddSubcategory = async () => {
     if (isAdding) return;
@@ -102,7 +102,7 @@ function AddSubcategoryModal({ categoryId }) {
 
   return (
     <Modal
-      show={showAddSubcategoryModal}
+      show={isAddSubcategoryModalVisible}
       onHide={handleCancel}
       centered
       backdrop={isAdding ? "static" : true}

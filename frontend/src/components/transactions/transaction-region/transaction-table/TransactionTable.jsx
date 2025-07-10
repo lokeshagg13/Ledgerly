@@ -1,32 +1,15 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { Button } from "react-bootstrap";
-
+import { useContext, useRef, useState } from "react";
 import TransactionContext from "../../../../store/context/transactionContext";
-import {
-  formatAmountForDisplay,
-  formatDateForDisplay,
-} from "../../../../logic/utils";
-import EditIcon from "../../../ui/icons/EditIcon";
-import TrashIcon from "../../../ui/icons/TrashIcon";
-import PaginationControl from "./pagination-control/PaginationControl";
 import TableScroller from "./table-scroller/TableScroller";
+import TransactionRow from "./transaction-row/TransactionRow";
+import PaginationControl from "./pagination-control/PaginationControl";
 
 const TRANSACTIONS_PER_PAGE = 10;
 
 function TransactionTable({ type }) {
   const { transactions } = useContext(TransactionContext);
   const [currentPage, setCurrentPage] = useState(1);
-  const [showScrollButtons, setShowScrollButtons] = useState(false);
   const scrollContainerRef = useRef();
-
-  useEffect(() => {
-    const el = scrollContainerRef.current;
-    if (el && el.scrollWidth > el.clientWidth) {
-      setShowScrollButtons(true);
-    } else {
-      setShowScrollButtons(false);
-    }
-  }, [transactions]);
 
   const filteredTransactions = transactions.filter((txn) => txn.type === type);
   const totalPages = Math.ceil(
@@ -48,9 +31,7 @@ function TransactionTable({ type }) {
 
   return (
     <div className="transaction-table-container">
-      {showScrollButtons && (
-        <TableScroller scrollContainerRef={scrollContainerRef} />
-      )}
+      <TableScroller scrollContainerRef={scrollContainerRef} />
       <div className="transaction-table-wrapper" ref={scrollContainerRef}>
         <table className="transaction-table" id={`${type}TransactionTable`}>
           <thead className="table-dark">
@@ -65,27 +46,7 @@ function TransactionTable({ type }) {
           </thead>
           <tbody>
             {currentTransactions.map((txn) => (
-              <tr key={txn._id}>
-                <td>{formatDateForDisplay(txn.date)}</td>
-                <td>{formatAmountForDisplay(txn.amount)}</td>
-                <td>{txn.remarks}</td>
-                <td>{txn.category}</td>
-                <td>{txn.subcategory || "-"}</td>
-                <td>
-                  <Button
-                    variant="link"
-                    //   onClick={() => onEdit(txn)}
-                  >
-                    <EditIcon />
-                  </Button>
-                  <Button
-                    variant="link"
-                    //   onClick={() => onDelete(txn._id)}
-                  >
-                    <TrashIcon />
-                  </Button>
-                </td>
-              </tr>
+              <TransactionRow key={txn._id} transactionData={txn} />
             ))}
           </tbody>
         </table>

@@ -8,7 +8,7 @@ function CategorySelector({ value, onChange }) {
   const {
     categories,
     isLoadingCategories,
-    showAddCategoryForm,
+    isAddCategoryFormVisible,
     inputFieldErrors,
     openAddCategoryForm,
     checkIfInputFieldInvalid,
@@ -44,7 +44,7 @@ function CategorySelector({ value, onChange }) {
               aria-label="Add new category"
               onClick={openAddCategoryForm}
               title="Add New Category"
-              disabled={showAddCategoryForm}
+              disabled={isAddCategoryFormVisible}
             >
               <AddIcon />
             </Button>
@@ -54,7 +54,7 @@ function CategorySelector({ value, onChange }) {
       {checkIfInputFieldInvalid("category") && (
         <div className="text-danger">{inputFieldErrors.category}</div>
       )}
-      {showAddCategoryForm && <AddCategoryInlineForm />}
+      {isAddCategoryFormVisible && <AddCategoryInlineForm />}
     </Form.Group>
   );
 }

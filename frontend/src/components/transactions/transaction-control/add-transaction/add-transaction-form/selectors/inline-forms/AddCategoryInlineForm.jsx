@@ -7,7 +7,7 @@ import CancelIcon from "../../../../../../ui/icons/CancelIcon";
 
 function AddCategoryInlineForm() {
   const newCategoryNameRef = useRef();
-  const { showAddCategoryForm, fetchCategoriesFromDB, closeAddCategoryForm } =
+  const { isAddCategoryFormVisible, fetchCategoriesFromDB, closeAddCategoryForm } =
     useContext(TransactionContext);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [isAdding, setIsAdding] = useState(false);
@@ -15,10 +15,10 @@ function AddCategoryInlineForm() {
 
   // Focus input field on mount
   useEffect(() => {
-    if (showAddCategoryForm) {
+    if (isAddCategoryFormVisible) {
       newCategoryNameRef.current?.focus();
     }
-  }, [showAddCategoryForm]);
+  }, [isAddCategoryFormVisible]);
 
   // For hiding error message after 4 seconds
   useEffect(() => {
@@ -39,7 +39,7 @@ function AddCategoryInlineForm() {
 
   // Keyboard support for closing modal and submitting
   useEffect(() => {
-    if (!showAddCategoryForm) return;
+    if (!isAddCategoryFormVisible) return;
     const handleKeyDown = (e) => {
       if (
         e.key === "Enter" &&
@@ -55,7 +55,7 @@ function AddCategoryInlineForm() {
       document.removeEventListener("keydown", handleKeyDown);
     };
     // eslint-disable-next-line
-  }, [showAddCategoryForm, isAdding]);
+  }, [isAddCategoryFormVisible, isAdding]);
 
   const handleAddCategory = async () => {
     const newCategoryNameTrimmed = newCategoryName.trim();
@@ -110,7 +110,7 @@ function AddCategoryInlineForm() {
     closeAddCategoryForm();
   };
 
-  if (!showAddCategoryForm) return null;
+  if (!isAddCategoryFormVisible) return null;
 
   return (
     <div className="add-category-inline-form">
