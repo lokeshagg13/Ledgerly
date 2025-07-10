@@ -6,7 +6,7 @@ import TransactionContext from "../../../../../../store/context/transactionConte
 import {
   formatAmountForDisplay,
   formatDateForDisplay,
-} from "../../../../../../logic/utils";
+} from "../../../../../../logic/formatUtils";
 
 function DeleteTransactionModal({ transactionId, transactionData, onClose }) {
   const { fetchTransactionsFromDB } = useContext(TransactionContext);

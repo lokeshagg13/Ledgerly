@@ -3,7 +3,7 @@ import { Modal, Button } from "react-bootstrap";
 
 import { axiosPrivate } from "../../../api/axios";
 import CategoryContext from "../../../store/context/categoryContext";
-import { formatCategoryError } from "../../../logic/utils";
+import { formatCategoryError } from "../../../logic/formatUtils";
 
 function DeleteSelectedCategoriesModal() {
   const {

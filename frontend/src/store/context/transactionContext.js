@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 import { axiosPrivate } from "../../api/axios";
-import { formatDateForCalendarInput } from "../../logic/utils";
+import { formatDateForCalendarInput } from "../../logic/formatUtils";
 
 const TransactionContext = createContext({
     transactions: [],

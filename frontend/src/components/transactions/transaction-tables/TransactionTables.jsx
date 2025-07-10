@@ -47,7 +47,6 @@ function TransactionTables() {
         </div>
         {showDebit && <TransactionTable type="debit" />}
       </div>
-
       <div className="transaction-section">
         <div
           className="transaction-section-header"
