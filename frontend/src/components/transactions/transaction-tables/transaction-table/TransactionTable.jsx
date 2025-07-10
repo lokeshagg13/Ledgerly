@@ -3,11 +3,13 @@ import TransactionContext from "../../../../store/context/transactionContext";
 import TableScroller from "./table-scroller/TableScroller";
 import TransactionRow from "./transaction-row/TransactionRow";
 import PaginationControl from "./pagination-control/PaginationControl";
+import EditTransactionModal from "./transaction-modals/edit-transaction-modal/EditTransactionModal";
 
 const TRANSACTIONS_PER_PAGE = 10;
 
 function TransactionTable({ type }) {
-  const { transactions } = useContext(TransactionContext);
+  const { transactions, isEditTransactionModalVisible } =
+    useContext(TransactionContext);
   const [currentPage, setCurrentPage] = useState(1);
   const scrollContainerRef = useRef();
 
@@ -57,6 +59,8 @@ function TransactionTable({ type }) {
             onPageChange={(page) => setCurrentPage(page)}
           />
         )}
+
+        {isEditTransactionModalVisible && <EditTransactionModal />}
       </div>
     </div>
   );

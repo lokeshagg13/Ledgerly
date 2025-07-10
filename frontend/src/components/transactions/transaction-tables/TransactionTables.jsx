@@ -4,7 +4,7 @@ import TransactionContext from "../../../store/context/transactionContext";
 import TransactionTable from "./transaction-table/TransactionTable";
 import CaretDownIcon from "../../ui/icons/CaretDownIcon";
 
-function TransactionRegion() {
+function TransactionTables() {
   const { transactions, isLoadingTransactions, fetchTransactionsFromDB } =
     useContext(TransactionContext);
   const [showDebit, setShowDebit] = useState(true);
@@ -66,4 +66,4 @@ function TransactionRegion() {
   );
 }
 
-export default TransactionRegion;
+export default TransactionTables;

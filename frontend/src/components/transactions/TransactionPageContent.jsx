@@ -1,6 +1,6 @@
 import { TransactionProvider } from "../../store/context/transactionContext";
 import TransactionControl from "./transaction-control/TransactionControl";
-import TransactionRegion from "./transaction-region/TransactionRegion";
+import TransactionTables from "./transaction-tables/TransactionTables";
 
 function TransactionPageContent() {
   return (
@@ -13,7 +13,7 @@ function TransactionPageContent() {
         <div className="transaction-page-body">
           <TransactionControl />
           {/* <TransactionFilter /> */}
-          <TransactionRegion />
+          <TransactionTables />
         </div>
       </div>
     </TransactionProvider>

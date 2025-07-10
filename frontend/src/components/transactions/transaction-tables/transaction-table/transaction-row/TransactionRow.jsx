@@ -8,14 +8,12 @@ import {
   formatDateForDisplay,
 } from "../../../../../logic/utils";
 import DeleteTransactionModal from "../transaction-modals/delete-transaction-modal/DeleteTransactionModal";
-import EditTransactionModal from "../transaction-modals/edit-transaction-modal/EditTransactionModal";
 import TransactionContext from "../../../../../store/context/transactionContext";
 
 function TransactionRow({ transactionData }) {
   const { _id, date, amount, remarks, categoryName, subcategoryName } =
     transactionData;
-  const { isEditTransactionModalVisible, openEditTransactionModal } =
-    useContext(TransactionContext);
+  const { openEditTransactionModal } = useContext(TransactionContext);
   const [isDeleteTransactionModalVisible, setIsDeleteTransactionModalVisible] =
     useState(false);
 
@@ -46,8 +44,6 @@ function TransactionRow({ transactionData }) {
             onClose={() => setIsDeleteTransactionModalVisible(false)}
           />
         )}
-
-        {isEditTransactionModalVisible && <EditTransactionModal />}
       </td>
     </tr>
   );
