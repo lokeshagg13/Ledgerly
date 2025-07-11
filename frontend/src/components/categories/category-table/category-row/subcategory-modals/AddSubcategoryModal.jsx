@@ -80,7 +80,6 @@ function AddSubcategoryModal({ categoryId }) {
       closeAddSubcategoryModal();
       fetchSubcategoriesFromDB();
     } catch (error) {
-      console.log("Error while adding subcategory:", error);
       if (!error?.response) {
         setErrorMessage("Failed to add subcategory: No server response.");
       } else {

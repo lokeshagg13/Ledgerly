@@ -3,14 +3,16 @@ import { Button } from "react-bootstrap";
 
 import TransactionContext from "../../../store/context/transactionContext";
 import AddTransactionModal from "./add-transaction/AddTransactionModal";
+import TransactionFilterContext from "../../../store/context/transactionFilterContext";
 
 function TransactionControl() {
   const {
     isLoadingTransactions,
     isAddTransactionModalVisible,
     openAddTransactionModal,
-    fetchTransactionsFromDB,
+    fetchTransactions,
   } = useContext(TransactionContext);
+  const { appliedFilters } = useContext(TransactionFilterContext);
 
   return (
     <div className="transaction-controls">
@@ -27,7 +29,7 @@ function TransactionControl() {
         type="button"
         className="control-btn btn-outline-light"
         aria-label="Reload transactions"
-        onClick={fetchTransactionsFromDB}
+        onClick={() => fetchTransactions(appliedFilters)}
         disabled={isLoadingTransactions}
         title="Click to reload your transactions"
       >

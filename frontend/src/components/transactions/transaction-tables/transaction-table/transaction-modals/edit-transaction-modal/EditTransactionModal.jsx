@@ -3,16 +3,18 @@ import { Modal, Button } from "react-bootstrap";
 import { axiosPrivate } from "../../../../../../api/axios";
 import TransactionContext from "../../../../../../store/context/transactionContext";
 import EditTransactionForm from "./edit-transaction-form/EditTransactionForm";
+import TransactionFilterContext from "../../../../../../store/context/transactionFilterContext";
 
 function EditTransactionModal() {
   const {
     isEditTransactionModalVisible,
     editTransactionFormData,
-    fetchTransactionsFromDB,
+    fetchTransactions,
     closeEditTransactionModal,
     resetEditTransactionFormData,
     updateInputFieldErrors,
   } = useContext(TransactionContext);
+  const { appliedFilters } = useContext(TransactionFilterContext);
   const [isUpdating, setIsUpdating] = useState(false);
   const [commonErrorMessage, setCommonErrorMessage] = useState("");
 
@@ -102,9 +104,8 @@ function EditTransactionModal() {
       );
       resetEditTransactionFormData();
       closeEditTransactionModal();
-      fetchTransactionsFromDB();
+      fetchTransactions(appliedFilters);
     } catch (error) {
-      console.log("Error while edit transaction:", error);
       if (!error?.response) {
         setCommonErrorMessage(
           "Failed to edit transaction: No server response."

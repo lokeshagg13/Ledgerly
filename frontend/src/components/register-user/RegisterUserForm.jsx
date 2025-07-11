@@ -96,10 +96,14 @@ function RegisterUserForm() {
       setRegisterSuccess(true);
       setFormData({ name: "", email: "", password: "", confirmPassword: "" });
     } catch (error) {
-      console.log("Error while registering user:", error);
-      const errorMsg = error.response?.data?.error || "Error creating user";
       setRegisterSuccess(false);
-      setError(`${errorMsg}`);
+      if (!error?.response) {
+        setError("Error while registering user: No server response.");
+      } else {
+        setError(
+          error?.response?.data?.error || "Error while registering user."
+        );
+      }
     }
   };
 

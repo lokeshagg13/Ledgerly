@@ -72,7 +72,6 @@ function SubcategoryNameEditor({ subcategoryId, subcategoryName, onClose }) {
       onClose();
       fetchSubcategoriesFromDB();
     } catch (error) {
-      console.log("Error while updating subcategory name:", error);
       setErrorMessage(
         error?.response?.data?.error || "Failed to update subcategory name."
       );

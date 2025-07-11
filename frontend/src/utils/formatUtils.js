@@ -17,6 +17,18 @@ export function formatAmountForDisplay(amount) {
     return `₹ ${formattedInt}.${decimalPart ? decimalPart.padEnd(2, "0") : "00"}`;
 }
 
+export function formatAmountForFirstTimeInput(amount) {
+    if (typeof amount === "number") amount = amount.toString();
+    if (!amount.includes('.')) {
+        const formattedInt = parseInt(amount).toString();
+        return `${formattedInt}.00`;
+    }
+    const [intPart, decimalPartRaw] = amount.split(".");
+    const formattedInt = parseInt(intPart).toString();
+    let decimalPart = (decimalPartRaw || "").padEnd(2, "0").slice(0, 2);
+    return `${formattedInt}.${decimalPart}`;
+}
+
 export function formatDateForCalendarInput(dateString, sep = '-') {
     const date = new Date(dateString);
     const day = String(date.getUTCDate()).padStart(2, "0");

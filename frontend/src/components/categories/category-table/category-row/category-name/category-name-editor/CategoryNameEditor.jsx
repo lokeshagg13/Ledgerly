@@ -69,7 +69,6 @@ function CategoryNameEditor({ categoryId, categoryName, onClose }) {
       onClose();
       fetchCategoriesFromDB();
     } catch (error) {
-      console.log("Error while updating category name:", error);
       setErrorMessage(
         error?.response?.data?.error || "Failed to update category name."
       );

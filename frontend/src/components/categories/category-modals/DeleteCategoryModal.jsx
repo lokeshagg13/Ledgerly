@@ -42,7 +42,6 @@ function DeleteCategoryModal({ categoryId, categoryName, onClose }) {
       closeModal();
       fetchCategoriesFromDB();
     } catch (error) {
-      console.log("Error while deleting category:", error);
       if (!error?.response) {
         setErrorMessage("Failed to delete category: No server response.");
       } else {

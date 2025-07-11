@@ -3,16 +3,18 @@ import { Modal, Button } from "react-bootstrap";
 import { axiosPrivate } from "../../../../api/axios";
 import TransactionContext from "../../../../store/context/transactionContext";
 import AddTransactionForm from "./add-transaction-form/AddTransactionForm";
+import TransactionFilterContext from "../../../../store/context/transactionFilterContext";
 
 function AddTransactionModal() {
   const {
     isAddTransactionModalVisible,
     addTransactionFormData,
-    fetchTransactionsFromDB,
+    fetchTransactions,
     closeAddTransactionModal,
     resetAddTransactionFormData,
     updateInputFieldErrors,
   } = useContext(TransactionContext);
+  const { appliedFilters } = useContext(TransactionFilterContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [commonErrorMessage, setCommonErrorMessage] = useState("");
 
@@ -103,9 +105,8 @@ function AddTransactionModal() {
       });
       resetAddTransactionFormData();
       closeAddTransactionModal();
-      fetchTransactionsFromDB();
+      fetchTransactions(appliedFilters);
     } catch (error) {
-      console.log("Error while adding transaction:", error);
       if (!error?.response) {
         setCommonErrorMessage("Failed to add transaction: No server response.");
       } else {

@@ -3,7 +3,7 @@ import { Modal, Button } from "react-bootstrap";
 
 import { axiosPrivate } from "../../../api/axios";
 import CategoryContext from "../../../store/context/categoryContext";
-import { formatCategoryError } from "../../../logic/formatUtils";
+import { formatCategoryError } from "../../../utils/formatUtils";
 
 function DeleteSelectedCategoriesModal() {
   const {
@@ -53,7 +53,6 @@ function DeleteSelectedCategoriesModal() {
       closeDeleteSelectedCategoriesModal();
       fetchCategoriesFromDB();
     } catch (error) {
-      console.log("Error while deleting selected categories:", error);
       if (!error?.response) {
         setErrorMessage(
           "Failed to delete selected categories: No server response."

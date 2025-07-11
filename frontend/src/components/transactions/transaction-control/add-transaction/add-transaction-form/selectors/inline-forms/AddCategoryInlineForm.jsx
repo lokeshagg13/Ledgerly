@@ -86,7 +86,6 @@ function AddCategoryInlineForm() {
       setNewCategoryName("");
       fetchCategoriesFromDB();
     } catch (error) {
-      console.log("Error while adding category:", error);
       if (!error?.response) {
         setMessage({
           variant: "danger",

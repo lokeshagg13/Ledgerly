@@ -1,10 +1,11 @@
 import { createContext, useState } from "react";
 import { axiosPrivate } from "../../api/axios";
-import { formatDateForCalendarInput } from "../../logic/formatUtils";
+import { formatAmountForFirstTimeInput, formatDateForCalendarInput } from "../../utils/formatUtils";
 
 const TransactionContext = createContext({
     transactions: [],
     isLoadingTransactions: false,
+    errorFetchingTransactions: null,
     isAddTransactionModalVisible: false,
     addTransactionFormData: {},
     isEditTransactionModalVisible: false,
@@ -16,7 +17,7 @@ const TransactionContext = createContext({
     isAddCategoryFormVisible: false,
     isAddSubcategoryFormVisible: false,
     inputFieldErrors: {},
-    fetchTransactionsFromDB: () => { },
+    fetchTransactions: (appliedFilters) => { },
     openAddTransactionModal: () => { },
     closeAddTransactionModal: () => { },
     resetAddTransactionFormData: () => { },
@@ -38,6 +39,7 @@ const TransactionContext = createContext({
 export const TransactionProvider = ({ children }) => {
     const [transactions, setTransactions] = useState([]);
     const [isLoadingTransactions, setIsLoadingTransactions] = useState(false);
+    const [errorFetchingTransactions, setErrorFetchingTransactions] = useState(null);
     const [isAddTransactionModalVisible, setIsAddTransactionModalVisible] = useState(false);
     const [addTransactionFormData, setAddTransactionFormData] = useState({
         type: "debit",
@@ -64,15 +66,45 @@ export const TransactionProvider = ({ children }) => {
     const [isAddSubcategoryFormVisible, setIsAddSubcategoryFormVisible] = useState(false);
     const [inputFieldErrors, setInputFieldErrors] = useState({});
 
-    async function fetchTransactionsFromDB() {
+    async function fetchTransactionsFromDB({ mode = "all", limit = 10, from, to, type, categoryIds } = {}) {
         setIsLoadingTransactions(true);
+        setErrorFetchingTransactions(null);
         try {
-            const res = await axiosPrivate.get("/user/transactions");
+            const params = new URLSearchParams();
+            params.append("mode", mode);
+            if (mode === "recent") {
+                params.append("limit", limit);
+            }
+            if (mode === "filtered") {
+                if (from) params.append("from", from);
+                if (to) params.append("to", to);
+                if (type) params.append("type", type);
+                if (Array.isArray(categoryIds)) {
+                    categoryIds.forEach((id) => params.append("categoryIds", id));
+                } else if (typeof categoryIds === "string") {
+                    params.append("categoryIds", categoryIds);
+                }
+            }
+            const res = await axiosPrivate.get(`/user/transactions?${params.toString()}`);
             if (res?.data?.transactions) setTransactions(res.data.transactions);
         } catch (error) {
             console.log("Error while fetching transactions:", error);
+            setErrorFetchingTransactions("Error while fetching transactions: " + error);
         } finally {
             setIsLoadingTransactions(false);
+        }
+    }
+
+    function fetchTransactions(appliedFilters) {
+        if (appliedFilters === null) {
+            fetchTransactionsFromDB();
+        } else {
+            fetchTransactionsFromDB({
+                mode: "filtered",
+                from: appliedFilters.fromDate,
+                to: appliedFilters.toDate,
+                categoryIds: appliedFilters.categories,
+            });
         }
     }
 
@@ -104,7 +136,7 @@ export const TransactionProvider = ({ children }) => {
         setEditTransactionFormData({
             _id: transaction._id,
             type: transaction.type,
-            amount: transaction.amount,
+            amount: formatAmountForFirstTimeInput(transaction.amount),
             date: formatDateForCalendarInput(transaction.date),
             remarks: transaction.remarks,
             categoryId: transaction.categoryId,
@@ -195,6 +227,7 @@ export const TransactionProvider = ({ children }) => {
     const currentTransactionContext = {
         transactions,
         isLoadingTransactions,
+        errorFetchingTransactions,
         isAddTransactionModalVisible,
         addTransactionFormData,
         isEditTransactionModalVisible,
@@ -206,7 +239,7 @@ export const TransactionProvider = ({ children }) => {
         isAddCategoryFormVisible,
         isAddSubcategoryFormVisible,
         inputFieldErrors,
-        fetchTransactionsFromDB,
+        fetchTransactions,
         openAddTransactionModal,
         closeAddTransactionModal,
         resetAddTransactionFormData,

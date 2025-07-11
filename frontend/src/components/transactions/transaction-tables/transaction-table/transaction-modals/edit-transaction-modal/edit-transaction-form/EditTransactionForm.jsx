@@ -1,7 +1,8 @@
 import { useContext, useEffect, useRef } from "react";
 import { Form, InputGroup } from "react-bootstrap";
 import TransactionContext from "../../../../../../../store/context/transactionContext";
-import { formatAmountWithCommas } from "../../../../../../../logic/formatUtils";
+import { formatAmountWithCommas } from "../../../../../../../utils/formatUtils";
+import FormDatePicker from "../../../../../../ui/FormDatePicker";
 
 function EditTransactionForm() {
   const amountInputRef = useRef();
@@ -62,7 +63,7 @@ function EditTransactionForm() {
         modifyEditTransactionFormData("subcategoryId", value || null);
         break;
       default:
-        modifyEditTransactionFormData(e.target.name, e.target.value);
+        modifyEditTransactionFormData(name, value);
     }
   };
 
@@ -118,19 +119,21 @@ function EditTransactionForm() {
       {/* Date */}
       <Form.Group className="mb-3">
         <Form.Label>Date</Form.Label>
-        <Form.Control
-          type="date"
-          name="date"
-          id="transactionDate"
-          value={formData.date}
-          onChange={handleChange}
-          max={new Date().toISOString().split("T")[0]}
-          isInvalid={checkIfInputFieldInvalid("date")}
+        <div
           className={`date-input ${
             checkIfInputFieldInvalid("date") ? "shake" : ""
           }`}
-          required
-        />
+        >
+          <FormDatePicker
+            name="date"
+            id="transactionDate"
+            value={formData.date}
+            onChange={handleChange}
+            maxDate={new Date()}
+            isInvalid={checkIfInputFieldInvalid("date")}
+            required
+          />
+        </div>
         {checkIfInputFieldInvalid("date") && (
           <div className="text-danger">{inputFieldErrors.date}</div>
         )}

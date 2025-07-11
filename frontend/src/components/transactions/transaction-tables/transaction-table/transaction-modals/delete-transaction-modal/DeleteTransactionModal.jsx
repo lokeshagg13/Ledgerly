@@ -6,10 +6,12 @@ import TransactionContext from "../../../../../../store/context/transactionConte
 import {
   formatAmountForDisplay,
   formatDateForDisplay,
-} from "../../../../../../logic/formatUtils";
+} from "../../../../../../utils/formatUtils";
+import TransactionFilterContext from "../../../../../../store/context/transactionFilterContext";
 
 function DeleteTransactionModal({ transactionId, transactionData, onClose }) {
-  const { fetchTransactionsFromDB } = useContext(TransactionContext);
+  const { fetchTransactions } = useContext(TransactionContext);
+  const { appliedFilters } = useContext(TransactionFilterContext);
   const [deleting, setDeleting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -44,9 +46,8 @@ function DeleteTransactionModal({ transactionId, transactionData, onClose }) {
       await axiosPrivate.delete(`/user/transactions/${transactionId}`);
       setErrorMessage("");
       onClose();
-      fetchTransactionsFromDB();
+      fetchTransactions(appliedFilters);
     } catch (error) {
-      console.log("Error while deleting transaction:", error);
       if (!error?.response) {
         setErrorMessage("Failed to delete transaction: No server response.");
       } else {
@@ -105,12 +106,8 @@ function DeleteTransactionModal({ transactionId, transactionData, onClose }) {
             </table>
           </div>
         </div>
-        <p className="warning-message">
-          Note: This action cannot be undone.
-        </p>
-        {errorMessage && (
-          <div className="error-message">{errorMessage}</div>
-        )}
+        <p className="warning-message">Note: This action cannot be undone.</p>
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
       </Modal.Body>
       <Modal.Footer>
         <Button

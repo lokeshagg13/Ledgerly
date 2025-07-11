@@ -6,7 +6,7 @@ import TrashIcon from "../../../../ui/icons/TrashIcon";
 import {
   formatAmountForDisplay,
   formatDateForDisplay,
-} from "../../../../../logic/formatUtils";
+} from "../../../../../utils/formatUtils";
 import DeleteTransactionModal from "../transaction-modals/delete-transaction-modal/DeleteTransactionModal";
 import TransactionContext from "../../../../../store/context/transactionContext";
 

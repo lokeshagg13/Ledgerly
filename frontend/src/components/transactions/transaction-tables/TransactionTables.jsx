@@ -3,17 +3,19 @@ import { Spinner } from "react-bootstrap";
 import TransactionContext from "../../../store/context/transactionContext";
 import TransactionTable from "./transaction-table/TransactionTable";
 import CaretDownIcon from "../../ui/icons/CaretDownIcon";
+import TransactionFilterContext from "../../../store/context/transactionFilterContext";
 
 function TransactionTables() {
-  const { transactions, isLoadingTransactions, fetchTransactionsFromDB } =
+  const { transactions, isLoadingTransactions, fetchTransactions } =
     useContext(TransactionContext);
+  const { appliedFilters } = useContext(TransactionFilterContext);
   const [showDebit, setShowDebit] = useState(true);
   const [showCredit, setShowCredit] = useState(true);
 
   useEffect(() => {
-    fetchTransactionsFromDB();
+    fetchTransactions(appliedFilters);
     // eslint-disable-next-line
-  }, []);
+  }, [appliedFilters]);
 
   if (isLoadingTransactions) {
     return (
@@ -26,7 +28,7 @@ function TransactionTables() {
   if (transactions.length === 0) {
     return (
       <div className="transaction-table-empty text-muted">
-        No Transactions added yet.
+        No Transactions {appliedFilters ? "found." : "added yet."}
       </div>
     );
   }

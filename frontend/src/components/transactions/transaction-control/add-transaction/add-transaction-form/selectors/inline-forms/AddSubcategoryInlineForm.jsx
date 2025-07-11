@@ -99,7 +99,6 @@ function AddSubcategoryInlineForm() {
       setNewSubcategoryName("");
       fetchSubcategoriesFromDB();
     } catch (error) {
-      console.log("Error while adding subcategory:", error);
       if (!error?.response) {
         setMessage({
           variant: "danger",

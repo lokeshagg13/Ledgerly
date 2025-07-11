@@ -44,7 +44,6 @@ function DeleteSubcategoryModal({ subcategoryId, subcategoryName, onClose }) {
       closeModal();
       fetchSubcategoriesFromDB();
     } catch (error) {
-      console.log("Error while deleting subcategory:", error);
       if (!error?.response) {
         setErrorMessage("Failed to delete subcategory: No server response.");
       } else {

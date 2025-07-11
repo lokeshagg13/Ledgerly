@@ -83,7 +83,6 @@ function AddCategoryModal() {
       closeAddCategoryModal();
       fetchCategoriesFromDB();
     } catch (error) {
-      console.log("Error while adding category:", error);
       if (!error?.response) {
         setErrorMessage("Failed to add category: No server response.");
       } else {
