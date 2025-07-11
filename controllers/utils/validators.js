@@ -9,12 +9,6 @@ exports.validateRequiredTransactionFields = (body, fields = []) => {
     }
 };
 
-exports.normalizeDate = (date) => {
-    const [year, month, day] = new Date(date).toISOString().split("T")[0].split("-");
-    // Create a UTC date equivalent to the local date at midnight
-    return new Date(Date.UTC(year, month - 1, day));
-}
-
 exports.validateTransactionType = (type) => {
     if (!["credit", "debit"].includes(type)) {
         throw new Error("Transaction type is invalid.");
