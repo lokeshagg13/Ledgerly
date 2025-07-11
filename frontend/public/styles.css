@@ -478,6 +478,53 @@ body {
 }
 /* #endregion */
 
+/* #region - Transaction filter section */
+.transaction-filter-section {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  flex: 1 1 48%;
+  min-width: 300px;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.transaction-filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Nunito", sans-serif;
+  font-weight: 600;
+  border-radius: 6px 6px 0 0;
+  padding: 1rem;
+  background-color: #1d1f21;
+  color: #ffffff;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.3s ease;
+}
+
+.transaction-filter-dropdown {
+  transition: transform 0.5s ease;
+}
+
+.transaction-filter-dropdown.up {
+  transform: rotate(-180deg);
+}
+
+.transaction-filter-header:hover {
+  background-color: #2c2f33;
+}
+
+.transaction-filter-header h4 {
+  margin: 0;
+  text-align: left;
+  font-size: 1.2rem;
+}
+/* #endregion */
+
 /* #region - Add transaction modal */
 .add-transaction-modal .error-message {
   color: #dc3545;
