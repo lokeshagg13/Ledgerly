@@ -15,7 +15,6 @@ const mongoose = require("mongoose");
 exports.getTransactions = async (req, res) => {
     const userId = req.userId;
     const { mode = "all", limit = 10, from, to, categoryIds, type } = req.query;
-
     const validModes = ["all", "recent", "filtered"];
     if (!validModes.includes(mode)) {
         return res.status(400).json({ error: `Invalid mode for fetching transactions: ${mode}` });

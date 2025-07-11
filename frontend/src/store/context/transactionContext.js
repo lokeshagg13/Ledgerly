@@ -17,6 +17,7 @@ const TransactionContext = createContext({
     isAddCategoryFormVisible: false,
     isAddSubcategoryFormVisible: false,
     inputFieldErrors: {},
+    resetErrorFetchingTransactions: () => { },
     fetchTransactions: (appliedFilters) => { },
     openAddTransactionModal: () => { },
     closeAddTransactionModal: () => { },
@@ -88,8 +89,19 @@ export const TransactionProvider = ({ children }) => {
             const res = await axiosPrivate.get(`/user/transactions?${params.toString()}`);
             if (res?.data?.transactions) setTransactions(res.data.transactions);
         } catch (error) {
-            console.log("Error while fetching transactions:", error);
-            setErrorFetchingTransactions("Error while fetching transactions: " + error);
+            if (!error?.response) {
+                setErrorFetchingTransactions(
+                    "Apologies for the inconvenience. We couldn’t connect to the server at the moment. This might be a temporary issue. Kindly try again shortly."
+                );
+            } else if (error?.response?.data?.error) {
+                setErrorFetchingTransactions(
+                    `Apologies for the inconvenience. There was an error while fetching your transactions. Please try again after some time. ${error?.response?.data?.error}`
+                );
+            } else {
+                setErrorFetchingTransactions(
+                    "Apologies for the inconvenience. There was an error while fetching your transactions. Please try again after some time."
+                );
+            }
         } finally {
             setIsLoadingTransactions(false);
         }
@@ -106,6 +118,10 @@ export const TransactionProvider = ({ children }) => {
                 categoryIds: appliedFilters.categories,
             });
         }
+    }
+
+    function resetErrorFetchingTransactions() {
+        setErrorFetchingTransactions(null);
     }
 
     function openAddTransactionModal() {
@@ -240,6 +256,7 @@ export const TransactionProvider = ({ children }) => {
         isAddSubcategoryFormVisible,
         inputFieldErrors,
         fetchTransactions,
+        resetErrorFetchingTransactions,
         openAddTransactionModal,
         closeAddTransactionModal,
         resetAddTransactionFormData,

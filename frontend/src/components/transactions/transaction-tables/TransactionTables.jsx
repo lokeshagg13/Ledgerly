@@ -4,10 +4,16 @@ import TransactionContext from "../../../store/context/transactionContext";
 import TransactionTable from "./transaction-table/TransactionTable";
 import CaretDownIcon from "../../ui/icons/CaretDownIcon";
 import TransactionFilterContext from "../../../store/context/transactionFilterContext";
+import TransactionErrorModal from "./TransactionErrorModal";
 
 function TransactionTables() {
-  const { transactions, isLoadingTransactions, fetchTransactions } =
-    useContext(TransactionContext);
+  const {
+    transactions,
+    isLoadingTransactions,
+    errorFetchingTransactions,
+    resetErrorFetchingTransactions,
+    fetchTransactions,
+  } = useContext(TransactionContext);
   const { appliedFilters } = useContext(TransactionFilterContext);
   const [showDebit, setShowDebit] = useState(true);
   const [showCredit, setShowCredit] = useState(true);
@@ -26,6 +32,22 @@ function TransactionTables() {
   }
 
   if (transactions.length === 0) {
+    if (errorFetchingTransactions) {
+      return (
+        <>
+          <div className="transaction-table-empty text-muted error-message">
+            Transaction Error
+          </div>
+          <TransactionErrorModal
+            message={errorFetchingTransactions}
+            onTryAgain={() => {
+              resetErrorFetchingTransactions();
+              fetchTransactions(appliedFilters);
+            }}
+          />
+        </>
+      );
+    }
     return (
       <div className="transaction-table-empty text-muted">
         No Transactions {appliedFilters ? "found." : "added yet."}

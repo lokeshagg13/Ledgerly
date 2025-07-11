@@ -3,7 +3,7 @@ import TransactionFilterSection from "./transaction-filter-section/TransactionFi
 import CaretDownIcon from "../../ui/icons/CaretDownIcon";
 
 function TransactionFilter() {
-  const [isFilterSectionVisible, setIsFilterSectionVisible] = useState(true);
+  const [isFilterSectionVisible, setIsFilterSectionVisible] = useState(false);
 
   return (
     <div className="transaction-filter">
