@@ -22,30 +22,16 @@ exports.getTransactions = async (req, res) => {
     try {
         if (mode === "recent") {
             const safeLimit = Math.max(1, Math.min(parseInt(limit) || 10, 50));
-            const debitTxnsPromise = TransactionModel
-                .find({ userId, type: "debit" })
+            const transactions = await TransactionModel
+                .find({ userId })
                 .limit(safeLimit)
                 .sort({ date: -1 })
                 .lean()
                 .populate("categoryId", "name")
                 .populate("subcategoryId", "name");
-            const creditTxnsPromise = TransactionModel
-                .find({ userId, type: "credit" })
-                .limit(safeLimit)
-                .sort({ date: -1 })
-                .lean()
-                .populate("categoryId", "name")
-                .populate("subcategoryId", "name");
-
-            const [debitTransactions, creditTransactions] = await Promise.all([debitTxnsPromise, creditTxnsPromise]);
-
-            const combined = [...debitTransactions, ...creditTransactions];
-
-            // Sort in descending order
-            combined.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             return res.status(200).json({
-                transactions: formatTransactions(combined)
+                transactions: formatTransactions(transactions)
             });
         }
 
