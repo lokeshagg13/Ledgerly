@@ -6,7 +6,6 @@ const TransactionContext = createContext({
     transactions: [],
     isLoadingTransactions: false,
     errorFetchingTransactions: null,
-    isAddTransactionModalVisible: false,
     addTransactionFormData: {},
     isEditTransactionModalVisible: false,
     editTransactionFormData: {},
@@ -19,8 +18,6 @@ const TransactionContext = createContext({
     inputFieldErrors: {},
     resetErrorFetchingTransactions: () => { },
     fetchTransactions: (appliedFilters) => { },
-    openAddTransactionModal: () => { },
-    closeAddTransactionModal: () => { },
     resetAddTransactionFormData: () => { },
     modifyAddTransactionFormData: (key, value) => { },
     openEditTransactionModal: (transaction) => { },
@@ -41,7 +38,6 @@ export const TransactionProvider = ({ children }) => {
     const [transactions, setTransactions] = useState([]);
     const [isLoadingTransactions, setIsLoadingTransactions] = useState(false);
     const [errorFetchingTransactions, setErrorFetchingTransactions] = useState(null);
-    const [isAddTransactionModalVisible, setIsAddTransactionModalVisible] = useState(false);
     const [addTransactionFormData, setAddTransactionFormData] = useState({
         type: "debit",
         amount: "",
@@ -122,15 +118,6 @@ export const TransactionProvider = ({ children }) => {
 
     function resetErrorFetchingTransactions() {
         setErrorFetchingTransactions(null);
-    }
-
-    function openAddTransactionModal() {
-        setIsAddTransactionModalVisible(true);
-    }
-
-    function closeAddTransactionModal() {
-        setInputFieldErrors({});
-        setIsAddTransactionModalVisible(false);
     }
 
     function resetAddTransactionFormData() {
@@ -244,7 +231,6 @@ export const TransactionProvider = ({ children }) => {
         transactions,
         isLoadingTransactions,
         errorFetchingTransactions,
-        isAddTransactionModalVisible,
         addTransactionFormData,
         isEditTransactionModalVisible,
         editTransactionFormData,
@@ -257,8 +243,6 @@ export const TransactionProvider = ({ children }) => {
         inputFieldErrors,
         fetchTransactions,
         resetErrorFetchingTransactions,
-        openAddTransactionModal,
-        closeAddTransactionModal,
         resetAddTransactionFormData,
         modifyAddTransactionFormData,
         openEditTransactionModal,

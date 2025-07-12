@@ -5,12 +5,10 @@ import TransactionContext from "../../../../store/context/transactionContext";
 import AddTransactionForm from "./add-transaction-form/AddTransactionForm";
 import TransactionFilterContext from "../../../../store/context/transactionFilterContext";
 
-function AddTransactionModal() {
+function AddTransactionModal({ onClose }) {
   const {
-    isAddTransactionModalVisible,
     addTransactionFormData,
     fetchTransactions,
-    closeAddTransactionModal,
     resetAddTransactionFormData,
     updateInputFieldErrors,
   } = useContext(TransactionContext);
@@ -30,10 +28,9 @@ function AddTransactionModal() {
 
   // Keyboard support for closing modal and submitting
   useEffect(() => {
-    if (!isAddTransactionModalVisible) return;
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
-        closeAddTransactionModal();
+        onClose();
       }
       if (e.key === "Enter" && !isSubmitting) {
         e.preventDefault();
@@ -45,7 +42,7 @@ function AddTransactionModal() {
       document.removeEventListener("keydown", handleKeyDown);
     };
     // eslint-disable-next-line
-  }, [isAddTransactionModalVisible, isSubmitting, closeAddTransactionModal]);
+  }, [isSubmitting, onClose]);
 
   const validateTransactionFormData = () => {
     const { amount, date, type, remarks, categoryId } = addTransactionFormData;
@@ -104,7 +101,7 @@ function AddTransactionModal() {
         subcategoryId,
       });
       resetAddTransactionFormData();
-      closeAddTransactionModal();
+      onClose();
       fetchTransactions(appliedFilters);
     } catch (error) {
       if (!error?.response) {
@@ -121,8 +118,8 @@ function AddTransactionModal() {
 
   return (
     <Modal
-      show={isAddTransactionModalVisible}
-      onHide={closeAddTransactionModal}
+      show={true}
+      onHide={onClose}
       centered
       size="lg"
       className="add-transaction-modal"
@@ -139,11 +136,7 @@ function AddTransactionModal() {
         )}
       </Modal.Body>
       <Modal.Footer>
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={closeAddTransactionModal}
-        >
+        <Button type="button" variant="secondary" onClick={onClose}>
           Cancel
         </Button>
         <Button type="button" variant="primary" onClick={handleSubmit}>
