@@ -1,5 +1,6 @@
 body {
-  font-family: "Segoe UI", sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", sans-serif;
   background: #f5f7fa;
   margin: 0;
   padding: 0;
@@ -82,7 +83,6 @@ body {
 }
 
 .navbar .brand-text {
-  font-family: "Nunito", sans-serif;
   font-weight: 600;
   font-size: 1.6rem;
   color: #fff;
@@ -264,7 +264,6 @@ body {
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  font-family: "Segoe UI", sans-serif;
   text-align: center;
   position: relative;
   z-index: 2;
@@ -453,7 +452,6 @@ body {
 
 /* #region - Transactions page content */
 .transaction-page-header {
-  font-family: "Nunito", sans-serif;
   font-weight: 600;
   font-size: 2rem;
   color: white;
@@ -549,7 +547,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: "Nunito", sans-serif;
   font-weight: 600;
   padding: 1rem 1.25rem;
   background-color: #1d1f21;
@@ -922,7 +919,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: "Nunito", sans-serif;
   font-weight: 600;
   border-radius: 6px 6px 0 0;
   padding: 1rem;
@@ -993,12 +989,10 @@ body {
   color: #0ea5e9;
 }
 
-
 .transaction-table {
   width: 100%;
   min-width: max-content;
   border-collapse: collapse;
-  font-family: "Segoe UI", sans-serif;
   font-size: 0.95rem;
   margin-bottom: 0;
 }
@@ -1048,7 +1042,6 @@ body {
 
 .transaction-table-loading,
 .transaction-table-empty {
-  font-family: "Segoe UI", sans-serif;
   font-size: 1.4rem;
   text-align: center;
   margin: 0;
@@ -1088,7 +1081,6 @@ body {
 
 /* #region - Delete transaction data row */
 #deleteTransactionModal .modal-content {
-  font-family: "Segoe UI", sans-serif;
   border-radius: 12px;
   border: none;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
@@ -1136,7 +1128,6 @@ body {
   width: 100%;
   min-width: max-content;
   border-collapse: collapse;
-  font-family: "Segoe UI", sans-serif;
   font-size: 0.95rem;
   border: 1px solid black;
 }
@@ -1226,7 +1217,6 @@ body {
 }
 
 .pagination {
-  font-family: "Segoe UI", sans-serif;
   display: flex;
   justify-content: center;
   gap: 0.5rem;
@@ -1348,7 +1338,6 @@ body {
 
 /* #region - Category page content */
 .category-page-header {
-  font-family: "Nunito", sans-serif;
   font-weight: 600;
   font-size: 2rem;
   color: white;
