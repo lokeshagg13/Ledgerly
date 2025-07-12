@@ -1,18 +1,37 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Button } from "react-bootstrap";
 
 import TransactionContext from "../../../store/context/transactionContext";
-import AddTransactionModal from "./add-transaction/AddTransactionModal";
 import TransactionFilterContext from "../../../store/context/transactionFilterContext";
+import AddTransactionModal from "./add-transaction/AddTransactionModal";
+import PrintTransactionModal from "./print-transaction/PrintTransactionModal";
+import { TransactionPrintContextProvider } from "../../../store/context/transactionPrintContext";
 
 function TransactionControl() {
-  const {
-    isLoadingTransactions,
-    isAddTransactionModalVisible,
-    openAddTransactionModal,
-    fetchTransactions,
-  } = useContext(TransactionContext);
+  const { isLoadingTransactions, fetchTransactions } =
+    useContext(TransactionContext);
+
   const { appliedFilters } = useContext(TransactionFilterContext);
+  const [isAddTransactionModalVisible, setIsAddTransactionModalVisible] =
+    useState(false);
+  const [isPrintTransactionModalVisible, setIsPrintTransactionModalVisible] =
+    useState(false);
+
+  const handleOpenAddTransactionModal = () => {
+    setIsAddTransactionModalVisible(true);
+  };
+
+  const handleCloseAddTransactionModal = () => {
+    setIsAddTransactionModalVisible(false);
+  };
+
+  const handleOpenPrintTransactionModal = () => {
+    setIsPrintTransactionModalVisible(true);
+  };
+
+  const handleClosePrintTransactionModal = () => {
+    setIsPrintTransactionModalVisible(false);
+  };
 
   return (
     <div className="transaction-controls">
@@ -20,10 +39,19 @@ function TransactionControl() {
         type="button"
         className="control-btn btn-blue"
         aria-label="Add a new transaction"
-        onClick={openAddTransactionModal}
+        onClick={handleOpenAddTransactionModal}
         disabled={isLoadingTransactions}
       >
         Add Transaction
+      </Button>
+      <Button
+        type="button"
+        className="control-btn btn-outline-light"
+        aria-label="Add a new transaction"
+        onClick={handleOpenPrintTransactionModal}
+        disabled={isLoadingTransactions}
+      >
+        Print Transactions
       </Button>
       <Button
         type="button"
@@ -47,7 +75,14 @@ function TransactionControl() {
         )}
       </Button>
 
-      {isAddTransactionModalVisible && <AddTransactionModal />}
+      {isAddTransactionModalVisible && (
+        <AddTransactionModal onClose={handleCloseAddTransactionModal} />
+      )}
+      {isPrintTransactionModalVisible && (
+        <TransactionPrintContextProvider>
+          <PrintTransactionModal onClose={handleClosePrintTransactionModal} />
+        </TransactionPrintContextProvider>
+      )}
     </div>
   );
 }
