@@ -1,10 +1,14 @@
 import CategoryPageContent from "../../components/categories/CategoryPageContent";
+import PageLayout from "../../components/ui/PageLayout";
+import categoryImage from "../../images/category-bg.png";
 
 function CategoryPage() {
   return (
-    <div className="page category-page">
-      <CategoryPageContent />
-    </div>
+    <PageLayout bgImage={categoryImage}>
+      <div className="page category-page">
+        <CategoryPageContent />
+      </div>
+    </PageLayout>
   );
 }
 
