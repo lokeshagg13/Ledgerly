@@ -1,78 +1,42 @@
 import { useContext } from "react";
-import { Button, Form, Spinner } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import TransactionPrintContext from "../../../store/context/transactionPrintContext";
-import TransactionErrorModal from "./TransactionErrorModal";
 
 function PrintTransactionForm() {
-  const {
-    isLoadingTransactions,
-    errorFetchingTransactions,
-    transactions,
-    printStyle,
-    fetchTransactionsFromDB,
-    setPrintStyle,
-    resetErrorFetchingTransactions,
-  } = useContext(TransactionPrintContext);
+  const { isPrintSectionVisible, transactions, printStyle, setPrintStyle } =
+    useContext(TransactionPrintContext);
 
-  if (isLoadingTransactions) {
-    return (
-      <div className="print-transaction-fetching">
-        <Spinner animation="border" size="lg" />
-      </div>
-    );
-  }
+  if (!isPrintSectionVisible || transactions?.length === 0) return <></>;
 
-  if (transactions?.length === 0)
-    return (
-      <div className="print-transaction-empty text-muted">
-        No Transactions found
-      </div>
-    );
-
-  if (
-    errorFetchingTransactions?.message &&
-    errorFetchingTransactions?.type === "api"
-  ) {
-    return (
-      <>
-        <div className="print-transactions-empty text-muted error-message">
-          Transaction Error
-        </div>
-        <TransactionErrorModal
-          message={errorFetchingTransactions.message}
-          onTryAgain={() => {
-            resetErrorFetchingTransactions();
-            fetchTransactionsFromDB();
-          }}
-        />
-      </>
-    );
-  }
-  
   return (
     <div className="print-transaction-section">
-      <div className="transactions-fetched-message">
-        {transactions.length} transactions fetched successfully.
+      <div className="print-transaction-header">
+        <h5>Printing Style</h5>
       </div>
-      <div className="print-transaction-form">
-        <strong>Printing Style</strong>
-        <Form.Check
-          type="radio"
-          label="CA File Style"
-          checked={printStyle === "ca"}
-          onChange={() => setPrintStyle("ca")}
-        />
-        <Form.Check
-          type="radio"
-          label="Table Style"
-          checked={printStyle === "table"}
-          onChange={() => setPrintStyle("table")}
-        />
-      </div>
-      <div className="print-transaction-control">
-        <Button variant="outline-secondary">Show Preview</Button>
-        <Button variant="primary">Save as PDF</Button>
-        <Button variant="success">Print Transactions</Button>
+      <div className="print-transaction-form-wrapper">
+        <div className="print-transaction-form">
+          <div className="print-style-options">
+            <Form.Check
+              type="radio"
+              label="CA File Style"
+              checked={printStyle === "ca"}
+              onChange={() => setPrintStyle("ca")}
+              className="ca-print-style-radio"
+            />
+            <Form.Check
+              type="radio"
+              label="Table Style"
+              checked={printStyle === "table"}
+              onChange={() => setPrintStyle("table")}
+              className="table-print-style-radio"
+            />
+          </div>
+          <div className="print-transaction-control">
+            <Button variant="outline-secondary">Show Preview</Button>
+            <Button variant="primary">Save as PDF</Button>
+            <Button variant="success">Print Transactions</Button>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1322,15 +1322,19 @@ body {
 
 /* #region - Print transactions page */
 .print-transaction-page {
-  max-width: 1000px;
-  margin: 2rem auto;
   padding: 0;
+  margin: 4rem;
 }
 
-@media (max-width: 1032px) {
+@media (max-width: 596px) {
   .print-transaction-page {
-    margin-left: 1rem;
-    margin-right: 1rem;
+    margin: 4rem auto;
+  }
+}
+
+@media (max-width: 532px) {
+  .print-transaction-page {
+    margin: 2rem 1rem;
   }
 }
 /* #endregion */
@@ -1361,8 +1365,288 @@ body {
 .print-transaction-page-body {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
   justify-content: center;
+}
+/* #endregion */
+
+/* #region - Fetch transaction section (for printing) */
+.fetch-transaction-section {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.fetch-transaction-header {
+  width: 100%;
+}
+
+.fetch-transaction-header h5 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  text-align: left;
+}
+
+.fetch-transaction-body-wrapper {
+  width: 100%;
+  max-width: 470px;
+  overflow-x: auto;
+  align-self: flex-start;
+  border: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+}
+
+.fetch-transaction-body {
+  min-width: max-content;
+  padding: 2rem;
+}
+
+.fetch-transaction-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-radius: 10px;
+}
+
+.fetch-transaction-form-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.last-n-transaction-radio,
+.transaction-filter-radio {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0;
+}
+
+.last-n-transaction-radio > input,
+.transaction-filter-radio > input {
+  margin: 0 !important;
+  font-size: 1.4rem;
+  border: 2px solid #e5e7eb;
+  cursor: pointer;
+}
+
+.last-n-transaction-section {
+  display: flex !important;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.2rem;
+}
+
+.last-n-transaction-section input {
+  width: 10ch;
+  font-size: 1.2rem;
+  line-height: 1;
+  text-align: center;
+  border: 2px solid #e5e7eb;
+}
+
+.transaction-filter-label {
+  font-size: 1.2rem;
+}
+
+.fetch-transaction-filter-option {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.transaction-filter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 0 0 1rem 2rem;
+  max-width: 400px;
+}
+
+.transaction-filter-form .date-filter-range {
+  gap: 2rem;
+}
+
+.transaction-filter-form .date-filter-row {
+  gap: 2rem;
+}
+
+.fetch-transaction-error-message {
+  max-width: 400px;
+  color: #dc2626;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  background-color: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 6px;
+}
+
+.fetch-transaction-control {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.fetch-transaction-button {
+  align-self: flex-start;
+  padding: 0.55rem 1.5rem;
+  background-color: #2563eb;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.fetch-transaction-button:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.fetch-transaction-button:disabled {
+  background-color: #cbd5e1;
+  cursor: not-allowed;
+  color: #374151;
+}
+
+.reset-transaction-button {
+  align-self: flex-start;
+  padding: 0.4rem 1.5rem;
+  background-color: transparent;
+  color: #2563eb;
+  font-weight: 600;
+  font-size: 1rem;
+  border: 2px solid #2563eb;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.reset-transaction-button:hover {
+  transform: translateY(-1px);
+}
+
+.reset-transaction-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  border-color: #9ca3af;
+  color: #9ca3af;
+  background-color: transparent;
+  box-shadow: none;
+}
+/* #endregion */
+
+/* #region - Transaction fetch status */
+.transaction-fetching {
+  font-size: 1.4rem;
+  text-align: center;
+  margin: 0;
+  margin-top: 2rem;
+  color: #6b7280;
+}
+
+.transaction-empty,
+.transaction-fetch-message {
+  font-size: 1.2rem;
+  text-align: center;
+  margin: 0;
+  margin-top: 2rem;
+}
+
+.transaction-fetch-message {
+  color: #065f46;
+  background-color: #ecfdf5;
+  border: 1px solid #34d399;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-weight: 600;
+}
+/* #endregion */
+
+/* #region - Print transaction section */
+.print-transaction-section {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.print-transaction-header {
+  width: 100%;
+}
+
+.print-transaction-header h5 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  text-align: left;
+}
+
+.print-transaction-form-wrapper {
+  width: 100%;
+  max-width: 470px;
+  overflow-x: auto;
+  align-self: flex-start;
+  border: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  padding: 2rem;
+}
+
+.print-transaction-form {
+  min-width: max-content;
+  width: 100%;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2rem;
+  border-radius: 10px;
+}
+
+.print-style-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.ca-print-style-radio,
+.table-print-style-radio {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0;
+}
+
+.ca-print-style-radio > input,
+.table-print-style-radio > input {
+  margin: 0 !important;
+  font-size: 1.4rem;
+  border: 2px solid #e5e7eb;
+  cursor: pointer;
+}
+
+.ca-print-style-radio > label,
+.table-print-style-radio > label {
+  font-size: 1.2rem;
+}
+
+.print-transaction-control {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 /* #endregion */
 

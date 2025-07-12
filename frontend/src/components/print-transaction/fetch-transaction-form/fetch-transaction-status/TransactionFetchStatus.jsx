@@ -1,0 +1,53 @@
+import { useContext } from "react";
+import { Spinner } from "react-bootstrap";
+import TransactionPrintContext from "../../../../store/context/transactionPrintContext";
+import TransactionErrorModal from "./TransactionErrorModal";
+
+function TransactionFetchStatus() {
+  const {
+    isLoadingTransactions,
+    isPrintSectionVisible,
+    errorFetchingTransactions,
+    transactions,
+    resetAll,
+  } = useContext(TransactionPrintContext);
+
+  if (
+    errorFetchingTransactions?.message &&
+    errorFetchingTransactions?.type === "api"
+  ) {
+    return (
+      <>
+        <TransactionErrorModal
+          message={errorFetchingTransactions.message}
+          onClose={resetAll}
+        />
+      </>
+    );
+  }
+
+  if (isLoadingTransactions) {
+    return (
+      <div className="transaction-fetching">
+        <Spinner animation="border" size="lg" />
+      </div>
+    );
+  }
+
+  if (!isPrintSectionVisible) return <></>;
+
+  if (transactions?.length === 0)
+    return (
+      <div className="transaction-empty warning-message">
+        No transactions found
+      </div>
+    );
+
+  return (
+    <div className="transaction-fetch-message">
+      {transactions.length} transactions fetched successfully.
+    </div>
+  );
+}
+
+export default TransactionFetchStatus;

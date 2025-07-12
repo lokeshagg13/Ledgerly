@@ -12,6 +12,7 @@ const TransactionPrintContext = createContext({
     transactions: [],
     isLoadingTransactions: false,
     errorFetchingTransactions: {},
+    isPrintSectionVisible: false,
     printStyle: null,
     setFetchMode: (prev) => { },
     setLastN: (prev) => { },
@@ -20,6 +21,7 @@ const TransactionPrintContext = createContext({
     setSelectedCategories: (prev) => { },
     fetchCategoriesFromDB: () => { },
     fetchTransactionsFromDB: () => { },
+    resetAll: () => { },
     resetErrorFetchingTransactions: () => { },
     setPrintStyle: (prev) => { },
 });
@@ -41,6 +43,7 @@ export function TransactionPrintContextProvider({ children }) {
         fromDate: false,
         toDate: false,
     })
+    const [isPrintSectionVisible, setIsPrintSectionVisible] = useState(false);
     const [printStyle, setPrintStyle] = useState("ca");    // "ca" | "table"
 
     async function fetchCategoriesFromDB() {
@@ -53,6 +56,18 @@ export function TransactionPrintContextProvider({ children }) {
         } finally {
             setIsLoadingCategories(false);
         }
+    }
+
+    function resetAll() {
+        setLastN(10);
+        setFromDate(null);
+        setToDate(null);
+        setSelectedCategories([]);
+        setTransactions([]);
+        setIsLoadingTransactions(false);
+        setIsPrintSectionVisible(false);
+        setPrintStyle("ca");
+        resetErrorFetchingTransactions();
     }
 
     function resetErrorFetchingTransactions() {
@@ -131,6 +146,12 @@ export function TransactionPrintContextProvider({ children }) {
     }
 
     function handleErrorFetchingTransactions(error) {
+        if (fetchMode === "recent") setLastN(10);
+        if (fetchMode === "filtered") {
+            setFromDate(null);
+            setToDate(null);
+            setSelectedCategories([]);
+        }
         if (!error?.response) {
             setErrorFetchingTransactions({
                 ...errorFetchingTransactions,
@@ -142,14 +163,14 @@ export function TransactionPrintContextProvider({ children }) {
             setErrorFetchingTransactions({
                 ...errorFetchingTransactions,
                 type: "api",
-                message: `Apologies for the inconvenience. There was an error while fetching your transactions. Please try again after some time. ${error?.response?.data?.error}`
+                message: [<div key="1">Apologies for the inconvenience. There was an error while fetching your transactions.</div>, <div key="2"><br /><b>{error?.response?.data?.error}</b></div>]
             });
         } else {
             setErrorFetchingTransactions({
                 ...errorFetchingTransactions,
                 type: "api",
                 message:
-                    "Apologies for the inconvenience. There was an error while fetching your transactions. Please try again after some time."
+                    "Apologies for the inconvenience. There was some error while fetching your transactions. Please try again after some time."
             });
         }
     }
@@ -160,8 +181,8 @@ export function TransactionPrintContextProvider({ children }) {
         try {
             if (validateInputForFetchingTransactions()) {
                 const res = await axiosPrivate.get(`/user/transactions?${generateParamStringForAPI()}`);
-                console.log(res?.data)
                 if (res?.data?.transactions) setTransactions(res.data.transactions);
+                setIsPrintSectionVisible(true);
             }
         } catch (error) {
             handleErrorFetchingTransactions(error)
@@ -181,6 +202,7 @@ export function TransactionPrintContextProvider({ children }) {
         transactions,
         isLoadingTransactions,
         errorFetchingTransactions,
+        isPrintSectionVisible,
         printStyle,
         setFetchMode,
         setLastN,
@@ -189,6 +211,7 @@ export function TransactionPrintContextProvider({ children }) {
         setSelectedCategories,
         fetchCategoriesFromDB,
         fetchTransactionsFromDB,
+        resetAll,
         resetErrorFetchingTransactions,
         setPrintStyle
     };

@@ -19,9 +19,11 @@ function DateFilterInputs() {
     setFromDate,
     setToDate,
     errorFetchingTransactions,
+    resetErrorFetchingTransactions,
   } = useContext(TransactionPrintContext);
 
   const updateFilterDates = (from, to) => {
+    resetErrorFetchingTransactions();
     if (from) setFromDate(getLocalDateString(from));
     if (to) setToDate(getLocalDateString(to));
   };

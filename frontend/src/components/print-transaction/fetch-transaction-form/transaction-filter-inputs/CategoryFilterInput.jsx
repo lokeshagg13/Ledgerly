@@ -3,9 +3,12 @@ import MultiSelector from "../../../ui/MultiSelector";
 import TransactionPrintContext from "../../../../store/context/transactionPrintContext";
 
 function CategoryFilterInput() {
-  const { categories, selectedCategories, setSelectedCategories } = useContext(
-    TransactionPrintContext
-  );
+  const {
+    categories,
+    selectedCategories,
+    setSelectedCategories,
+    resetErrorFetchingTransactions,
+  } = useContext(TransactionPrintContext);
 
   if (categories === null) return;
 
@@ -14,6 +17,11 @@ function CategoryFilterInput() {
     label: cat.name,
     value: cat._id,
   }));
+
+  const handleCategorySelect = (newValue) => {
+    resetErrorFetchingTransactions();
+    setSelectedCategories(newValue);
+  };
 
   return (
     <div className="category-filter-section">
@@ -24,7 +32,7 @@ function CategoryFilterInput() {
           name="categoryFilter"
           options={categoryOptions}
           value={selectedCategories}
-          onChange={setSelectedCategories}
+          onChange={handleCategorySelect}
         />
       </div>
     </div>
