@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "react-bootstrap";
 
 import TransactionContext from "../../../store/context/transactionContext";
 import TransactionFilterContext from "../../../store/context/transactionFilterContext";
 import AddTransactionModal from "./add-transaction/AddTransactionModal";
-import PrintTransactionModal from "./print-transaction/PrintTransactionModal";
 import { TransactionPrintContextProvider } from "../../../store/context/transactionPrintContext";
 
 function TransactionControl() {
@@ -14,8 +14,9 @@ function TransactionControl() {
   const { appliedFilters } = useContext(TransactionFilterContext);
   const [isAddTransactionModalVisible, setIsAddTransactionModalVisible] =
     useState(false);
-  const [isPrintTransactionModalVisible, setIsPrintTransactionModalVisible] =
-    useState(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleOpenAddTransactionModal = () => {
     setIsAddTransactionModalVisible(true);
@@ -25,12 +26,10 @@ function TransactionControl() {
     setIsAddTransactionModalVisible(false);
   };
 
-  const handleOpenPrintTransactionModal = () => {
-    setIsPrintTransactionModalVisible(true);
-  };
-
-  const handleClosePrintTransactionModal = () => {
-    setIsPrintTransactionModalVisible(false);
+  const handleNavigateToPrintTransactionsPage = () => {
+    navigate("/transactions/print", {
+      state: { from: location.pathname },
+    });
   };
 
   return (
@@ -48,7 +47,7 @@ function TransactionControl() {
         type="button"
         className="control-btn btn-outline-light"
         aria-label="Add a new transaction"
-        onClick={handleOpenPrintTransactionModal}
+        onClick={handleNavigateToPrintTransactionsPage}
         disabled={isLoadingTransactions}
       >
         Print Transactions
@@ -77,11 +76,6 @@ function TransactionControl() {
 
       {isAddTransactionModalVisible && (
         <AddTransactionModal onClose={handleCloseAddTransactionModal} />
-      )}
-      {isPrintTransactionModalVisible && (
-        <TransactionPrintContextProvider>
-          <PrintTransactionModal onClose={handleClosePrintTransactionModal} />
-        </TransactionPrintContextProvider>
       )}
     </div>
   );

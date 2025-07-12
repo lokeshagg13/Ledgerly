@@ -35,6 +35,7 @@ export function TransactionPrintContextProvider({ children }) {
     const [transactions, setTransactions] = useState([]);
     const [isLoadingTransactions, setIsLoadingTransactions] = useState(false);
     const [errorFetchingTransactions, setErrorFetchingTransactions] = useState({
+        type: "", // "input" / "api"
         message: "",
         lastN: false,
         fromDate: false,
@@ -57,6 +58,7 @@ export function TransactionPrintContextProvider({ children }) {
     function resetErrorFetchingTransactions() {
         setErrorFetchingTransactions({
             message: "",
+            type: "",
             lastN: false,
             fromDate: false,
             toDate: false,
@@ -99,7 +101,11 @@ export function TransactionPrintContextProvider({ children }) {
         }
 
         if (hasError) {
-            setErrorFetchingTransactions({ message: errorMessage, ...errorState });
+            setErrorFetchingTransactions({
+                message: errorMessage,
+                type: "input",
+                ...errorState
+            });
             return false;
         }
         resetErrorFetchingTransactions();
@@ -128,17 +134,20 @@ export function TransactionPrintContextProvider({ children }) {
         if (!error?.response) {
             setErrorFetchingTransactions({
                 ...errorFetchingTransactions,
+                type: "api",
                 message:
                     "Apologies for the inconvenience. We couldn’t connect to the server at the moment. This might be a temporary issue. Kindly try again shortly."
             });
         } else if (error?.response?.data?.error) {
             setErrorFetchingTransactions({
                 ...errorFetchingTransactions,
+                type: "api",
                 message: `Apologies for the inconvenience. There was an error while fetching your transactions. Please try again after some time. ${error?.response?.data?.error}`
             });
         } else {
             setErrorFetchingTransactions({
                 ...errorFetchingTransactions,
+                type: "api",
                 message:
                     "Apologies for the inconvenience. There was an error while fetching your transactions. Please try again after some time."
             });

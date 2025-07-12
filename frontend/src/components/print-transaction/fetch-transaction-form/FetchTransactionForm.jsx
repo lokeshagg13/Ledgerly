@@ -1,9 +1,9 @@
 import { useContext, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
 import LastNTransactionInput from "./last-n-transaction-input/LastNTransactionInput";
-import DateFilters from "./transaction-filter-inputs/DateFilters";
-import CategoryFilters from "./transaction-filter-inputs/CategoryFilters";
-import TransactionPrintContext from "../../../../../store/context/transactionPrintContext";
+import DateFilters from "./transaction-filter-inputs/DateFilterInputs";
+import CategoryFilters from "./transaction-filter-inputs/CategoryFilterInput";
+import TransactionPrintContext from "../../../store/context/transactionPrintContext";
 
 function FetchTransactionForm() {
   const {
@@ -21,10 +21,12 @@ function FetchTransactionForm() {
       const timeout = setTimeout(() => resetErrorFetchingTransactions(), 8000);
       return () => clearTimeout(timeout);
     }
+    // eslint-disable-next-line
   }, [errorFetchingTransactions]);
 
   useEffect(() => {
     fetchCategoriesFromDB();
+    // eslint-disable-next-line
   }, []);
 
   const handleFetch = () => {
@@ -62,11 +64,12 @@ function FetchTransactionForm() {
           className="transaction-filter-radio"
         />
 
-        {errorFetchingTransactions?.message && (
-          <div className="fetch-transaction-error-message">
-            {errorFetchingTransactions.message}
-          </div>
-        )}
+        {errorFetchingTransactions?.message &&
+          errorFetchingTransactions?.type === "input" && (
+            <div className="fetch-transaction-error-message">
+              {errorFetchingTransactions.message}
+            </div>
+          )}
         <Button className="fetch-transaction-button" onClick={handleFetch}>
           {isLoadingTransactions ? (
             <>

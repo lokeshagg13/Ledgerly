@@ -1320,6 +1320,52 @@ body {
 }
 /* #endregion */
 
+/* #region - Print transactions page */
+.print-transaction-page {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0;
+}
+
+@media (max-width: 1032px) {
+  .print-transaction-page {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}
+/* #endregion */
+
+/* #region - Print transactions page content */
+.print-transaction-page-header {
+  font-weight: 600;
+  font-size: 2rem;
+  color: white;
+  padding: 1rem 2rem;
+  background: #142842;
+  color: white;
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.print-transaction-page-header h2 {
+  margin: 0;
+  text-align: left;
+}
+
+.print-transaction-page-body-wrapper {
+  padding: 2rem 1rem;
+}
+
+.print-transaction-page-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: center;
+}
+/* #endregion */
+
 /* #region - Category page */
 .category-page {
   max-width: 1000px;

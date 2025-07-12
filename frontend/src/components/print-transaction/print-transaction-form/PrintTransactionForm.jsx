@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
-import TransactionPrintContext from "../../../../../store/context/transactionPrintContext";
+import TransactionPrintContext from "../../../store/context/transactionPrintContext";
+import TransactionErrorModal from "./TransactionErrorModal";
 
 function PrintTransactionForm() {
   const {
@@ -8,20 +9,46 @@ function PrintTransactionForm() {
     errorFetchingTransactions,
     transactions,
     printStyle,
+    fetchTransactionsFromDB,
     setPrintStyle,
+    resetErrorFetchingTransactions,
   } = useContext(TransactionPrintContext);
 
   if (isLoadingTransactions) {
     return (
-      <div className="transaction-table-loading">
+      <div className="print-transaction-fetching">
         <Spinner animation="border" size="lg" />
       </div>
     );
   }
 
-  if (errorFetchingTransactions.message || transactions.length === 0)
-    return <></>;
+  if (transactions?.length === 0)
+    return (
+      <div className="print-transaction-empty text-muted">
+        No Transactions found
+      </div>
+    );
 
+  if (
+    errorFetchingTransactions?.message &&
+    errorFetchingTransactions?.type === "api"
+  ) {
+    return (
+      <>
+        <div className="print-transactions-empty text-muted error-message">
+          Transaction Error
+        </div>
+        <TransactionErrorModal
+          message={errorFetchingTransactions.message}
+          onTryAgain={() => {
+            resetErrorFetchingTransactions();
+            fetchTransactionsFromDB();
+          }}
+        />
+      </>
+    );
+  }
+  
   return (
     <div className="print-transaction-section">
       <div className="transactions-fetched-message">

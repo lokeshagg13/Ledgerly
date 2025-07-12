@@ -8,11 +8,11 @@ import {
   getStartOfMonth,
   getStartOfYear,
   getToday,
-} from "../../../../../../utils/dateUtils";
-import FilterDatePicker from "../../../../../ui/FilterDatePicker";
-import TransactionPrintContext from "../../../../../../store/context/transactionPrintContext";
+} from "../../../../utils/dateUtils";
+import FilterDatePicker from "../../../ui/FilterDatePicker";
+import TransactionPrintContext from "../../../../store/context/transactionPrintContext";
 
-function DateFilters() {
+function DateFilterInputs() {
   const {
     fromDate,
     toDate,
@@ -95,4 +95,4 @@ function DateFilters() {
   );
 }
 
-export default DateFilters;
+export default DateFilterInputs;

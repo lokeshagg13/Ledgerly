@@ -1,6 +1,6 @@
 import TransactionPageContent from "../../components/transactions/TransactionPageContent";
 
-function TransactionPage() {
+function ManageTransactionPage() {
   return (
     <div className="page transaction-page">
       <TransactionPageContent />
@@ -8,4 +8,4 @@ function TransactionPage() {
   );
 }
 
-export default TransactionPage;
+export default ManageTransactionPage;

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Form } from "react-bootstrap";
-import TransactionPrintContext from "../../../../../../store/context/transactionPrintContext";
+import TransactionPrintContext from "../../../../store/context/transactionPrintContext";
 
 function LastNTransactionInput() {
   const { lastN, fetchMode, errorFetchingTransactions, setLastN } = useContext(

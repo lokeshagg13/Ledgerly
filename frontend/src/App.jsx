@@ -11,6 +11,7 @@ import HomeLogged from "./pages/HomeLogged";
 import Page404 from "./pages/page404";
 import TransactionPage from "./pages/transaction-page/TransactionPage";
 import CategoryPage from "./pages/category-page/CategoryPage";
+import PrintTransactionPage from "./pages/print-transaction-page/PrintTransactionPage";
 
 function App() {
   const { auth } = useAuth();
@@ -60,6 +61,10 @@ function App() {
           <Route element={<RequireAuth />}>
             <Route path="/dashboard" element={<HomeLogged />} />
             <Route path="/transactions" element={<TransactionPage />} />
+            <Route
+              path="/transactions/print"
+              element={<PrintTransactionPage />}
+            />
             <Route path="/categories" element={<CategoryPage />} />
           </Route>
         </Route>

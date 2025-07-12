@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import MultiSelector from "../../../../../ui/MultiSelector";
-import TransactionPrintContext from "../../../../../../store/context/transactionPrintContext";
+import MultiSelector from "../../../ui/MultiSelector";
+import TransactionPrintContext from "../../../../store/context/transactionPrintContext";
 
-function CategoryFilters() {
+function CategoryFilterInput() {
   const { categories, selectedCategories, setSelectedCategories } = useContext(
     TransactionPrintContext
   );
@@ -31,4 +31,4 @@ function CategoryFilters() {
   );
 }
 
-export default CategoryFilters;
+export default CategoryFilterInput;
