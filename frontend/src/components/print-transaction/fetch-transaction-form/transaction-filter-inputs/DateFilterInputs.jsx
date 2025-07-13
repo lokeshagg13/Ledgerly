@@ -16,13 +16,15 @@ function DateFilterInputs() {
   const {
     fromDate,
     toDate,
+    errorFetchingTransactions,
+    isPrintSectionVisible,
     setFromDate,
     setToDate,
-    errorFetchingTransactions,
     resetErrorFetchingTransactions,
   } = useContext(TransactionPrintContext);
 
   const updateFilterDates = (from, to) => {
+    if (isPrintSectionVisible) return;
     resetErrorFetchingTransactions();
     if (from) setFromDate(getLocalDateString(from));
     if (to) setToDate(getLocalDateString(to));
@@ -58,6 +60,7 @@ function DateFilterInputs() {
               onChange={(date) => updateFilterDates(date, toDate)}
               maxDate={today}
               isInvalid={errorFetchingTransactions.fromDate}
+              disabled={isPrintSectionVisible}
             />
           </div>
           <div
@@ -73,25 +76,28 @@ function DateFilterInputs() {
               minDate={fromDate}
               maxDate={today}
               isInvalid={errorFetchingTransactions.toDate}
+              disabled={isPrintSectionVisible}
             />
           </div>
         </div>
-        <div className="date-filter-quick-actions">
-          <div className="date-filter-action-group">
-            <div className="date-filter-buttons">
-              {quickActions.map(({ label, from, to }, idx) => (
-                <Button
-                  key={idx}
-                  size="sm"
-                  variant="outline-primary"
-                  onClick={() => updateFilterDates(from, to)}
-                >
-                  {label}
-                </Button>
-              ))}
+        {!isPrintSectionVisible && (
+          <div className="date-filter-quick-actions">
+            <div className="date-filter-action-group">
+              <div className="date-filter-buttons">
+                {quickActions.map(({ label, from, to }, idx) => (
+                  <Button
+                    key={idx}
+                    size="sm"
+                    variant="outline-primary"
+                    onClick={() => updateFilterDates(from, to)}
+                  >
+                    {label}
+                  </Button>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ function CategoryFilterInput() {
   const {
     categories,
     selectedCategories,
+    isPrintSectionVisible,
     setSelectedCategories,
     resetErrorFetchingTransactions,
   } = useContext(TransactionPrintContext);
@@ -19,6 +20,7 @@ function CategoryFilterInput() {
   }));
 
   const handleCategorySelect = (newValue) => {
+    if (isPrintSectionVisible) return;
     resetErrorFetchingTransactions();
     setSelectedCategories(newValue);
   };
@@ -33,6 +35,7 @@ function CategoryFilterInput() {
           options={categoryOptions}
           value={selectedCategories}
           onChange={handleCategorySelect}
+          disabled={isPrintSectionVisible}
         />
       </div>
     </div>

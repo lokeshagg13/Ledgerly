@@ -11,6 +11,7 @@ function FetchTransactionForm() {
     fetchMode,
     errorFetchingTransactions,
     isLoadingTransactions,
+    isPrintSectionVisible,
     setFetchMode,
     fetchCategoriesFromDB,
     fetchTransactionsFromDB,
@@ -32,10 +33,12 @@ function FetchTransactionForm() {
   }, []);
 
   const handleFetch = () => {
+    if (isPrintSectionVisible) return;
     fetchTransactionsFromDB();
   };
 
   const handleModifyFetchMode = (newMode) => {
+    if (isPrintSectionVisible) return;
     resetErrorFetchingTransactions();
     setFetchMode(newMode);
   };
@@ -55,6 +58,7 @@ function FetchTransactionForm() {
                 checked={fetchMode === "recent"}
                 onChange={() => handleModifyFetchMode("recent")}
                 className="last-n-transaction-radio"
+                disabled={isPrintSectionVisible}
               />
               <div className="fetch-transaction-filter-option">
                 <Form.Check
@@ -67,6 +71,7 @@ function FetchTransactionForm() {
                   checked={fetchMode === "filtered"}
                   onChange={() => handleModifyFetchMode("filtered")}
                   className="transaction-filter-radio"
+                  disabled={isPrintSectionVisible}
                 />
                 {fetchMode === "filtered" && (
                   <div className="transaction-filter-form">
@@ -86,6 +91,7 @@ function FetchTransactionForm() {
               <Button
                 className="fetch-transaction-button"
                 onClick={handleFetch}
+                disabled={isPrintSectionVisible}
               >
                 {isLoadingTransactions ? (
                   <>

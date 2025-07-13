@@ -1459,7 +1459,6 @@ body,
 
 .last-n-transaction-radio,
 .transaction-filter-radio {
-  cursor: pointer;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -1472,6 +1471,12 @@ body,
   font-size: 1.4rem;
   border: 2px solid #e5e7eb;
   cursor: pointer;
+}
+
+.last-n-transaction-radio > input:disabled,
+.transaction-filter-radio > input:disabled {
+  pointer-events: none;
+  cursor: not-allowed;
 }
 
 .last-n-transaction-section {

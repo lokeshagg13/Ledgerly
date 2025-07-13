@@ -7,12 +7,14 @@ function LastNTransactionInput() {
     lastN,
     fetchMode,
     errorFetchingTransactions,
+    isPrintSectionVisible,
     setLastN,
     resetErrorFetchingTransactions,
   } = useContext(TransactionPrintContext);
   const isInvalid = errorFetchingTransactions.lastN;
 
   const handleChange = (e) => {
+    if (isPrintSectionVisible) return;
     const raw = e.target.value;
     if (/^\d*$/.test(raw)) {
       resetErrorFetchingTransactions();
@@ -21,6 +23,7 @@ function LastNTransactionInput() {
   };
 
   const handleKeyDown = (e) => {
+    if (isPrintSectionVisible) return;
     const invalidChars = ["e", "E", "+", "-", ".", ","];
     if (invalidChars.includes(e.key)) {
       e.preventDefault();
@@ -37,7 +40,7 @@ function LastNTransactionInput() {
         inputMode="numeric"
         pattern="[0-9]*"
         value={lastN}
-        disabled={fetchMode !== "recent"}
+        disabled={fetchMode !== "recent" || isPrintSectionVisible}
         onKeyDown={handleKeyDown}
         onChange={handleChange}
         isInvalid={isInvalid}

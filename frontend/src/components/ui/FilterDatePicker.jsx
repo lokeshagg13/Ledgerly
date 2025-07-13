@@ -11,6 +11,7 @@ function FilterDatePicker({
   minDate,
   maxDate,
   isInvalid = false,
+  disabled = false,
 }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -22,6 +23,7 @@ function FilterDatePicker({
         minDate={minDate ? dayjs(minDate) : undefined}
         maxDate={maxDate ? dayjs(maxDate) : undefined}
         format="DD/MM/YYYY"
+        disabled={disabled}
         slotProps={{
           textField: { size: "small", fullWidth: true, error: isInvalid },
         }}

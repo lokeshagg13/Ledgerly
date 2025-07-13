@@ -34,6 +34,7 @@ function MultiSelector({
   value = [],
   onChange,
   className,
+  disabled = false,
 }) {
   const theme = useTheme();
 
@@ -52,6 +53,7 @@ function MultiSelector({
         m: 1,
         width: 300,
       }}
+      disabled={disabled}
     >
       <InputLabel id={`${name}-label`}>{label}</InputLabel>
       <Select
