@@ -1,12 +1,24 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import TransactionPrintContext from "../../../store/context/transactionPrintContext";
+import PrintPreviewModal from "./show-print-preview/PrintPreviewModal";
 
 function PrintTransactionForm() {
+  const [showPreview, setShowPreview] = useState(false);
   const { isPrintSectionVisible, transactions, printStyle, setPrintStyle } =
     useContext(TransactionPrintContext);
 
   if (!isPrintSectionVisible || transactions?.length === 0) return <></>;
+
+  const handleOpenPreview = () => {
+    console.log("opening");
+    setShowPreview(true);
+  };
+
+  const handleClosePreview = () => {
+    console.log("closing");
+    setShowPreview(false);
+  };
 
   return (
     <div className="print-transaction-section">
@@ -32,10 +44,16 @@ function PrintTransactionForm() {
             />
           </div>
           <div className="print-transaction-control">
-            <Button variant="outline-secondary">Show Preview</Button>
+            <Button variant="outline-secondary" onClick={handleOpenPreview}>
+              Show Preview
+            </Button>
             <Button variant="primary">Save as PDF</Button>
             <Button variant="success">Print Transactions</Button>
           </div>
+
+          {showPreview && (
+            <PrintPreviewModal show={showPreview} onClose={handleClosePreview} />
+          )}
         </div>
       </div>
     </div>
