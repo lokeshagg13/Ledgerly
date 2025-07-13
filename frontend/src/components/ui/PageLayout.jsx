@@ -5,7 +5,7 @@ function PageLayout({ bgImage, children }) {
         className="page-bg-overlay"
         style={{ backgroundImage: `url(${bgImage})` }}
       ></div>
-      {children}
+      <div className="page-content-wrapper">{children}</div>
     </div>
   );
 }

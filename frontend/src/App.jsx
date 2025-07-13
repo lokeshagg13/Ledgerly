@@ -16,63 +16,65 @@ import PrintTransactionPage from "./pages/print-transaction-page/PrintTransactio
 function App() {
   const { auth } = useAuth();
   return (
-    <>
+    <div className="app-wrapper">
       <NavbarComponent />
 
-      <Routes>
-        <Route
-          exact
-          path="/"
-          element={
-            auth?.email && auth?.accessToken ? (
-              <Navigate to="/dashboard" replace />
-            ) : (
-              <Navigate to="/home" replace />
-            )
-          }
-        />
-
-        <Route path="/home" element={<Home />} />
-
-        {/* Protected Routes */}
-        <Route element={<PersistLogin />}>
+      <div className="app-content">
+        <Routes>
           <Route
-            path="/login"
+            exact
+            path="/"
             element={
               auth?.email && auth?.accessToken ? (
                 <Navigate to="/dashboard" replace />
               ) : (
-                <Login />
+                <Navigate to="/home" replace />
               )
             }
           />
 
-          <Route
-            path="/register"
-            element={
-              auth?.email && auth?.accessToken ? (
-                <Navigate to="/dashboard" replace />
-              ) : (
-                <Register />
-              )
-            }
-          />
+          <Route path="/home" element={<Home />} />
 
-          <Route element={<RequireAuth />}>
-            <Route path="/dashboard" element={<HomeLogged />} />
-            <Route path="/transactions" element={<TransactionPage />} />
+          {/* Protected Routes */}
+          <Route element={<PersistLogin />}>
             <Route
-              path="/transactions/print"
-              element={<PrintTransactionPage />}
+              path="/login"
+              element={
+                auth?.email && auth?.accessToken ? (
+                  <Navigate to="/dashboard" replace />
+                ) : (
+                  <Login />
+                )
+              }
             />
-            <Route path="/categories" element={<CategoryPage />} />
-          </Route>
-        </Route>
 
-        {/* Invalid Paths */}
-        <Route path="*" element={<Page404 />} />
-      </Routes>
-    </>
+            <Route
+              path="/register"
+              element={
+                auth?.email && auth?.accessToken ? (
+                  <Navigate to="/dashboard" replace />
+                ) : (
+                  <Register />
+                )
+              }
+            />
+
+            <Route element={<RequireAuth />}>
+              <Route path="/dashboard" element={<HomeLogged />} />
+              <Route path="/transactions" element={<TransactionPage />} />
+              <Route
+                path="/transactions/print"
+                element={<PrintTransactionPage />}
+              />
+              <Route path="/categories" element={<CategoryPage />} />
+            </Route>
+          </Route>
+
+          {/* Invalid Paths */}
+          <Route path="*" element={<Page404 />} />
+        </Routes>
+      </div>
+    </div>
   );
 }
 
