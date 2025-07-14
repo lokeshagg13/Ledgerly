@@ -17,18 +17,6 @@ export function formatAmountForDisplay(amount) {
     return `₹ ${formattedInt}.${decimalPart ? decimalPart.padEnd(2, "0") : "00"}`;
 }
 
-export function formatAmountForPreview(amount, maxIntegerDigits) {
-    if (amount == null || typeof amount !== "number") return "";
-
-    const fixedAmount = amount.toFixed(2); // ensures 2 decimal places
-    const [intPart, decimalPart] = fixedAmount.split(".");
-    const formattedInt = parseInt(intPart, 10).toLocaleString("en-IN");
-    const paddingNeeded = maxIntegerDigits - formattedInt.length;
-    console.log(paddingNeeded)
-    const padding = " ".repeat(paddingNeeded > 0 ? paddingNeeded : 0);
-    return `${padding}${formattedInt}.${decimalPart}`;
-}
-
 export function formatAmountForFirstTimeInput(amount) {
     if (typeof amount === "number") amount = amount.toString();
     if (!amount.includes('.')) {
@@ -49,21 +37,12 @@ export function formatDateForCalendarInput(dateString, sep = '-') {
     return `${year}${sep}${month}${sep}${day}`;
 }
 
-export function formatDateForDisplay(dateString) {
+export function formatDateForDisplay(dateString, sep = "-") {
     const date = new Date(dateString);
     const day = String(date.getUTCDate()).padStart(2, "0");
     const month = String(date.getUTCMonth() + 1).padStart(2, "0");
     const year = date.getUTCFullYear();
-    return `${day}-${month}-${year}`;
-}
-
-export function formatStringForCenterPadding(str, totalLength = 20) {
-  const trimmed = str?.toString().trim() || "";
-  const padLength = Math.max(totalLength - trimmed.length, 0);
-  const leftPad = Math.floor(padLength / 2);
-  const rightPad = padLength - leftPad;
-  console.log(str, leftPad, rightPad)
-  return " ".repeat(leftPad) + trimmed + " ".repeat(rightPad);
+    return `${day}${sep}${month}${sep}${year}`;
 }
 
 export function formatCategoryError(errorMessage) {

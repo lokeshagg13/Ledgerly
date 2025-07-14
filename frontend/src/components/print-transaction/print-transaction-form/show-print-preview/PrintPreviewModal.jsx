@@ -1,11 +1,10 @@
-import { Button, Modal } from "react-bootstrap";
-import CancelIcon from "../../../ui/icons/CancelIcon";
 import { useContext } from "react";
+import { Button, Image, Modal } from "react-bootstrap";
+import CancelIcon from "../../../ui/icons/CancelIcon";
 import TransactionPrintContext from "../../../../store/context/transactionPrintContext";
-import CAStylePrintPreview from "./ca-style-print-preview/CAStylePrintPreview";
 
 function PrintPreviewModal({ show, onClose }) {
-  const { printStyle, transactions } = useContext(TransactionPrintContext);
+  const { caPrintPreviewImageData } = useContext(TransactionPrintContext);
   return (
     <Modal
       show={show}
@@ -17,13 +16,17 @@ function PrintPreviewModal({ show, onClose }) {
     >
       <div className="preview-a4-sheet-container">
         <div className="preview-a4-sheet-wrapper">
+          <div className="preview-a4-sheet-content">
+            <Image
+              className="preview-a4-sheet-image"
+              src={caPrintPreviewImageData}
+              alt="Data"
+            />
+          </div>
           <div className="preview-a4-sheet-control">
             <Button className="preview-a4-sheet-close-button" onClick={onClose}>
-              <CancelIcon width="1.1rem" height="1.1rem" />
+              <CancelIcon width="0.9rem" height="0.9rem" />
             </Button>
-          </div>
-          <div className="preview-a4-sheet-content">
-            <CAStylePrintPreview />
           </div>
         </div>
       </div>

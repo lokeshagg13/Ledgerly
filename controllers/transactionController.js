@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const TransactionModel = require("../models/Transaction");
 const {
     validateRequiredTransactionFields,
@@ -9,7 +10,6 @@ const {
     validateTransactionSubcategoryId,
 } = require("./utils/validators");
 const { normalizeDate, formatTransactions } = require("./utils/formatters");
-const mongoose = require("mongoose");
 
 // Get all transactions for the logged-in user
 exports.getTransactions = async (req, res) => {

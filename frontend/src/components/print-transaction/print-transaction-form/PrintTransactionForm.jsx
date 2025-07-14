@@ -11,12 +11,10 @@ function PrintTransactionForm() {
   if (!isPrintSectionVisible || transactions?.length === 0) return <></>;
 
   const handleOpenPreview = () => {
-    console.log("opening");
     setShowPreview(true);
   };
 
   const handleClosePreview = () => {
-    console.log("closing");
     setShowPreview(false);
   };
 

@@ -12,6 +12,8 @@ const TransactionPrintContext = createContext({
     transactions: [],
     isLoadingTransactions: false,
     errorFetchingTransactions: {},
+    caPrintPreviewImageData: null,
+    tablePrintPreviewImageData: null,
     isPrintSectionVisible: false,
     printStyle: null,
     setFetchMode: (prev) => { },
@@ -43,6 +45,8 @@ export function TransactionPrintContextProvider({ children }) {
         fromDate: false,
         toDate: false,
     })
+    const [caPrintPreviewImageData, setCAPrintPreviewImageData] = useState(null);
+    const [tablePrintPreviewImageData, setTablePrintPreviewImageData] = useState(null);
     const [isPrintSectionVisible, setIsPrintSectionVisible] = useState(false);
     const [printStyle, setPrintStyle] = useState("ca");    // "ca" | "table"
 
@@ -64,6 +68,8 @@ export function TransactionPrintContextProvider({ children }) {
         setToDate(null);
         setSelectedCategories([]);
         setTransactions([]);
+        setCAPrintPreviewImageData(null);
+        setTablePrintPreviewImageData(null);
         setIsLoadingTransactions(false);
         setIsPrintSectionVisible(false);
         setPrintStyle("ca");
@@ -180,8 +186,10 @@ export function TransactionPrintContextProvider({ children }) {
         resetErrorFetchingTransactions();
         try {
             if (validateInputForFetchingTransactions()) {
-                const res = await axiosPrivate.get(`/user/transactions?${generateParamStringForAPI()}`);
+                const res = await axiosPrivate.get(`/user/transactions/print?${generateParamStringForAPI()}`);
                 if (res?.data?.transactions) setTransactions(res.data.transactions);
+                if (res?.data?.caPreviewImage) setCAPrintPreviewImageData(res.data.caPreviewImage);
+                if (res?.data?.tablePreviewImage) setTablePrintPreviewImageData(res.data.table)
                 setIsPrintSectionVisible(true);
             }
         } catch (error) {
@@ -202,6 +210,8 @@ export function TransactionPrintContextProvider({ children }) {
         transactions,
         isLoadingTransactions,
         errorFetchingTransactions,
+        caPrintPreviewImageData,
+        tablePrintPreviewImageData,
         isPrintSectionVisible,
         printStyle,
         setFetchMode,
