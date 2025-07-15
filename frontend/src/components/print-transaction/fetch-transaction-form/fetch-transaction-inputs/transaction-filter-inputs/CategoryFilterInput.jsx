@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import MultiSelector from "../../../ui/MultiSelector";
-import TransactionPrintContext from "../../../../store/context/transactionPrintContext";
+import MultiSelector from "../../../../ui/MultiSelector";
+import TransactionPrintContext from "../../../../../store/context/transactionPrintContext";
 
 function CategoryFilterInput() {
   const {

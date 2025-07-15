@@ -1,7 +1,7 @@
 import { Modal } from "react-bootstrap";
 import ErrorTriangle from "../../../ui/icons/ErrorTriangle";
 
-function TransactionErrorModal({ message = "Something went wrong.", onClose }) {
+function FetchErrorModal({ message = "Something went wrong.", onClose }) {
   return (
     <Modal
       show={true}
@@ -23,4 +23,4 @@ function TransactionErrorModal({ message = "Something went wrong.", onClose }) {
   );
 }
 
-export default TransactionErrorModal;
+export default FetchErrorModal;

@@ -1,10 +1,10 @@
 import jsPDF from "jspdf";
 
-export async function downloadPrintPreviewPDF(pages, fileName = "transactions.pdf") {
+export async function downloadPrintPreviewPDF(pages, orientation = "portrait", fileName = "transactions.pdf") {
     if (!pages || pages.length === 0) return;
     await new Promise((resolve) => setTimeout(resolve, 100));
     const pdf = new jsPDF({
-        orientation: "portrait",
+        orientation: orientation,
         unit: "px",
         format: "a4",
     });

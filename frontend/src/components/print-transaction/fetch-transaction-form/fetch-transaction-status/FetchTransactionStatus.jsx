@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { Spinner } from "react-bootstrap";
 import TransactionPrintContext from "../../../../store/context/transactionPrintContext";
-import TransactionErrorModal from "./TransactionErrorModal";
+import TransactionErrorModal from "./FetchErrorModal";
 
-function TransactionFetchStatus() {
+function FetchTransactionStatus() {
   const {
     isLoadingTransactions,
     isPrintSectionVisible,
@@ -50,4 +50,4 @@ function TransactionFetchStatus() {
   );
 }
 
-export default TransactionFetchStatus;
+export default FetchTransactionStatus;

@@ -8,6 +8,8 @@ const TransactionPrintContext = createContext({
     fromDate: null,
     toDate: null,
     selectedCategories: [],
+    keepCreditDebitTxnSeparate: true,
+    transactionSortOrder: null,
     categories: [],
     isLoadingCategories: false,
     transactions: [],
@@ -25,6 +27,8 @@ const TransactionPrintContext = createContext({
     setFromDate: (prev) => { },
     setToDate: (prev) => { },
     setSelectedCategories: (prev) => { },
+    setKeepCreditDebitTxnSeparate: (prev) => { },
+    setTransactionSortOrder: (prev) => { },
     fetchCategoriesFromDB: async () => { },
     fetchTransactionsFromDB: async () => { },
     resetAll: () => { },
@@ -50,6 +54,8 @@ export function TransactionPrintContextProvider({ children }) {
     const [fromDate, setFromDate] = useState(null);
     const [toDate, setToDate] = useState(null);
     const [selectedCategories, setSelectedCategories] = useState([]);
+    const [keepCreditDebitTxnSeparate, setKeepCreditDebitTxnSeparate] = useState(true);
+    const [transactionSortOrder, setTransactionSortOrder] = useState("dateAsc");    // "dateAsc" / "dateDesc" / "amountAsc" / "amountDesc"
     const [categories, setCategories] = useState(null);
     const [isLoadingCategories, setIsLoadingCategories] = useState(false);
     const [transactions, setTransactions] = useState([]);
@@ -103,6 +109,8 @@ export function TransactionPrintContextProvider({ children }) {
         setFromDate(null);
         setToDate(null);
         setSelectedCategories([]);
+        setKeepCreditDebitTxnSeparate(true);
+        setTransactionSortOrder("dateAsc");
         setTransactions([]);
         setIsLoadingTransactions(false);
         resetErrorFetchingTransactions();
@@ -184,6 +192,8 @@ export function TransactionPrintContextProvider({ children }) {
                 params.append("categoryIds", selectedCategories);
             }
         }
+        params.append("keepCreditDebitTxnSeparate", keepCreditDebitTxnSeparate);
+        params.append("sortBy", transactionSortOrder);
         return params.toString();
     }
 
@@ -194,6 +204,8 @@ export function TransactionPrintContextProvider({ children }) {
             setToDate(null);
             setSelectedCategories([]);
         }
+        setKeepCreditDebitTxnSeparate(true);
+        setTransactionSortOrder("dateAsc");
         if (!error?.response) {
             setErrorFetchingTransactions({
                 ...errorFetchingTransactions,
@@ -315,8 +327,9 @@ export function TransactionPrintContextProvider({ children }) {
 
     async function handleSaveTransactionsAsPDF(fileName) {
         const imagesToDownload = printStyle === "ca" ? caPrintPreviewImages : tablePrintPreviewImages;
+        const orientation = printStyle === "ca" ? "portrait" : "landscape";
         try {
-            await downloadPrintPreviewPDF(imagesToDownload, fileName);
+            await downloadPrintPreviewPDF(imagesToDownload, orientation, fileName);
         } catch (error) {
             throw new Error(error);
         }
@@ -328,6 +341,8 @@ export function TransactionPrintContextProvider({ children }) {
         fromDate,
         toDate,
         selectedCategories,
+        keepCreditDebitTxnSeparate,
+        transactionSortOrder,
         categories,
         isLoadingCategories,
         transactions,
@@ -345,6 +360,8 @@ export function TransactionPrintContextProvider({ children }) {
         setFromDate,
         setToDate,
         setSelectedCategories,
+        setKeepCreditDebitTxnSeparate,
+        setTransactionSortOrder,
         fetchCategoriesFromDB,
         fetchTransactionsFromDB,
         resetAll,
