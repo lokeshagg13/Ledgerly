@@ -250,7 +250,7 @@ export function TransactionPrintContextProvider({ children }) {
     }
 
     function moveToPrevPrintPreviewPage() {
-        setPrintPreviewSlideDirection("left");
+        setPrintPreviewSlideDirection("right");
         setPrintPreviewCurrentData((prev) => {
             if (!prev || prev.currentPage <= 1) return prev;
             const prevPage = prev.currentPage - 1;
@@ -265,7 +265,7 @@ export function TransactionPrintContextProvider({ children }) {
     }
 
     function moveToNextPrintPreviewPage() {
-        setPrintPreviewSlideDirection("right");
+        setPrintPreviewSlideDirection("left");
         setPrintPreviewCurrentData((prev) => {
             if (!prev || prev.currentPage >= prev.totalPages) return prev;
             const nextPage = prev.currentPage + 1;

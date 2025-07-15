@@ -41,12 +41,12 @@ function PrintPreviewModal() {
         <div className="preview-a4-sheet-wrapper">
           <PrintPreviewControl />
           <div
-            className={`preview-a4-sheet-content animated-container ${slideAnimationClass}`}
+            className={`preview-a4-sheet-content ${slideAnimationClass}`}
           >
             <Image
-              className="preview-a4-sheet-image"
               src={imageData}
-              alt="Data"
+              alt="Preview Image"
+              className="preview-a4-sheet-image"
             />
           </div>
         </div>
