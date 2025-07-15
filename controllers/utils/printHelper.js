@@ -139,7 +139,7 @@ function drawTransactionPage({ debitTransactions, creditTransactions }, pageNumb
 }
 
 // Paginate transactions
-function paginateTransactions(transactions, linesPerSection = 30) {
+function paginateTransactions(transactions, linesPerSection = 56) {
     const pages = [];
     let debitLineCount = 0;
     let creditLineCount = 0;
@@ -188,7 +188,7 @@ function paginateTransactions(transactions, linesPerSection = 30) {
 
 // Call the paginate function to divide transactions into pages and then draw each page while saving that page's canvas image in buffers
 exports.generateCAPreviewImages = (transactions, userName) => {
-    const linesPerPage = 60;
+    const linesPerPage = 56;
     const pages = paginateTransactions(transactions, linesPerPage);
     const buffers = [];
 

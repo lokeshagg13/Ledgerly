@@ -60,7 +60,6 @@ function PrintTransactionForm() {
             <Button variant="primary" onClick={handleOpenSaveTransactionModal}>
               Save as PDF
             </Button>
-            <Button variant="success">Print Transactions</Button>
           </div>
 
           {isPrintPreviewVisible && <PrintPreviewModal />}
