@@ -1721,7 +1721,6 @@ body,
   justify-content: center;
   padding: 1rem;
   height: 100vh;
-  overflow-y: auto;
 }
 
 .preview-a4-sheet-wrapper {
@@ -1730,25 +1729,9 @@ body,
   aspect-ratio: 1 / 1.414;
   background-color: #fff;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
-  overflow-y: auto;
   display: flex;
-}
-
-.preview-a4-sheet-close-button {
-  padding: 0.5rem 0.5rem 0 0;
-  background-color: transparent;
-  border: none;
-  border-radius: 50%;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.preview-a4-sheet-close-button:hover {
-  background-color: rgba(0, 0, 0, 0.08);
-  transform: scale(1.05);
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .preview-a4-sheet-content {
@@ -1761,6 +1744,91 @@ body,
 .preview-a4-sheet-image {
   width: 100%;
   height: auto;
+}
+/* #endregion */
+
+/* #region - Print transaction preview control */
+.preview-control-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.preview-control-wrapper {
+  overflow-x: auto;
+  background-color: #f9fafb;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.2rem;
+  margin: 0.2rem;
+}
+
+.preview-control-section {
+  min-width: max-content;
+  display: flex;
+  gap: 2rem;
+}
+
+.preview-control-section .pagination-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.preview-control-section .page-info {
+  font-weight: bold;
+  font-size: 0.8rem;
+  color: #333;
+}
+
+.preview-control-section .action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.preview-control-section .tool-btn {
+  background-color: #4f46e5;
+  border: none;
+  padding: 0.4rem;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.preview-control-section .tool-btn svg {
+  fill: white;
+  width: 0.7rem;
+  height: 0.8rem;
+}
+
+.preview-control-section .tool-btn:hover {
+  background-color: #4338ca;
+}
+
+.preview-control-section .tool-btn:active {
+  background-color: #3730a3;
+}
+
+.preview-modal-close-button {
+  padding: 0.5rem;
+  background-color: transparent;
+  border: none;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.preview-modal-close-button:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+  transform: scale(1.05);
 }
 /* #endregion */
 

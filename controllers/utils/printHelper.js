@@ -35,7 +35,7 @@ function getMaxCharactersInCatString(transactions) {
 }
 
 // Draw transactions on given section centered on its section center
-function drawTransactionLines(ctx, transactions, centerX, sectionStartY) {
+function drawTransactionLines(ctx, transactions, centerX, startY) {
     const maxDigitsInAmounts = getMaxDigitsInAmount(transactions);
     const maxCharactersInCatString = getMaxCharactersInCatString(transactions);
 

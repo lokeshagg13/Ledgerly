@@ -12,10 +12,11 @@ const TransactionPrintContext = createContext({
     transactions: [],
     isLoadingTransactions: false,
     errorFetchingTransactions: {},
-    caPrintPreviewImageData: null,
-    tablePrintPreviewImageData: null,
     isPrintSectionVisible: false,
     printStyle: null,
+    isPrintPreviewVisible: false,
+    caPrintPreviewImageData: [],
+    tablePrintPreviewImageData: [],
     setFetchMode: (prev) => { },
     setLastN: (prev) => { },
     setFromDate: (prev) => { },
@@ -26,6 +27,8 @@ const TransactionPrintContext = createContext({
     resetAll: () => { },
     resetErrorFetchingTransactions: () => { },
     setPrintStyle: (prev) => { },
+    handleOpenPrintPreview: () => { },
+    handleClosePrintPreview: () => { }
 });
 
 export function TransactionPrintContextProvider({ children }) {
@@ -45,10 +48,11 @@ export function TransactionPrintContextProvider({ children }) {
         fromDate: false,
         toDate: false,
     })
-    const [caPrintPreviewImageData, setCAPrintPreviewImageData] = useState(null);
-    const [tablePrintPreviewImageData, setTablePrintPreviewImageData] = useState(null);
     const [isPrintSectionVisible, setIsPrintSectionVisible] = useState(false);
     const [printStyle, setPrintStyle] = useState("ca");    // "ca" | "table"
+    const [isPrintPreviewVisible, setIsPrintPreviewVisible] = useState(false);
+    const [caPrintPreviewImageData, setCAPrintPreviewImageData] = useState([]);
+    const [tablePrintPreviewImageData, setTablePrintPreviewImageData] = useState([]);
 
     async function fetchCategoriesFromDB() {
         setIsLoadingCategories(true);
@@ -73,6 +77,9 @@ export function TransactionPrintContextProvider({ children }) {
         setIsLoadingTransactions(false);
         setIsPrintSectionVisible(false);
         setPrintStyle("ca");
+        setIsPrintPreviewVisible(false);
+        setCAPrintPreviewImageData(null);
+        setTablePrintPreviewImageData(null);
         resetErrorFetchingTransactions();
     }
 
@@ -188,7 +195,7 @@ export function TransactionPrintContextProvider({ children }) {
             if (validateInputForFetchingTransactions()) {
                 const res = await axiosPrivate.get(`/user/transactions/print?${generateParamStringForAPI()}`);
                 if (res?.data?.transactions) setTransactions(res.data.transactions);
-                if (res?.data?.caPreviewImage) setCAPrintPreviewImageData(res.data.caPreviewImage);
+                if (res?.data?.caPreviewImages) setCAPrintPreviewImageData(res.data.caPreviewImages[0]);
                 if (res?.data?.tablePreviewImage) setTablePrintPreviewImageData(res.data.table)
                 setIsPrintSectionVisible(true);
             }
@@ -197,6 +204,14 @@ export function TransactionPrintContextProvider({ children }) {
         } finally {
             setIsLoadingTransactions(false);
         }
+    }
+
+    function handleOpenPrintPreview() {
+        setIsPrintPreviewVisible(true);
+    }
+
+    function handleClosePrintPreview() {
+        setIsPrintPreviewVisible(false);
     }
 
     const currentPrintContextValue = {
@@ -210,10 +225,11 @@ export function TransactionPrintContextProvider({ children }) {
         transactions,
         isLoadingTransactions,
         errorFetchingTransactions,
-        caPrintPreviewImageData,
-        tablePrintPreviewImageData,
         isPrintSectionVisible,
         printStyle,
+        isPrintPreviewVisible,
+        caPrintPreviewImageData,
+        tablePrintPreviewImageData,
         setFetchMode,
         setLastN,
         setFromDate,
@@ -223,7 +239,9 @@ export function TransactionPrintContextProvider({ children }) {
         fetchTransactionsFromDB,
         resetAll,
         resetErrorFetchingTransactions,
-        setPrintStyle
+        setPrintStyle,
+        handleOpenPrintPreview,
+        handleClosePrintPreview
     };
 
     return (
