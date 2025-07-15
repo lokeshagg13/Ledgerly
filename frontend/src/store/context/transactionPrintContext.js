@@ -225,7 +225,7 @@ export function TransactionPrintContextProvider({ children }) {
                 const res = await axiosPrivate.get(`/user/transactions/print?${generateParamStringForAPI()}`);
                 if (res?.data?.transactions) setTransactions(res.data.transactions);
                 if (res?.data?.caPreviewImages) setCAPrintPreviewImages(res.data.caPreviewImages);
-                if (res?.data?.tablePreviewImage) setTablePrintPreviewImages(res.data.table)
+                if (res?.data?.tablePreviewImages) setTablePrintPreviewImages(res.data.tablePreviewImages)
                 setIsPrintSectionVisible(true);
             }
         } catch (error) {

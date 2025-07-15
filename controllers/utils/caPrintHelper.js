@@ -1,17 +1,17 @@
 const { createCanvas } = require("canvas");
-const { formatAmountForCAPrintPreview, formatDateForCAPrintPreview, addPaddingAroundString } = require("./formatters");
+const { formatAmountForCAPrintPreview, formatDateForPrintPreview, addPaddingAroundString } = require("./formatters");
 
 const CANVAS_WIDTH = 1100;
 const CANVAS_HEIGHT = 1556;
-const BACKGROUND_COLOR = "#f8f9fa";
-const HEADER_COLOR = "#343a40";
+const PAGE_BACKGROUND_COLOR = "#f8f9fa";
+const PAGE_HEADER_COLOR = "#343a40";
 const SECTION_TITLE_COLOR = "#0d6efd";
 const TEXT_COLOR = "#000000";
 const LINE_HEIGHT = 26;
-const FONT_MONO = "14px monospace";
-const FONT_TITLE = "bold 18px sans-serif";
-const FONT_PAGE = "italic 18px sans-serif";
-const FONT_USER = "bold 18px sans-serif";
+const PAGE_FONT = "italic 18px sans-serif";
+const USER_FONT = "bold 18px sans-serif";
+const TITLE_FONT = "bold 18px sans-serif";
+const TEXT_FONT = "14px monospace";
 
 // Combine category and subcategory name into a single string
 function combineCategorySubcategoryNames(categoryName = "", subcategoryName = "") {
@@ -52,14 +52,14 @@ function drawTransactionLines(ctx, transactions, centerX, startY) {
     const maxCharactersInCatString = getMaxCharactersInCatString(transactions);
 
     ctx.textAlign = "left";
-    ctx.font = FONT_MONO;
+    ctx.font = TEXT_FONT;
     ctx.fillStyle = TEXT_COLOR;
 
     const lines = [];
     for (let i = 0; i < transactions.length; i++) {
         const { amount, categoryName, subcategoryName, date } = transactions[i];
         const formattedAmount = formatAmountForCAPrintPreview(amount, maxDigitsInAmounts);
-        const formattedDate = formatDateForCAPrintPreview(date, ".");
+        const formattedDate = formatDateForPrintPreview(date, ".");
 
         const combinedName = combineCategorySubcategoryNames(categoryName, subcategoryName);
         if (combinedName.length > 20) {
@@ -85,7 +85,8 @@ function drawTransactionLines(ctx, transactions, centerX, startY) {
 
 // Draw section containing a title for the transactions and the transactions in it
 function drawTransactionSection(ctx, transactions, sectionTitle, sectionCenterX, sectionY) {
-    ctx.font = FONT_TITLE;
+    if (transactions.length <= 0) return;
+    ctx.font = TITLE_FONT;
     ctx.fillStyle = SECTION_TITLE_COLOR;
     const titleTextWidth = ctx.measureText(sectionTitle).width;
     ctx.fillText(sectionTitle, sectionCenterX - 0.5 * titleTextWidth, sectionY);
@@ -100,7 +101,7 @@ function drawTransactionPage({ debitTransactions, creditTransactions }, pageNumb
     const ctx = canvas.getContext("2d");
 
     // Creating a page
-    ctx.fillStyle = BACKGROUND_COLOR;
+    ctx.fillStyle = PAGE_BACKGROUND_COLOR;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Page constants
@@ -108,13 +109,13 @@ function drawTransactionPage({ debitTransactions, creditTransactions }, pageNumb
     let paddingLeft = 30;
 
     // Draw page number on top-left of the page
-    ctx.fillStyle = HEADER_COLOR;
-    ctx.font = FONT_PAGE;
+    ctx.fillStyle = PAGE_HEADER_COLOR;
+    ctx.font = PAGE_FONT;
     ctx.fillText(`Page ${pageNumber} / ${totalPages}`, paddingLeft, paddingTop);
 
     if (userName) {
         // Draw user name on top-center of the page
-        ctx.font = FONT_USER;
+        ctx.font = USER_FONT;
         const nameWidth = ctx.measureText(userName).width;
         userName = userName.toUpperCase();
         ctx.fillText(userName, (CANVAS_WIDTH - nameWidth) / 2, paddingTop);

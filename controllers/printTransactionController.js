@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 const UserModel = require("../models/User");
 const TransactionModel = require("../models/Transaction");
 const { normalizeDate, formatTransactions } = require("./utils/formatters");
-const { generateCAPreviewImages } = require("./utils/printHelper");
+const { generateCAPreviewImages } = require("./utils/caPrintHelper");
+const { generateTablePreviewImages } = require("./utils/tablePrintHelper");
 
 exports.getTransactionsWithPrintPreview = async (req, res) => {
     const userId = req.userId;
@@ -72,9 +73,13 @@ exports.getTransactionsWithPrintPreview = async (req, res) => {
         const caImageBuffers = generateCAPreviewImages(formattedTransactions, userName);
         const caBase64Images = caImageBuffers.map(buf => `data:image/png;base64,${buf.toString("base64")}`);
 
+        const tableImageBuffers = generateTablePreviewImages(formattedTransactions, userName);
+        const tableBase64Images = tableImageBuffers.map(buf => `data:image/png;base64,${buf.toString("base64")}`);
+
         return res.status(200).json({
             transactions: formattedTransactions,
-            caPreviewImages: caBase64Images
+            caPreviewImages: caBase64Images,
+            tablePreviewImages: tableBase64Images,
         });
     } catch (error) {
         return res.status(500).json({ error: "Error fetching transactions and generating print preview: " + error.message });

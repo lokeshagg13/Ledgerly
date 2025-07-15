@@ -38,13 +38,22 @@ export function addPaddingAroundString(str, maxLength = 40) {
     return " ".repeat(leftPad) + trimmed + " ".repeat(rightPad);
 }
 
-export function formatDateForCAPrintPreview(dateString, sep = ".") {
+export function formatAmountForTablePrintPreview(amount) {
+    if (amount == null || typeof amount !== "number") return "";
+    const fixedAmount = amount.toFixed(2);
+    const [intPart, decimalPart] = fixedAmount.split(".");
+    const formattedInt = parseInt(intPart, 10).toLocaleString("en-IN");
+    return `${formattedInt}.${decimalPart}`;
+}
+
+export function formatDateForPrintPreview(dateString, sep = ".") {
     const date = new Date(dateString);
     const day = String(date.getUTCDate()).padStart(2, "0");
     const month = String(date.getUTCMonth() + 1).padStart(2, "0");
     const year = date.getUTCFullYear();
     return `${day}${sep}${month}${sep}${year}`;
 }
+
 
 
 
