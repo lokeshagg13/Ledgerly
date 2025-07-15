@@ -1,6 +1,18 @@
 const { createCanvas } = require("canvas");
 const { formatAmountForCAPrintPreview, formatDateForCAPrintPreview, addPaddingAroundString } = require("./formatters");
 
+const CANVAS_WIDTH = 1100;
+const CANVAS_HEIGHT = 1556;
+const BACKGROUND_COLOR = "#f8f9fa";
+const HEADER_COLOR = "#343a40";
+const SECTION_TITLE_COLOR = "#0d6efd";
+const TEXT_COLOR = "#000000";
+const LINE_HEIGHT = 26;
+const FONT_MONO = "14px monospace";
+const FONT_TITLE = "bold 18px sans-serif";
+const FONT_PAGE = "italic 18px sans-serif";
+const FONT_USER = "bold 18px sans-serif";
+
 // Combine category and subcategory name into a single string
 function combineCategorySubcategoryNames(categoryName = "", subcategoryName = "") {
     return `${categoryName}${subcategoryName
@@ -40,7 +52,8 @@ function drawTransactionLines(ctx, transactions, centerX, startY) {
     const maxCharactersInCatString = getMaxCharactersInCatString(transactions);
 
     ctx.textAlign = "left";
-    ctx.font = "14px monospace";
+    ctx.font = FONT_MONO;
+    ctx.fillStyle = TEXT_COLOR;
 
     const lines = [];
     for (let i = 0; i < transactions.length; i++) {
@@ -66,13 +79,14 @@ function drawTransactionLines(ctx, transactions, centerX, startY) {
     let y = startY;
     lines.forEach((line) => {
         ctx.fillText(line, sectionStartX, y);
-        y += 24;
+        y += LINE_HEIGHT;
     });
 }
 
 // Draw section containing a title for the transactions and the transactions in it
 function drawTransactionSection(ctx, transactions, sectionTitle, sectionCenterX, sectionY) {
-    ctx.font = "bold 20px sans-serif";
+    ctx.font = FONT_TITLE;
+    ctx.fillStyle = SECTION_TITLE_COLOR;
     const titleTextWidth = ctx.measureText(sectionTitle).width;
     ctx.fillText(sectionTitle, sectionCenterX - 0.5 * titleTextWidth, sectionY);
 
@@ -81,24 +95,30 @@ function drawTransactionSection(ctx, transactions, sectionTitle, sectionCenterX,
 }
 
 // Draw entire page of transactions with debit and credit sections
-function drawTransactionPage({ debitTransactions, creditTransactions }, pageNumber = 1, totalPages = 10) {
-    const canvasWidth = 1100;
-    const canvasHeight = 1556;
-    const canvas = createCanvas(canvasWidth, canvasHeight);
+function drawTransactionPage({ debitTransactions, creditTransactions }, pageNumber = 1, totalPages = 10, userName = null) {
+    const canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
     const ctx = canvas.getContext("2d");
 
     // Creating a page
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = BACKGROUND_COLOR;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Page constants
-    let paddingTop = 20;
-    let paddingLeft = 10;
+    let paddingTop = 30;
+    let paddingLeft = 30;
 
     // Draw page number on top-left of the page
-    ctx.fillStyle = "#000000";
-    ctx.font = "16px sans-serif";
+    ctx.fillStyle = HEADER_COLOR;
+    ctx.font = FONT_PAGE;
     ctx.fillText(`Page ${pageNumber} / ${totalPages}`, paddingLeft, paddingTop);
+
+    if (userName) {
+        // Draw user name on top-center of the page
+        ctx.font = FONT_USER;
+        const nameWidth = ctx.measureText(userName).width;
+        userName = userName.toUpperCase();
+        ctx.fillText(userName, (CANVAS_WIDTH - nameWidth) / 2, paddingTop);
+    }
 
     // Section constants
     const sectionSpacing = 20;
@@ -167,13 +187,13 @@ function paginateTransactions(transactions, linesPerSection = 30) {
 }
 
 // Call the paginate function to divide transactions into pages and then draw each page while saving that page's canvas image in buffers
-exports.generateCAPreviewImages = (transactions) => {
+exports.generateCAPreviewImages = (transactions, userName) => {
     const linesPerPage = 60;
     const pages = paginateTransactions(transactions, linesPerPage);
     const buffers = [];
 
     pages.forEach(({ debitTransactions, creditTransactions }, pageIndex) => {
-        const buffer = drawTransactionPage({ debitTransactions, creditTransactions }, pageIndex + 1, pages.length);
+        const buffer = drawTransactionPage({ debitTransactions, creditTransactions }, pageIndex + 1, pages.length, userName);
         buffers.push(buffer);
     });
     return buffers;

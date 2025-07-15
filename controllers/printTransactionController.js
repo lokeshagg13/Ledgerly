@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const UserModel = require("../models/User");
 const TransactionModel = require("../models/Transaction");
 const { normalizeDate, formatTransactions } = require("./utils/formatters");
 const { generateCAPreviewImages } = require("./utils/printHelper");
@@ -65,7 +66,10 @@ exports.getTransactionsWithPrintPreview = async (req, res) => {
 
         const formattedTransactions = formatTransactions(transactions);
 
-        const caImageBuffers = generateCAPreviewImages(formattedTransactions);
+        const user = await UserModel.findById(userId).select("name").lean();
+        const userName = user?.name || null;
+
+        const caImageBuffers = generateCAPreviewImages(formattedTransactions, userName);
         const caBase64Images = caImageBuffers.map(buf => `data:image/png;base64,${buf.toString("base64")}`);
 
         return res.status(200).json({
