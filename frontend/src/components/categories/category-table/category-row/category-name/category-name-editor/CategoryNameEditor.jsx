@@ -17,7 +17,7 @@ function CategoryNameEditor({ categoryId, categoryName, onClose }) {
     newCategoryNameRef.current?.focus();
   }, []);
 
-  // For hiding error message after 4 seconds
+  // For hiding error message after 6 seconds
   useEffect(() => {
     if (errorMessage) {
       const timeout = setTimeout(() => {

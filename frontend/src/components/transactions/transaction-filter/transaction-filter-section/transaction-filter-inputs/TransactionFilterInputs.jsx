@@ -15,10 +15,12 @@ function TransactionFilterInputs() {
       const timeout = setTimeout(() => resetFilteringError(), 8000);
       return () => clearTimeout(timeout);
     }
+    // eslint-disable-next-line
   }, [filteringError]);
 
   useEffect(() => {
     fetchCategoriesFromDB();
+    // eslint-disable-next-line
   }, []);
 
   return (

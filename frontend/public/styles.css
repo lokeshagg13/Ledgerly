@@ -1882,6 +1882,33 @@ body,
 }
 /* #endregion */
 
+/* Save Transaction Modal - Applied Filters info */
+.applied-filters-box {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  background-color: #f8f9fa;
+}
+
+.applied-filters-box h6 {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #212529;
+}
+
+.applied-filters-box ul {
+  padding-left: 1rem;
+  margin-bottom: 0;
+  font-size: 0.875rem;
+  color: #343a40;
+}
+
+.applied-filters-box li {
+  margin-bottom: 0.25rem;
+}
+/* #endregion */
+
 /* #region - Category page */
 .category-page {
   max-width: 1000px;

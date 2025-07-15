@@ -20,7 +20,7 @@ function AddCategoryInlineForm() {
     }
   }, [isAddCategoryFormVisible]);
 
-  // For hiding error message after 4 seconds
+  // For hiding error message after 6 seconds
   useEffect(() => {
     if (message) {
       const timeout = setTimeout(() => {

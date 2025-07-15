@@ -6,17 +6,20 @@ import RightAngleIcon from "../../../ui/icons/RightAngleIcon";
 import ZoomInIcon from "../../../ui/icons/ZoomInIcon";
 import ZoomOutIcon from "../../../ui/icons/ZoomOutIcon";
 import TransactionPrintContext from "../../../../store/context/transactionPrintContext";
+import SaveTransactionModal from "./save-transaction-modal/SaveTransactionModal";
 
 function PrintPreviewControl() {
   const {
     printPreviewCurrentData,
     printPreviewZoomLevel,
+    isSaveTransactionModalVisible,
     isOnFirstPrintPreviewPage,
     isOnLastPrintPreviewPage,
     moveToPrevPrintPreviewPage,
     moveToNextPrintPreviewPage,
     handleZoomInPrintPreviewPage,
     handleZoomOutPrintPreviewPage,
+    handleOpenSaveTransactionModal,
     handleClosePrintPreview,
   } = useContext(TransactionPrintContext);
 
@@ -25,14 +28,6 @@ function PrintPreviewControl() {
   const nextPageButtonDisabled = isOnLastPrintPreviewPage();
   const zoomInButtonDisabled = printPreviewZoomLevel >= 2;
   const zoomOutButtonDisabled = printPreviewZoomLevel <= 1;
-
-  const handleZoom = () => {
-    console.log("Zoom function triggered");
-  };
-
-  const handleDownload = () => {
-    console.log("Download function triggered");
-  };
 
   return (
     <div className="preview-control-container">
@@ -72,7 +67,10 @@ function PrintPreviewControl() {
             >
               <ZoomOutIcon />
             </button>
-            <button className="tool-btn" onClick={handleDownload}>
+            <button
+              className="tool-btn"
+              onClick={handleOpenSaveTransactionModal}
+            >
               <FileDownloadIcon />
             </button>
           </div>
@@ -86,6 +84,7 @@ function PrintPreviewControl() {
           <CancelIcon width="0.9rem" height="0.9rem" />
         </button>
       </div>
+      {isSaveTransactionModalVisible && <SaveTransactionModal />}
     </div>
   );
 }

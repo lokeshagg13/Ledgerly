@@ -5,7 +5,6 @@ import { Button } from "react-bootstrap";
 import TransactionContext from "../../../store/context/transactionContext";
 import TransactionFilterContext from "../../../store/context/transactionFilterContext";
 import AddTransactionModal from "./add-transaction/AddTransactionModal";
-import { TransactionPrintContextProvider } from "../../../store/context/transactionPrintContext";
 
 function TransactionControl() {
   const { isLoadingTransactions, fetchTransactions } =

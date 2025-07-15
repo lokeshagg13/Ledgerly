@@ -9,7 +9,7 @@ function DeleteSubcategoryModal({ subcategoryId, subcategoryName, onClose }) {
   const [deleting, setDeleting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Hiding error message after 4 seconds
+  // Hiding error message after 6 seconds
   useEffect(() => {
     if (errorMessage) {
       const messageTimeout = setTimeout(() => {

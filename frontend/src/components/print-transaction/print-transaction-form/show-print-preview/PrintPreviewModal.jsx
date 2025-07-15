@@ -61,6 +61,7 @@ function PrintPreviewModal() {
   // Reset zoom on page/image change
   useEffect(() => {
     resetPrintPreviewZoomLevel();
+    // eslint-disable-next-line
   }, [imageData]);
 
   return (

@@ -16,7 +16,7 @@ function AddTransactionModal({ onClose }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [commonErrorMessage, setCommonErrorMessage] = useState("");
 
-  // For hiding error message after 4 seconds
+  // For hiding error message after 6 seconds
   useEffect(() => {
     if (commonErrorMessage) {
       const timeout = setTimeout(() => {

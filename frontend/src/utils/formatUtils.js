@@ -45,6 +45,18 @@ export function formatDateForDisplay(dateString, sep = "-") {
     return `${day}${sep}${month}${sep}${year}`;
 }
 
+export function formatCategoryNamesUsingCategoryIds(categoryData, categoryIds) {
+    if (!Array.isArray(categoryData) || !Array.isArray(categoryIds)) return "None selected";
+    const idToNameMap = new Map(categoryData.map(cat => [cat._id, cat.name]));
+    const categoryNames = categoryIds
+        .map(id => idToNameMap.get(id))
+        .filter(Boolean);
+    if (categoryNames.length > 3) {
+        return categoryNames.slice(0, 3).join(', ').concat(", etc.");
+    }
+    return categoryNames.join(', ');
+}
+
 export function formatCategoryError(errorMessage) {
     const regex = /transactions:\s*(.*?)\.\s*Please/;
     const match = errorMessage.match(regex);

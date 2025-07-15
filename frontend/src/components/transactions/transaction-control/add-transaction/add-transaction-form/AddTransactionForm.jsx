@@ -29,7 +29,7 @@ function AddTransactionForm() {
     // eslint-disable-next-line
   }, [formData.categoryId]);
 
-  // For hiding input field error messages after 4 seconds
+  // For hiding input field error messages after 6 seconds
   useEffect(() => {
     if (Object.keys(inputFieldErrors).length > 0) {
       const timeout = setTimeout(() => {

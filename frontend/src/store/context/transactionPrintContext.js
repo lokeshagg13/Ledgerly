@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
 import { axiosPrivate } from "../../api/axios";
+import { downloadPrintPreviewPDF } from "../../utils/printUtils";
 
 const TransactionPrintContext = createContext({
     fetchMode: null,
@@ -18,13 +19,14 @@ const TransactionPrintContext = createContext({
     printPreviewCurrentData: {},
     printPreviewSlideDirection: null,
     printPreviewZoomLevel: 1,
+    isSaveTransactionModalVisible: false,
     setFetchMode: (prev) => { },
     setLastN: (prev) => { },
     setFromDate: (prev) => { },
     setToDate: (prev) => { },
     setSelectedCategories: (prev) => { },
-    fetchCategoriesFromDB: () => { },
-    fetchTransactionsFromDB: () => { },
+    fetchCategoriesFromDB: async () => { },
+    fetchTransactionsFromDB: async () => { },
     resetAll: () => { },
     resetErrorFetchingTransactions: () => { },
     setPrintStyle: (prev) => { },
@@ -37,6 +39,9 @@ const TransactionPrintContext = createContext({
     resetPrintPreviewZoomLevel: () => { },
     handleZoomInPrintPreviewPage: () => { },
     handleZoomOutPrintPreviewPage: () => { },
+    handleOpenSaveTransactionModal: () => { },
+    handleCloseSaveTransactionModal: () => { },
+    handleSaveTransactionsAsPDF: async (fileName) => { }
 });
 
 export function TransactionPrintContextProvider({ children }) {
@@ -69,6 +74,7 @@ export function TransactionPrintContextProvider({ children }) {
     const [printPreviewZoomLevel, setPrintPreviewZoomLevel] = useState(1);
     const [caPrintPreviewImages, setCAPrintPreviewImages] = useState([]);
     const [tablePrintPreviewImages, setTablePrintPreviewImages] = useState([]);
+    const [isSaveTransactionModalVisible, setIsSaveTransactionModalVisible] = useState(false);
 
     async function fetchCategoriesFromDB() {
         setIsLoadingCategories(true);
@@ -109,8 +115,11 @@ export function TransactionPrintContextProvider({ children }) {
             printStyle: null,
             imageData: null,
         });
+        setPrintPreviewSlideDirection(null);
+        setPrintPreviewZoomLevel(1);
         setCAPrintPreviewImages([]);
         setTablePrintPreviewImages([]);
+        setIsSaveTransactionModalVisible(false);
     }
 
     function validateInputForFetchingTransactions() {
@@ -296,6 +305,23 @@ export function TransactionPrintContextProvider({ children }) {
         setPrintPreviewZoomLevel((z) => Math.max(1, z - 0.25));
     }
 
+    function handleOpenSaveTransactionModal() {
+        setIsSaveTransactionModalVisible(true);
+    }
+
+    function handleCloseSaveTransactionModal() {
+        setIsSaveTransactionModalVisible(false);
+    }
+
+    async function handleSaveTransactionsAsPDF(fileName) {
+        const imagesToDownload = printStyle === "ca" ? caPrintPreviewImages : tablePrintPreviewImages;
+        try {
+            await downloadPrintPreviewPDF(imagesToDownload, fileName);
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
     const currentPrintContextValue = {
         fetchMode,
         lastN,
@@ -313,6 +339,7 @@ export function TransactionPrintContextProvider({ children }) {
         printPreviewCurrentData,
         printPreviewSlideDirection,
         printPreviewZoomLevel,
+        isSaveTransactionModalVisible,
         setFetchMode,
         setLastN,
         setFromDate,
@@ -331,7 +358,10 @@ export function TransactionPrintContextProvider({ children }) {
         moveToNextPrintPreviewPage,
         resetPrintPreviewZoomLevel,
         handleZoomInPrintPreviewPage,
-        handleZoomOutPrintPreviewPage
+        handleZoomOutPrintPreviewPage,
+        handleOpenSaveTransactionModal,
+        handleCloseSaveTransactionModal,
+        handleSaveTransactionsAsPDF
     };
 
     return (

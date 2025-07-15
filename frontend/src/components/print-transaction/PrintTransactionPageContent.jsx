@@ -13,6 +13,7 @@ function PrintTransactionPageContent() {
     const previousPage = location.state?.from || "/dashboard";
     navigate(previousPage);
   };
+  
   return (
     <TransactionPrintContextProvider>
       <div className="print-transaction-page-header">
