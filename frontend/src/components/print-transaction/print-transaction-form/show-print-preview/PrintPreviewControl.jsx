@@ -8,11 +8,19 @@ import ZoomOutIcon from "../../../ui/icons/ZoomOutIcon";
 import TransactionPrintContext from "../../../../store/context/transactionPrintContext";
 
 function PrintPreviewControl() {
-  const currentPage = 1;
-  const totalPages = 5;
+  const {
+    printPreviewCurrentData,
+    isOnFirstPrintPreviewPage,
+    isOnLastPrintPreviewPage,
+    moveToPrevPrintPreviewPage,
+    moveToNextPrintPreviewPage,
+    handleClosePrintPreview,
+  } = useContext(TransactionPrintContext);
 
-  const { handleClosePrintPreview } = useContext(TransactionPrintContext);
-
+  const { currentPage, totalPages } = printPreviewCurrentData;
+  const prevPageButtonDisabled = isOnFirstPrintPreviewPage();
+  const nextPageButtonDisabled = isOnLastPrintPreviewPage();
+  
   const handleZoom = () => {
     console.log("Zoom function triggered");
   };
@@ -26,13 +34,21 @@ function PrintPreviewControl() {
       <div className="preview-control-wrapper">
         <div className="preview-control-section">
           <div className="pagination-section">
-            <button className="tool-btn">
+            <button
+              className="tool-btn"
+              onClick={moveToPrevPrintPreviewPage}
+              disabled={prevPageButtonDisabled}
+            >
               <LeftAngleIcon />
             </button>
             <span className="page-info">
               {currentPage} / {totalPages}
             </span>
-            <button className="tool-btn">
+            <button
+              className="tool-btn"
+              onClick={moveToNextPrintPreviewPage}
+              disabled={nextPageButtonDisabled}
+            >
               <RightAngleIcon />
             </button>
           </div>

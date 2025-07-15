@@ -15,8 +15,8 @@ const TransactionPrintContext = createContext({
     isPrintSectionVisible: false,
     printStyle: null,
     isPrintPreviewVisible: false,
-    caPrintPreviewImageData: [],
-    tablePrintPreviewImageData: [],
+    printPreviewCurrentData: {},
+    printPreviewSlideDirection: null,
     setFetchMode: (prev) => { },
     setLastN: (prev) => { },
     setFromDate: (prev) => { },
@@ -28,7 +28,11 @@ const TransactionPrintContext = createContext({
     resetErrorFetchingTransactions: () => { },
     setPrintStyle: (prev) => { },
     handleOpenPrintPreview: () => { },
-    handleClosePrintPreview: () => { }
+    handleClosePrintPreview: () => { },
+    isOnFirstPrintPreviewPage: () => { },
+    isOnLastPrintPreviewPage: () => { },
+    moveToPrevPrintPreviewPage: () => { },
+    moveToNextPrintPreviewPage: () => { }
 });
 
 export function TransactionPrintContextProvider({ children }) {
@@ -51,8 +55,15 @@ export function TransactionPrintContextProvider({ children }) {
     const [isPrintSectionVisible, setIsPrintSectionVisible] = useState(false);
     const [printStyle, setPrintStyle] = useState("ca");    // "ca" | "table"
     const [isPrintPreviewVisible, setIsPrintPreviewVisible] = useState(false);
-    const [caPrintPreviewImageData, setCAPrintPreviewImageData] = useState([]);
-    const [tablePrintPreviewImageData, setTablePrintPreviewImageData] = useState([]);
+    const [printPreviewCurrentData, setPrintPreviewCurrentData] = useState({
+        currentPage: 0,    // Starting from 1
+        totalPages: 0,
+        printStyle: null,
+        imageData: null,
+    });
+    const [printPreviewSlideDirection, setPrintPreviewSlideDirection] = useState(null);
+    const [caPrintPreviewImages, setCAPrintPreviewImages] = useState([]);
+    const [tablePrintPreviewImages, setTablePrintPreviewImages] = useState([]);
 
     async function fetchCategoriesFromDB() {
         setIsLoadingCategories(true);
@@ -66,23 +77,6 @@ export function TransactionPrintContextProvider({ children }) {
         }
     }
 
-    function resetAll() {
-        setLastN(10);
-        setFromDate(null);
-        setToDate(null);
-        setSelectedCategories([]);
-        setTransactions([]);
-        setCAPrintPreviewImageData(null);
-        setTablePrintPreviewImageData(null);
-        setIsLoadingTransactions(false);
-        setIsPrintSectionVisible(false);
-        setPrintStyle("ca");
-        setIsPrintPreviewVisible(false);
-        setCAPrintPreviewImageData(null);
-        setTablePrintPreviewImageData(null);
-        resetErrorFetchingTransactions();
-    }
-
     function resetErrorFetchingTransactions() {
         setErrorFetchingTransactions({
             message: "",
@@ -91,6 +85,27 @@ export function TransactionPrintContextProvider({ children }) {
             fromDate: false,
             toDate: false,
         });
+    }
+
+    function resetAll() {
+        setLastN(10);
+        setFromDate(null);
+        setToDate(null);
+        setSelectedCategories([]);
+        setTransactions([]);
+        setIsLoadingTransactions(false);
+        resetErrorFetchingTransactions();
+        setIsPrintSectionVisible(false);
+        setPrintStyle("ca");
+        setIsPrintPreviewVisible(false);
+        setPrintPreviewCurrentData({
+            currentPage: 0,
+            totalPages: 0,
+            printStyle: null,
+            imageData: null,
+        });
+        setCAPrintPreviewImages([]);
+        setTablePrintPreviewImages([]);
     }
 
     function validateInputForFetchingTransactions() {
@@ -195,8 +210,8 @@ export function TransactionPrintContextProvider({ children }) {
             if (validateInputForFetchingTransactions()) {
                 const res = await axiosPrivate.get(`/user/transactions/print?${generateParamStringForAPI()}`);
                 if (res?.data?.transactions) setTransactions(res.data.transactions);
-                if (res?.data?.caPreviewImages) setCAPrintPreviewImageData(res.data.caPreviewImages[0]);
-                if (res?.data?.tablePreviewImage) setTablePrintPreviewImageData(res.data.table)
+                if (res?.data?.caPreviewImages) setCAPrintPreviewImages(res.data.caPreviewImages);
+                if (res?.data?.tablePreviewImage) setTablePrintPreviewImages(res.data.table)
                 setIsPrintSectionVisible(true);
             }
         } catch (error) {
@@ -207,11 +222,61 @@ export function TransactionPrintContextProvider({ children }) {
     }
 
     function handleOpenPrintPreview() {
+        if (!printPreviewCurrentData?.printStyle || printPreviewCurrentData.printStyle !== printStyle) {
+            setPrintPreviewCurrentData({
+                currentPage: 1,
+                totalPages: printStyle === "ca" ? caPrintPreviewImages.length : tablePrintPreviewImages.length,
+                printStyle,
+                imageData: printStyle === "ca" ? caPrintPreviewImages[0] : tablePrintPreviewImages[0]
+            });
+        }
         setIsPrintPreviewVisible(true);
     }
 
     function handleClosePrintPreview() {
         setIsPrintPreviewVisible(false);
+    }
+
+    function isOnFirstPrintPreviewPage() {
+        return !printPreviewCurrentData?.currentPage || printPreviewCurrentData.currentPage <= 1;
+    }
+
+    function isOnLastPrintPreviewPage() {
+        return (
+            !printPreviewCurrentData?.currentPage ||
+            !printPreviewCurrentData?.totalPages ||
+            printPreviewCurrentData.currentPage >= printPreviewCurrentData.totalPages
+        );
+    }
+
+    function moveToPrevPrintPreviewPage() {
+        setPrintPreviewSlideDirection("left");
+        setPrintPreviewCurrentData((prev) => {
+            if (!prev || prev.currentPage <= 1) return prev;
+            const prevPage = prev.currentPage - 1;
+            return {
+                ...prev,
+                currentPage: prevPage,
+                imageData: prev.printStyle === "ca"
+                    ? caPrintPreviewImages[prevPage - 1] // As page number is 1-indexed but array is 0-indexed
+                    : tablePrintPreviewImages[prevPage - 1]
+            };
+        });
+    }
+
+    function moveToNextPrintPreviewPage() {
+        setPrintPreviewSlideDirection("right");
+        setPrintPreviewCurrentData((prev) => {
+            if (!prev || prev.currentPage >= prev.totalPages) return prev;
+            const nextPage = prev.currentPage + 1;
+            return {
+                ...prev,
+                currentPage: nextPage,
+                imageData: prev.printStyle === "ca"
+                    ? caPrintPreviewImages[nextPage - 1] // As page number is 1-indexed but array is 0-indexed
+                    : tablePrintPreviewImages[nextPage - 1]
+            };
+        });
     }
 
     const currentPrintContextValue = {
@@ -228,8 +293,8 @@ export function TransactionPrintContextProvider({ children }) {
         isPrintSectionVisible,
         printStyle,
         isPrintPreviewVisible,
-        caPrintPreviewImageData,
-        tablePrintPreviewImageData,
+        printPreviewCurrentData,
+        printPreviewSlideDirection,
         setFetchMode,
         setLastN,
         setFromDate,
@@ -241,7 +306,11 @@ export function TransactionPrintContextProvider({ children }) {
         resetErrorFetchingTransactions,
         setPrintStyle,
         handleOpenPrintPreview,
-        handleClosePrintPreview
+        handleClosePrintPreview,
+        isOnFirstPrintPreviewPage,
+        isOnLastPrintPreviewPage,
+        moveToPrevPrintPreviewPage,
+        moveToNextPrintPreviewPage,
     };
 
     return (

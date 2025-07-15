@@ -38,6 +38,7 @@ body,
     transform: translateX(0);
   }
 }
+
 .shake {
   animation: shake 0.5s ease-in-out;
 }
@@ -50,6 +51,28 @@ body,
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes slideFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0.2;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0.2;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
 }
 
@@ -1741,10 +1764,27 @@ body,
   overflow-y: auto;
 }
 
+.preview-a4-sheet-content.animated-container {
+  position: relative;
+  overflow: hidden;
+}
+
 .preview-a4-sheet-image {
   width: 100%;
   height: auto;
+  transition: transform 0.3s ease-in-out;
+  position: relative;
 }
+
+.preview-a4-sheet-content.slide-left .preview-a4-sheet-image {
+  animation: slideFromRight 0.6s ease-in-out;
+}
+
+.preview-a4-sheet-content.slide-right .preview-a4-sheet-image {
+  animation: slideFromLeft 0.6s ease-in-out;
+}
+
+
 /* #endregion */
 
 /* #region - Print transaction preview control */
@@ -1812,6 +1852,19 @@ body,
 
 .preview-control-section .tool-btn:active {
   background-color: #3730a3;
+}
+
+.preview-control-section .tool-btn:disabled,
+.preview-control-section .tool-btn.is-disabled {
+  background-color: #c7d2fe;
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.preview-control-section .tool-btn:disabled svg,
+.preview-control-section .tool-btn.is-disabled svg {
+  fill: white;
 }
 
 .preview-modal-close-button {
