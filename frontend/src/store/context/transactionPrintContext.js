@@ -17,6 +17,7 @@ const TransactionPrintContext = createContext({
     isPrintPreviewVisible: false,
     printPreviewCurrentData: {},
     printPreviewSlideDirection: null,
+    printPreviewZoomLevel: 1,
     setFetchMode: (prev) => { },
     setLastN: (prev) => { },
     setFromDate: (prev) => { },
@@ -32,7 +33,10 @@ const TransactionPrintContext = createContext({
     isOnFirstPrintPreviewPage: () => { },
     isOnLastPrintPreviewPage: () => { },
     moveToPrevPrintPreviewPage: () => { },
-    moveToNextPrintPreviewPage: () => { }
+    moveToNextPrintPreviewPage: () => { },
+    resetPrintPreviewZoomLevel: () => { },
+    handleZoomInPrintPreviewPage: () => { },
+    handleZoomOutPrintPreviewPage: () => { },
 });
 
 export function TransactionPrintContextProvider({ children }) {
@@ -62,6 +66,7 @@ export function TransactionPrintContextProvider({ children }) {
         imageData: null,
     });
     const [printPreviewSlideDirection, setPrintPreviewSlideDirection] = useState(null);
+    const [printPreviewZoomLevel, setPrintPreviewZoomLevel] = useState(1);
     const [caPrintPreviewImages, setCAPrintPreviewImages] = useState([]);
     const [tablePrintPreviewImages, setTablePrintPreviewImages] = useState([]);
 
@@ -279,6 +284,18 @@ export function TransactionPrintContextProvider({ children }) {
         });
     }
 
+    function resetPrintPreviewZoomLevel() {
+        setPrintPreviewZoomLevel(1);
+    }
+
+    function handleZoomInPrintPreviewPage() {
+        setPrintPreviewZoomLevel((z) => Math.min(z + 0.25, 2));
+    }
+
+    function handleZoomOutPrintPreviewPage() {
+        setPrintPreviewZoomLevel((z) => Math.max(1, z - 0.25));
+    }
+
     const currentPrintContextValue = {
         fetchMode,
         lastN,
@@ -295,6 +312,7 @@ export function TransactionPrintContextProvider({ children }) {
         isPrintPreviewVisible,
         printPreviewCurrentData,
         printPreviewSlideDirection,
+        printPreviewZoomLevel,
         setFetchMode,
         setLastN,
         setFromDate,
@@ -311,6 +329,9 @@ export function TransactionPrintContextProvider({ children }) {
         isOnLastPrintPreviewPage,
         moveToPrevPrintPreviewPage,
         moveToNextPrintPreviewPage,
+        resetPrintPreviewZoomLevel,
+        handleZoomInPrintPreviewPage,
+        handleZoomOutPrintPreviewPage
     };
 
     return (

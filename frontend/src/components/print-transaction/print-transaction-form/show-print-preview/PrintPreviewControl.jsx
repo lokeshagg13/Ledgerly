@@ -10,17 +10,22 @@ import TransactionPrintContext from "../../../../store/context/transactionPrintC
 function PrintPreviewControl() {
   const {
     printPreviewCurrentData,
+    printPreviewZoomLevel,
     isOnFirstPrintPreviewPage,
     isOnLastPrintPreviewPage,
     moveToPrevPrintPreviewPage,
     moveToNextPrintPreviewPage,
+    handleZoomInPrintPreviewPage,
+    handleZoomOutPrintPreviewPage,
     handleClosePrintPreview,
   } = useContext(TransactionPrintContext);
 
   const { currentPage, totalPages } = printPreviewCurrentData;
   const prevPageButtonDisabled = isOnFirstPrintPreviewPage();
   const nextPageButtonDisabled = isOnLastPrintPreviewPage();
-  
+  const zoomInButtonDisabled = printPreviewZoomLevel >= 2;
+  const zoomOutButtonDisabled = printPreviewZoomLevel <= 1;
+
   const handleZoom = () => {
     console.log("Zoom function triggered");
   };
@@ -53,10 +58,18 @@ function PrintPreviewControl() {
             </button>
           </div>
           <div className="action-buttons">
-            <button className="tool-btn" onClick={handleZoom}>
+            <button
+              className="tool-btn"
+              onClick={handleZoomInPrintPreviewPage}
+              disabled={zoomInButtonDisabled}
+            >
               <ZoomInIcon />
             </button>
-            <button className="tool-btn" onClick={handleZoom}>
+            <button
+              className="tool-btn"
+              onClick={handleZoomOutPrintPreviewPage}
+              disabled={zoomOutButtonDisabled}
+            >
               <ZoomOutIcon />
             </button>
             <button className="tool-btn" onClick={handleDownload}>

@@ -1759,9 +1759,13 @@ body,
 
 .preview-a4-sheet-content {
   padding: 0.5rem;
-  padding-right: 0;
   flex-grow: 1;
   overflow-y: auto;
+}
+
+.preview-a4-sheet-content.zoomed {
+  overflow-x: scroll;
+  overflow-y: scroll;
 }
 
 .preview-a4-sheet-image {
@@ -1771,15 +1775,6 @@ body,
   position: relative;
 }
 
-.preview-sliding-image {
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: auto;
-  position: absolute;
-  transition: transform 0.3s ease-in-out;
-}
-
 .preview-a4-sheet-content.slide-left .preview-a4-sheet-image {
   animation: slideFromRight 0.6s ease-in-out;
 }
@@ -1787,7 +1782,6 @@ body,
 .preview-a4-sheet-content.slide-right .preview-a4-sheet-image {
   animation: slideFromLeft 0.6s ease-in-out;
 }
-
 /* #endregion */
 
 /* #region - Print transaction preview control */

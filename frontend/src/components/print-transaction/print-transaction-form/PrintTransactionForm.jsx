@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Button, Form } from "react-bootstrap";
 import TransactionPrintContext from "../../../store/context/transactionPrintContext";
 import PrintPreviewModal from "./show-print-preview/PrintPreviewModal";
