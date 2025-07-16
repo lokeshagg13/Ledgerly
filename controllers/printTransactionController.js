@@ -2,12 +2,18 @@ const mongoose = require("mongoose");
 const UserModel = require("../models/User");
 const TransactionModel = require("../models/Transaction");
 const { normalizeDate, formatTransactions } = require("./utils/formatters");
-const { generateCAPreviewImages } = require("./utils/caPrintHelper");
-const { generateTablePreviewImages } = require("./utils/tablePrintHelper");
+const { generateCAPreviewImages, generateTablePreviewImages } = require("./utils/printHelper");
 
 exports.getTransactionsWithPrintPreview = async (req, res) => {
     const userId = req.userId;
-    const { mode = "all", limit = 10, from, to, categoryIds, type } = req.query;
+    const {
+        mode = "all",
+        limit = 10,
+        from, to, categoryIds, type, sortBy
+    } = req.query;
+
+    const keepCreditDebitTxnSeparate = req.query?.keepCreditDebitTxnSeparate === "true";
+
     const validModes = ["all", "recent", "filtered"];
     if (!validModes.includes(mode)) {
         return res.status(400).json({ error: `Invalid mode for fetching transactions: ${mode}` });
@@ -15,6 +21,7 @@ exports.getTransactionsWithPrintPreview = async (req, res) => {
     try {
         const filter = { userId };
 
+        // Add filters if in filtered mode
         if (mode === "filtered") {
             if (from && isNaN(Date.parse(from))) {
                 return res.status(400).json({ error: "Invalid 'from' date format." });
@@ -55,25 +62,42 @@ exports.getTransactionsWithPrintPreview = async (req, res) => {
 
         const query = TransactionModel.find(filter);
 
+        // Add limit if in recent mode
         if (mode === "recent") {
             const safeLimit = Math.max(1, Math.min(parseInt(limit) || 10, 50));
             query.limit(safeLimit);
         }
 
-        const transactions = await query.sort({ date: -1 })
+        // Sort the transactions
+        if (sortBy === "amountDesc") {
+            query.sort({ amount: -1 });
+        } else if (sortBy === "amountAsc") {
+            query.sort({ amount: 1 });
+        } else if (sortBy === "dateDesc") {
+            query.sort({ date: -1 });
+        } else {
+            query.sort({ date: 1 });
+        }
+
+        // Run the query
+        const transactions = await query
             .lean()
             .populate("categoryId", "name")
             .populate("subcategoryId", "name");
 
+        // Format results
         const formattedTransactions = formatTransactions(transactions);
 
+        // Fetch user name from DB
         const user = await UserModel.findById(userId).select("name").lean();
         const userName = user?.name || null;
 
-        const caImageBuffers = generateCAPreviewImages(formattedTransactions, userName);
+        // Get CA Style preview images
+        const caImageBuffers = generateCAPreviewImages(formattedTransactions, userName, keepCreditDebitTxnSeparate);
         const caBase64Images = caImageBuffers.map(buf => `data:image/png;base64,${buf.toString("base64")}`);
 
-        const tableImageBuffers = generateTablePreviewImages(formattedTransactions, userName);
+        // Get Table style preview images
+        const tableImageBuffers = generateTablePreviewImages(formattedTransactions, userName, keepCreditDebitTxnSeparate);
         const tableBase64Images = tableImageBuffers.map(buf => `data:image/png;base64,${buf.toString("base64")}`);
 
         return res.status(200).json({

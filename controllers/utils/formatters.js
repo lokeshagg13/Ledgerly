@@ -19,11 +19,13 @@ export function normalizeDate(date, mode = "dayBegin") {
     return dayBeginDate;
 }
 
-export function formatAmountForCAPrintPreview(amount, maxDigits = 20) {
+export function formatAmountForCAPrintPreview(amount, maxDigits = 20, signed = false) {
     if (amount == null || typeof amount !== "number") return "";
     const fixedAmount = amount.toFixed(2);
     const [intPart, decimalPart] = fixedAmount.split(".");
-    const formattedInt = parseInt(intPart, 10).toLocaleString("en-IN");
+    let formattedInt = parseInt(intPart, 10).toLocaleString("en-IN");
+    if (signed)
+        formattedInt = `${signed} ${formattedInt}`;
     const paddingNeeded = maxDigits - formattedInt.length;
     const padding = " ".repeat(paddingNeeded > 0 ? paddingNeeded : 0);
     return `${padding}${formattedInt}.${decimalPart}`;
@@ -43,7 +45,7 @@ export function formatAmountForTablePrintPreview(amount) {
     const fixedAmount = amount.toFixed(2);
     const [intPart, decimalPart] = fixedAmount.split(".");
     const formattedInt = parseInt(intPart, 10).toLocaleString("en-IN");
-    return `${formattedInt}.${decimalPart}`;
+    return `${formattedInt}.${decimalPart} `;
 }
 
 export function formatDateForPrintPreview(dateString, sep = ".") {
@@ -51,7 +53,7 @@ export function formatDateForPrintPreview(dateString, sep = ".") {
     const day = String(date.getUTCDate()).padStart(2, "0");
     const month = String(date.getUTCMonth() + 1).padStart(2, "0");
     const year = date.getUTCFullYear();
-    return `${day}${sep}${month}${sep}${year}`;
+    return `${day}${sep}${month}${sep}${year} `;
 }
 
 

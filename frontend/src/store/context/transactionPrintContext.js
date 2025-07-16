@@ -327,7 +327,7 @@ export function TransactionPrintContextProvider({ children }) {
 
     async function handleSaveTransactionsAsPDF(fileName) {
         const imagesToDownload = printStyle === "ca" ? caPrintPreviewImages : tablePrintPreviewImages;
-        const orientation = printStyle === "ca" ? "portrait" : "landscape";
+        const orientation = printStyle === "table" && keepCreditDebitTxnSeparate ? "landscape" : "portrait";
         try {
             await downloadPrintPreviewPDF(imagesToDownload, orientation, fileName);
         } catch (error) {
