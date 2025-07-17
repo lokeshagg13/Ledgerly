@@ -183,10 +183,6 @@ body,
   font-size: 1.2rem;
 }
 
-.navbar .navbar-collapse.show {
-  margin-top: 1rem;
-}
-
 .navbar .btn-dark {
   background-color: white;
   color: #1d1f21;
@@ -194,9 +190,20 @@ body,
   border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar .navbar-collapse.show {
+  margin-top: 1rem;
 }
 
 .navbar .navbar-collapse.show .btn-dark {
+  margin-top: 1rem;
+}
+
+.navbar .navbar-collapse.show .logout-button {
   margin-top: 1rem;
 }
 
@@ -215,6 +222,18 @@ body,
   .navbar-collapse .nav-link {
     text-align: left;
     margin: 0;
+  }
+
+  .navbar .navbar-collapse.show {
+    margin-top: 0;
+  }
+
+  .navbar .navbar-collapse.show .btn-dark {
+    margin-top: 0;
+  }
+
+  .navbar .navbar-collapse.show .logout-button {
+    margin-top: 0;
   }
 }
 /* #endregion */
@@ -235,6 +254,8 @@ body,
   flex: 1;
   padding-right: 2rem;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
 }
 
 .hero-text h1 {
@@ -251,12 +272,17 @@ body,
   line-height: 1.6;
 }
 
+.cta-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
 .cta-buttons .btn-blue {
   background-color: #1e88e5;
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
-  margin-right: 1rem;
   border-radius: 6px;
   font-size: 1rem;
   cursor: pointer;
@@ -278,6 +304,7 @@ body,
   justify-content: center;
   z-index: 2;
 }
+
 .hero-image img {
   max-width: 100%;
   border-radius: 12px;
@@ -303,6 +330,7 @@ body,
   .hero-text {
     padding: 0;
     margin-top: 4rem;
+    align-items: center;
   }
 
   .hero-text h1 {
@@ -311,6 +339,10 @@ body,
 
   .hero-text p {
     font-size: 1rem;
+  }
+
+  .cta-buttons {
+    justify-content: center;
   }
 
   .bg-overlay {
