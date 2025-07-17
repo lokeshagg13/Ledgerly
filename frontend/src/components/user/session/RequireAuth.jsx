@@ -1,5 +1,5 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom";
-import useAuth from "../../store/hooks/useAuth";
+import useAuth from "../../../store/hooks/useAuth";
 
 // Require Auth component to apply protection on URLs that must only be shown once user is logged in
 function RequireAuth() {

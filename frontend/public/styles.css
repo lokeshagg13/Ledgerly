@@ -330,33 +330,63 @@ body,
 
 /* #region - Page 404 not found */
 .page-404 {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
   display: flex;
+  flex-direction: column;
+  background-color: #fdfbf3;
   align-items: center;
   justify-content: center;
-  background-color: #f9f9f9;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
 }
 
-.page-404-image-full {
+.page-404-image {
   max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+}
+/* #endregion */
+
+/* #region - Register page */
+.register-page {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+@media (max-width: 532px) {
+  .register-page {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}
+/* #endregion */
+
+/* #region - Login page */
+.login-page {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+@media (max-width: 532px) {
+  .login-page {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
 }
 /* #endregion */
 
 /* #region - Login & Register Form */
-.form {
+.register-form,
+.login-form {
   max-width: 400px;
   margin: 0 auto;
   background: white;
   padding: 2rem 1rem;
   border-radius: 10px;
-}
-
-.form-title {
-  font-size: 1.8rem;
-  color: #1d1f21;
-  margin-bottom: 1.5rem;
 }
 
 .form-input {
@@ -430,7 +460,8 @@ body,
   animation: fadeIn 0.5s ease-in-out;
 }
 
-.form .login-link {
+.login-form .register-link,
+.register-form .login-link {
   margin: 1rem;
 }
 
@@ -441,6 +472,23 @@ body,
   to {
     opacity: 1;
   }
+}
+/* #endregion */
+
+/* #region - Specific register form css */
+.register-form .form-input,
+.register-form .password-field {
+  margin-bottom: 0.2rem;
+}
+
+.register-form .password-field input.is-invalid + span {
+  margin-right: 1.5rem;
+}
+
+.register-form .text-danger {
+  text-align: left;
+  font-size: 0.9rem;
+  animation: fadeIn 0.5s ease-in-out;
 }
 /* #endregion */
 

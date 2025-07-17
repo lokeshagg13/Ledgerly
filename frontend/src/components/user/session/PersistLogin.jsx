@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
-import Loader from "../ui/elements/Loader";
-import useAuth from "../../store/hooks/useAuth";
-import useRefreshToken from "../../store/hooks/useRefreshToken";
+import Loader from "../../ui/elements/Loader";
+import useAuth from "../../../store/hooks/useAuth";
+import useRefreshToken from "../../../store/hooks/useRefreshToken";
 
 // Persist login component to continue a session even on refresh page or expiry of access token until refresh token is not expired
 function PersistLogin() {

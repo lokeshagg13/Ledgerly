@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { Button, Form } from "react-bootstrap";
 
-import { axiosPrivate } from "../../api/axios";
-import useAuth from "../../store/hooks/useAuth";
-import EyeOpenIcon from "../ui/icons/EyeOpenIcon";
-import EyeSlashIcon from "../ui/icons/EyeSlashIcon";
+import { axiosPrivate } from "../../../../api/axios";
+import useAuth from "../../../../store/hooks/useAuth";
+import EyeOpenIcon from "../../../ui/icons/EyeOpenIcon";
+import EyeSlashIcon from "../../../ui/icons/EyeSlashIcon";
 
 function LoginForm() {
   const emailRef = useRef();
@@ -27,8 +28,8 @@ function LoginForm() {
   // Make the error status disappear after 6 seconds
   useEffect(() => {
     if (errorMessage) {
-      const timer = setTimeout(() => setErrorMessage(""), 6000);
-      return () => clearTimeout(timer);
+      const timeout = setTimeout(() => setErrorMessage(""), 6000);
+      return () => clearTimeout(timeout);
     }
   }, [errorMessage]);
 
@@ -42,7 +43,7 @@ function LoginForm() {
       setErrorMessage("");
   }, [formData, errorMessage]);
 
-  // Keyboard support for submitting modal
+  // Keyboard support for submitting login form
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !isSubmitting) {
       e.preventDefault();
@@ -64,13 +65,12 @@ function LoginForm() {
 
   const handleLogin = async () => {
     if (isSubmitting) return;
-
+    setErrorMessage("");
     // Validate email before submitting
     if (!isValidEmail(formData.email)) {
       setErrorMessage("Please enter a valid email address.");
       return;
     }
-
     // Validate password and confirm password
     if (formData.password.length < 8) {
       setErrorMessage(
@@ -100,12 +100,12 @@ function LoginForm() {
         email: formData.email,
         accessToken,
       });
+      setErrorMessage("");
       setFormData({ email: "", password: "" });
-
       navigate("/dashboard", { replace: true });
     } catch (error) {
       if (!error?.response) {
-        setErrorMessage("No server response.");
+        setErrorMessage("Login failed: No server response.");
       } else if (error.response?.status === 400) {
         setErrorMessage(
           "Invalid password. Please ensure you have entered the correct password."
@@ -115,7 +115,7 @@ function LoginForm() {
           "User not found. Please check your email or sign up to create a new account."
         );
       } else {
-        setErrorMessage("Login error.");
+        setErrorMessage(`Login Failed.`);
       }
     } finally {
       setIsSubmitting(false);
@@ -123,30 +123,30 @@ function LoginForm() {
   };
 
   return (
-    <form className="form">
-      <input
+    <Form className="login-form">
+      <Form.Control
         type="email"
         name="email"
-        placeholder="Email Address"
-        ref={emailRef}
+        id="loginEmail"
         value={formData.email}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        autoComplete="off"
+        placeholder="Email Address"
+        ref={emailRef}
         required
         className="form-input"
       />
       <div className="password-field">
-        <input
+        <Form.Control
           type={showPassword ? "text" : "password"}
           name="password"
-          placeholder="Password"
+          id="loginPassword"
           value={formData.password}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          autoComplete="off"
-          required
+          placeholder="Password"
           className="form-input"
+          required
         />
         <span
           className="toggle-password"
@@ -156,13 +156,23 @@ function LoginForm() {
         </span>
       </div>
       {errorMessage && <p className="error">{errorMessage}</p>}
-      <button type="button" className="form-button" onClick={handleLogin}>
-        Login
-      </button>
-      <div className="login-link">
+      <Button type="button" className="form-button" onClick={handleLogin}>
+        {isSubmitting ? (
+          <>
+            <span
+              className="spinner-border spinner-border-sm me-2"
+              role="status"
+              aria-hidden="true"
+            ></span>
+          </>
+        ) : (
+          "Login"
+        )}
+      </Button>
+      <div className="register-link">
         Not Registered? <Link to="/register">Signup here</Link>
       </div>
-    </form>
+    </Form>
   );
 }
 
