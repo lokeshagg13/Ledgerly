@@ -37,26 +37,6 @@ function AddCategoryInlineForm() {
     }
   }, [newCategoryName, message]);
 
-  // Keyboard support for closing modal and submitting
-  useEffect(() => {
-    if (!isAddCategoryFormVisible) return;
-    const handleKeyDown = (e) => {
-      if (
-        e.key === "Enter" &&
-        document.activeElement === newCategoryNameRef.current &&
-        !isAdding
-      ) {
-        e.preventDefault();
-        handleAddCategory();
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-    // eslint-disable-next-line
-  }, [isAddCategoryFormVisible, isAdding]);
-
   const handleAddCategory = async () => {
     const newCategoryNameTrimmed = newCategoryName.trim();
     if (!newCategoryNameTrimmed) {

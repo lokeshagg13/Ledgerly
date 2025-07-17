@@ -61,7 +61,7 @@ function SaveTransactionModal() {
   }, [isSaveTransactionModalVisible, isSaving]);
 
   const handleSaveTransactions = async () => {
-    const fileNameTrimmed = fileName.trim();
+    const fileNameTrimmed = fileNameRef?.current?.value?.trim();
     if (!fileNameTrimmed) {
       setErrorMessage("File name cannot be empty.");
       return;
@@ -151,7 +151,7 @@ function SaveTransactionModal() {
               Saving...
             </>
           ) : (
-            "Save as PDF"
+            "Save"
           )}
         </Button>
       </Modal.Footer>

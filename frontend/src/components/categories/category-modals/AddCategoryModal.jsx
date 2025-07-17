@@ -6,8 +6,11 @@ import CategoryContext from "../../../store/context/categoryContext";
 
 function AddCategoryModal() {
   const newCategoryNameRef = useRef();
-  const { isAddCategoryModalVisible, fetchCategoriesFromDB, closeAddCategoryModal } =
-    useContext(CategoryContext);
+  const {
+    isAddCategoryModalVisible,
+    fetchCategoriesFromDB,
+    closeAddCategoryModal,
+  } = useContext(CategoryContext);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [isAdding, setIsAdding] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -59,7 +62,7 @@ function AddCategoryModal() {
   }, [isAddCategoryModalVisible, isAdding]);
 
   const handleAddCategory = async () => {
-    const newCategoryNameTrimmed = newCategoryName.trim();
+    const newCategoryNameTrimmed = newCategoryNameRef?.current?.value?.trim();
     if (!newCategoryNameTrimmed) {
       setErrorMessage("Category name cannot be empty.");
       return;
@@ -68,7 +71,7 @@ function AddCategoryModal() {
       setErrorMessage("Category name is too long (max 20 characters).");
       return;
     }
-    if (newCategoryNameTrimmed.includes(',')) {
+    if (newCategoryNameTrimmed.includes(",")) {
       setErrorMessage("Category name cannnot contain commas.");
       return;
     }
@@ -132,9 +135,7 @@ function AddCategoryModal() {
               Enter a unique name to organize your transactions.
             </Form.Text>
           </Form.Group>
-          {errorMessage && (
-            <div className="error-message">{errorMessage}</div>
-          )}
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
         </Form>
       </Modal.Body>
       <Modal.Footer>

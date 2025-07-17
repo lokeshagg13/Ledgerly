@@ -41,26 +41,6 @@ function AddSubcategoryInlineForm() {
     }
   }, [newSubcategoryName, message]);
 
-  // Keyboard support for closing modal and submitting
-  useEffect(() => {
-    if (!isAddSubcategoryFormVisible) return;
-    const handleKeyDown = (e) => {
-      if (
-        e.key === "Enter" &&
-        document.activeElement === newSubcategoryNameRef.current &&
-        !isAdding
-      ) {
-        e.preventDefault();
-        handleAddSubcategory();
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-    // eslint-disable-next-line
-  }, [isAddSubcategoryFormVisible, isAdding]);
-
   const handleAddSubcategory = async () => {
     const { categoryId } = addTransactionFormData;
     const newSubcategoryNameTrimmed = newSubcategoryName.trim();

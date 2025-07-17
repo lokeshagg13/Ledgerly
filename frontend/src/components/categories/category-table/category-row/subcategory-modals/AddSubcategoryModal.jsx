@@ -59,7 +59,8 @@ function AddSubcategoryModal({ categoryId }) {
 
   const handleAddSubcategory = async () => {
     if (isAdding) return;
-    const newSubcategoryNameTrimmed = newSubcategoryName.trim();
+    const newSubcategoryNameTrimmed =
+      newSubcategoryNameRef?.current?.value?.trim();
     if (!newSubcategoryNameTrimmed) {
       setErrorMessage("Subcategory name cannot be empty.");
       return;
@@ -129,9 +130,7 @@ function AddSubcategoryModal({ categoryId }) {
               this category.
             </Form.Text>
           </Form.Group>
-          {errorMessage && (
-            <div className="error-message">{errorMessage}</div>
-          )}
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
         </Form>
       </Modal.Body>
       <Modal.Footer>

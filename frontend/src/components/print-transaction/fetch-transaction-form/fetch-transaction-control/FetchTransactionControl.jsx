@@ -35,7 +35,11 @@ function FetchTransactionControl() {
           "Fetch Transactions"
         )}
       </Button>
-      <Button className="reset-transaction-button" onClick={resetAll}>
+      <Button
+        className="reset-transaction-button"
+        onClick={resetAll}
+        disabled={isLoadingTransactions}
+      >
         Reset
       </Button>
     </div>
