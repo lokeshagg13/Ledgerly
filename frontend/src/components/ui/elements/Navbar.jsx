@@ -1,10 +1,10 @@
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-import useAuth from "../../store/hooks/useAuth";
-import useAxiosPrivate from "../../store/hooks/useAxiosPrivate";
+import useAuth from "../../../store/hooks/useAuth";
+import useAxiosPrivate from "../../../store/hooks/useAxiosPrivate";
 
-import logo from "../../images/logo.png";
+import logo from "../../../images/logo.png";
 
 function NavbarComponent() {
   const { auth, setAuth } = useAuth();

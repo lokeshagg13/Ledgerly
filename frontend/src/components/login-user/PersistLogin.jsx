@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
-import Loader from "../ui/Loader";
+import Loader from "../ui/elements/Loader";
 import useAuth from "../../store/hooks/useAuth";
 import useRefreshToken from "../../store/hooks/useRefreshToken";
 

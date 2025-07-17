@@ -1,5 +1,5 @@
 import CategoryPageContent from "../../components/categories/CategoryPageContent";
-import PageLayout from "../../components/ui/PageLayout";
+import PageLayout from "../../components/ui/page-layout/PageLayout";
 import categoryImage from "../../images/category-bg.png";
 
 function CategoryPage() {

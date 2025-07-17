@@ -4,7 +4,7 @@ import TransactionContext from "../../../../../store/context/transactionContext"
 import { formatAmountWithCommas } from "../../../../../utils/formatUtils";
 import CategorySelector from "./selectors/CategorySelector";
 import SubcategorySelector from "./selectors/SubcategorySelector";
-import FormDatePicker from "../../../../ui/FormDatePicker";
+import FormDatePicker from "../../../../ui/elements/FormDatePicker";
 
 function AddTransactionForm() {
   const amountInputRef = useRef();

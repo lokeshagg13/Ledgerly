@@ -1,5 +1,5 @@
 import TransactionPageContent from "../../components/transactions/TransactionPageContent";
-import PageLayout from "../../components/ui/PageLayout";
+import PageLayout from "../../components/ui/page-layout/PageLayout";
 import transactionImage from "../../images/transaction-bg.png";
 
 function ManageTransactionPage() {

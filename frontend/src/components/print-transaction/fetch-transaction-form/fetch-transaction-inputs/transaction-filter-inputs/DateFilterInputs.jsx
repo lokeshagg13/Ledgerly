@@ -9,7 +9,7 @@ import {
   getStartOfYear,
   getToday,
 } from "../../../../../utils/dateUtils";
-import FilterDatePicker from "../../../../ui/FilterDatePicker";
+import FilterDatePicker from "../../../../ui/elements/FilterDatePicker";
 import TransactionPrintContext from "../../../../../store/context/transactionPrintContext";
 
 function DateFilterInputs() {

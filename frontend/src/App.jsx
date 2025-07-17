@@ -1,14 +1,14 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import useAuth from "./store/hooks/useAuth";
-import NavbarComponent from "./components/ui/Navbar";
+import NavbarComponent from "./components/ui/elements/Navbar";
 import PersistLogin from "./components/login-user/PersistLogin";
 import RequireAuth from "./components/login-user/RequireAuth";
-import Home from "./pages/Home";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-import HomeLogged from "./pages/HomeLogged";
 import Page404 from "./pages/page404";
+import HomePage from "./pages/home-page/HomePage";
+import DashboardPage from "./pages/dashboard-page/DashboardPage";
+import LoginPage from "./pages/login-page/LoginPage";
+import RegisterPage from "./pages/register-page/RegisterPage";
 import TransactionPage from "./pages/transaction-page/TransactionPage";
 import CategoryPage from "./pages/category-page/CategoryPage";
 import PrintTransactionPage from "./pages/print-transaction-page/PrintTransactionPage";
@@ -33,7 +33,7 @@ function App() {
             }
           />
 
-          <Route path="/home" element={<Home />} />
+          <Route path="/home" element={<HomePage />} />
 
           {/* Protected Routes */}
           <Route element={<PersistLogin />}>
@@ -43,7 +43,7 @@ function App() {
                 auth?.email && auth?.accessToken ? (
                   <Navigate to="/dashboard" replace />
                 ) : (
-                  <Login />
+                  <LoginPage />
                 )
               }
             />
@@ -54,13 +54,13 @@ function App() {
                 auth?.email && auth?.accessToken ? (
                   <Navigate to="/dashboard" replace />
                 ) : (
-                  <Register />
+                  <RegisterPage />
                 )
               }
             />
 
             <Route element={<RequireAuth />}>
-              <Route path="/dashboard" element={<HomeLogged />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/transactions" element={<TransactionPage />} />
               <Route
                 path="/transactions/print"

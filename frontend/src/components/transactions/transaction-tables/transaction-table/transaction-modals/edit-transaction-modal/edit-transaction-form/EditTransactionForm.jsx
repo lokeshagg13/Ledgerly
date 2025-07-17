@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef } from "react";
 import { Form, InputGroup } from "react-bootstrap";
 import TransactionContext from "../../../../../../../store/context/transactionContext";
 import { formatAmountWithCommas } from "../../../../../../../utils/formatUtils";
-import FormDatePicker from "../../../../../../ui/FormDatePicker";
+import FormDatePicker from "../../../../../../ui/elements/FormDatePicker";
 
 function EditTransactionForm() {
   const amountInputRef = useRef();

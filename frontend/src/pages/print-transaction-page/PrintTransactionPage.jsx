@@ -1,5 +1,5 @@
 import PrintTransactionPageContent from "../../components/print-transaction/PrintTransactionPageContent";
-import PageLayout from "../../components/ui/PageLayout";
+import PageLayout from "../../components/ui/page-layout/PageLayout";
 import printImage from "../../images/print-bg.png";
 
 function PrintTransactionPage() {

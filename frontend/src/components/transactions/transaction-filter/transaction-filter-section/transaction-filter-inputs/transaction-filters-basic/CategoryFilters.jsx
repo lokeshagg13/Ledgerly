@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import MultiSelector from "../../../../../ui/MultiSelector";
+import MultiSelector from "../../../../../ui/elements/MultiSelector";
 import TransactionFilterContext from "../../../../../../store/context/transactionFilterContext";
 
 function CategoryFilters() {
