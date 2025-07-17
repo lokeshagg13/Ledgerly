@@ -19,9 +19,10 @@ function PrintTransactionForm() {
 
   useEffect(() => {
     if (isPrintSectionVisible && !isPrintPreviewVisible) {
-      setTimeout(() => {
-        sectionRef.current?.scrollIntoView({ behavior: "smooth" });
-      }, 100);
+      setTimeout(
+        () => sectionRef.current?.scrollIntoView({ behavior: "smooth" }),
+        100
+      );
     }
   }, [isPrintSectionVisible, isPrintPreviewVisible]);
 

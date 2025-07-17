@@ -12,9 +12,7 @@ function DeleteCategoryModal({ categoryId, categoryName, onClose }) {
   // Hiding error message after 6 seconds
   useEffect(() => {
     if (errorMessage) {
-      const messageTimeout = setTimeout(() => {
-        setErrorMessage("");
-      }, 6000);
+      const messageTimeout = setTimeout(() => setErrorMessage(""), 6000);
       return () => clearTimeout(messageTimeout);
     }
   }, [errorMessage]);
@@ -35,6 +33,7 @@ function DeleteCategoryModal({ categoryId, categoryName, onClose }) {
   }, [deleting]);
 
   const handleDeleteCategory = async () => {
+    if (deleting) return;
     setDeleting(true);
     try {
       await axiosPrivate.delete(`/user/categories/${categoryId}`);
@@ -77,12 +76,10 @@ function DeleteCategoryModal({ categoryId, categoryName, onClose }) {
           You are about to delete the <strong>{categoryName}</strong> category.
         </p>
         <p className="warning-message">
-          Note: This action cannot be undone. All associated subcategories will also
-          be removed.
+          Note: This action cannot be undone. All associated subcategories will
+          also be removed.
         </p>
-        {errorMessage && (
-          <div className="error-message">{errorMessage}</div>
-        )}
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
       </Modal.Body>
       <Modal.Footer>
         <Button

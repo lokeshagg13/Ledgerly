@@ -25,9 +25,7 @@ function AddCategoryModal() {
   // For hiding error message after 6 seconds
   useEffect(() => {
     if (errorMessage) {
-      const timeout = setTimeout(() => {
-        setErrorMessage("");
-      }, 6000);
+      const timeout = setTimeout(() => setErrorMessage(""), 6000);
       return () => clearTimeout(timeout);
     }
   }, [errorMessage]);
@@ -39,30 +37,21 @@ function AddCategoryModal() {
   }, [newCategoryName, errorMessage]);
 
   // Keyboard support for closing modal and submitting
-  useEffect(() => {
-    if (!isAddCategoryModalVisible) return;
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape" && !isAdding) {
-        e.preventDefault();
-        handleCancel();
-      } else if (
-        e.key === "Enter" &&
-        document.activeElement === newCategoryNameRef.current &&
-        !isAdding
-      ) {
-        e.preventDefault();
-        handleAddCategory();
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-    // eslint-disable-next-line
-  }, [isAddCategoryModalVisible, isAdding]);
+  const handleKeyDown = (e) => {
+    if (isAdding) return;
+    if (e.key === "Escape") {
+      e.preventDefault();
+      handleCancel();
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      handleAddCategory();
+    }
+  };
 
+  // Handle adding a new category by calling the API
   const handleAddCategory = async () => {
-    const newCategoryNameTrimmed = newCategoryNameRef?.current?.value?.trim();
+    if (isAdding) return;
+    const newCategoryNameTrimmed = newCategoryName.trim();
     if (!newCategoryNameTrimmed) {
       setErrorMessage("Category name cannot be empty.");
       return;
@@ -126,6 +115,7 @@ function AddCategoryModal() {
               placeholder="e.g. Shopping, PPF, LIC"
               value={newCategoryName}
               onChange={(e) => setNewCategoryName(e.target.value)}
+              onKeyDown={handleKeyDown}
               isInvalid={Boolean(errorMessage)}
               className={`py-1 ${errorMessage ? "shake" : ""}`}
               ref={newCategoryNameRef}

@@ -24,9 +24,7 @@ function SaveTransactionModal() {
   // For hiding error message after 6 seconds
   useEffect(() => {
     if (errorMessage) {
-      const timeout = setTimeout(() => {
-        setErrorMessage("");
-      }, 6000);
+      const timeout = setTimeout(() => setErrorMessage(""), 6000);
       return () => clearTimeout(timeout);
     }
   }, [errorMessage]);
@@ -38,41 +36,30 @@ function SaveTransactionModal() {
   }, [fileName, errorMessage]);
 
   // Keyboard support for closing modal and submitting
-  useEffect(() => {
-    if (!isSaveTransactionModalVisible) return;
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape" && !isSaving) {
-        e.preventDefault();
-        handleCancel();
-      } else if (
-        e.key === "Enter" &&
-        document.activeElement === fileNameRef.current &&
-        !isSaving
-      ) {
-        e.preventDefault();
-        handleSaveTransactions();
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-    // eslint-disable-next-line
-  }, [isSaveTransactionModalVisible, isSaving]);
+  const handleKeyDown = (e) => {
+    if (isSaving) return;
+    if (e.key === "Escape") {
+      e.preventDefault();
+      handleCancel();
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      handleSaveTransactions();
+    }
+  };
 
+  // Handle saving transactions by calling the handler function
   const handleSaveTransactions = async () => {
-    const fileNameTrimmed = fileNameRef?.current?.value?.trim();
+    if (isSaving) return;
+    const fileNameTrimmed = fileName.trim();
     if (!fileNameTrimmed) {
       setErrorMessage("File name cannot be empty.");
       return;
     }
-
     const invalidChars = /[\\/:*?"<>|]/;
     if (invalidChars.test(fileNameTrimmed)) {
       setErrorMessage("File name contains invalid characters.");
       return;
     }
-
     const finalFileName = fileNameTrimmed.endsWith(".pdf")
       ? fileNameTrimmed
       : `${fileNameTrimmed}.pdf`;
@@ -119,6 +106,7 @@ function SaveTransactionModal() {
               placeholder="e.g. nov-transactions.pdf"
               value={fileName}
               onChange={(e) => setFileName(e.target.value)}
+              onKeyDown={handleKeyDown}
               isInvalid={Boolean(errorMessage)}
               className={`py-1 ${errorMessage ? "shake" : ""}`}
               ref={fileNameRef}

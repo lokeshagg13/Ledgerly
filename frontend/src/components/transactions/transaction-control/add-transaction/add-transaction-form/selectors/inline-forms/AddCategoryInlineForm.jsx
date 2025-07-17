@@ -7,8 +7,11 @@ import CancelIcon from "../../../../../../ui/icons/CancelIcon";
 
 function AddCategoryInlineForm() {
   const newCategoryNameRef = useRef();
-  const { isAddCategoryFormVisible, fetchCategoriesFromDB, closeAddCategoryForm } =
-    useContext(TransactionContext);
+  const {
+    isAddCategoryFormVisible,
+    fetchCategoriesFromDB,
+    closeAddCategoryForm,
+  } = useContext(TransactionContext);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [isAdding, setIsAdding] = useState(false);
   const [message, setMessage] = useState(null);
@@ -23,9 +26,7 @@ function AddCategoryInlineForm() {
   // For hiding error message after 6 seconds
   useEffect(() => {
     if (message) {
-      const timeout = setTimeout(() => {
-        setMessage(null);
-      }, 6000);
+      const timeout = setTimeout(() => setMessage(null), 6000);
       return () => clearTimeout(timeout);
     }
   }, [message]);
@@ -38,6 +39,7 @@ function AddCategoryInlineForm() {
   }, [newCategoryName, message]);
 
   const handleAddCategory = async () => {
+    if (isAdding) return;
     const newCategoryNameTrimmed = newCategoryName.trim();
     if (!newCategoryNameTrimmed) {
       setMessage({

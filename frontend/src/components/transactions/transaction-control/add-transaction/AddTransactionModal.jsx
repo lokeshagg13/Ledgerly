@@ -19,9 +19,7 @@ function AddTransactionModal({ onClose }) {
   // For hiding error message after 6 seconds
   useEffect(() => {
     if (commonErrorMessage) {
-      const timeout = setTimeout(() => {
-        setCommonErrorMessage("");
-      }, 6000);
+      const timeout = setTimeout(() => setCommonErrorMessage(""), 6000);
       return () => clearTimeout(timeout);
     }
   }, [commonErrorMessage, setCommonErrorMessage]);

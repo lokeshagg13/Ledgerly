@@ -12,9 +12,7 @@ function DeleteSubcategoryModal({ subcategoryId, subcategoryName, onClose }) {
   // Hiding error message after 6 seconds
   useEffect(() => {
     if (errorMessage) {
-      const messageTimeout = setTimeout(() => {
-        setErrorMessage("");
-      }, 6000);
+      const messageTimeout = setTimeout(() => setErrorMessage(""), 6000);
       return () => clearTimeout(messageTimeout);
     }
   }, [errorMessage]);
@@ -35,11 +33,10 @@ function DeleteSubcategoryModal({ subcategoryId, subcategoryName, onClose }) {
   }, [deleting]);
 
   const handleDeleteSubcategory = async () => {
+    if (deleting) return;
     setDeleting(true);
     try {
-      await axiosPrivate.delete(
-        `/user/subcategories/${subcategoryId}`
-      );
+      await axiosPrivate.delete(`/user/subcategories/${subcategoryId}`);
       setErrorMessage("");
       closeModal();
       fetchSubcategoriesFromDB();
@@ -78,12 +75,8 @@ function DeleteSubcategoryModal({ subcategoryId, subcategoryName, onClose }) {
           You are about to delete the <strong>{subcategoryName}</strong>{" "}
           subcategory.
         </p>
-        <p className="warning-message">
-          Note: This action cannot be undone.
-        </p>
-        {errorMessage && (
-          <div className="error-message">{errorMessage}</div>
-        )}
+        <p className="warning-message">Note: This action cannot be undone.</p>
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
       </Modal.Body>
       <Modal.Footer>
         <Button

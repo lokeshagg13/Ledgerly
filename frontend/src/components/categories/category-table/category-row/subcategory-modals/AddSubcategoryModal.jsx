@@ -37,36 +37,31 @@ function AddSubcategoryModal({ categoryId }) {
   }, [newSubcategoryName, errorMessage]);
 
   // Keyboard support for closing modal and submitting
-  useEffect(() => {
-    if (!isAddSubcategoryModalVisible) return;
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape" && !isAdding) {
-        e.preventDefault();
-        handleCancel();
-      } else if (
-        e.key === "Enter" &&
-        document.activeElement === newSubcategoryNameRef.current &&
-        !isAdding
-      ) {
-        e.preventDefault();
-        handleAddSubcategory();
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-    //eslint-disable-next-line
-  }, [isAddSubcategoryModalVisible, isAdding]);
+  const handleKeyDown = (e) => {
+    if (isAdding) return;
+    if (e.key === "Escape") {
+      e.preventDefault();
+      handleCancel();
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      handleAddSubcategory();
+    }
+  };
 
+  // Handle adding a new subcategory by calling the API
   const handleAddSubcategory = async () => {
     if (isAdding) return;
-    const newSubcategoryNameTrimmed =
-      newSubcategoryNameRef?.current?.value?.trim();
+    const newSubcategoryNameTrimmed = newSubcategoryName.trim();
     if (!newSubcategoryNameTrimmed) {
       setErrorMessage("Subcategory name cannot be empty.");
       return;
     }
     if (newSubcategoryNameTrimmed.length > 20) {
       setErrorMessage("Subcategory name is too long (max 20 characters).");
+      return;
+    }
+    if (newSubcategoryNameTrimmed.includes(",")) {
+      setErrorMessage("Subcategory name cannnot contain commas.");
       return;
     }
 
@@ -116,13 +111,15 @@ function AddSubcategoryModal({ categoryId }) {
           <Form.Group controlId="subcategoryName">
             <Form.Label>Subcategory Name</Form.Label>
             <Form.Control
+              aria-label="New category name"
               type="text"
               placeholder="e.g. Mobile Recharge, SIP, Insurance"
               value={newSubcategoryName}
               onChange={(e) => setNewSubcategoryName(e.target.value)}
+              onKeyDown={handleKeyDown}
               isInvalid={Boolean(errorMessage)}
-              ref={newSubcategoryNameRef}
               className={`py-1 ${errorMessage ? "shake" : ""}`}
+              ref={newSubcategoryNameRef}
               maxLength={20}
             />
             <Form.Text className="text-muted">

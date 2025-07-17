@@ -25,9 +25,7 @@ function RegisterUserForm() {
   // Make the error status disappear after 5 seconds
   useEffect(() => {
     if (error && !error.includes("Passwords do not match")) {
-      const timer = setTimeout(() => {
-        setError("");
-      }, 5000);
+      const timer = setTimeout(() => setError(""), 5000);
       return () => clearTimeout(timer);
     }
   }, [error]);

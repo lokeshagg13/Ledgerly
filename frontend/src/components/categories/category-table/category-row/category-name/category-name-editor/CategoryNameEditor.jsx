@@ -20,9 +20,7 @@ function CategoryNameEditor({ categoryId, categoryName, onClose }) {
   // For hiding error message after 6 seconds
   useEffect(() => {
     if (errorMessage) {
-      const timeout = setTimeout(() => {
-        setErrorMessage("");
-      }, 6000);
+      const timeout = setTimeout(() => setErrorMessage(""), 6000);
       return () => clearTimeout(timeout);
     }
   }, [errorMessage]);
@@ -34,65 +32,74 @@ function CategoryNameEditor({ categoryId, categoryName, onClose }) {
   }, [editedName, errorMessage]);
 
   // Keyboard support for closing modal and submitting
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape" && !isSaving) {
-        e.preventDefault();
-        handleCancel();
-      } else if (
-        e.key === "Enter" &&
-        document.activeElement === newCategoryNameRef.current &&
-        !isSaving
-      ) {
-        e.preventDefault();
-        handleSave();
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-    // eslint-disable-next-line
-  }, [isSaving]);
+  const handleKeyDown = (e) => {
+    if (isSaving) return;
+    if (e.key === "Escape") {
+      e.preventDefault();
+      handleCancel();
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      handleSave();
+    }
+  };
 
+  // Handle saving updated category name
   const handleSave = async () => {
-    if (!editedName.trim()) {
+    if (isSaving) return;
+    const editedNameTrimmed = editedName.trim();
+    if (!editedNameTrimmed) {
       setErrorMessage("Category name cannot be empty.");
       return;
     }
+    if (editedNameTrimmed.length > 20) {
+      setErrorMessage("Category name is too long (max 20 characters).");
+      return;
+    }
+    if (editedNameTrimmed.includes(",")) {
+      setErrorMessage("Category name cannnot contain commas.");
+      return;
+    }
+
+    setIsSaving(true);
     try {
-      setIsSaving(true);
       await axiosPrivate.put(`/user/categories/${categoryId}`, {
-        newName: editedName.trim(),
+        newName: editedNameTrimmed,
       });
       setErrorMessage("");
       onClose();
       fetchCategoriesFromDB();
     } catch (error) {
-      setErrorMessage(
-        error?.response?.data?.error || "Failed to update category name."
-      );
+      if (!error?.response) {
+        setErrorMessage("Failed to update category name: No server response.");
+      } else {
+        setErrorMessage(
+          error?.response?.data?.error || "Failed to update category name."
+        );
+      }
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleCancel = () => {
-    onClose();
-    setEditedName(categoryName);
+    if (isSaving) return;
     setErrorMessage("");
+    setEditedName(categoryName);
+    onClose();
   };
 
   return (
     <div className="category-name-editor-wrapper">
       <div className="category-name-editor">
         <Form.Control
-          ref={newCategoryNameRef}
+          aria-label="Edit category name"
+          type="text"
           value={editedName}
           onChange={(e) => setEditedName(e.target.value)}
+          onKeyDown={handleKeyDown}
           isInvalid={Boolean(errorMessage)}
           className={`category-name-input ${errorMessage ? "shake" : ""}`}
-          aria-label="Input field for new category name"
+          ref={newCategoryNameRef}
           maxLength={20}
         />
         <div className="category-editor-actions">

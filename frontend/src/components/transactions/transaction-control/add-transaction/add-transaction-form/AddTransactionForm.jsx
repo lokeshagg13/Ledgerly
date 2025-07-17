@@ -32,9 +32,7 @@ function AddTransactionForm() {
   // For hiding input field error messages after 6 seconds
   useEffect(() => {
     if (Object.keys(inputFieldErrors).length > 0) {
-      const timeout = setTimeout(() => {
-        updateInputFieldErrors({});
-      }, 6000);
+      const timeout = setTimeout(() => updateInputFieldErrors({}), 6000);
       return () => clearTimeout(timeout);
     }
   }, [inputFieldErrors, updateInputFieldErrors]);

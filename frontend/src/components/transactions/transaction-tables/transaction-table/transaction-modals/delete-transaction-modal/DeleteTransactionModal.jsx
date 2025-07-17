@@ -18,9 +18,7 @@ function DeleteTransactionModal({ transactionId, transactionData, onClose }) {
   // Hiding error message after 6 seconds
   useEffect(() => {
     if (errorMessage) {
-      const messageTimeout = setTimeout(() => {
-        setErrorMessage("");
-      }, 6000);
+      const messageTimeout = setTimeout(() => setErrorMessage(""), 6000);
       return () => clearTimeout(messageTimeout);
     }
   }, [errorMessage]);
@@ -41,6 +39,7 @@ function DeleteTransactionModal({ transactionId, transactionData, onClose }) {
   }, [deleting]);
 
   const handleDeleteTransaction = async () => {
+    if (deleting) return;
     setDeleting(true);
     try {
       await axiosPrivate.delete(`/user/transactions/${transactionId}`);

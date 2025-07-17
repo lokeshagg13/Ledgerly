@@ -18,9 +18,7 @@ function DeleteSelectedCategoriesModal() {
   // Hiding error message after 6 seconds
   useEffect(() => {
     if (errorMessage) {
-      const messageTimeout = setTimeout(() => {
-        setErrorMessage("");
-      }, 6000);
+      const messageTimeout = setTimeout(() => setErrorMessage(""), 6000);
       return () => clearTimeout(messageTimeout);
     }
   }, [errorMessage]);
@@ -28,8 +26,7 @@ function DeleteSelectedCategoriesModal() {
   // Keyboard handling
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (!isDeleteSelectedCategoriesModalVisible || deleting) return;
-      if (e.key === "Escape") {
+      if (!deleting && e.key === "Escape") {
         e.preventDefault();
         handleCancel();
       }
@@ -42,6 +39,7 @@ function DeleteSelectedCategoriesModal() {
   }, [isDeleteSelectedCategoriesModalVisible, selectedCategories, deleting]);
 
   const handleDeleteSelectedCategories = async () => {
+    if (deleting) return;
     setDeleting(true);
     try {
       await axiosPrivate.delete("/user/categories", {

@@ -27,9 +27,7 @@ function AddSubcategoryInlineForm() {
   // For hiding error message after 6 seconds
   useEffect(() => {
     if (message) {
-      const timeout = setTimeout(() => {
-        setMessage(null);
-      }, 6000);
+      const timeout = setTimeout(() => setMessage(null), 6000);
       return () => clearTimeout(timeout);
     }
   }, [message]);
@@ -42,6 +40,7 @@ function AddSubcategoryInlineForm() {
   }, [newSubcategoryName, message]);
 
   const handleAddSubcategory = async () => {
+    if (isAdding) return;
     const { categoryId } = addTransactionFormData;
     const newSubcategoryNameTrimmed = newSubcategoryName.trim();
     if (!categoryId) {

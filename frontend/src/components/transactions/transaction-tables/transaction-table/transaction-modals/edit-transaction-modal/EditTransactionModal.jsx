@@ -21,18 +21,15 @@ function EditTransactionModal() {
   // For hiding error message after 6 seconds
   useEffect(() => {
     if (commonErrorMessage) {
-      const timeout = setTimeout(() => {
-        setCommonErrorMessage("");
-      }, 6000);
+      const timeout = setTimeout(() => setCommonErrorMessage(""), 6000);
       return () => clearTimeout(timeout);
     }
   }, [commonErrorMessage, setCommonErrorMessage]);
 
   // Keyboard support for closing modal and submitting
   useEffect(() => {
-    if (!isEditTransactionModalVisible) return;
     const handleKeyDown = (e) => {
-      if (e.key === "Escape") {
+      if (!isUpdating && e.key === "Escape") {
         closeEditTransactionModal();
       }
     };

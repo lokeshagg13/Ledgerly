@@ -16,27 +16,44 @@ function LoginForm() {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Bring email field into focus on entering the login form
   useEffect(() => {
     emailRef.current.focus();
   }, []);
 
-  // Make the error status disappear after 5 seconds
+  // Make the error status disappear after 6 seconds
   useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => {
-        setError("");
-      }, 5000);
+    if (errorMessage) {
+      const timer = setTimeout(() => setErrorMessage(""), 6000);
       return () => clearTimeout(timer);
     }
-  }, [error]);
+  }, [errorMessage]);
+
+  // For hiding empty input error message on user writes something
+  useEffect(() => {
+    if (
+      errorMessage.includes(
+        "Please enter a valid email address." && isValidEmail(formData.email)
+      )
+    )
+      setErrorMessage("");
+  }, [formData, errorMessage]);
+
+  // Keyboard support for submitting modal
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !isSubmitting) {
+      e.preventDefault();
+      handleLogin();
+    }
+  };
 
   // Handle changes in the input fields
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError(""); // Clear error message when input changes
+    setErrorMessage(""); // Clear error message when input changes
   };
 
   // Email validation function
@@ -45,22 +62,24 @@ function LoginForm() {
     return emailRegex.test(email);
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError("");
+  const handleLogin = async () => {
+    if (isSubmitting) return;
 
     // Validate email before submitting
     if (!isValidEmail(formData.email)) {
-      setError("Please enter a valid email address.");
+      setErrorMessage("Please enter a valid email address.");
       return;
     }
 
     // Validate password and confirm password
     if (formData.password.length < 8) {
-      setError("Invalid password. Please ensure you have entered the correct password.");
+      setErrorMessage(
+        "Invalid password. Please ensure you have entered the correct password."
+      );
       return;
     }
 
+    setIsSubmitting(true);
     try {
       const response = await axiosPrivate.post(
         "/user/login",
@@ -86,23 +105,25 @@ function LoginForm() {
       navigate("/dashboard", { replace: true });
     } catch (error) {
       if (!error?.response) {
-        setError("No server response.");
+        setErrorMessage("No server response.");
       } else if (error.response?.status === 400) {
-        setError(
+        setErrorMessage(
           "Invalid password. Please ensure you have entered the correct password."
         );
       } else if (error.response?.status === 401) {
-        setError(
+        setErrorMessage(
           "User not found. Please check your email or sign up to create a new account."
         );
       } else {
-        setError("Login error.");
+        setErrorMessage("Login error.");
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={handleLogin} className="form">
+    <form className="form">
       <input
         type="email"
         name="email"
@@ -110,6 +131,7 @@ function LoginForm() {
         ref={emailRef}
         value={formData.email}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
         autoComplete="off"
         required
         className="form-input"
@@ -121,6 +143,7 @@ function LoginForm() {
           placeholder="Password"
           value={formData.password}
           onChange={handleChange}
+          onKeyDown={handleKeyDown}
           autoComplete="off"
           required
           className="form-input"
@@ -132,8 +155,8 @@ function LoginForm() {
           {showPassword ? <EyeOpenIcon /> : <EyeSlashIcon />}
         </span>
       </div>
-      {error && <p className="error">{error}</p>}
-      <button type="submit" className="form-button">
+      {errorMessage && <p className="error">{errorMessage}</p>}
+      <button type="button" className="form-button" onClick={handleLogin}>
         Login
       </button>
       <div className="login-link">

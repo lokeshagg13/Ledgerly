@@ -20,9 +20,7 @@ function SubcategoryNameEditor({ subcategoryId, subcategoryName, onClose }) {
   // For hiding error message after 6 seconds
   useEffect(() => {
     if (errorMessage) {
-      const timeout = setTimeout(() => {
-        setErrorMessage("");
-      }, 6000);
+      const timeout = setTimeout(() => setErrorMessage(""), 6000);
       return () => clearTimeout(timeout);
     }
   }, [errorMessage]);
@@ -34,68 +32,76 @@ function SubcategoryNameEditor({ subcategoryId, subcategoryName, onClose }) {
   }, [editedName, errorMessage]);
 
   // Keyboard support for closing modal and submitting
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape" && !isSaving) {
-        e.preventDefault();
-        handleCancel();
-      } else if (
-        e.key === "Enter" &&
-        document.activeElement === newSubcategoryNameRef.current &&
-        !isSaving
-      ) {
-        e.preventDefault();
-        handleSave();
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-    // eslint-disable-next-line
-  }, [isSaving]);
+  const handleKeyDown = (e) => {
+    if (isSaving) return;
+    if (e.key === "Escape") {
+      e.preventDefault();
+      handleCancel();
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      handleSave();
+    }
+  };
 
+  // Handle saving updated subcategory name
   const handleSave = async () => {
-    if (!editedName.trim()) {
+    if (isSaving) return;
+    const editedNameTrimmed = editedName.trim();
+    if (!editedNameTrimmed) {
       setErrorMessage("Subcategory name cannot be empty.");
       return;
     }
+    if (editedNameTrimmed.length > 20) {
+      setErrorMessage("Subcategory name is too long (max 20 characters).");
+      return;
+    }
+    if (editedNameTrimmed.includes(",")) {
+      setErrorMessage("Subcategory name cannnot contain commas.");
+      return;
+    }
+
+    setIsSaving(true);
     try {
-      setIsSaving(true);
-      await axiosPrivate.put(
-        `/user/subcategories/${subcategoryId}`,
-        {
-          newName: editedName.trim(),
-        }
-      );
+      await axiosPrivate.put(`/user/subcategories/${subcategoryId}`, {
+        newName: editedNameTrimmed,
+      });
       setErrorMessage("");
       onClose();
       fetchSubcategoriesFromDB();
     } catch (error) {
-      setErrorMessage(
-        error?.response?.data?.error || "Failed to update subcategory name."
-      );
+      if (!error?.response) {
+        setErrorMessage(
+          "Failed to update subcategory name: No server response."
+        );
+      } else {
+        setErrorMessage(
+          error?.response?.data?.error || "Failed to update subcategory name."
+        );
+      }
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleCancel = () => {
-    onClose();
-    setEditedName(subcategoryName);
+    if (isSaving) return;
     setErrorMessage("");
+    setEditedName(subcategoryName);
+    onClose();
   };
 
   return (
     <div className="subcategory-name-editor-wrapper">
       <div className="subcategory-name-editor">
         <Form.Control
-          ref={newSubcategoryNameRef}
+          aria-label="Edit subcategory name"
+          type="text"
           value={editedName}
           onChange={(e) => setEditedName(e.target.value)}
+          onKeyDown={handleKeyDown}
           isInvalid={Boolean(errorMessage)}
           className={`subcategory-name-input ${errorMessage ? "shake" : ""}`}
-          aria-label="Edit subcategory name"
+          ref={newSubcategoryNameRef}
           maxLength={20}
         />
         <div className="subcategory-editor-actions">
@@ -104,6 +110,7 @@ function SubcategoryNameEditor({ subcategoryId, subcategoryName, onClose }) {
             size="sm"
             variant="outline-secondary"
             onClick={handleSave}
+            aria-label="Save edited subcategory name"
             disabled={isSaving}
           >
             {isSaving ? (
@@ -121,6 +128,7 @@ function SubcategoryNameEditor({ subcategoryId, subcategoryName, onClose }) {
             size="sm"
             variant="outline-secondary"
             onClick={handleCancel}
+            aria-label="Close subcategory name editor"
           >
             <CancelIcon width="0.9em" height="0.9em" />
           </Button>
