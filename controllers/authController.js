@@ -26,6 +26,7 @@ exports.loginUser = async (req, res) => {
       return res.status(401).json({ error: "User is not registered" });
     }
 
+    // Compare password
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       return res.status(400).json({ error: "Invalid login credentials" });
@@ -35,7 +36,7 @@ exports.loginUser = async (req, res) => {
     const accessToken = jwt.sign(
       {
         email: user.email,
-        userId: user._id
+        userId: user._id,
       },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
@@ -44,7 +45,7 @@ exports.loginUser = async (req, res) => {
     const refreshToken = jwt.sign(
       {
         email: user.email,
-        userId: user._id
+        userId: user._id,
       },
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
@@ -60,10 +61,15 @@ exports.loginUser = async (req, res) => {
       httpOnly: true,
       sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
       secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
-    // Send back in response body only the accessToken
-    res.status(200).json({ accessToken });
+
+    // ✅ Send accessToken + user name + email
+    res.status(200).json({
+      accessToken,
+      name: user.name,
+      email: user.email,
+    });
   } catch (error) {
     res
       .status(500)

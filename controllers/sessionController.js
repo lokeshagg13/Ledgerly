@@ -39,6 +39,7 @@ exports.handleRefreshToken = async (req, res) => {
         );
         res.status(200).json({
           email: decoded.email,
+          name: user.name,
           accessToken,
         });
       }

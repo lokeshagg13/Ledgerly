@@ -524,6 +524,102 @@ body,
 }
 /* #endregion */
 
+/* #region - Dashboard page content */
+.dashboard-container {
+  padding: 2rem;
+  background-color: #f4f6f8;
+}
+/* #endregion */
+
+/* #region - Dashboard welcome banner */
+.dashboard-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.dashboard-header h1 {
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  font-weight: 700;
+  text-align: center;
+  color: #1e1e1e;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.dashboard-header h1 .username {
+  white-space: nowrap;
+  display: inline;
+}
+
+@media (max-width: 600px) {
+  .dashboard-header h1 {
+    line-height: 1.4;
+  }
+
+  .dashboard-header h1 span {
+    display: block;
+    white-space: normal;
+    margin-top: 0.25rem;
+  }
+}
+/* #endregion */
+
+/* #region - Dashboard cta control */
+.cta-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.cta-button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.5rem;
+  background-color: white;
+  border: 1px solid #d1d5db;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+  width: 280px;
+  max-width: 100%;
+}
+
+.cta-button:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.cta-icon {
+  font-size: 1.2rem;
+}
+
+.cta-icon svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.cta-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #111827;
+}
+
+@media (max-width: 700px) {
+  .cta-button {
+    width: 100%;
+    max-width: 362px;
+    justify-content: center;
+  }
+}
+/* #endregion */
+
 /* #region - Transactions page */
 .transaction-page {
   max-width: 1400px;

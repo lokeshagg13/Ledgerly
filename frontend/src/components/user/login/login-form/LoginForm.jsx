@@ -36,9 +36,8 @@ function LoginForm() {
   // For hiding empty input error message on user writes something
   useEffect(() => {
     if (
-      errorMessage.includes(
-        "Please enter a valid email address." && isValidEmail(formData.email)
-      )
+      errorMessage.includes("Please enter a valid email address.") &&
+      isValidEmail(formData.email)
     )
       setErrorMessage("");
   }, [formData, errorMessage]);
@@ -84,7 +83,7 @@ function LoginForm() {
       const response = await axiosPrivate.post(
         "/user/login",
         JSON.stringify({
-          email: formData.email,
+          email: formData.email.trim(),
           password: formData.password,
         }),
         {
@@ -95,11 +94,8 @@ function LoginForm() {
         }
       );
 
-      const accessToken = response?.data?.accessToken;
-      setAuth({
-        email: formData.email,
-        accessToken,
-      });
+      const { email, name, accessToken } = response?.data || {};
+      setAuth({ email, name, accessToken });
       setErrorMessage("");
       setFormData({ email: "", password: "" });
       navigate("/dashboard", { replace: true });
