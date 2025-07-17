@@ -43,6 +43,7 @@ function RegisterForm() {
     } else {
       setPasswordMismatch(false);
     }
+    // eslint-disable-next-line
   }, [formData.password, formData.confirmPassword]);
 
   // Keyboard support for submitting register form

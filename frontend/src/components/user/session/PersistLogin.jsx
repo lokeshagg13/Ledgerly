@@ -26,7 +26,7 @@ function PersistLogin() {
     // eslint-disable-next-line
   }, []);
 
-  // Finally, either show the loader icon or the contained route according to the path (We can see app.js for understanding usage of Outlet)
+  // Finally, either show the loader icon or the contained route according to the path (We can see app.jsx for understanding usage of Outlet)
   return <>{isLoading ? <Loader /> : <Outlet />}</>;
 }
 

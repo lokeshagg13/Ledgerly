@@ -21,22 +21,22 @@ function App() {
 
       <div className="app-content">
         <Routes>
-          <Route
-            exact
-            path="/"
-            element={
-              auth?.email && auth?.accessToken ? (
-                <Navigate to="/dashboard" replace />
-              ) : (
-                <Navigate to="/home" replace />
-              )
-            }
-          />
-
-          <Route path="/home" element={<HomePage />} />
-
           {/* Protected Routes */}
           <Route element={<PersistLogin />}>
+            <Route path="/home" element={<HomePage />} />
+
+            <Route
+              exact
+              path="/"
+              element={
+                auth?.email && auth?.accessToken ? (
+                  <Navigate to="/dashboard" replace />
+                ) : (
+                  <Navigate to="/home" replace />
+                )
+              }
+            />
+
             <Route
               path="/login"
               element={
