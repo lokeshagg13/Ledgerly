@@ -7,6 +7,7 @@ import {
   formatAmountWithCommas,
   formatDateForFancyDisplay,
 } from "../../../../utils/formatUtils";
+import OpeningBalanceTooltip from "./opening-balance-tooltip/OpeningBalanceTooltip";
 
 function UserProfileForm() {
   const { auth, setAuth } = useAuth();
@@ -143,6 +144,7 @@ function UserProfileForm() {
         const formattedAmount = `${
           balanceType === "debit" ? "-" : ""
         }${openingBalance}`;
+        // Convert balance to float, negative if debit
         payload.openingBalance = parseFloat(formattedAmount);
       }
 
@@ -237,23 +239,27 @@ function UserProfileForm() {
         <div className="custom-input-col">
           <InputGroup>
             <InputGroup.Text>₹</InputGroup.Text>
-            <Form.Control
-              type="text"
-              name="openingBalance"
-              id="profileOpeningBalance"
-              value={
-                formData.openingBalance !== ""
-                  ? formatAmountWithCommas(formData.openingBalance)
-                  : ""
-              }
-              onChange={handleChange}
-              placeholder="Opening Balance"
-              isInvalid={checkIfInputFieldInvalid("openingBalance")}
-              className={`form-input ${
-                checkIfInputFieldInvalid("openingBalance") ? "shake" : ""
-              }`}
-              required
-            />
+            <div className="opening-balance-input-wrapper">
+              <Form.Control
+                type="text"
+                name="openingBalance"
+                id="profileOpeningBalance"
+                value={
+                  formData.openingBalance !== ""
+                    ? formatAmountWithCommas(formData.openingBalance)
+                    : ""
+                }
+                onChange={handleChange}
+                placeholder="Opening Balance"
+                isInvalid={checkIfInputFieldInvalid("openingBalance")}
+                className={`form-input ${
+                  checkIfInputFieldInvalid("openingBalance") ? "shake" : ""
+                }`}
+                inputMode="decimal"
+                required
+              />
+              <OpeningBalanceTooltip />
+            </div>
             <Form.Select
               name="balanceType"
               id="profileBalanceType"
