@@ -13,11 +13,15 @@ function PrintTransactionPageContent() {
     const previousPage = location.state?.from || "/dashboard";
     navigate(previousPage);
   };
-  
+
   return (
     <TransactionPrintContextProvider>
       <div className="print-transaction-page-header">
-        <Button variant="outline-light" onClick={handleNavigateBack}>
+        <Button
+          variant="outline-light"
+          className="page-back-button"
+          onClick={handleNavigateBack}
+        >
           <LeftArrowIcon fill="white" width="0.8em" height="0.8em" />
         </Button>
         <h2>Print Transactions</h2>

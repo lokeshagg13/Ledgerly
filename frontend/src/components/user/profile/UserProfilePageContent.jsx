@@ -14,7 +14,11 @@ function UserProfilePageContent() {
   return (
     <>
       <div className="user-profile-page-header">
-        <Button variant="outline-light" onClick={handleNavigateBack}>
+        <Button
+          variant="outline-light"
+          className="page-back-button"
+          onClick={handleNavigateBack}
+        >
           <LeftArrowIcon fill="white" width="0.8em" height="0.8em" />
         </Button>
         <h2>Manage your profile</h2>

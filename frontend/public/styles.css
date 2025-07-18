@@ -150,6 +150,10 @@ body,
   position: relative;
   z-index: 2;
 }
+
+.page-back-button:hover svg {
+  fill: #142842;
+}
 /* #endregion */
 
 /* #region - Navbar styles */
