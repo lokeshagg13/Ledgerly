@@ -46,6 +46,17 @@ export function formatDateForDisplay(dateString, sep = "-") {
     return `${day}${sep}${month}${sep}${year}`;
 }
 
+export function formatDateForFancyDisplay(dateString, fullMonthName = false) {
+    const date = new Date(dateString);
+    const day = String(date.getUTCDate()).padStart(2, "0");
+    const month = date.toLocaleString("default", {
+        month: fullMonthName ? "long" : "short"
+    });
+    const year = date.getUTCFullYear();
+    return `${day} ${month} ${year}`;
+}
+
+
 export function formatCategoryNamesUsingCategoryIds(categoryData, categoryIds) {
     if (!Array.isArray(categoryData) || !Array.isArray(categoryIds)) return "None selected";
     const idToNameMap = new Map(categoryData.map(cat => [cat._id, cat.name]));

@@ -425,7 +425,8 @@ body,
   border-radius: 10px;
 }
 
-.form-input {
+.register-form .form-input,
+.login-form .form-input {
   display: block;
   width: 100%;
   padding: 0.75rem;
@@ -436,18 +437,21 @@ body,
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.form-input:focus {
+.register-form .form-input:focus,
+.login-form .form-input:focus {
   border-color: #1e88e5;
   box-shadow: 0 0 5px rgba(30, 136, 229, 0.4);
   outline: none;
 }
 
-.password-field {
+.register-form .password-field,
+.login-form .password-field {
   position: relative;
   margin-bottom: 1rem;
 }
 
-.toggle-password {
+.register-form .toggle-password,
+.login-form .toggle-password {
   position: absolute;
   top: 50%;
   right: 10px;
@@ -457,10 +461,10 @@ body,
   color: #1e88e5;
 }
 
-.form-button {
+.register-form .form-button,
+.login-form .form-button {
   display: block;
   width: 100%;
-  padding: 0.75rem;
   background: #1e88e5;
   color: white;
   border: none;
@@ -472,15 +476,18 @@ body,
   transition: background-color 0.3s, transform 0.2s;
 }
 
-.form-button:hover {
+.register-form .form-button:hover,
+.login-form .form-button:hover {
   background: #1565c0;
 }
 
-.form-button:active {
+.register-form .form-button:active,
+.login-form .form-button:active {
   transform: scale(0.98);
 }
 
-.message {
+.register-form .message,
+.login-form .message {
   margin-top: 1rem;
   font-weight: bold;
   font-size: 1rem;
@@ -488,7 +495,8 @@ body,
   animation: fadeIn 0.5s ease-in-out;
 }
 
-.error {
+.register-form .error,
+.login-form .error {
   color: #e53935;
   font-size: 0.9rem;
   margin-bottom: 1rem;
@@ -568,6 +576,110 @@ body,
   gap: 2rem;
   justify-content: center;
   padding: 2rem 1rem;
+}
+/* #endregion */
+
+/* #region - User profile form */
+.user-profile-form {
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.user-profile-form h5 {
+  text-align: left;
+}
+
+.user-profile-form .custom-input-group {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.user-profile-form .custom-input-col {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.user-profile-form .form-label {
+  width: 50%;
+  text-align: left;
+  font-weight: 500;
+  margin-bottom: 0;
+}
+
+.user-profile-form .form-input {
+  font-size: 0.95rem;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0;
+}
+
+.user-profile-form .form-fixed {
+  background-color: #f5f5f5;
+  border: 1px solid #d1d5db;
+  color: #6b7280;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.user-profile-form .text-danger {
+  text-align: left;
+  margin-top: 0.2rem;
+}
+
+.user-profile-form select#profileBalanceType {
+  max-width: 72px;
+  background-color: #e7f3ff;
+}
+
+.user-profile-form-control {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.user-profile-form .message {
+  margin-top: 1rem;
+  color: #0c7b39;
+  font-weight: 500;
+}
+
+.user-profile-form .error {
+  color: #b00020;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.user-profile-form .last-updated-text {
+  text-align: left;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .user-profile-form .custom-input-group {
+    flex-direction: column;
+  }
+
+  .user-profile-form .form-label {
+    width: 100%;
+  }
+
+  .user-profile-form .form-label {
+    margin-bottom: 0.25rem;
+  }
+}
+
+@media (max-width: 300px) {
+  .user-profile-form-control {
+    flex-direction: column;
+  }
 }
 /* #endregion */
 

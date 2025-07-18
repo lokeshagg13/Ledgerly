@@ -66,6 +66,7 @@ function RegisterForm() {
   const checkNameValidity = (name) => {
     const nameTrimmed = name.trim();
     if (!nameTrimmed) return "User name is required.";
+    else if (/[^a-zA-Z ]/.test(nameTrimmed)) return "User name is invalid. Only alphabets and spaces allowed.";
     else if (nameTrimmed.length > 30)
       return "User name must be max. 30 characters long.";
     return null;
@@ -181,7 +182,6 @@ function RegisterForm() {
     } catch (error) {
       setRegisterSuccess(false);
       if (!error?.response) {
-        console.log("1");
         setCommonErrorMessage(
           "Error while registering user: No server response."
         );

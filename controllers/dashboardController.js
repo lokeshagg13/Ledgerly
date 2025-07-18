@@ -38,7 +38,6 @@ exports.getBalance = async (req, res) => {
             lastUpdated,
         });
     } catch (error) {
-        console.error("Error in getBalance:", error);
         res.status(500).json({ message: "Server error while fetching balance" });
     }
 };

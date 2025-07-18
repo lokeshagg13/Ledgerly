@@ -1,6 +1,7 @@
 import { Button } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import LeftArrowIcon from "../../ui/icons/LeftArrowIcon";
+import UserProfileForm from "./user-profile-form/UserProfileForm";
 
 function UserProfilePageContent() {
   const location = useLocation();
@@ -23,7 +24,9 @@ function UserProfilePageContent() {
         </Button>
         <h2>Manage your profile</h2>
       </div>
-      <div className="user-profile-page-body">Hello</div>
+      <div className="user-profile-page-body">
+        <UserProfileForm />
+      </div>
     </>
   );
 }
