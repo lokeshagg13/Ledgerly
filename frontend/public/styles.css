@@ -620,6 +620,10 @@ body,
   margin-bottom: 0;
 }
 
+.user-profile-form #profileOpeningBalance {
+  padding-right: 2rem;
+}
+
 .user-profile-form .form-fixed {
   background-color: #f5f5f5;
   border: 1px solid #d1d5db;
@@ -631,6 +635,8 @@ body,
 .user-profile-form .text-danger {
   text-align: left;
   margin-top: 0.2rem;
+  font-size: 0.9rem;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 .user-profile-form select#profileBalanceType {
@@ -670,6 +676,10 @@ body,
   position: absolute;
   transform: translateY(-140%);
   right: 0.5rem;
+}
+
+.user-profile-form input.is-invalid + span {
+  margin-right: 1.5rem;
 }
 
 #balInfoTooltip.show {
@@ -728,15 +738,122 @@ body,
 
   .user-profile-form .form-label {
     width: 100%;
-  }
-
-  .user-profile-form .form-label {
     margin-bottom: 0.25rem;
   }
 }
 
 @media (max-width: 300px) {
   .user-profile-form-control {
+    flex-direction: column;
+  }
+}
+/* #endregion */
+
+/* #region - Password update form */
+.password-update-form {
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.password-update-form h5 {
+  text-align: left;
+}
+
+.password-update-form .custom-input-group {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.password-update-form .custom-input-col {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.password-update-form .form-label {
+  width: 50%;
+  text-align: left;
+  font-weight: 500;
+  margin-bottom: 0;
+}
+
+.password-update-form .form-input {
+  font-size: 0.95rem;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0;
+}
+
+.password-update-form .password-field {
+  position: relative;
+}
+
+.password-update-form .toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #1e88e5;
+}
+
+.password-update-form .text-danger {
+  text-align: left;
+  margin-top: 0.2rem;
+  font-size: 0.9rem;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.password-update-form .password-field input.is-invalid + span {
+  margin-right: 1.5rem;
+}
+
+
+.password-update-form-control {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.password-update-success-snackbar {
+  color: #0c7b39;
+  font-weight: 500;
+}
+
+.password-update-form .message {
+  margin-top: 1rem;
+  color: #0c7b39;
+  font-weight: 500;
+}
+
+.password-update-form .error {
+  color: #b00020;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .password-update-form .custom-input-group {
+    flex-direction: column;
+  }
+
+  .password-update-form .form-label {
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+}
+
+@media (max-width: 300px) {
+  .password-update-form-control {
     flex-direction: column;
   }
 }

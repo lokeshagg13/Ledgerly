@@ -4,6 +4,21 @@ const UserModel = require("../models/User");
 // Helper: Email validator
 const isValidEmail = (email) => /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/gm.test(email);
 
+// Check password complexity
+const validatePassword = (pwd) => {
+    if (pwd.trim() === "") return "Password cannot be just spaces.";
+    if (pwd.length < 8 || pwd.length > 32)
+        return "Password must be between 8 to 32 characters.";
+    if (!/[a-z]/.test(pwd))
+        return "Password must have at least one lowercase letter (a–z).";
+    if (!/[A-Z]/.test(pwd))
+        return "Password must have at least one uppercase letter (A–Z).";
+    if (!/\d/.test(pwd)) return "Include at least one number (0–9).";
+    if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(pwd))
+        return "Password must have at least one special character.";
+    return null;
+};
+
 exports.registerUser = async (req, res) => {
     try {
         const { name, email, password } = req.body;
@@ -14,6 +29,11 @@ exports.registerUser = async (req, res) => {
 
         if (!isValidEmail(email)) {
             return res.status(400).json({ error: "Invalid email." });
+        }
+
+        const passwordError = validatePassword(password);
+        if (passwordError) {
+            return res.status(400).json({ error: passwordError });
         }
 
         const existing = await UserModel.findOne({ email: email.toLowerCase() });
@@ -30,7 +50,12 @@ exports.registerUser = async (req, res) => {
         });
 
         await user.save();
-        res.status(201).json(user);
+        res.status(201).json({
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            createdAt: user.createdAt
+        });
 
     } catch (error) {
         res.status(500).json({ error: "Error registering user: " + error.message });
@@ -84,4 +109,51 @@ exports.updateUserProfile = async (req, res) => {
         res.status(500).json({ error: "Error updating profile: " + error.message });
     }
 };
+
+exports.updatePassword = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const { currentPassword, newPassword } = req.body;
+
+        // Basic validation
+        if (!currentPassword || !newPassword) {
+            return res
+                .status(400)
+                .json({ error: "Current password and new password are required." });
+        }
+
+        const passwordError = validatePassword(newPassword);
+        if (passwordError) {
+            return res.status(400).json({ error: passwordError });
+        }
+
+        const user = await UserModel.findById(userId);
+        if (!user) return res.status(404).json({ error: "User not found." });
+
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ error: "Current password is incorrect." });
+        }
+
+        if (newPassword === currentPassword) {
+            return res.status(400).json({
+                error: "New password must be different from current password.",
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 12);
+        user.password = hashedPassword;
+        await user.save();
+
+        return res
+            .status(200)
+            .json({ message: "Password updated successfully." });
+    } catch (error) {
+        console.error("Error updating password:", error);
+        return res.status(500).json({
+            error: "Error updating password. Please try again later.",
+        });
+    }
+};
+
 

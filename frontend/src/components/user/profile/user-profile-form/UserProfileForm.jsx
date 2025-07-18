@@ -43,7 +43,7 @@ function UserProfileForm() {
     setCommonErrorMessage("");
     const { name, value } = e.target;
     setInputFieldErrors({ ...inputFieldErrors, [name]: null });
-    let newFormData = {};
+    let newFormData = { ...formData };
     if (name === "name" || name === "balanceType") {
       newFormData = { ...formData, [name]: value };
       setFormData(newFormData);
@@ -53,9 +53,7 @@ function UserProfileForm() {
       const numericValue = parseFloat(rawValue);
       if (
         (isValid || rawValue === "") &&
-        (rawValue === "" ||
-          (numericValue >= Number.MIN_SAFE_INTEGER &&
-            numericValue <= Number.MAX_SAFE_INTEGER))
+        (rawValue === "" || numericValue <= Number.MAX_SAFE_INTEGER)
       ) {
         newFormData = { ...formData, [name]: rawValue };
         setFormData(newFormData);
@@ -86,11 +84,8 @@ function UserProfileForm() {
     if (!balance) return "Opening balance is required.";
     else if (isNaN(balance))
       return "Invalid value entered for opening balance.";
-    else if (
-      Number(balance) < Number.MIN_SAFE_INTEGER ||
-      Number(balance) > Number.MAX_SAFE_INTEGER
-    )
-      return "This value of opening balance is not allowed";
+    else if (Number(balance) > Number.MAX_SAFE_INTEGER)
+      return "This value of opening balance is too large.";
     return null;
   };
 
@@ -122,7 +117,7 @@ function UserProfileForm() {
   };
 
   // Handle update of profile
-  const handleUpdate = async (e) => {
+  const handleUpdate = async () => {
     if (isUpdating) return;
     const errors = validateProfileFormData();
     setInputFieldErrors(errors);
@@ -277,7 +272,11 @@ function UserProfileForm() {
           </InputGroup>
           <Form.Text className="last-updated-text">
             Last updated on:{" "}
-            {formatDateForFancyDisplay(auth?.openingBalance?.lastUpdated, true, true)}
+            {formatDateForFancyDisplay(
+              auth?.openingBalance?.lastUpdated,
+              true,
+              true
+            )}
           </Form.Text>
           {checkIfInputFieldInvalid("openingBalance") && (
             <div className="text-danger">{inputFieldErrors.openingBalance}</div>
