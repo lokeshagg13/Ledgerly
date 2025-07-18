@@ -524,6 +524,49 @@ body,
 }
 /* #endregion */
 
+/* #region - User profile page */
+.user-profile-page {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 0;
+}
+
+@media (max-width: 632px) {
+  .user-profile-page {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}
+/* #endregion */
+
+/* #region - User profile page content */
+.user-profile-page-header {
+  font-weight: 600;
+  font-size: 2rem;
+  color: white;
+  padding: 1rem 2rem;
+  background: #142842;
+  color: white;
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.user-profile-page-header h2 {
+  margin: 0;
+  text-align: left;
+}
+
+.user-profile-page-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+/* #endregion */
+
 /* #region - Dashboard page content */
 .dashboard-container {
   background-color: #f4f6f8;

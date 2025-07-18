@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import useAuth from "../../../store/hooks/useAuth";
 import { formatAmountForDisplay } from "../../../utils/formatUtils";
 
@@ -23,11 +24,11 @@ function OpeningBalanceLine() {
 
   return (
     <div className="opening-balance-line">
-      Your opening balance is{" "}
+      Your opening balance is set as{" "}
       <span className={`opening-balance-value ${balanceClass}`}>
         {openingBalance}.
       </span>
-      Manage your opening balance from here.
+      Manage your opening balance from <Link to="/user/profile">here</Link>.
     </div>
   );
 }
