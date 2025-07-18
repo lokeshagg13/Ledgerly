@@ -41,6 +41,8 @@ exports.handleRefreshToken = async (req, res) => {
           email: decoded.email,
           name: user.name,
           accessToken,
+          createdAt: user.createdAt,
+          openingBalance: user.openingBalance
         });
       }
     );

@@ -94,8 +94,9 @@ function LoginForm() {
         }
       );
 
-      const { email, name, accessToken } = response?.data || {};
-      setAuth({ email, name, accessToken });
+      const { email, name, accessToken, createdAt, openingBalance } =
+        response?.data || {};
+      setAuth({ email, name, accessToken, createdAt, openingBalance });
       setErrorMessage("");
       setFormData({ email: "", password: "" });
       navigate("/dashboard", { replace: true });

@@ -625,6 +625,41 @@ body,
 }
 /* #endregion */
 
+/* #region - Dashboard opening balance line */
+.opening-balance-line {
+  background-color: white;
+  padding: 0.75rem 1rem;
+  margin: 0 auto;
+  margin-bottom: 2rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  align-items: center;
+  color: #333;
+  width: fit-content;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.opening-balance-value {
+  font-weight: bold;
+}
+
+.credit-balance {
+  color: #0c7b39;
+}
+
+.debit-balance {
+  color: #b00020;
+}
+
+.neutral-balance {
+  color: #666;
+}
+/* #endregion */
+
 /* #region - Dash layout */
 .dashboard-layout {
   font-size: clamp(14px, 1.5vw, 18px);

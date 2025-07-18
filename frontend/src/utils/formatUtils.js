@@ -1,5 +1,5 @@
 export function formatAmountWithCommas(amount) {
-    if (!amount) return "";
+    if (amount == null || Number.isNaN(amount)) return "";
     if (typeof amount === "number") amount = amount.toString();
     if (amount.includes('.')) {
         const [intPart, decimalPart] = amount.toString().split(".");
@@ -11,8 +11,9 @@ export function formatAmountWithCommas(amount) {
 }
 
 export function formatAmountForDisplay(amount) {
-    if (!amount || typeof amount !== "number") return "";
-    const [intPart, decimalPart] = amount.toString().split(".");
+    if (amount == null || Number.isNaN(amount)) return "";
+    if (typeof amount === "number") amount = amount.toString();
+    const [intPart, decimalPart] = amount.split(".");
     const formattedInt = parseInt(intPart).toLocaleString("en-IN");
     return `₹ ${formattedInt}.${decimalPart ? decimalPart.padEnd(2, "0") : "00"}`;
 }

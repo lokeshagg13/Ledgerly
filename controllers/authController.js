@@ -69,6 +69,8 @@ exports.loginUser = async (req, res) => {
       accessToken,
       name: user.name,
       email: user.email,
+      createdAt: user.createdAt,
+      openingBalance: user.openingBalance
     });
   } catch (error) {
     res
