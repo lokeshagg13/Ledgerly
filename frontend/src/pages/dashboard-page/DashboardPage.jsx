@@ -3,7 +3,9 @@ import DashboardPageContent from "../../components/dashboard/DashboardPageConten
 function DashboardPage() {
   return (
     <div className="dashboard-container">
-      <DashboardPageContent />
+      <div className="dashboard-page">
+        <DashboardPageContent />
+      </div>
     </div>
   );
 }

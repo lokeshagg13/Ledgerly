@@ -526,8 +526,13 @@ body,
 
 /* #region - Dashboard page content */
 .dashboard-container {
-  padding: 2rem;
   background-color: #f4f6f8;
+  overflow-y: auto;
+}
+
+.dashboard-page {
+  padding: 2rem;
+  min-height: max-content;
 }
 /* #endregion */
 
@@ -616,6 +621,69 @@ body,
     width: 100%;
     max-width: 362px;
     justify-content: center;
+  }
+}
+/* #endregion */
+
+/* #region - Dash layout */
+.dashboard-layout {
+  font-size: clamp(14px, 1.5vw, 18px);
+}
+
+.dashboard-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.card-and-chart-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  max-width: 100%;
+}
+
+.balance-cards-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  flex: 1;
+}
+
+.dashboard-card {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.balance-card {
+  flex: 1 1 150px;
+  min-width: 200px;
+  min-height: 100px;
+}
+
+.pie-chart-card {
+  flex: 1 1 250px;
+  min-width: 200px;
+  min-height: 300px;
+}
+
+.bar-chart-card {
+  flex: 1;
+  min-height: 250px;
+}
+
+.line-chart-card {
+  flex: 1 1;
+  min-height: 200px;
+}
+
+/* Responsive logic for balance card stacking logic */
+@media (max-width: 425px) {
+  .balance-card {
+    min-width: 150px;
   }
 }
 /* #endregion */
