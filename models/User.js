@@ -26,13 +26,15 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    accountBalance: {
-        type: Number,
-        default: 0
-    },
-    lastUpdatedOn: {
-        type: Date,
-        default: null
+    openingBalance: {
+        amount: {
+            type: Number,
+            default: 0
+        },
+        lastUpdated: {
+            type: Date,
+            default: Date.now
+        }
     }
 });
 
