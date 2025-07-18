@@ -229,7 +229,7 @@ function UserProfileForm() {
         <Form.Control
           type="text"
           id="profileCreatedAt"
-          value={formatDateForFancyDisplay(auth.createdAt)}
+          value={formatDateForFancyDisplay(auth.createdAt, false, true)}
           className="form-input form-fixed"
           readOnly
         />
@@ -277,7 +277,7 @@ function UserProfileForm() {
           </InputGroup>
           <Form.Text className="last-updated-text">
             Last updated on:{" "}
-            {formatDateForFancyDisplay(auth?.openingBalance?.lastUpdated, true)}
+            {formatDateForFancyDisplay(auth?.openingBalance?.lastUpdated, true, true)}
           </Form.Text>
           {checkIfInputFieldInvalid("openingBalance") && (
             <div className="text-danger">{inputFieldErrors.openingBalance}</div>

@@ -38,24 +38,24 @@ export function formatDateForCalendarInput(dateString, sep = '-') {
     return `${year}${sep}${month}${sep}${day}`;
 }
 
-export function formatDateForDisplay(dateString, sep = "-") {
+export function formatDateForDisplay(dateString, sep = "-", toLocal = false) {
     const date = new Date(dateString);
-    const day = String(date.getUTCDate()).padStart(2, "0");
-    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-    const year = date.getUTCFullYear();
+    const day = String(toLocal ? date.getDate() : date.getUTCDate()).padStart(2, "0");
+    const month = String(toLocal ? date.getMonth() + 1 : date.getUTCMonth() + 1).padStart(2, "0");
+    const year = toLocal ? date.getFullYear() : date.getUTCFullYear();
     return `${day}${sep}${month}${sep}${year}`;
 }
 
-export function formatDateForFancyDisplay(dateString, fullMonthName = false) {
+export function formatDateForFancyDisplay(dateString, fullMonthName = false, toLocal = false) {
     const date = new Date(dateString);
-    const day = String(date.getUTCDate()).padStart(2, "0");
+    const day = String(toLocal ? date.getDate() : date.getUTCDate()).padStart(2, "0");
+    const year = toLocal ? date.getFullYear() : date.getUTCFullYear();
     const month = date.toLocaleString("default", {
-        month: fullMonthName ? "long" : "short"
+        month: fullMonthName ? "long" : "short",
+        timeZone: toLocal ? undefined : "UTC" // force UTC if not local
     });
-    const year = date.getUTCFullYear();
     return `${day} ${month} ${year}`;
 }
-
 
 export function formatCategoryNamesUsingCategoryIds(categoryData, categoryIds) {
     if (!Array.isArray(categoryData) || !Array.isArray(categoryIds)) return "None selected";
