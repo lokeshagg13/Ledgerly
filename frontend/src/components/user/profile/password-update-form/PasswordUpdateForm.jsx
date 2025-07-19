@@ -4,7 +4,6 @@ import { Form, Button } from "react-bootstrap";
 import { axiosPrivate } from "../../../../api/axios";
 import EyeOpenIcon from "../../../ui/icons/EyeOpenIcon";
 import EyeSlashIcon from "../../../ui/icons/EyeSlashIcon";
-import Snackbar from "@mui/material/Snackbar";
 
 function PasswordUpdateForm() {
   const [formData, setFormData] = useState({

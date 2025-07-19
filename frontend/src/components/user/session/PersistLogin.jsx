@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
-import Loader from "../../ui/elements/Loader";
 import useAuth from "../../../store/hooks/useAuth";
 import useRefreshToken from "../../../store/hooks/useRefreshToken";
 import PageSkeleton from "../../ui/skeletons/PageSkeleton";

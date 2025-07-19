@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import useAuth from "./store/hooks/useAuth";
-import NavbarComponent from "./components/ui/elements/Navbar";
+import NavbarComponent from "./components/ui/navbar/Navbar";
 import PersistLogin from "./components/user/session/PersistLogin";
 import RequireAuth from "./components/user/session/RequireAuth";
 import Page404 from "./pages/page404";
