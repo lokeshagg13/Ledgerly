@@ -1,13 +1,14 @@
-import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { Navbar, Nav, Container, Button } from "react-bootstrap";
 
 import useAuth from "../../../store/hooks/useAuth";
 import useAxiosPrivate from "../../../store/hooks/useAxiosPrivate";
 
 import logo from "../../../images/logo.png";
+import NavSkeleton from "../skeletons/NavSkeleton";
 
 function NavbarComponent() {
-  const { auth, setAuth } = useAuth();
+  const { auth, setAuth, authLoading } = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
 
@@ -39,7 +40,9 @@ function NavbarComponent() {
 
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            {(!auth?.email || !auth?.accessToken) && (
+            {authLoading ? (
+              <NavSkeleton />
+            ) : !auth?.email || !auth?.accessToken ? (
               <>
                 <Nav.Link href="#features">Features</Nav.Link>
                 <Nav.Link href="/login">Login</Nav.Link>
@@ -47,8 +50,7 @@ function NavbarComponent() {
                   Get Started
                 </Button>
               </>
-            )}
-            {auth?.email && auth.accessToken && (
+            ) : (
               <>
                 <Nav.Link href="#features">Features</Nav.Link>
                 <Nav.Link href="/transactions">Your Transactions</Nav.Link>
