@@ -35,6 +35,28 @@ const userSchema = new mongoose.Schema({
             type: Date,
             default: Date.now
         }
+    },
+    customBalanceCard: {
+        type: {
+            title: {
+                type: String,
+                required: true,
+                trim: true,
+                default: "Filtered Balance"
+            },
+            filters: {
+                uptoDate: {
+                    type: Date,
+                    default: null
+                },
+                selectedCategories: {
+                    type: [mongoose.Schema.Types.ObjectId],
+                    ref: "categoryModel",
+                    default: []
+                }
+            }
+        },
+        default: null
     }
 });
 

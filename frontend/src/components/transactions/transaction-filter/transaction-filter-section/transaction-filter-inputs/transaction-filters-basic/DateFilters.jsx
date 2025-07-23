@@ -23,9 +23,9 @@ function DateFilters() {
   } = useContext(TransactionFilterContext);
 
   const updateFilterDates = (from, to) => {
+    resetFilteringError();
     if (from) setFromDate(getLocalDateString(from));
     if (to) setToDate(getLocalDateString(to));
-    resetFilteringError();
   };
 
   const today = getToday();

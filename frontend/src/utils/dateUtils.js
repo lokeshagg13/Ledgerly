@@ -11,9 +11,21 @@ export function getToday() {
     return getLocalDateString(today);
 }
 
+export function getYesterday() {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return getLocalDateString(yesterday);
+}
+
 export function getStartOfMonth() {
     const date = new Date();
     date.setDate(1);
+    return getLocalDateString(date);
+}
+
+export function getEndOfLastMonth() {
+    const date = new Date();
+    date.setDate(0);
     return getLocalDateString(date);
 }
 
@@ -34,6 +46,17 @@ export function getDateBeforeGivenYears(years) {
     const date = new Date();
     date.setFullYear(date.getFullYear() - years);
     return getLocalDateString(date);
+}
+
+export function getEndDateOfFinancialYear(lastN) {
+    const currentDate = new Date();
+    const year = currentDate.getMonth() >= 3 ? currentDate.getFullYear() : currentDate.getFullYear() - 1;
+    const startYear = year - lastN;
+    const date = `${startYear + 1}-03-31`;
+    return {
+        label: `End of FY ${startYear}-${startYear + 1}`,
+        date
+    };
 }
 
 export function getFinancialYearRange(lastN) {

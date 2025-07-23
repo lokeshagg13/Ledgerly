@@ -217,7 +217,7 @@ export function TransactionPrintContextProvider({ children }) {
             setErrorFetchingTransactions({
                 ...errorFetchingTransactions,
                 type: "api",
-                message: [<div key="1">Apologies for the inconvenience. There was an error while fetching your transactions.</div>, <div key="2"><br /><b>{error?.response?.data?.error}</b></div>]
+                message: `Apologies for the inconvenience. There was an error while fetching your transactions. ${error?.response?.data?.error}`
             });
         } else {
             setErrorFetchingTransactions({
