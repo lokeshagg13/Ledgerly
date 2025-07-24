@@ -1412,6 +1412,14 @@ body,
   font-size: 1rem;
   transition: all 0.2s ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  width: 200px;
+}
+
+@media (max-width: 479px) {
+  .transaction-controls .control-btn {
+    width: 100%;
+    max-width: 256px;
+  }
 }
 
 .transaction-controls .control-btn.btn-blue {
@@ -1454,7 +1462,7 @@ body,
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
   flex: 1 1 48%;
-  min-width: 300px;
+  min-width: 250px;
   transition: all 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
@@ -1826,7 +1834,7 @@ body,
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
   flex: 1 1 48%;
-  min-width: 300px;
+  min-width: 250px;
   transition: all 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
