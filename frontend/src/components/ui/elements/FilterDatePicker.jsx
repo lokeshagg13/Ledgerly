@@ -12,6 +12,7 @@ function FilterDatePicker({
   maxDate,
   isInvalid = false,
   disabled = false,
+  paddedCalendar = false,
 }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -25,7 +26,18 @@ function FilterDatePicker({
         format="DD/MM/YYYY"
         disabled={disabled}
         slotProps={{
-          textField: { size: "small", fullWidth: true, error: isInvalid },
+          textField: {
+            size: "small",
+            fullWidth: true,
+            error: isInvalid,
+            InputProps: paddedCalendar
+              ? {
+                  style: {
+                    paddingRight: value ? "2rem" : null,
+                  },
+                }
+              : null,
+          },
         }}
       />
     </LocalizationProvider>

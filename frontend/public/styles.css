@@ -1044,7 +1044,7 @@ body,
 }
 /* #endregion */
 
-/* #region - Dash layout */
+/* #region - Dashboard layout */
 .dashboard-layout {
   font-size: clamp(14px, 1.5vw, 18px);
 }
@@ -1235,6 +1235,72 @@ body,
   display: flex;
   gap: 0.5rem;
   justify-content: flex-end;
+}
+/* #endregion */
+
+/* #region - Balance filter - Upto date picker */
+.balance-filter.date-filter-section .date-picker-with-clear {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.balance-filter.date-filter-section .clear-date-button {
+  position: absolute;
+  right: 0;
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.balance-filter.date-filter-section .clear-date-button svg {
+  fill: #888;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.balance-filter.date-filter-section .clear-date-button:hover svg {
+  fill: #000;
+}
+/* #endregion */
+
+/* #region - Balance filter - Selected category inputs */
+.balance-filter.category-filter-section .category-filter-selector-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.balance-filter.category-filter-section .clear-categories-button {
+  position: absolute;
+  right: 0;
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.balance-filter.category-filter-section .clear-categories-button svg {
+  fill: #888;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.balance-filter.category-filter-section .clear-categories-button:hover svg {
+  fill: #000;
 }
 /* #endregion */
 

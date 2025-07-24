@@ -35,6 +35,7 @@ function MultiSelector({
   onChange,
   className,
   disabled = false,
+  paddedDropdown = false,
 }) {
   const theme = useTheme();
 
@@ -72,6 +73,17 @@ function MultiSelector({
           </Box>
         )}
         MenuProps={MenuProps}
+        sx={{
+          "& .MuiSelect-icon": paddedDropdown
+            ? {
+                right: value?.length > 0 ? "1.5rem" : "0rem",
+                width: "2rem",
+                height: "2rem",
+                top: "50%",
+                transform: "translateY(-50%)",
+              }
+            : undefined,
+        }}
       >
         {options.map((opt) => (
           <MenuItem

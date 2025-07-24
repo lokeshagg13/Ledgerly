@@ -17,14 +17,13 @@ async function computeBalance({ userId, uptoDate, selectedCategories, openingBal
         hasUptoDate = true;
     }
 
-    if (selectedCategories) {
+    if (Array.isArray(selectedCategories) && selectedCategories.length > 0) {
         const categoryIdList = Array.isArray(selectedCategories)
             ? selectedCategories
             : selectedCategories.split(",");
         filterQuery.categoryId = {
             $in: categoryIdList
                 .filter((id) => mongoose.Types.ObjectId.isValid(id))
-                .map((id) => mongoose.Types.ObjectId.createFromHexString(id)),
         }
         hasCategoryFilter = true;
     }
@@ -93,7 +92,7 @@ exports.getCustomBalance = async (req, res) => {
         if (!user) return res.status(404).json({ message: "User not found" });
 
         const filters = user.customBalanceCard?.filters;
-        
+
         const { balance, latestTxnDate } = await computeBalance({
             userId: user._id,
             uptoDate: filters?.uptoDate,

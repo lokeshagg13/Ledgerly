@@ -13,11 +13,13 @@ function FilteredBalanceCard() {
     filteredBalance,
     filteredBalanceError,
     appliedFilters,
+    resetErrorFetchingFilteredBalance,
     fetchCategoriesFromDB,
     fetchFilteredBalanceAndFilters,
   } = useContext(DashboardContext);
 
   useEffect(() => {
+    resetErrorFetchingFilteredBalance();
     fetchCategoriesFromDB();
     fetchFilteredBalanceAndFilters();
     // eslint-disable-next-line
@@ -44,7 +46,9 @@ function FilteredBalanceCard() {
     if (uptoDate) parts.push(`Upto date: ${formatDateForDisplay(uptoDate)}`);
     else if (filteredBalance.latestTxnDate)
       parts.push(
-        `Upto date: ${formatDateForDisplay(filteredBalance.latestTxnDate)}`
+        `Latest transaction: ${formatDateForDisplay(
+          filteredBalance.latestTxnDate
+        )}`
       );
 
     if (selectedCategories) {
@@ -66,8 +70,8 @@ function FilteredBalanceCard() {
 
       {isLoadingFilteredBalance ? (
         <>Loading...</>
-      ) : filteredBalanceError.type === "api" ? (
-        <div className="text-danger">{filteredBalanceError.message}</div>
+      ) : filteredBalanceError ? (
+        <div className="text-danger">{filteredBalanceError}</div>
       ) : (
         <>
           <h4

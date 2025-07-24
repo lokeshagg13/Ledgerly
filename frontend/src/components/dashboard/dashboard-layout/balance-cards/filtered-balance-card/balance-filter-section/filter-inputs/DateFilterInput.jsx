@@ -9,8 +9,9 @@ import {
 } from "../../../../../../../utils/dateUtils";
 import FilterDatePicker from "../../../../../../ui/elements/FilterDatePicker";
 import DashboardContext from "../../../../../../../store/context/dashboardContext";
+import CancelIcon from "../../../../../../ui/icons/CancelIcon";
 
-function DateFilterInputs() {
+function DateFilterInput() {
   const {
     filterFormData,
     filteredBalanceError,
@@ -33,7 +34,7 @@ function DateFilterInputs() {
   ];
 
   return (
-    <div className="date-filter-section">
+    <div className="balance-filter date-filter-section">
       <div className="date-filter-row">
         <div className="date-filter-range">
           <div
@@ -41,14 +42,27 @@ function DateFilterInputs() {
               filteredBalanceError.uptoDate ? "shake" : ""
             }`}
           >
-            <FilterDatePicker
-              label="Upto Date"
-              name="uptoDate"
-              value={filterFormData.uptoDate}
-              onChange={(date) => modifyUptoDate(date)}
-              maxDate={today}
-              isInvalid={filteredBalanceError.uptoDate}
-            />
+            <div className="date-picker-with-clear">
+              <FilterDatePicker
+                label="Upto Date"
+                name="uptoDate"
+                value={filterFormData.uptoDate}
+                onChange={(date) => modifyUptoDate(date)}
+                maxDate={today}
+                isInvalid={filteredBalanceError.uptoDate}
+                paddedCalendar={true}
+              />
+              {filterFormData.uptoDate && (
+                <button
+                  type="button"
+                  className="clear-date-button"
+                  onClick={() => modifyFilterFormData("uptoDate", null)}
+                  aria-label="Clear date"
+                >
+                  <CancelIcon />
+                </button>
+              )}
+            </div>
           </div>
         </div>
         <div className="date-filter-quick-actions">
@@ -72,4 +86,4 @@ function DateFilterInputs() {
   );
 }
 
-export default DateFilterInputs;
+export default DateFilterInput;

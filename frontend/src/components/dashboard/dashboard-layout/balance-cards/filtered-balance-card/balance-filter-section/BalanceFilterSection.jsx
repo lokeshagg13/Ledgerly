@@ -3,7 +3,7 @@ import { Button } from "react-bootstrap";
 import Popover from "@mui/material/Popover";
 
 import FunnelIcon from "../../../../../ui/icons/FunnelIcon";
-import DateFilterInputs from "./filter-inputs/DateFilterInputs";
+import DateFilterInput from "./filter-inputs/DateFilterInput";
 import CategoryFilterInput from "./filter-inputs/CategoryFilterInput";
 import DashboardContext from "../../../../../../store/context/dashboardContext";
 
@@ -11,10 +11,12 @@ function BalanceFilterSection() {
   const [isFilterPopoverVisible, setIsFilterPopoverVisible] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const {
-    filteredBalanceError,
-    resetErrorFetchingFilteredBalance,
+    isUpdatingFilters,
+    updateFilterError,
+    resetErrorUpdatingBalanceFilters,
     resetFilterFormData,
-    updateFiltersAndRefetchBalance,
+    fetchFilteredBalanceAndFilters,
+    updateBalanceFilters,
   } = useContext(DashboardContext);
 
   const handleOpenFilterPopover = (e) => {
@@ -24,7 +26,7 @@ function BalanceFilterSection() {
   };
 
   const handleCloseFilterPopover = () => {
-    resetErrorFetchingFilteredBalance();
+    resetErrorUpdatingBalanceFilters();
     setAnchorEl(null);
     setIsFilterPopoverVisible(false);
   };
@@ -36,8 +38,9 @@ function BalanceFilterSection() {
   };
 
   const handleApplyFilters = async () => {
-    const isSuccess = await updateFiltersAndRefetchBalance();
-    if (!isSuccess) return;
+    const isError = await updateBalanceFilters();
+    if (isError) return;
+    await fetchFilteredBalanceAndFilters();
     handleCloseFilterPopover();
   };
 
@@ -69,16 +72,32 @@ function BalanceFilterSection() {
         }}
       >
         <div className="balance-filter-popover-inner">
-          <DateFilterInputs />
+          <DateFilterInput />
           <CategoryFilterInput />
-          {filteredBalanceError.type === "input" && (
+          {updateFilterError.message && (
             <div className="balance-filter-error">
-              {filteredBalanceError.message}
+              {updateFilterError.message}
             </div>
           )}
           <div className="balance-filter-control">
-            <Button variant="primary" onClick={handleApplyFilters} size="sm">
-              Apply Filters
+            <Button
+              variant="primary"
+              onClick={handleApplyFilters}
+              size="sm"
+              disabled={isUpdatingFilters}
+            >
+              {isUpdatingFilters ? (
+                <>
+                  <span
+                    className="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  Updating...
+                </>
+              ) : (
+                "Update Filters"
+              )}
             </Button>
             <Button
               variant="outline-primary"

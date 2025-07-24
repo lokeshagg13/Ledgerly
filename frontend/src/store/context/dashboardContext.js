@@ -16,6 +16,8 @@ const DashboardContext = createContext({
         latestTxnDate: null,
     },
     filteredBalanceError: "",
+    isUpdatingFilters: false,
+    updateFilterError: "",
     appliedFilters: {
         uptoDate: null,
         selectedCategories: []
@@ -25,12 +27,13 @@ const DashboardContext = createContext({
         selectedCategories: []
     },
     resetErrorFetchingFilteredBalance: () => { },
+    resetErrorUpdatingBalanceFilters: () => { },
     resetFilterFormData: () => { },
     modifyFilterFormData: (key, val) => { },
     fetchCategoriesFromDB: async () => { },
     fetchOverallBalance: async () => { },
     fetchFilteredBalanceAndFilters: async () => { },
-    updateFiltersAndRefetchBalance: async () => { }
+    updateBalanceFilters: async () => { }
 });
 
 export function DashboardContextProvider({ children }) {
@@ -47,12 +50,12 @@ export function DashboardContextProvider({ children }) {
         amount: 0,
         latestTxnDate: null
     });
-    const [filteredBalanceError, setFilteredBalanceError] = useState({
-        type: "",
+    const [filteredBalanceError, setFilteredBalanceError] = useState("");
+    const [isUpdatingFilters, setIsUpdatingFilters] = useState(false);
+    const [updateFilterError, setUpdateFilterError] = useState({
         message: "",
         uptoDate: false,
         selectedCategories: false
-
     });
     const [appliedFilters, setAppliedFilters] = useState({
         uptoDate: null,
@@ -63,14 +66,16 @@ export function DashboardContextProvider({ children }) {
         selectedCategories: []
     });
 
-
     function resetErrorFetchingOverallBalance() {
         setOverallBalanceError("");
     }
 
     function resetErrorFetchingFilteredBalance() {
-        setFilteredBalanceError({
-            type: "",
+        setFilteredBalanceError("");
+    }
+
+    function resetErrorUpdatingBalanceFilters() {
+        setUpdateFilterError({
             message: "",
             uptoDate: false,
             selectedCategories: false
@@ -95,25 +100,33 @@ export function DashboardContextProvider({ children }) {
 
     function handleErrorFetchingFilteredBalance(error) {
         if (!error?.response) {
-            setFilteredBalanceError({
-                type: "api",
+            setFilteredBalanceError("Apologies for the inconvenience. We couldn’t connect to the server at the moment. This might be a temporary issue. Kindly try again shortly."
+            );
+        } else if (error?.response?.data?.error) {
+            setFilteredBalanceError(`Apologies for the inconvenience. There was an error while fetching your filtered balance. ${error?.response?.data?.error}`);
+        } else {
+            setFilteredBalanceError("Apologies for the inconvenience. There was some error while fetching your filtered balance. Please try again after some time.");
+        }
+    }
+
+    function handleErrorUpdatingBalanceFilters(error) {
+        if (!error?.response) {
+            setUpdateFilterError({
                 message:
                     "Apologies for the inconvenience. We couldn’t connect to the server at the moment. This might be a temporary issue. Kindly try again shortly.",
                 uptoDate: false,
                 selectedCategories: false
             });
         } else if (error?.response?.data?.error) {
-            setFilteredBalanceError({
-                type: "api",
-                message: `Apologies for the inconvenience. There was an error while fetching your filtered balance. ${error?.response?.data?.error}`,
+            setUpdateFilterError({
+                message: `Apologies for the inconvenience. There was an error while updating your filters for filtered balance. ${error?.response?.data?.error}`,
                 uptoDate: false,
                 selectedCategories: false
             });
         } else {
-            setFilteredBalanceError({
-                type: "api",
+            setUpdateFilterError({
                 message:
-                    "Apologies for the inconvenience. There was some error while fetching your filtered balance. Please try again after some time.",
+                    "Apologies for the inconvenience. There was some error while updating your filters for filtered balance. Please try again after some time.",
                 uptoDate: false,
                 selectedCategories: false
             });
@@ -182,7 +195,10 @@ export function DashboardContextProvider({ children }) {
         }
     }
 
-    async function updateFiltersAndRefetchBalance() {
+    async function updateBalanceFilters() {
+        setIsUpdatingFilters(true);
+        resetErrorUpdatingBalanceFilters();
+        let isError = false;
         try {
             const { uptoDate, selectedCategories } = filterFormData;
             if (uptoDate) {
@@ -191,46 +207,48 @@ export function DashboardContextProvider({ children }) {
                 inputDate.setHours(0, 0, 0, 0);
                 today.setHours(0, 0, 0, 0);
                 if (inputDate > today) {
-                    setFilteredBalanceError({
-                        type: "input",
+                    setUpdateFilterError({
                         message: "The 'Upto Date' cannot be later than today",
                         uptoDate: true,
                         selectedCategories: false
                     });
-                    return false;
+                    isError = true;
                 }
             }
             await axiosPrivate.put("/user/dashboard/custom/filters", {
                 uptoDate,
                 selectedCategories
             });
-
-            await fetchFilteredBalanceAndFilters();
-            return true;
         } catch (error) {
-            handleErrorFetchingFilteredBalance(error);
-            return false;
+            handleErrorUpdatingBalanceFilters(error);
+            isError = true;
+        } finally {
+            setIsUpdatingFilters(false);
         }
+        return isError;
     }
 
     const currentValue = {
-        categories,
         isLoadingCategories,
+        categories,
         isLoadingOverallBalance,
         overallBalance,
         overallBalanceError,
         isLoadingFilteredBalance,
         filteredBalance,
         filteredBalanceError,
+        isUpdatingFilters,
+        updateFilterError,
         appliedFilters,
         filterFormData,
         resetErrorFetchingFilteredBalance,
+        resetErrorUpdatingBalanceFilters,
         resetFilterFormData,
         modifyFilterFormData,
         fetchCategoriesFromDB,
         fetchOverallBalance,
         fetchFilteredBalanceAndFilters,
-        updateFiltersAndRefetchBalance
+        updateBalanceFilters
     };
 
     return (

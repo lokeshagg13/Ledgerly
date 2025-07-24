@@ -42,7 +42,7 @@ function OverallBalanceCard() {
             </span>
           </h4>
           <h6 className="balance-date">
-            Upto Date:{" "}
+            Latest transaction:{" "}
             {formatDateForDisplay(overallBalance.latestTxnDate, "-", true)}
           </h6>
         </>
