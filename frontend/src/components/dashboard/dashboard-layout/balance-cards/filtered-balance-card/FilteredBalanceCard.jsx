@@ -5,6 +5,7 @@ import {
 } from "../../../../../utils/formatUtils";
 import BalanceFilterSection from "./balance-filter-section/BalanceFilterSection";
 import DashboardContext from "../../../../../store/context/dashboardContext";
+import FilterCardNameEditor from "./filter-card-name-editor/FilterCardNameEditor";
 
 function FilteredBalanceCard() {
   const {
@@ -64,7 +65,7 @@ function FilteredBalanceCard() {
   return (
     <div className="dashboard-card balance-card filtered">
       <div className="balance-header">
-        <h6 className="balance-title">Filtered Balance</h6>
+        <FilterCardNameEditor />
         <BalanceFilterSection />
       </div>
 

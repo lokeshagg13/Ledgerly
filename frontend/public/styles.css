@@ -1201,6 +1201,8 @@ body,
 
 .balance-card.filtered .filter-button svg {
   fill: #000;
+  width: 1.1rem;
+  height: 1.1rem;
 }
 
 .balance-card.filtered .filter-button:hover svg {
@@ -1304,6 +1306,112 @@ body,
 }
 /* #endregion */
 
+/* #region - Filtered balance card title editable */
+.balance-filter.filter-card-name-editable {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.balance-filter .filter-card-name-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.balance-filter .filter-card-name-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.balance-filter .filter-card-name-input-wrapper {
+  position: relative;
+}
+
+.balance-filter .filter-card-name-input {
+  width: 100%;
+  padding: 0.2rem 2.5rem 0.2rem 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.balance-filter .filter-card-name-input:focus {
+  border-color: #0d6efd;
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.balance-filter .filter-card-name-form-controls {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  transform: translateY(-50%);
+}
+
+.balance-filter .filter-card-name-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.balance-filter .filter-card-name-btn svg {
+  transition: fill 0.2s, transform 0.2s;
+}
+
+.balance-filter .filter-card-name-btn.edit-btn {
+  position: absolute;
+  top: -0.6rem;
+  right: 1rem;
+  padding: 0 0.5rem;
+}
+
+.balance-filter .filter-card-name-btn.edit-btn svg {
+  fill: #000;
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.balance-filter .filter-card-name-btn.save-btn svg {
+  fill: #198754;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.balance-filter .filter-card-name-btn.cancel-btn svg {
+  fill: #dc3545;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.balance-filter .filter-card-name-btn:hover svg {
+  transform: scale(1.1);
+  opacity: 0.9;
+}
+
+.balance-filter .filter-card-name-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.balance-filter .filter-card-name-btn:disabled svg {
+  transform: none;
+}
+/* #endregion */
+
 /* #region - Transactions page */
 .transaction-page {
   max-width: 1400px;
@@ -1402,6 +1510,7 @@ body,
   flex-wrap: wrap;
   gap: 1rem;
   justify-content: center;
+  margin: 0 auto;
 }
 
 .transaction-controls .control-btn {
@@ -1419,6 +1528,12 @@ body,
   .transaction-controls .control-btn {
     width: 100%;
     max-width: 256px;
+  }
+}
+
+@media (max-width: 975px) {
+  .transaction-controls {
+    max-width: 630px;
   }
 }
 

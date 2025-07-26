@@ -68,7 +68,7 @@ async function computeBalance({ userId, uptoDate, selectedCategories, openingBal
 exports.getOverallBalance = async (req, res) => {
     try {
         const user = await UserModel.findById(req.userId).select("openingBalance");
-        if (!user) return res.status(404).json({ message: "User not found" });
+        if (!user) return res.status(404).json({ error: "User not found" });
 
         const { balance, latestTxnDate } = await computeBalance({
             userId: user._id,
@@ -79,7 +79,7 @@ exports.getOverallBalance = async (req, res) => {
             balance, latestTxnDate
         });
     } catch (error) {
-        res.status(500).json({ message: error.message || "Server error while fetching overall balance" });
+        res.status(500).json({ error: error.message || "Server error while fetching overall balance" });
     }
 };
 
@@ -89,7 +89,7 @@ exports.getOverallBalance = async (req, res) => {
 exports.getCustomBalance = async (req, res) => {
     try {
         const user = await UserModel.findById(req.userId).select("customBalanceCard openingBalance");
-        if (!user) return res.status(404).json({ message: "User not found" });
+        if (!user) return res.status(404).json({ error: "User not found" });
 
         const filters = user.customBalanceCard?.filters;
 
@@ -107,7 +107,21 @@ exports.getCustomBalance = async (req, res) => {
             selectedCategories: filters?.selectedCategories,
         });
     } catch (error) {
-        res.status(500).json({ message: error.message || "Server error while fetching custom balance" });
+        res.status(500).json({ error: error.message || "Server error while fetching custom balance" });
+    }
+};
+
+// @desc    Get custom balance card title
+// @route   GET /api/dashboard/custom/title
+// @access  Private
+exports.getCustomBalanceCardTitle = async (req, res) => {
+    try {
+        const user = await UserModel.findById(req.userId).select("customBalanceCard");
+        if (!user) return res.status(404).json({ error: "User not found" });
+        const title = user.customBalanceCard?.title?.trim() || "Filtered Balance";
+        return res.status(200).json({ title });
+    } catch (error) {
+        return res.status(500).json({ error: "Server error while fetching title" });
     }
 };
 
@@ -152,7 +166,7 @@ exports.updateCustomBalanceCardFilters = async (req, res) => {
 
         res.status(200).json({ message: "Custom balance card filters updated." });
     } catch (error) {
-        res.status(500).json({ message: "Server error while updating filters." });
+        res.status(500).json({ error: "Server error while updating filters." });
     }
 };
 
@@ -168,23 +182,29 @@ exports.updateCustomBalanceCardTitle = async (req, res) => {
             return res.status(400).json({ error: "Title is required and must be a non-empty string." });
         }
 
-        const update = {
-            "customBalanceCard.title": title.trim(),
-        };
+        const user = await UserModel.findById(userId);
 
-        const updatedUser = await UserModel.findByIdAndUpdate(
-            userId,
-            { $set: update },
-            { new: true, runValidators: true }
-        );
-
-        if (!updatedUser) {
+        if (!user) {
             return res.status(404).json({ error: "User not found." });
         }
 
-        res.status(200).json({ message: "Custom balance card title updated." });
+        if (!user.customBalanceCard) {
+            user.customBalanceCard = {
+                title: title.trim(),
+                filters: {
+                    uptoDate: null,
+                    selectedCategories: []
+                }
+            };
+        } else {
+            user.customBalanceCard.title = title.trim();
+        }
+
+        await user.save();
+
+        return res.status(200).json({ message: "Custom balance card title updated." });
     } catch (error) {
-        res.status(500).json({ message: "Server error while updating title." });
+        res.status(500).json({ error: "Server error while updating title." });
     }
 };
 
