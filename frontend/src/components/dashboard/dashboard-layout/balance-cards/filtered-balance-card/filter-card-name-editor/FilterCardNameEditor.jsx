@@ -46,7 +46,7 @@ function FilterCardNameEditor() {
       setFilterCardName(trimmedName);
       setIsFilterCardNameEditorVisible(false);
     } catch (error) {
-      setErrorMessage("Failed to update title");
+      setErrorMessage(error?.response?.data?.error || "Failed to update title");
     } finally {
       setIsUpdating(false);
     }
@@ -70,7 +70,10 @@ function FilterCardNameEditor() {
             <input
               type="text"
               value={filterCardTempName}
-              onChange={(e) => setFilterCardTempName(e.target.value)}
+              onChange={(e) => {
+                setFilterCardTempName(e.target.value);
+                if (errorMessage) setErrorMessage("");
+              }}
               disabled={isUpdating}
               className="filter-card-name-input"
               placeholder="Enter title for this card"
@@ -100,7 +103,7 @@ function FilterCardNameEditor() {
             </div>
           </div>
           {errorMessage && (
-            <div className="form-error text-danger">{errorMessage}</div>
+            <div className="error-message">{errorMessage}</div>
           )}
         </div>
       ) : (

@@ -1321,9 +1321,7 @@ body,
 
 .balance-filter .filter-card-name-form {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  flex-direction: column;
 }
 
 .balance-filter .filter-card-name-input-wrapper {
