@@ -69,6 +69,18 @@ export function formatCategoryNamesUsingCategoryIds(categoryData, categoryIds) {
     return categoryNames.join(', ');
 }
 
+export function truncateWithEllipsis(str, maxLength = 20) {
+    const dotIndex = str.lastIndexOf(".");
+    if (dotIndex === -1)
+        return str.length > maxLength ? str.slice(0, maxLength) + '...' : str;
+
+    if (str.length <= maxLength) return str;
+    const name = str.slice(0, dotIndex);
+    const ext = str.slice(dotIndex);
+    const allowedNameLength = maxLength - ext.length - 3;
+    return name.slice(0, allowedNameLength) + "..." + ext;
+}
+
 export function formatCategoryError(errorMessage) {
     const regex = /transactions:\s*(.*?)\.\s*Please/;
     const match = errorMessage.match(regex);

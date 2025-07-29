@@ -603,8 +603,6 @@ body,
 
 /* #region - User profile page content */
 .user-profile-page-header {
-  font-weight: 600;
-  font-size: 2rem;
   color: white;
   padding: 1rem 2rem;
   background: #142842;
@@ -618,6 +616,8 @@ body,
 .user-profile-page-header h2 {
   margin: 0;
   text-align: left;
+  font-weight: 600;
+  font-size: 2rem;
 }
 
 .user-profile-page-body {
@@ -1476,8 +1476,6 @@ body,
 
 /* #region - Transactions page content */
 .transaction-page-header {
-  font-weight: 600;
-  font-size: 2rem;
   color: white;
   padding: 1rem 2rem;
   background: #142842;
@@ -1488,6 +1486,8 @@ body,
 .transaction-page-header h2 {
   margin: 0;
   text-align: left;
+  font-weight: 600;
+  font-size: 2rem;
 }
 
 .transaction-page-body-wrapper {
@@ -2359,6 +2359,183 @@ body,
 }
 /* #endregion */
 
+/* #region - Upload transactions page */
+.upload-transaction-page {
+  padding: 0;
+  margin: 2rem;
+  max-width: 400px;
+}
+
+@media (max-width: 596px) {
+  .upload-transaction-page {
+    margin: 2rem auto;
+  }
+}
+
+@media (max-width: 532px) {
+  .upload-transaction-page {
+    margin: 2rem 1rem;
+  }
+}
+/* #endregion */
+
+/* #region - Upload transactions page content */
+.upload-transaction-page-header {
+  color: white;
+  padding: 1rem 2rem;
+  background: #142842;
+  color: white;
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.upload-transaction-page-header h2 {
+  margin: 0;
+  text-align: left;
+  font-weight: 600;
+  font-size: 1.6rem;
+}
+
+.upload-transaction-page-body-wrapper {
+  padding: 2rem 1rem;
+}
+
+.upload-transaction-page-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+/* #endregion */
+
+/* #region - Upload - Extract transaction form */
+.extract-transaction-form .error-message {
+  text-align: left;
+}
+/* #endregion */
+
+/* #region - Upload - Extract transaction input */
+.extract-transaction-input.file-input-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  flex: 1;
+  min-width: 200px;
+}
+
+.extract-transaction-input label {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.extract-transaction-input .file-input-original.hide {
+  display: none;
+}
+
+.extract-transaction-input .file-input-row {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.extract-transaction-input .file-input-row:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+}
+
+.extract-transaction-input .input-file-name {
+  font-weight: 400;
+  flex: 1;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.8rem;
+  line-height: 2;
+  color: #111827;
+}
+
+.extract-transaction-input .input-file-name.actual-file {
+  text-decoration: underline;
+}
+
+.extract-transaction-input .input-file-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.extract-transaction-input .input-file-controls button {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  background: none;
+  border: none;
+}
+
+.extract-transaction-input .input-file-controls button:hover {
+  transform: scale(1.2);
+}
+/* #endregion */
+
+/* #region - Upload - Extract transaction control */
+.extract-transaction-control {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.extract-transaction-button {
+  padding: 0.55rem 1.5rem;
+  background-color: #2563eb;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.extract-transaction-button:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.extract-transaction-button:disabled {
+  background-color: #cbd5e1;
+  cursor: not-allowed;
+  color: #374151;
+}
+
+.extract-transaction-control .reset-button {
+  padding: 0.4rem 1.5rem;
+  background-color: transparent;
+  color: #2563eb;
+  font-weight: 600;
+  font-size: 1rem;
+  border: 2px solid #2563eb;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.extract-transaction-control .reset-button:hover {
+  transform: translateY(-1px);
+}
+
+.extract-transaction-control .reset-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  border-color: #9ca3af;
+  color: #9ca3af;
+  background-color: transparent;
+  box-shadow: none;
+}
+/* #endregion */
+
 /* #region - Print transactions page */
 .print-transaction-page {
   padding: 0;
@@ -2380,8 +2557,6 @@ body,
 
 /* #region - Print transactions page content */
 .print-transaction-page-header {
-  font-weight: 600;
-  font-size: 2rem;
   color: white;
   padding: 1rem 2rem;
   background: #142842;
@@ -2395,6 +2570,8 @@ body,
 .print-transaction-page-header h2 {
   margin: 0;
   text-align: left;
+  font-weight: 600;
+  font-size: 2rem;
 }
 
 .print-transaction-page-body-wrapper {
@@ -2408,7 +2585,7 @@ body,
 }
 /* #endregion */
 
-/* #region - Fetch transaction section (for printing) */
+/* #region - Print - Fetch transaction section */
 .fetch-transaction-section {
   padding: 1rem;
   display: flex;
@@ -2473,7 +2650,7 @@ body,
 }
 /* #endregion */
 
-/* #region - Fetch transaction inputs */
+/* #region - Print - Fetch transaction inputs */
 .fetch-transaction-inputs {
   display: flex;
   flex-direction: column;
@@ -2544,7 +2721,7 @@ body,
 }
 /* #endregion */
 
-/* #region - Fetch transaction options */
+/* #region - Print - Fetch transaction options */
 .fetch-transaction-options {
   margin-top: 0.5rem;
   display: flex;
@@ -2604,7 +2781,7 @@ body,
 }
 /* #endregion */
 
-/* #region - Fetch transaction control */
+/* #region - Print - Fetch transaction control */
 .fetch-transaction-control {
   display: flex;
   justify-content: flex-start;
@@ -2663,7 +2840,7 @@ body,
 }
 /* #endregion */
 
-/* #region - Fetch transaction status */
+/* #region - Print - Fetch transaction status */
 .transaction-fetching {
   font-size: 1.4rem;
   text-align: center;
@@ -2933,7 +3110,7 @@ body,
 }
 /* #endregion */
 
-/* #region - Save Transaction Modal - Applied Filters info */
+/* #region - Print - Save Transaction Modal - Applied Filters info */
 .applied-filters-box {
   margin-bottom: 1rem;
   padding: 1rem;
@@ -2978,8 +3155,6 @@ body,
 
 /* #region - Category page content */
 .category-page-header {
-  font-weight: 600;
-  font-size: 2rem;
   color: white;
   padding: 1rem 2rem;
   background: #142842;
@@ -2990,6 +3165,8 @@ body,
 .category-page-header h2 {
   margin: 0;
   text-align: left;
+  font-weight: 600;
+  font-size: 2rem;
 }
 
 .category-page-body-wrapper {

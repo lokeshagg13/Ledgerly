@@ -18,6 +18,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.11.0",
     "mongoose": "^8.16.1",
-    "nodemon": "^3.1.10"
+    "multer": "^2.0.2",
+    "nodemon": "^3.1.10",
+    "pdfreader": "^3.0.7"
   }
 }

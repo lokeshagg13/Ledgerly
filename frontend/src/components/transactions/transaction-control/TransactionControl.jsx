@@ -31,6 +31,12 @@ function TransactionControl() {
     });
   };
 
+  const handleNavigateToUploadTransactionsPage = () => {
+    navigate("/transactions/upload", {
+      state: { from: location.pathname },
+    });
+  };
+
   return (
     <div className="transaction-controls">
       <Button
@@ -41,6 +47,15 @@ function TransactionControl() {
         disabled={isLoadingTransactions}
       >
         Add Transaction
+      </Button>
+      <Button
+        type="button"
+        className="control-btn btn-outline-light"
+        aria-label="Upload transactions"
+        onClick={handleNavigateToUploadTransactionsPage}
+        disabled={isLoadingTransactions}
+      >
+        Upload Transactions
       </Button>
       <Button
         type="button"

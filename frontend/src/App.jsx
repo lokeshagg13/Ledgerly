@@ -9,10 +9,11 @@ import HomePage from "./pages/home-page/HomePage";
 import DashboardPage from "./pages/dashboard-page/DashboardPage";
 import LoginPage from "./pages/login-page/LoginPage";
 import RegisterPage from "./pages/register-page/RegisterPage";
+import UserProfilePage from "./pages/user-profile-page/UserProfilePage";
 import TransactionPage from "./pages/transaction-page/TransactionPage";
 import CategoryPage from "./pages/category-page/CategoryPage";
+import UploadTransactionPage from "./pages/upload-transaction-page/UploadTransactionPage";
 import PrintTransactionPage from "./pages/print-transaction-page/PrintTransactionPage";
-import UserProfilePage from "./pages/user-profile-page/UserProfilePage";
 
 function App() {
   const { auth } = useAuth();
@@ -67,6 +68,10 @@ function App() {
               <Route
                 path="/transactions/print"
                 element={<PrintTransactionPage />}
+              />
+              <Route
+                path="/transactions/upload"
+                element={<UploadTransactionPage />}
               />
               <Route path="/categories" element={<CategoryPage />} />
             </Route>
