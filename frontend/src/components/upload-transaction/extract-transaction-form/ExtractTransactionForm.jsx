@@ -1,8 +1,9 @@
 import { useContext } from "react";
 
-import ExtractTransactionControl from "./extract-transaction-control/ExtractTransactionControl";
 import TransactionUploadContext from "../../../store/context/transactionUploadContext";
 import ExtractTransactionInput from "./extract-transaction-input/ExtractTransactionInput";
+import ExtractTransactionControl from "./extract-transaction-control/ExtractTransactionControl";
+import ExtractTransactionStatus from "./extract-transaction-status/ExtractTransactionStatus";
 
 function ExtractTransactionForm() {
   const { extractTransactionError } = useContext(TransactionUploadContext);
@@ -14,6 +15,7 @@ function ExtractTransactionForm() {
         <div className="error-message">{extractTransactionError}</div>
       )}
       <ExtractTransactionControl />
+      <ExtractTransactionStatus />
     </div>
   );
 }

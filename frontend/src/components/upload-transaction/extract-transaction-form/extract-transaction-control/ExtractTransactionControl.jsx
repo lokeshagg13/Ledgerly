@@ -3,15 +3,19 @@ import { Button } from "react-bootstrap";
 import TransactionUploadContext from "../../../../store/context/transactionUploadContext";
 
 function ExtractTransactionControl() {
-  const { isExtractingTransactions, handleExtractTransactionsFromFile } =
-    useContext(TransactionUploadContext);
+  const {
+    isExtractingTransactions,
+    isEditTransactionSectionVisible,
+    resetAll,
+    handleExtractTransactionsFromFile,
+  } = useContext(TransactionUploadContext);
 
   return (
     <div className="extract-transaction-control">
       <Button
         className="extract-transaction-button"
         onClick={handleExtractTransactionsFromFile}
-        disabled={isExtractingTransactions}
+        disabled={isExtractingTransactions || isEditTransactionSectionVisible}
       >
         {isExtractingTransactions ? (
           <>
@@ -28,7 +32,7 @@ function ExtractTransactionControl() {
       </Button>
       <Button
         className="reset-button"
-        onClick={() => {}}
+        onClick={resetAll}
         disabled={isExtractingTransactions}
       >
         Reset

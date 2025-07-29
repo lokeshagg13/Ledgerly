@@ -6,7 +6,9 @@ const TransactionUploadContext = createContext({
     isExtractingTransactions: false,
     extractedTransactions: [],
     extractTransactionError: null,
-    handleOpenFileUploadDialogBox: (event) => { },
+    isEditTransactionSectionVisible: false,
+    resetAll: () => { },
+    handleOpenFileUploadDialogBox: () => { },
     handleClearUploadedFile: () => { },
     handleChangeUploadedFile: (event) => { },
     handleExtractTransactionsFromFile: () => { },
@@ -17,21 +19,36 @@ export function TransactionUploadContextProvider({ children }) {
     const [isExtractingTransactions, setIsExtractingTransactions] = useState(false);
     const [extractedTransactions, setExtractedTransactions] = useState([]);
     const [extractTransactionError, setExtractTransactionError] = useState(null);
+    const [isEditTransactionSectionVisible, setIsEditTransactionSectionVisible] = useState(false);
 
-    function handleOpenFileUploadDialogBox(ev) {
-        ev.preventDefault();
+    function resetFileInputValue() {
+        const fileInput = document.getElementById("transactionFileInput");
+        if (fileInput) fileInput.value = "";
+    }
+
+    function resetAll() {
+        setTransactionFile(null);
+        setIsExtractingTransactions(false);
+        setExtractedTransactions([]);
+        setExtractTransactionError(null);
+        setIsEditTransactionSectionVisible(false);
+    }
+
+    function handleOpenFileUploadDialogBox() {
+        if (isEditTransactionSectionVisible) return;
         document.getElementById("transactionFileInput").click();
         setExtractTransactionError(null);
     }
 
     function handleClearUploadedFile() {
+        if (isEditTransactionSectionVisible) return;
         setTransactionFile(null);
         setExtractTransactionError(null);
-        const fileInput = document.getElementById("transactionFileInput");
-        if (fileInput) fileInput.value = "";
+        resetFileInputValue();
     }
 
     function handleChangeUploadedFile(ev) {
+        if (isEditTransactionSectionVisible) return;
         const file = ev.target.files[0];
         if (
             !file ||
@@ -39,6 +56,8 @@ export function TransactionUploadContextProvider({ children }) {
             !file.type === "application/pdf"
         ) {
             setExtractTransactionError("Must upload a .pdf file.");
+            setTransactionFile(null);
+            resetFileInputValue();
             return;
         }
         setTransactionFile(file);
@@ -61,6 +80,7 @@ export function TransactionUploadContextProvider({ children }) {
     }
 
     async function handleExtractTransactionsFromFile() {
+        if (isEditTransactionSectionVisible) return;
         if (!transactionFile) {
             setExtractTransactionError("A .pdf file is required.");
             return;
@@ -81,15 +101,17 @@ export function TransactionUploadContextProvider({ children }) {
                 }
             );
 
-            if (res?.data?.transactions)
+            if (res?.data?.transactions) {
                 setExtractedTransactions(res?.data?.transactions);
+                setIsEditTransactionSectionVisible(true);
+            }
+
             console.log(res?.data?.transactions);
         } catch (error) {
             handleErrorExtractingTransactions();
         } finally {
             setIsExtractingTransactions(false);
-            const fileInput = document.getElementById("transactionFileInput");
-            if (fileInput) fileInput.value = "";
+            resetFileInputValue();
         }
     }
 
@@ -98,6 +120,8 @@ export function TransactionUploadContextProvider({ children }) {
         isExtractingTransactions,
         extractedTransactions,
         extractTransactionError,
+        isEditTransactionSectionVisible,
+        resetAll,
         handleOpenFileUploadDialogBox,
         handleClearUploadedFile,
         handleChangeUploadedFile,

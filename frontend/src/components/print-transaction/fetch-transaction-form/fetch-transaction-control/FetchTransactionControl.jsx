@@ -20,7 +20,7 @@ function FetchTransactionControl() {
       <Button
         className="fetch-transaction-button"
         onClick={handleFetch}
-        disabled={isPrintSectionVisible}
+        disabled={isLoadingTransactions || isPrintSectionVisible}
       >
         {isLoadingTransactions ? (
           <>

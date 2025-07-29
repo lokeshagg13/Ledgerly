@@ -8,6 +8,7 @@ import { truncateWithEllipsis } from "../../../../utils/formatUtils";
 function ExtractTransactionInput() {
   const {
     transactionFile,
+    isEditTransactionSectionVisible,
     handleOpenFileUploadDialogBox,
     handleClearUploadedFile,
     handleChangeUploadedFile,
@@ -18,7 +19,9 @@ function ExtractTransactionInput() {
       <label>Upload Transaction PDF File</label>
       <div className="file-input-row">
         <div
-          className={`input-file-name ${transactionFile && "actual-file"}`}
+          className={`input-file-name ${transactionFile && "actual-file"} ${
+            isEditTransactionSectionVisible && "disabled"
+          }`}
           onClick={handleOpenFileUploadDialogBox}
           title={transactionFile?.name}
         >
@@ -30,11 +33,16 @@ function ExtractTransactionInput() {
           <button
             className="upload-btn"
             onClick={handleOpenFileUploadDialogBox}
+            disabled={isEditTransactionSectionVisible}
           >
             <UploadIcon fillColor="green" width="1.1rem" height="1.1rem" />
           </button>
           {transactionFile && (
-            <button className="clear-btn" onClick={handleClearUploadedFile}>
+            <button
+              className="clear-btn"
+              onClick={handleClearUploadedFile}
+              disabled={isEditTransactionSectionVisible}
+            >
               <ClearIcon fillColor="red" width="1.1rem" height="1.1rem" />
             </button>
           )}

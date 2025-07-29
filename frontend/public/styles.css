@@ -616,8 +616,6 @@ body,
 .user-profile-page-header h2 {
   margin: 0;
   text-align: left;
-  font-weight: 600;
-  font-size: 2rem;
 }
 
 .user-profile-page-body {
@@ -1486,8 +1484,6 @@ body,
 .transaction-page-header h2 {
   margin: 0;
   text-align: left;
-  font-weight: 600;
-  font-size: 2rem;
 }
 
 .transaction-page-body-wrapper {
@@ -2363,7 +2359,7 @@ body,
 .upload-transaction-page {
   padding: 0;
   margin: 2rem;
-  max-width: 400px;
+  max-width: 420px;
 }
 
 @media (max-width: 596px) {
@@ -2394,8 +2390,6 @@ body,
 .upload-transaction-page-header h2 {
   margin: 0;
   text-align: left;
-  font-weight: 600;
-  font-size: 1.6rem;
 }
 
 .upload-transaction-page-body-wrapper {
@@ -2411,7 +2405,9 @@ body,
 
 /* #region - Upload - Extract transaction form */
 .extract-transaction-form .error-message {
-  text-align: left;
+  font-size: 1rem;
+  text-align: right;
+  animation: fadeIn 0.3s;
 }
 /* #endregion */
 
@@ -2425,8 +2421,9 @@ body,
 }
 
 .extract-transaction-input label {
-  font-size: 1rem;
+  font-size: 1.3rem;
   font-weight: 600;
+  text-align: left;
 }
 
 .extract-transaction-input .file-input-original.hide {
@@ -2453,13 +2450,20 @@ body,
   flex: 1;
   cursor: pointer;
   text-align: left;
-  font-size: 0.8rem;
+  font-size: 1rem;
   line-height: 2;
   color: #111827;
 }
 
 .extract-transaction-input .input-file-name.actual-file {
   text-decoration: underline;
+}
+
+.extract-transaction-input .input-file-name.disabled {
+  color: #9ca3af;
+  cursor: not-allowed;
+  text-decoration: none;
+  opacity: 0.6;
 }
 
 .extract-transaction-input .input-file-controls {
@@ -2476,6 +2480,12 @@ body,
 
 .extract-transaction-input .input-file-controls button:hover {
   transform: scale(1.2);
+}
+
+.extract-transaction-input .input-file-controls button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  transform: none;
 }
 /* #endregion */
 
@@ -2536,6 +2546,33 @@ body,
 }
 /* #endregion */
 
+/* #region - Upload - Extract transaction status */
+.transaction-extracting {
+  font-size: 1.4rem;
+  text-align: center;
+  margin: 0;
+  margin-top: 2rem;
+  color: #6b7280;
+}
+
+.transaction-empty,
+.transaction-extract-message {
+  font-size: 1.1rem;
+  text-align: center;
+  margin: 0;
+  margin-top: 2rem;
+}
+
+.transaction-extract-message {
+  color: #065f46;
+  background-color: #ecfdf5;
+  border: 1px solid #34d399;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-weight: 600;
+}
+/* #endregion */
+
 /* #region - Print transactions page */
 .print-transaction-page {
   padding: 0;
@@ -2570,8 +2607,6 @@ body,
 .print-transaction-page-header h2 {
   margin: 0;
   text-align: left;
-  font-weight: 600;
-  font-size: 2rem;
 }
 
 .print-transaction-page-body-wrapper {
@@ -3165,8 +3200,6 @@ body,
 .category-page-header h2 {
   margin: 0;
   text-align: left;
-  font-weight: 600;
-  font-size: 2rem;
 }
 
 .category-page-body-wrapper {
