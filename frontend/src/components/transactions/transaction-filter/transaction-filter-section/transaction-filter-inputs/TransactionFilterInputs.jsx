@@ -7,8 +7,9 @@ function TransactionFilterInputs() {
   const [isAdvancedFilterSectionVisible, setIsAdvancedFilterSectionVisible] =
     useState(false);
 
-  const { filteringError, resetFilteringError, fetchCategoriesFromDB } =
-    useContext(TransactionFilterContext);
+  const { filteringError, resetFilteringError } = useContext(
+    TransactionFilterContext
+  );
 
   useEffect(() => {
     if (filteringError.errorMessage) {
@@ -17,11 +18,6 @@ function TransactionFilterInputs() {
     }
     // eslint-disable-next-line
   }, [filteringError]);
-
-  useEffect(() => {
-    fetchCategoriesFromDB();
-    // eslint-disable-next-line
-  }, []);
 
   return (
     <div className="transaction-filter-inputs">

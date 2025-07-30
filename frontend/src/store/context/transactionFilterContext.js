@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { axiosPrivate } from "../../api/axios";
 
 const TransactionFilterContext = createContext({
@@ -13,7 +13,6 @@ const TransactionFilterContext = createContext({
     setToDate: (prev) => { },
     setSelectedCategories: (prev) => { },
     resetFilteringError: () => { },
-    fetchCategoriesFromDB: () => { },
     applyFilters: () => { },
     clearFilters: () => { }
 });
@@ -30,6 +29,22 @@ export function TransactionFilterProvider({ children }) {
         fromDate: false,
         toDate: false
     });
+
+    useEffect(() => {
+        fetchCategoriesFromDB();
+    }, []);
+
+    async function fetchCategoriesFromDB() {
+        setIsLoadingCategories(true);
+        try {
+            const res = await axiosPrivate.get("/user/categories");
+            if (res?.data?.categories) setCategories(res.data.categories);
+        } catch (error) {
+            console.log("Error while fetching categories:", error);
+        } finally {
+            setIsLoadingCategories(false);
+        }
+    }
 
     function resetFilteringError() {
         setFilteringError({
@@ -80,18 +95,6 @@ export function TransactionFilterProvider({ children }) {
         resetFilteringError();
     }
 
-    async function fetchCategoriesFromDB() {
-        setIsLoadingCategories(true);
-        try {
-            const res = await axiosPrivate.get("/user/categories");
-            if (res?.data?.categories) setCategories(res.data.categories);
-        } catch (error) {
-            console.log("Error while fetching categories:", error);
-        } finally {
-            setIsLoadingCategories(false);
-        }
-    }
-
     const currentFilterContextValue = {
         fromDate,
         toDate,
@@ -104,7 +107,6 @@ export function TransactionFilterProvider({ children }) {
         setToDate,
         setSelectedCategories,
         resetFilteringError,
-        fetchCategoriesFromDB,
         applyFilters,
         clearFilters,
     };

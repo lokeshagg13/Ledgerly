@@ -11,7 +11,6 @@ function AddTransactionForm() {
   const {
     addTransactionFormData: formData,
     inputFieldErrors,
-    fetchCategoriesFromDB,
     fetchSubcategoriesFromDB,
     modifyAddTransactionFormData,
     checkIfInputFieldInvalid,
@@ -20,7 +19,6 @@ function AddTransactionForm() {
 
   useEffect(() => {
     amountInputRef.current.focus();
-    fetchCategoriesFromDB();
     // eslint-disable-next-line
   }, []);
 

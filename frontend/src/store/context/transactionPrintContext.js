@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { axiosPrivate } from "../../api/axios";
 import { downloadPrintPreviewPDF } from "../../utils/printUtils";
 
@@ -29,7 +29,6 @@ const TransactionPrintContext = createContext({
     setSelectedCategories: (prev) => { },
     setKeepCreditDebitTxnSeparate: (prev) => { },
     setTransactionSortOrder: (prev) => { },
-    fetchCategoriesFromDB: async () => { },
     fetchTransactionsFromDB: async () => { },
     resetAll: () => { },
     resetErrorFetchingTransactions: () => { },
@@ -81,6 +80,10 @@ export function TransactionPrintContextProvider({ children }) {
     const [caPrintPreviewImages, setCAPrintPreviewImages] = useState([]);
     const [tablePrintPreviewImages, setTablePrintPreviewImages] = useState([]);
     const [isSaveTransactionModalVisible, setIsSaveTransactionModalVisible] = useState(false);
+
+    useEffect(() => {
+        fetchCategoriesFromDB();
+    }, []);
 
     async function fetchCategoriesFromDB() {
         setIsLoadingCategories(true);
@@ -362,7 +365,6 @@ export function TransactionPrintContextProvider({ children }) {
         setSelectedCategories,
         setKeepCreditDebitTxnSeparate,
         setTransactionSortOrder,
-        fetchCategoriesFromDB,
         fetchTransactionsFromDB,
         resetAll,
         resetErrorFetchingTransactions,

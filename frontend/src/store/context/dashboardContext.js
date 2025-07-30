@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { axiosPrivate } from "../../api/axios";
 
 const DashboardContext = createContext({
@@ -30,7 +30,6 @@ const DashboardContext = createContext({
     resetErrorUpdatingBalanceFilters: () => { },
     resetFilterFormData: () => { },
     modifyFilterFormData: (key, val) => { },
-    fetchCategoriesFromDB: async () => { },
     fetchOverallBalance: async () => { },
     fetchFilteredBalanceAndFilters: async () => { },
     updateBalanceFilters: async () => { }
@@ -65,6 +64,22 @@ export function DashboardContextProvider({ children }) {
         uptoDate: null,
         selectedCategories: []
     });
+
+    useEffect(() => {
+        fetchCategoriesFromDB();
+    }, []);
+
+    async function fetchCategoriesFromDB() {
+        setIsLoadingCategories(true);
+        try {
+            const res = await axiosPrivate.get("/user/categories");
+            if (res?.data?.categories) setCategories(res.data.categories);
+        } catch (error) {
+            console.log("Error while fetching categories:", error);
+        } finally {
+            setIsLoadingCategories(false);
+        }
+    }
 
     function resetErrorFetchingOverallBalance() {
         setOverallBalanceError("");
@@ -145,18 +160,6 @@ export function DashboardContextProvider({ children }) {
             ...prev,
             [key]: value
         }));
-    }
-
-    async function fetchCategoriesFromDB() {
-        setIsLoadingCategories(true);
-        try {
-            const res = await axiosPrivate.get("/user/categories");
-            if (res?.data?.categories) setCategories(res.data.categories);
-        } catch (error) {
-            console.log("Error while fetching categories:", error);
-        } finally {
-            setIsLoadingCategories(false);
-        }
     }
 
     async function fetchOverallBalance() {
@@ -245,7 +248,6 @@ export function DashboardContextProvider({ children }) {
         resetErrorUpdatingBalanceFilters,
         resetFilterFormData,
         modifyFilterFormData,
-        fetchCategoriesFromDB,
         fetchOverallBalance,
         fetchFilteredBalanceAndFilters,
         updateBalanceFilters

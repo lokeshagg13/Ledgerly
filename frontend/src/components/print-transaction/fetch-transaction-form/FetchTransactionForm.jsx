@@ -9,7 +9,6 @@ import FetchTransactionControl from "./fetch-transaction-control/FetchTransactio
 function FetchTransactionForm() {
   const {
     errorFetchingTransactions,
-    fetchCategoriesFromDB,
     resetErrorFetchingTransactions,
   } = useContext(TransactionPrintContext);
 
@@ -20,11 +19,6 @@ function FetchTransactionForm() {
     }
     // eslint-disable-next-line
   }, [errorFetchingTransactions]);
-
-  useEffect(() => {
-    fetchCategoriesFromDB();
-    // eslint-disable-next-line
-  }, []);
 
   return (
     <div className="fetch-transaction-section">

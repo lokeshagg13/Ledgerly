@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { axiosPrivate } from "../../api/axios";
 import { formatAmountForFirstTimeInput, formatDateForCalendarInput } from "../../utils/formatUtils";
 
@@ -226,6 +226,10 @@ export const TransactionProvider = ({ children }) => {
     function updateInputFieldErrors(errors) {
         setInputFieldErrors(errors);
     }
+
+    useEffect(() => {
+        fetchCategoriesFromDB();
+    }, []);
 
     const currentTransactionContext = {
         transactions,

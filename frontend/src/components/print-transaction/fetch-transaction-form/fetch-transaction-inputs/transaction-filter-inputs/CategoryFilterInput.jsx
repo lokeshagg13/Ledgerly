@@ -4,6 +4,7 @@ import TransactionPrintContext from "../../../../../store/context/transactionPri
 
 function CategoryFilterInput() {
   const {
+    isLoadingCategories,
     categories,
     selectedCategories,
     isPrintSectionVisible,
@@ -28,15 +29,23 @@ function CategoryFilterInput() {
   return (
     <div className="category-filter-section">
       <div className="category-filter-selector-wrapper">
-        <MultiSelector
-          className="category-filter-selector"
-          label="Select Categories"
-          name="categoryFilter"
-          options={categoryOptions}
-          value={selectedCategories}
-          onChange={handleCategorySelect}
-          disabled={isPrintSectionVisible}
-        />
+        {isLoadingCategories ? (
+          <span
+            className="spinner-border spinner-border-sm me-2"
+            role="status"
+            aria-hidden="true"
+          ></span>
+        ) : (
+          <MultiSelector
+            className="category-filter-selector"
+            label="Select Categories"
+            name="categoryFilter"
+            options={categoryOptions}
+            value={selectedCategories}
+            onChange={handleCategorySelect}
+            disabled={isPrintSectionVisible}
+          />
+        )}
       </div>
     </div>
   );

@@ -13,7 +13,6 @@ function EditTransactionForm() {
     categories,
     isLoadingSubcategories,
     subcategories,
-    fetchCategoriesFromDB,
     fetchSubcategoriesFromDB,
     modifyEditTransactionFormData,
     checkIfInputFieldInvalid,
@@ -22,7 +21,6 @@ function EditTransactionForm() {
 
   useEffect(() => {
     amountInputRef.current.focus();
-    fetchCategoriesFromDB();
     // eslint-disable-next-line
   }, []);
 

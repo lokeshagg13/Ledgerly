@@ -15,13 +15,11 @@ function FilteredBalanceCard() {
     filteredBalanceError,
     appliedFilters,
     resetErrorFetchingFilteredBalance,
-    fetchCategoriesFromDB,
     fetchFilteredBalanceAndFilters,
   } = useContext(DashboardContext);
 
   useEffect(() => {
     resetErrorFetchingFilteredBalance();
-    fetchCategoriesFromDB();
     fetchFilteredBalanceAndFilters();
     // eslint-disable-next-line
   }, []);

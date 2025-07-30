@@ -5,6 +5,7 @@ import CancelIcon from "../../../../../../ui/icons/CancelIcon";
 
 function CategoryFilterInput() {
   const {
+    isLoadingCategories,
     categories,
     filterFormData,
     modifyFilterFormData,
@@ -26,15 +27,23 @@ function CategoryFilterInput() {
   return (
     <div className="balance-filter category-filter-section">
       <div className="category-filter-selector-wrapper">
-        <MultiSelector
-          className="category-filter-selector"
-          label="Select Categories"
-          name="categoryFilter"
-          options={categoryOptions}
-          value={filterFormData.selectedCategories}
-          onChange={handleCategorySelect}
-          paddedDropdown={true}
-        />
+        {isLoadingCategories ? (
+          <span
+            className="spinner-border spinner-border-sm me-2"
+            role="status"
+            aria-hidden="true"
+          ></span>
+        ) : (
+          <MultiSelector
+            className="category-filter-selector"
+            label="Select Categories"
+            name="categoryFilter"
+            options={categoryOptions}
+            value={filterFormData.selectedCategories}
+            onChange={handleCategorySelect}
+            paddedDropdown={true}
+          />
+        )}
         {Array.isArray(filterFormData.selectedCategories) &&
           filterFormData.selectedCategories.length > 0 && (
             <button
