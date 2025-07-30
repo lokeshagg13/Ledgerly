@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ExtractTransactionForm from "./extract-transaction-form/ExtractTransactionForm";
 import LeftArrowIcon from "../ui/icons/LeftArrowIcon";
 import { TransactionUploadContextProvider } from "../../store/context/transactionUploadContext";
+import EditBulkTransactionSection from "./edit-bulk-transaction-section/EditBulkTransactionSection";
 
 function UploadTransactionPageContent() {
   const location = useLocation();
@@ -29,6 +30,7 @@ function UploadTransactionPageContent() {
       <div className="upload-transaction-page-body-wrapper">
         <div className="upload-transaction-page-body">
           <ExtractTransactionForm />
+          <EditBulkTransactionSection />
         </div>
       </div>
     </TransactionUploadContextProvider>

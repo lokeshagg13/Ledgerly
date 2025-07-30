@@ -2359,16 +2359,10 @@ body,
 .upload-transaction-page {
   padding: 0;
   margin: 2rem;
-  max-width: 420px;
+  max-width: fit-content;
 }
 
 @media (max-width: 596px) {
-  .upload-transaction-page {
-    margin: 2rem auto;
-  }
-}
-
-@media (max-width: 532px) {
   .upload-transaction-page {
     margin: 2rem 1rem;
   }
@@ -2393,17 +2387,22 @@ body,
 }
 
 .upload-transaction-page-body-wrapper {
-  padding: 2rem 1rem;
+  padding: 2rem;
 }
 
 .upload-transaction-page-body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 3rem;
 }
 /* #endregion */
 
 /* #region - Upload - Extract transaction form */
+.extract-transaction-form {
+  max-width: 380px;
+}
+
 .extract-transaction-form .error-message {
   font-size: 1rem;
   text-align: right;
@@ -2570,7 +2569,148 @@ body,
   border-radius: 6px;
   padding: 0.5rem 0.75rem;
   font-weight: 600;
+  margin-top: 1rem !important;
 }
+/* #endregion */
+
+/* #region - Upload - Bulk transaction section */
+.bulk-transaction-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bulk-transaction-header h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-align: left;
+}
+/* #endregion */
+
+/* #region - Upload - Bulk transaction table */
+.bulk-transaction-table-wrapper {
+  max-height: 50vh;
+  position: relative;
+  border: 1px solid #e5e7eb;
+  overflow-y: scroll;
+  overflow-x: scroll;
+  padding-right: 2px;
+  padding-bottom: 2px;
+}
+
+.bulk-transaction-table {
+  width: 100%;
+  min-width: max-content;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  color: #1f2937;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.bulk-transaction-table thead {
+  background-color: #f0f4f8;
+  text-align: left;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.bulk-transaction-table th {
+  padding: 0.75rem 1rem;
+  vertical-align: middle;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.bulk-transaction-table-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.bulk-transaction-table-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 10px;
+}
+/* #endregion */
+
+/* #region - Upload - Bulk transaction table row */
+.bulk-transaction-table tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.bulk-transaction-table td {
+  padding: 0.75rem 1rem;
+  vertical-align: middle;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.bulk-transaction-table td input.form-control,
+.bulk-transaction-table td select.form-select {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #f9fafb;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.bulk-transaction-table td.type select {
+  width: 100px;
+  cursor: pointer;
+}
+
+.bulk-transaction-table td.amount input {
+  width: 120px;
+  text-align: right;
+}
+
+.bulk-transaction-table td.category select,
+.bulk-transaction-table td.subcategory select {
+  width: 190px;
+  padding-right: 2rem;
+}
+
+.bulk-transaction-table td.date div.date-input {
+  width: 150px;
+  z-index: 0;
+}
+
+.bulk-transaction-table td.date div.date-input svg.MuiSvgIcon-root {
+  fill: #111;
+  width: 1rem;
+  height: 1rem;
+}
+
+.bulk-transaction-table td input:focus,
+.bulk-transaction-table td select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+  outline: none;
+}
+
+.bulk-transaction-table td select:disabled {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+}
+
+.bulk-transaction-table button {
+  background: none;
+  border: none;
+  color: red;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.bulk-transaction-table button:hover {
+  transform: scale(1.1);
+}
+
+.bulk-transaction-table .date-input {
+  position: relative;
+  z-index: 2;
+}
+
 /* #endregion */
 
 /* #region - Print transactions page */

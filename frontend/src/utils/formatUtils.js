@@ -30,6 +30,24 @@ export function formatAmountForFirstTimeInput(amount) {
     return `${formattedInt}.${decimalPart}`;
 }
 
+export function formatCustomDateFormatForCalendarInput(dateString, inputFormat = "dd/mm/yyyy") {
+    if (!dateString || !inputFormat) return "";
+    const sepMatch = inputFormat.match(/[^a-zA-Z0-9]/);
+    const sep = sepMatch ? sepMatch[0] : "/";
+    const formatParts = inputFormat.split(sep).map(part => part.toLowerCase());
+    const dateParts = dateString.split(sep);
+    if (formatParts.length !== 3 || dateParts.length !== 3) return "";
+    const dateMap = {};
+    formatParts.forEach((part, index) => {
+        dateMap[part] = dateParts[index];
+    });
+    const year = dateMap["yyyy"];
+    const month = dateMap["mm"]?.padStart(2, "0");
+    const day = dateMap["dd"]?.padStart(2, "0");
+    if (!year || !month || !day) return "";
+    return `${year}-${month}-${day}`;
+}
+
 export function formatDateForCalendarInput(dateString, sep = '-') {
     const date = new Date(dateString);
     const day = String(date.getUTCDate()).padStart(2, "0");

@@ -1,5 +1,6 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { axiosPrivate } from "../../api/axios";
+import { formatAmountForFirstTimeInput, formatCustomDateFormatForCalendarInput } from "../../utils/formatUtils";
 
 const TransactionUploadContext = createContext({
     transactionFile: null,
@@ -7,11 +8,18 @@ const TransactionUploadContext = createContext({
     extractedTransactions: [],
     extractTransactionError: null,
     isEditTransactionSectionVisible: false,
+    isLoadingCategories: false,
+    categories: [],
+    isLoadingSubcategoryMapping: false,
+    subcategoryMapping: {},
+    editableTransactions: [],
     resetAll: () => { },
     handleOpenFileUploadDialogBox: () => { },
     handleClearUploadedFile: () => { },
     handleChangeUploadedFile: (event) => { },
     handleExtractTransactionsFromFile: () => { },
+    handleModifyTransaction: (index, field, value) => { },
+    handleRemoveTransaction: (index) => { }
 });
 
 export function TransactionUploadContextProvider({ children }) {
@@ -20,6 +28,53 @@ export function TransactionUploadContextProvider({ children }) {
     const [extractedTransactions, setExtractedTransactions] = useState([]);
     const [extractTransactionError, setExtractTransactionError] = useState(null);
     const [isEditTransactionSectionVisible, setIsEditTransactionSectionVisible] = useState(false);
+    const [isLoadingCategories, setIsLoadingCategories] = useState(false);
+    const [categories, setCategories] = useState([]);
+    const [isLoadingSubcategoryMapping, setIsLoadingSubcategoryMapping] = useState(false);
+    const [subcategoryMapping, setSubcategoryMapping] = useState({});
+    const [editableTransactions, setEditableTransactions] = useState([]);
+
+    useEffect(() => {
+        fetchCategoriesFromDB();
+        fetchSubcategoryMappingFromDB();
+    }, []);
+
+    useEffect(() => {
+        if (isEditTransactionSectionVisible && extractedTransactions?.length > 0) {
+            const tCopy = extractedTransactions.map(txn => ({
+                ...txn,
+                date: formatCustomDateFormatForCalendarInput(txn.date, "dd/mm/yyyy"),
+                amount: formatAmountForFirstTimeInput(txn.amount),
+                categoryId: "",
+                subcategoryId: "",
+            }))
+            setEditableTransactions([...tCopy]);
+        }
+    }, [extractedTransactions, isEditTransactionSectionVisible]);
+
+    async function fetchCategoriesFromDB() {
+        setIsLoadingCategories(true);
+        try {
+            const res = await axiosPrivate.get("/user/categories");
+            if (res?.data?.categories) setCategories(res.data.categories);
+        } catch (error) {
+            console.log("Error while fetching categories:", error);
+        } finally {
+            setIsLoadingCategories(false);
+        }
+    }
+
+    async function fetchSubcategoryMappingFromDB() {
+        setIsLoadingSubcategoryMapping(true);
+        try {
+            const res = await axiosPrivate.get("/user/subcategories");
+            if (res?.data?.groupedSubcategories) setSubcategoryMapping(res.data.groupedSubcategories);
+        } catch (error) {
+            console.log("Error while fetching subcategory mapping:", error);
+        } finally {
+            setIsLoadingSubcategoryMapping(false);
+        }
+    }
 
     function resetFileInputValue() {
         const fileInput = document.getElementById("transactionFileInput");
@@ -106,7 +161,6 @@ export function TransactionUploadContextProvider({ children }) {
                 setIsEditTransactionSectionVisible(true);
             }
 
-            console.log(res?.data?.transactions);
         } catch (error) {
             handleErrorExtractingTransactions();
         } finally {
@@ -115,17 +169,34 @@ export function TransactionUploadContextProvider({ children }) {
         }
     }
 
+    function handleModifyTransaction(index, field, value) {
+        setEditableTransactions((prev) =>
+            prev.map((txn, i) => (i === index ? { ...txn, [field]: value } : txn))
+        );
+    }
+
+    function handleRemoveTransaction(index) {
+        setEditableTransactions((prev) => prev.filter((_, i) => i !== index));
+    };
+
     const currentUploadContextValue = {
         transactionFile,
         isExtractingTransactions,
         extractedTransactions,
         extractTransactionError,
         isEditTransactionSectionVisible,
+        isLoadingCategories,
+        categories,
+        isLoadingSubcategoryMapping,
+        subcategoryMapping,
+        editableTransactions,
         resetAll,
         handleOpenFileUploadDialogBox,
         handleClearUploadedFile,
         handleChangeUploadedFile,
-        handleExtractTransactionsFromFile
+        handleExtractTransactionsFromFile,
+        handleModifyTransaction,
+        handleRemoveTransaction
     };
 
     return (
