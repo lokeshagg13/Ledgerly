@@ -19,11 +19,12 @@ function EditBulkTransactionTable() {
             <th>Subcategory</th>
             <th>Remarks</th>
             <th>Date</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           {editableTransactions.map((data, index) => (
-            <EditBulkTransactionRow key={index} index={index} data={data} />
+            <EditBulkTransactionRow key={data._id} index={index} data={data} />
           ))}
         </tbody>
       </table>

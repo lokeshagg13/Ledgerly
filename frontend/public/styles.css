@@ -2654,6 +2654,11 @@ body,
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+.bulk-transaction-table .edit-bulk-transaction-checkbox input {
+  border: 1px solid #747482;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+}
+
 .bulk-transaction-table td.type select {
   width: 100px;
   cursor: pointer;
@@ -2693,24 +2698,31 @@ body,
   color: #9ca3af;
 }
 
-.bulk-transaction-table button {
-  background: none;
-  border: none;
-  color: red;
-  font-size: 1.25rem;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.bulk-transaction-table button:hover {
-  transform: scale(1.1);
-}
-
 .bulk-transaction-table .date-input {
   position: relative;
   z-index: 2;
 }
+/* #endregion */
 
+/* #region - Upload - Bulk transaction table row control */
+.edit-bulk-transaction-row-control {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.edit-bulk-transaction-row-control button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 0;
+  padding: 0;
+}
+
+.edit-bulk-transaction-row-control button:hover {
+  background: none;
+  transform: scale(1.1);
+}
 /* #endregion */
 
 /* #region - Print transactions page */

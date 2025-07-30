@@ -23,7 +23,7 @@ function fetchTransactionData(data) {
             }
         }
 
-        transactions.push({ date, type, amount, remarks, balance });
+        transactions.push({ _id: counter, date, type, amount, remarks, balance });
         counter += 1;
     }
     return transactions;
@@ -43,6 +43,7 @@ exports.extractTransactionsFromPDF = async (req, res) => {
         });
 
         const transactions = fetchTransactionData(data);
+
         res.status(200).json({ transactions });
     } catch (error) {
         res.status(400).json({ error: error.message });

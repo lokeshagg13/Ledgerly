@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import { axiosPrivate } from "../../api/axios";
 import { formatAmountForFirstTimeInput, formatCustomDateFormatForCalendarInput } from "../../utils/formatUtils";
 
@@ -18,8 +18,9 @@ const TransactionUploadContext = createContext({
     handleClearUploadedFile: () => { },
     handleChangeUploadedFile: (event) => { },
     handleExtractTransactionsFromFile: () => { },
-    handleModifyTransaction: (index, field, value) => { },
-    handleRemoveTransaction: (index) => { }
+    handleModifyTransaction: (id, field, value) => { },
+    handleRemoveTransaction: (id) => { },
+    handleResetTransaction: (id) => { }
 });
 
 export function TransactionUploadContextProvider({ children }) {
@@ -160,7 +161,6 @@ export function TransactionUploadContextProvider({ children }) {
                 setExtractedTransactions(res?.data?.transactions);
                 setIsEditTransactionSectionVisible(true);
             }
-
         } catch (error) {
             handleErrorExtractingTransactions();
         } finally {
@@ -169,15 +169,32 @@ export function TransactionUploadContextProvider({ children }) {
         }
     }
 
-    function handleModifyTransaction(index, field, value) {
+    const handleModifyTransaction = useCallback((id, field, value) => {
         setEditableTransactions((prev) =>
-            prev.map((txn, i) => (i === index ? { ...txn, [field]: value } : txn))
+            prev.map((txn) => (txn._id === id ? { ...txn, [field]: value } : txn))
+        );
+    }, []);
+
+    function handleRemoveTransaction(id) {
+        setEditableTransactions((prev) => prev.filter((txn) => txn._id !== id));
+    };
+
+    function handleResetTransaction(id) {
+        const originalData = extractedTransactions.find(txn => txn._id === id);
+        setEditableTransactions((prev) =>
+            prev.map((txn) => (
+                txn._id === id
+                    ? {
+                        ...originalData,
+                        date: formatCustomDateFormatForCalendarInput(originalData.date, "dd/mm/yyyy"),
+                        amount: formatAmountForFirstTimeInput(originalData.amount),
+                        categoryId: "",
+                        subcategoryId: "",
+                    }
+                    : txn
+            ))
         );
     }
-
-    function handleRemoveTransaction(index) {
-        setEditableTransactions((prev) => prev.filter((_, i) => i !== index));
-    };
 
     const currentUploadContextValue = {
         transactionFile,
@@ -196,7 +213,8 @@ export function TransactionUploadContextProvider({ children }) {
         handleChangeUploadedFile,
         handleExtractTransactionsFromFile,
         handleModifyTransaction,
-        handleRemoveTransaction
+        handleRemoveTransaction,
+        handleResetTransaction
     };
 
     return (

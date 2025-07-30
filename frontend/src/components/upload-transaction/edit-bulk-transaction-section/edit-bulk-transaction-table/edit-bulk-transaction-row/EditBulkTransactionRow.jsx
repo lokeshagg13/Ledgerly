@@ -1,11 +1,13 @@
+import React from "react";
 import { useContext, useState } from "react";
-import { Button, Form, InputGroup } from "react-bootstrap";
+import { Form, InputGroup } from "react-bootstrap";
 import TransactionUploadContext from "../../../../../store/context/transactionUploadContext";
 import FormDatePicker from "../../../../ui/elements/FormDatePicker";
 import { formatAmountWithCommas } from "../../../../../utils/formatUtils";
+import EditBulkTransactionRowControl from "./edit-bulk-transaction-row-control/EditBulkTransactionRowControl";
 
 function EditBulkTransactionRow({ index, data }) {
-  const { type, amount, categoryId, subcategoryId, remarks, date } = data;
+  const { _id, type, amount, categoryId, subcategoryId, remarks, date } = data;
 
   const {
     isLoadingCategories,
@@ -13,7 +15,6 @@ function EditBulkTransactionRow({ index, data }) {
     isLoadingSubcategoryMapping,
     subcategoryMapping,
     handleModifyTransaction,
-    handleRemoveTransaction,
   } = useContext(TransactionUploadContext);
 
   const [subcategories, setSubcategories] = useState([]);
@@ -26,7 +27,7 @@ function EditBulkTransactionRow({ index, data }) {
     return subcategoryMapping?.[categoryName] || [];
   };
 
-  const handleChange = (ev, index) => {
+  const handleChange = (ev, id) => {
     const { name, value } = ev.target;
     switch (name) {
       case "amount":
@@ -37,43 +38,37 @@ function EditBulkTransactionRow({ index, data }) {
           (isValid || rawValue === "") &&
           (rawValue === "" || numericValue <= Number.MAX_SAFE_INTEGER)
         ) {
-          handleModifyTransaction(index, name, rawValue);
+          handleModifyTransaction(id, name, rawValue);
         }
         break;
       case "category":
         const categoryId = value || null;
         const subcategoryList =
           getSubcategoriesBasedOnSelectedCategory(categoryId);
-        handleModifyTransaction(index, "categoryId", categoryId);
+        handleModifyTransaction(id, "categoryId", categoryId);
         setSubcategories(subcategoryList);
-        handleModifyTransaction(index, "subcategoryId", null);
+        handleModifyTransaction(id, "subcategoryId", null);
         break;
       case "subcategory":
-        handleModifyTransaction(index, "subcategoryId", value || null);
+        handleModifyTransaction(id, "subcategoryId", value || null);
         break;
       default:
-        handleModifyTransaction(index, name, value);
+        handleModifyTransaction(id, name, value);
     }
   };
 
   return (
     <tr>
-      {/* Controls */}
-      <td className="controls">
-        <Button
-          type="button"
-          className="delete-btn"
-          onClick={() => handleRemoveTransaction(index)}
-          style={{
-            background: "none",
-            border: "none",
-            color: "red",
-            fontSize: "1.2rem",
-            cursor: "pointer",
-          }}
-        >
-          🗑️
-        </Button>
+      {/* Multi select checkbox */}
+      <td className="checkbox">
+        <Form.Check
+          type="checkbox"
+          className="edit-bulk-transaction-checkbox"
+          id={`editBulkTransaction${_id}`}
+          // checked={selectedCategories.includes(categoryId)}
+          // onChange={() => toggleCategorySelection(categoryId)}
+          aria-label={`Select transaction ${index}`}
+        />
       </td>
 
       {/* S.No. */}
@@ -85,7 +80,7 @@ function EditBulkTransactionRow({ index, data }) {
           name="type"
           id="editBulkTransactionType"
           value={type}
-          onChange={(ev) => handleChange(ev, index)}
+          onChange={(ev) => handleChange(ev, _id)}
         >
           <option value="credit">Credit</option>
           <option value="debit">Debit</option>
@@ -102,7 +97,7 @@ function EditBulkTransactionRow({ index, data }) {
             id="editBulkTransactionAmount"
             value={amount !== "" ? formatAmountWithCommas(amount) : ""}
             autoComplete="on"
-            onChange={(ev) => handleChange(ev, index)}
+            onChange={(ev) => handleChange(ev, _id)}
             placeholder="Enter amount"
             required
           />
@@ -123,7 +118,7 @@ function EditBulkTransactionRow({ index, data }) {
             aria-label="Select category"
             id="editBulkTransactionCategory"
             value={categoryId}
-            onChange={(ev) => handleChange(ev, index)}
+            onChange={(ev) => handleChange(ev, _id)}
             disabled={isLoadingCategories}
           >
             <option value="">Select a category</option>
@@ -150,7 +145,7 @@ function EditBulkTransactionRow({ index, data }) {
             aria-label="Select subcategory"
             id="editBulkTransactionSubcategory"
             value={subcategoryId ?? ""}
-            onChange={(ev) => handleChange(ev, index)}
+            onChange={(ev) => handleChange(ev, _id)}
             disabled={!categoryId || isLoadingSubcategoryMapping}
           >
             <option value="">None</option>
@@ -170,7 +165,7 @@ function EditBulkTransactionRow({ index, data }) {
           name="remarks"
           id="editBulkTransactionRemarks"
           value={remarks}
-          onChange={(ev) => handleChange(ev, index)}
+          onChange={(ev) => handleChange(ev, _id)}
           placeholder="Remarks"
           maxLength={50}
           required
@@ -184,14 +179,19 @@ function EditBulkTransactionRow({ index, data }) {
             name="date"
             id="editBulkTransactionRemarks"
             value={date}
-            onChange={(ev) => handleChange(ev, index)}
+            onChange={(ev) => handleChange(ev, _id)}
             maxDate={new Date()}
             required
           />
         </div>
       </td>
+
+      {/* Controls */}
+      <td className="controls">
+        <EditBulkTransactionRowControl _id={_id} />
+      </td>
     </tr>
   );
 }
 
-export default EditBulkTransactionRow;
+export default React.memo(EditBulkTransactionRow);
