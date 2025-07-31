@@ -1,4 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import useAuth from "./store/hooks/useAuth";
 import NavbarComponent from "./components/ui/navbar/Navbar";
@@ -80,6 +82,8 @@ function App() {
           {/* Invalid Paths */}
           <Route path="*" element={<Page404 />} />
         </Routes>
+
+        <ToastContainer />
       </div>
     </div>
   );

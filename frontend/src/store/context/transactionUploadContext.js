@@ -1,5 +1,6 @@
 import { createContext, useCallback, useEffect, useState } from "react";
 import { axiosPrivate } from "../../api/axios";
+import { toast } from "react-toastify";
 import { formatAmountForFirstTimeInput, formatCustomDateFormatForCalendarInput } from "../../utils/formatUtils";
 
 const TransactionUploadContext = createContext({
@@ -176,7 +177,12 @@ export function TransactionUploadContextProvider({ children }) {
     }, []);
 
     function handleRemoveTransaction(id) {
+        const sno = editableTransactions.findIndex(txn => txn._id === id);
         setEditableTransactions((prev) => prev.filter((txn) => txn._id !== id));
+        toast.success(`Transaction ID ${sno + 1} removed successfully.`, {
+            position: "top-center",
+            autoClose: 3000
+        });
     };
 
     function handleResetTransaction(id) {
@@ -194,6 +200,11 @@ export function TransactionUploadContextProvider({ children }) {
                     : txn
             ))
         );
+        const sno = editableTransactions.findIndex(txn => txn._id === id);
+        toast.success(`Transaction ID ${sno + 1} reset successfully.`, {
+            position: "top-center",
+            autoClose: 3000
+        });
     }
 
     const currentUploadContextValue = {
