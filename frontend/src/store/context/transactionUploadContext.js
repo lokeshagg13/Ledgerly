@@ -14,6 +14,9 @@ const TransactionUploadContext = createContext({
     isLoadingSubcategoryMapping: false,
     subcategoryMapping: {},
     editableTransactions: [],
+    isUploadingBulkTransactions: false,
+    inputFieldErrorsMap: {},
+    errorUploadingTransactions: null,
     resetAll: () => { },
     handleOpenFileUploadDialogBox: () => { },
     handleClearUploadedFile: () => { },
@@ -21,7 +24,9 @@ const TransactionUploadContext = createContext({
     handleExtractTransactionsFromFile: () => { },
     handleModifyTransaction: (id, field, value) => { },
     handleRemoveTransaction: (id) => { },
-    handleResetTransaction: (id) => { }
+    handleResetTransaction: (id) => { },
+    handleUploadBulkTransactions: () => { },
+    getEditTransactionFieldError: (txnId, fieldName) => { }
 });
 
 export function TransactionUploadContextProvider({ children }) {
@@ -35,6 +40,9 @@ export function TransactionUploadContextProvider({ children }) {
     const [isLoadingSubcategoryMapping, setIsLoadingSubcategoryMapping] = useState(false);
     const [subcategoryMapping, setSubcategoryMapping] = useState({});
     const [editableTransactions, setEditableTransactions] = useState([]);
+    const [isUploadingBulkTransactions, setIsUploadingBulkTransactions] = useState(false);
+    const [inputFieldErrorsMap, setInputFieldErrorsMap] = useState({});
+    const [errorUploadingTransactions, setErrorUploadingTransactions] = useState(null);
 
     useEffect(() => {
         fetchCategoriesFromDB();
@@ -89,6 +97,9 @@ export function TransactionUploadContextProvider({ children }) {
         setExtractedTransactions([]);
         setExtractTransactionError(null);
         setIsEditTransactionSectionVisible(false);
+        setEditableTransactions([]);
+        setInputFieldErrorsMap({});
+        setErrorUploadingTransactions(null);
     }
 
     function handleOpenFileUploadDialogBox() {
@@ -163,7 +174,7 @@ export function TransactionUploadContextProvider({ children }) {
                 setIsEditTransactionSectionVisible(true);
             }
         } catch (error) {
-            handleErrorExtractingTransactions();
+            handleErrorExtractingTransactions(error);
         } finally {
             setIsExtractingTransactions(false);
             resetFileInputValue();
@@ -207,6 +218,112 @@ export function TransactionUploadContextProvider({ children }) {
         });
     }
 
+    function validateInputForUploadingBulkTransactions() {
+        const errorsMap = {};
+
+        editableTransactions.forEach((txn) => {
+            const errors = {};
+
+            // Type
+            if (!txn.type || (txn.type !== "debit" && txn.type !== "credit")) {
+                errors.type = "Invalid or missing transaction type.";
+            }
+
+            // Amount
+            const amount = parseFloat(txn.amount);
+            if (!txn.amount || isNaN(amount)) {
+                errors.amount = "Amount must be a valid number.";
+            } else if (amount <= 0) {
+                errors.amount = "Amount must be greater than zero.";
+            } else if (!Number.isFinite(amount) || amount > Number.MAX_SAFE_INTEGER) {
+                errors.amount = "Amount exceeds maximum safe limit.";
+            }
+
+            // Date
+            if (!txn.date || isNaN(new Date(txn.date).getTime())) {
+                errors.date = "Invalid or missing date.";
+            } else {
+                const inputDate = new Date(txn.date);
+                const today = new Date();
+                inputDate.setHours(0, 0, 0, 0);
+                today.setHours(0, 0, 0, 0);
+                if (inputDate > today) {
+                    errors.date = "Date cannot be in the future.";
+                }
+            }
+
+            // Remarks
+            if (!txn.remarks || txn.remarks.trim().length === 0) {
+                errors.remarks = "Remarks cannot be empty.";
+            } else if (txn.remarks.trim().length > 50) {
+                errors.remarks = "Remarks cannot exceed 50 characters.";
+            }
+
+            // Category
+            if (!txn.categoryId || txn.categoryId.trim() === "") {
+                errors.categoryId = "Category is required.";
+            }
+
+            if (Object.keys(errors).length > 0) {
+                errorsMap[txn._id] = errors;
+            }
+        });
+
+        setInputFieldErrorsMap(errorsMap);
+        return Object.keys(errorsMap).length === 0;
+    }
+
+    async function handleUploadBulkTransactions() {
+        if (!editableTransactions || editableTransactions.length === 0) {
+            setErrorUploadingTransactions("No transactions found.");
+            return;
+        }
+        setInputFieldErrorsMap({});
+        setErrorUploadingTransactions(null);
+
+        const isValid = validateInputForUploadingBulkTransactions();
+        if (!isValid) {
+            setErrorUploadingTransactions("Some of these transactions have errors. Please review and correct all highlighted fields before proceeding with the upload.");
+            return;
+        }
+
+        setIsUploadingBulkTransactions(true);
+        try {
+            const res = await axiosPrivate.post("/user/transactions/upload", {
+                transactions: editableTransactions
+            });
+            toast.success("Transactions uploaded successfully.", {
+                position: "top-center",
+                autoClose: 3000
+            });
+            resetAll();
+        } catch (error) {
+            handleErrorUploadingTransactions(error);
+        } finally {
+            setIsUploadingBulkTransactions(false);
+        }
+    }
+
+    function handleErrorUploadingTransactions(error) {
+        if (!error?.response) {
+            setErrorUploadingTransactions(
+                "Apologies for the inconvenience. We couldn’t connect to the server at the moment. This might be a temporary issue. Kindly try again shortly."
+            );
+        } else if (error?.response?.data?.error) {
+            setErrorUploadingTransactions(
+                `Apologies for the inconvenience. There was an error while uploading these transactions. ${error?.response?.data?.error}`
+            );
+        } else {
+            setErrorUploadingTransactions(
+                "Apologies for the inconvenience. There was some error while uploading these transactions. Please try again after some time."
+            );
+        }
+    }
+
+    function getEditTransactionFieldError(txnId, fieldName) {
+        return inputFieldErrorsMap[txnId]?.[fieldName] || null;
+    }
+
     const currentUploadContextValue = {
         transactionFile,
         isExtractingTransactions,
@@ -218,6 +335,9 @@ export function TransactionUploadContextProvider({ children }) {
         isLoadingSubcategoryMapping,
         subcategoryMapping,
         editableTransactions,
+        isUploadingBulkTransactions,
+        inputFieldErrorsMap,
+        errorUploadingTransactions,
         resetAll,
         handleOpenFileUploadDialogBox,
         handleClearUploadedFile,
@@ -225,7 +345,9 @@ export function TransactionUploadContextProvider({ children }) {
         handleExtractTransactionsFromFile,
         handleModifyTransaction,
         handleRemoveTransaction,
-        handleResetTransaction
+        handleResetTransaction,
+        handleUploadBulkTransactions,
+        getEditTransactionFieldError,
     };
 
     return (

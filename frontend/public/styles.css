@@ -2585,6 +2585,13 @@ body,
   font-weight: 600;
   text-align: left;
 }
+
+.bulk-transaction-section .error-message {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.9rem !important;
+  animation: fadeIn 0.3s ease-in-out;
+}
 /* #endregion */
 
 /* #region - Upload - Bulk transaction table */
@@ -2665,8 +2672,20 @@ body,
 }
 
 .bulk-transaction-table td.amount input {
-  width: 120px;
+  width: 145px;
   text-align: right;
+}
+
+.bulk-transaction-table td.amount input.is-invalid,
+.bulk-transaction-table td.remarks input.is-invalid {
+  padding-right: 2rem;
+  border-color: #dc3545;
+}
+
+.bulk-transaction-table td.type input.is-invalid,
+.bulk-transaction-table td.category input.is-invalid,
+.bulk-transaction-table td.date .date-input.is-invalid {
+  border-color: #dc3545;
 }
 
 .bulk-transaction-table td.category select,
@@ -2702,6 +2721,10 @@ body,
   position: relative;
   z-index: 2;
 }
+
+.bulk-transaction-table-error .tooltip-inner {
+  max-width: 200px;
+}
 /* #endregion */
 
 /* #region - Upload - Bulk transaction table row control */
@@ -2722,6 +2745,38 @@ body,
 .edit-bulk-transaction-row-control button:hover {
   background: none;
   transform: scale(1.1);
+}
+/* #endregion */
+
+/* #region - Upload - Bulk transaction control */
+.edit-bulk-transaction-control {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.edit-bulk-transaction-button {
+  padding: 0.55rem 1.5rem;
+  background-color: #2563eb;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.edit-bulk-transaction-button:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.edit-bulk-transaction-button:disabled {
+  background-color: #cbd5e1;
+  cursor: not-allowed;
+  color: #374151;
 }
 /* #endregion */
 
