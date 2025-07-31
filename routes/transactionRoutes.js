@@ -15,6 +15,7 @@ router.delete("/:transactionId", transactionController.deleteSingleTransaction);
 router.delete("/", transactionController.deleteMultipleTransactions);
 
 router.post("/extract", upload.single('file'), uploadTransactionController.extractTransactionsFromPDF);
+router.post("/upload", uploadTransactionController.uploadBulkTransactions);
 
 router.get("/print", printTransactionController.getTransactionsWithPrintPreview);
 

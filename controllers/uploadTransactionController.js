@@ -1,5 +1,18 @@
 const fs = require('fs');
 const { PdfReader } = require('pdfreader');
+const mongoose = require('mongoose');
+
+const TransactionModel = require('../models/Transaction');
+const {
+    validateRequiredTransactionFields,
+    validateTransactionType,
+    validateTransactionAmount,
+    validateTransactionDate,
+    validateTransactionRemarks,
+    validateTransactionCategoryId,
+    validateTransactionSubcategoryId
+} = require('./utils/validators');
+const { normalizeDate } = require('./utils/formatters');
 
 function fetchTransactionData(data) {
     const dataStr = data.join(' ');
@@ -49,5 +62,86 @@ exports.extractTransactionsFromPDF = async (req, res) => {
         res.status(400).json({ error: error.message });
     } finally {
         fs.unlink(pdfPath, () => { });
+    }
+}
+
+exports.uploadBulkTransactions = async (req, res) => {
+    const userId = req.userId;
+    const transactions = req.body.transactions;
+
+    if (!Array.isArray(transactions) || transactions.length === 0) {
+        return res.status(400).json({ error: "Transactions must be a non-empty array." });
+    }
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+        const normalizedTransactions = [];
+        for (let i = 0; i < transactions.length; i++) {
+            const txn = transactions[i];
+            const remarksTrimmed = txn.remarks?.trim();
+            const indexLabel = `Transaction #${i + 1}`;
+
+            try {
+                // Required fields
+                validateRequiredTransactionFields(txn, ["amount", "type", "date", "remarks", "categoryId"]);
+
+                // Field validators
+                validateTransactionType(txn.type);
+                validateTransactionAmount(txn.amount);
+                const txnDate = normalizeDate(validateTransactionDate(txn.date));
+                validateTransactionRemarks(remarksTrimmed);
+                await validateTransactionCategoryId(txn.categoryId, userId);
+
+                if (txn.subcategoryId) {
+                    await validateTransactionSubcategoryId(txn.subcategoryId, txn.categoryId, userId);
+                }
+
+                const duplicate = await TransactionModel.findOne({
+                    userId,
+                    type: txn.type,
+                    amount: txn.amount,
+                    date: txnDate,
+                    remarks: { $regex: new RegExp(`^${remarksTrimmed}$`, "i") },
+                });
+
+                if (duplicate) {
+                    throw new Error("Duplicate transaction detected.");
+                }
+
+                // If everything is valid
+                normalizedTransactions.push({
+                    userId,
+                    amount: txn.amount,
+                    type: txn.type,
+                    date: txnDate,
+                    remarks: remarksTrimmed,
+                    categoryId: txn.categoryId,
+                    subcategoryId: txn.subcategoryId || null,
+                });
+            } catch (error) {
+                await session.abortTransaction();
+                session.endSession();
+                return res.status(400).json({
+                    error: `${indexLabel}: ${error.message}`,
+                });
+            }
+        }
+
+        // All valid - now insert all
+        await TransactionModel.insertMany(normalizedTransactions, { session });
+        await session.commitTransaction();
+        session.endSession();
+
+        return res.status(201).json({
+            message: `${normalizedTransactions.length} transaction(s) added successfully.`,
+        });
+    } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+        return res.status(500).json({
+            error: "Failed to upload transactions: " + error.message,
+        });
     }
 }
