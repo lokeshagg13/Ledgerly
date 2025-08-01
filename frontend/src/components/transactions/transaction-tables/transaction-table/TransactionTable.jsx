@@ -121,9 +121,9 @@ function TransactionTable({ type }) {
                   )}
                 </div>
               </th>
-              <th>Remarks</th>
               <th>Category</th>
               <th>Subcategory</th>
+              <th>Remarks</th>
               <th>Actions</th>
             </tr>
           </thead>

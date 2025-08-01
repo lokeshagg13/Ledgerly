@@ -21,9 +21,9 @@ function TransactionRow({ transactionData }) {
     <tr>
       <td>{formatDateForDisplay(date)}</td>
       <td>{formatAmountForDisplay(amount)}</td>
-      <td>{remarks}</td>
       <td>{categoryName}</td>
       <td>{subcategoryName || "-"}</td>
+      <td>{remarks}</td>
       <td>
         <Button
           variant="link"

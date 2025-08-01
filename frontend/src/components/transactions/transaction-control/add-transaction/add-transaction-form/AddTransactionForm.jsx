@@ -29,6 +29,7 @@ function AddTransactionForm() {
 
   useEffect(() => {
     setSubcategories(getSubcategoriesForCategory(formData.categoryId));
+    // eslint-disable-next-line
   }, [subcategoryMapping]);
 
   // For hiding input field error messages after 6 seconds
