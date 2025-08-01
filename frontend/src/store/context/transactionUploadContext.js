@@ -26,6 +26,7 @@ const TransactionUploadContext = createContext({
     handleRemoveTransaction: (id) => { },
     handleResetTransaction: (id) => { },
     handleUploadBulkTransactions: () => { },
+    resetErrorUploadingTransactions: () => { },
     getEditTransactionFieldError: (txnId, fieldName) => { }
 });
 
@@ -320,6 +321,10 @@ export function TransactionUploadContextProvider({ children }) {
         }
     }
 
+    function resetErrorUploadingTransactions() {
+        setErrorUploadingTransactions(null);
+    }
+
     function getEditTransactionFieldError(txnId, fieldName) {
         return inputFieldErrorsMap[txnId]?.[fieldName] || null;
     }
@@ -347,6 +352,7 @@ export function TransactionUploadContextProvider({ children }) {
         handleRemoveTransaction,
         handleResetTransaction,
         handleUploadBulkTransactions,
+        resetErrorUploadingTransactions,
         getEditTransactionFieldError,
     };
 

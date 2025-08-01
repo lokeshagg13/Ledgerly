@@ -8,24 +8,36 @@ function EditBulkTransactionTable() {
 
   return (
     <div className="bulk-transaction-table-wrapper">
-      <table className="bulk-transaction-table">
+      <table className="bulk-transaction-table" role="table">
         <thead>
-          <tr>
-            <th></th>
-            <th>S.No.</th>
-            <th>Type</th>
-            <th>Amount</th>
-            <th>Category</th>
-            <th>Subcategory</th>
-            <th>Remarks</th>
-            <th>Date</th>
-            <th></th>
+          <tr role="row">
+            <th scope="col"></th>
+            <th scope="col">S.No.</th>
+            <th scope="col">Type</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Category</th>
+            <th scope="col">Subcategory</th>
+            <th scope="col">Remarks</th>
+            <th scope="col">Date</th>
+            <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
-          {editableTransactions.map((data, index) => (
-            <EditBulkTransactionRow key={data._id} index={index} data={data} />
-          ))}
+          {editableTransactions.length === 0 ? (
+            <tr>
+              <td colSpan="9" className="empty-table-message">
+                No transactions to edit.
+              </td>
+            </tr>
+          ) : (
+            editableTransactions.map((data, index) => (
+              <EditBulkTransactionRow
+                key={data._id}
+                index={index}
+                data={data}
+              />
+            ))
+          )}
         </tbody>
       </table>
     </div>

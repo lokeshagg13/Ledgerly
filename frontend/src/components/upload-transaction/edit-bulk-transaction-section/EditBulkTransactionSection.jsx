@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 import TransactionUploadContext from "../../../store/context/transactionUploadContext";
 import EditBulkTransactionTable from "./edit-bulk-transaction-table/EditBulkTransactionTable";
@@ -9,10 +9,20 @@ function EditBulkTransactionSection() {
     extractedTransactions,
     isEditTransactionSectionVisible,
     errorUploadingTransactions,
+    resetErrorUploadingTransactions,
   } = useContext(TransactionUploadContext);
 
+  useEffect(() => {
+    if (errorUploadingTransactions) {
+      const timeout = setTimeout(() => {
+        resetErrorUploadingTransactions();
+      }, 6000);
+      return () => clearTimeout(timeout);
+    }
+  }, [errorUploadingTransactions, resetErrorUploadingTransactions]);
+
   if (!isEditTransactionSectionVisible || extractedTransactions?.length === 0)
-    return <></>;
+    return null;
 
   return (
     <div className="bulk-transaction-section">
@@ -21,7 +31,9 @@ function EditBulkTransactionSection() {
       </div>
       <EditBulkTransactionTable />
       {errorUploadingTransactions && (
-        <div className="error-message">{errorUploadingTransactions}</div>
+        <div className="error-message" role="alert" aria-live="polite">
+          {errorUploadingTransactions}
+        </div>
       )}
       <EditBulkTransactionControl />
     </div>
