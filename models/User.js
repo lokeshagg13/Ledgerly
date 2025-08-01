@@ -56,7 +56,13 @@ const userSchema = new mongoose.Schema({
                 }
             }
         },
-        default: null
+        default: () => ({
+            title: "Filtered Balance",
+            filters: {
+                uptoDate: null,
+                selectedCategories: []
+            }
+        })
     }
 });
 

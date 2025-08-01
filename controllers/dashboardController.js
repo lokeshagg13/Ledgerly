@@ -91,7 +91,7 @@ exports.getCustomBalance = async (req, res) => {
         const user = await UserModel.findById(req.userId).select("customBalanceCard openingBalance");
         if (!user) return res.status(404).json({ error: "User not found" });
 
-        const filters = user.customBalanceCard?.filters;
+        const filters = user.customBalanceCard?.filters || {};
 
         const { balance, latestTxnDate } = await computeBalance({
             userId: user._id,
@@ -147,22 +147,23 @@ exports.updateCustomBalanceCardFilters = async (req, res) => {
             return res.status(400).json({ error: "'selectedCategories' must be an array." });
         }
 
-        const update = {
-            "customBalanceCard.filters": {
-                ...(uptoDateObj && { uptoDate: uptoDateObj }),
-                selectedCategories: selectedCategories || [],
-            },
+        // Check for user's existence
+        const user = await UserModel.findById(userId);
+        if (!user) return res.status(404).json({ error: "User not found." });
+
+        if (!user.customBalanceCard) {
+            user.customBalanceCard = {
+                title: "Filtered Balance",
+                filters: {}
+            };
+        }
+
+        user.customBalanceCard.filters = {
+            ...(uptoDateObj && { uptoDate: uptoDateObj }),
+            selectedCategories: selectedCategories || [],
         };
 
-        const updatedUser = await UserModel.findByIdAndUpdate(
-            userId,
-            { $set: update },
-            { new: true, runValidators: true }
-        );
-
-        if (!updatedUser) {
-            return res.status(404).json({ error: "User not found." });
-        }
+        await user.save();
 
         res.status(200).json({ message: "Custom balance card filters updated." });
     } catch (error) {
