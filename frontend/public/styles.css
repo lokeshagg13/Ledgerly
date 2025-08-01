@@ -2629,6 +2629,13 @@ body,
   border-bottom: 1px solid #e5e7eb;
 }
 
+.bulk-transaction-table .bulk-transaction-all-checkbox input {
+  border: 1px solid #747482;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  font-size: 1.2rem;
+  margin: 0;
+}
+
 .bulk-transaction-table-wrapper::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -2661,7 +2668,7 @@ body,
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.bulk-transaction-table .edit-bulk-transaction-checkbox input {
+.bulk-transaction-table .bulk-transaction-checkbox input {
   border: 1px solid #747482;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
 }
@@ -2728,13 +2735,13 @@ body,
 /* #endregion */
 
 /* #region - Upload - Bulk transaction table row control */
-.edit-bulk-transaction-row-control {
+.bulk-transaction-row-control {
   display: flex;
   align-items: center;
   gap: 1.5rem;
 }
 
-.edit-bulk-transaction-row-control button {
+.bulk-transaction-row-control button {
   background: none;
   border: none;
   cursor: pointer;
@@ -2742,21 +2749,21 @@ body,
   padding: 0;
 }
 
-.edit-bulk-transaction-row-control button:hover {
+.bulk-transaction-row-control button:hover {
   background: none;
   transform: scale(1.1);
 }
 /* #endregion */
 
-/* #region - Upload - Bulk transaction control */
-.edit-bulk-transaction-control {
+/* #region - Upload - Bulk transaction footer control */
+.bulk-transaction-footer-control {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
   margin-top: 1rem;
 }
 
-.edit-bulk-transaction-button {
+.bulk-transaction-footer-control .btn-blue {
   padding: 0.55rem 1.5rem;
   background-color: #2563eb;
   color: white;
@@ -2768,15 +2775,87 @@ body,
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.edit-bulk-transaction-button:hover {
+.bulk-transaction-footer-control .btn-blue:hover {
   background-color: #1d4ed8;
   transform: translateY(-1px);
 }
 
-.edit-bulk-transaction-button:disabled {
+.bulk-transaction-footer-control .btn-blue:disabled {
   background-color: #cbd5e1;
   cursor: not-allowed;
   color: #374151;
+}
+/* #endregion */
+
+/* #region - Upload - Bulk transaction top control */
+.bulk-transaction-top-control-wrapper {
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.bulk-transaction-top-control {
+  min-width: max-content;
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.bulk-transaction-top-control-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.bulk-transaction-top-control-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 10px;
+}
+
+.bulk-transaction-top-control .btn-blue,
+.bulk-transaction-top-control .btn-outline {
+  padding: 0.55rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.bulk-transaction-top-control .btn-blue {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bulk-transaction-top-control .btn-blue:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.bulk-transaction-top-control .btn-blue:disabled {
+  background-color: #cbd5e1;
+  cursor: not-allowed;
+  color: #374151;
+}
+
+.bulk-transaction-top-control .btn-outline {
+  background-color: transparent;
+  color: #2563eb;
+  border: 2px solid #2563eb;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.1);
+}
+
+.bulk-transaction-top-control .btn-outline:hover {
+  background-color: #2563eb;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+}
+
+.bulk-transaction-top-control .btn-outline:disabled {
+  color: #94a3b8;
+  border-color: #cbd5e1;
+  background-color: transparent;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 /* #endregion */
 

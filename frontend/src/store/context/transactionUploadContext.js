@@ -14,6 +14,7 @@ const TransactionUploadContext = createContext({
     isLoadingSubcategoryMapping: false,
     subcategoryMapping: {},
     editableTransactions: [],
+    selectedTransactionIds: new Set(),
     isUploadingBulkTransactions: false,
     inputFieldErrorsMap: {},
     errorUploadingTransactions: null,
@@ -25,9 +26,15 @@ const TransactionUploadContext = createContext({
     handleModifyTransaction: (id, field, value) => { },
     handleRemoveTransaction: (id) => { },
     handleResetTransaction: (id) => { },
+    checkIfTransactionSelected: (id) => { },
+    checkIfAnyTransactionSelected: () => { },
+    checkIfAllTransactionSelected: () => { },
+    handleToggleTransactionSelection: (id) => { },
+    handleToggleAllTransactionSelections: () => { },
     handleUploadBulkTransactions: () => { },
     resetErrorUploadingTransactions: () => { },
-    getEditTransactionFieldError: (txnId, fieldName) => { }
+    getEditTransactionFieldError: (txnId, fieldName) => { },
+    handleResetSelectedTransactions: () => { }, handleRemoveSelectedTransactions: () => { },
 });
 
 export function TransactionUploadContextProvider({ children }) {
@@ -41,6 +48,7 @@ export function TransactionUploadContextProvider({ children }) {
     const [isLoadingSubcategoryMapping, setIsLoadingSubcategoryMapping] = useState(false);
     const [subcategoryMapping, setSubcategoryMapping] = useState({});
     const [editableTransactions, setEditableTransactions] = useState([]);
+    const [selectedTransactionIds, setSelectedTransactionIds] = useState(new Set());
     const [isUploadingBulkTransactions, setIsUploadingBulkTransactions] = useState(false);
     const [inputFieldErrorsMap, setInputFieldErrorsMap] = useState({});
     const [errorUploadingTransactions, setErrorUploadingTransactions] = useState(null);
@@ -60,6 +68,7 @@ export function TransactionUploadContextProvider({ children }) {
                 subcategoryId: "",
             }))
             setEditableTransactions([...tCopy]);
+            handleUnselectAllTransactions();
         }
     }, [extractedTransactions, isEditTransactionSectionVisible]);
 
@@ -99,6 +108,7 @@ export function TransactionUploadContextProvider({ children }) {
         setExtractTransactionError(null);
         setIsEditTransactionSectionVisible(false);
         setEditableTransactions([]);
+        handleUnselectAllTransactions();
         setInputFieldErrorsMap({});
         setErrorUploadingTransactions(null);
     }
@@ -240,6 +250,47 @@ export function TransactionUploadContextProvider({ children }) {
         });
     }
 
+    function checkIfTransactionSelected(id) {
+        return selectedTransactionIds.has(id);
+    }
+
+    function checkIfAnyTransactionSelected() {
+        return selectedTransactionIds.size > 0;
+    }
+
+    function checkIfAllTransactionSelected() {
+        return editableTransactions.every((txn) => selectedTransactionIds.has(txn._id));
+    }
+
+    function handleToggleTransactionSelection(id) {
+        setSelectedTransactionIds((prev) => {
+            const newSet = new Set(prev);
+            if (newSet.has(id)) {
+                newSet.delete(id);
+            } else {
+                newSet.add(id);
+            }
+            return newSet;
+        });
+    }
+
+    function handleSelectAllTransactions() {
+        const allIds = new Set(editableTransactions.map((txn) => txn._id));
+        setSelectedTransactionIds(allIds);
+    }
+
+    function handleUnselectAllTransactions() {
+        setSelectedTransactionIds(new Set());
+    }
+
+    function handleToggleAllTransactionSelections() {
+        if (checkIfAllTransactionSelected()) {
+            handleUnselectAllTransactions();
+        } else {
+            handleSelectAllTransactions();
+        }
+    }
+
     function validateInputForUploadingBulkTransactions() {
         const errorsMap = {};
 
@@ -350,6 +401,51 @@ export function TransactionUploadContextProvider({ children }) {
         return inputFieldErrorsMap[txnId]?.[fieldName] || null;
     }
 
+    function handleResetSelectedTransactions() {
+        if (selectedTransactionIds.size === 0) return;
+        const updatedTransactions = editableTransactions.map((txn) => {
+            if (!selectedTransactionIds.has(txn._id)) return txn;
+            const original = extractedTransactions.find((origTxn) => origTxn._id === txn._id);
+            return {
+                ...original,
+                date: formatCustomDateFormatForCalendarInput(original.date, "dd/mm/yyyy"),
+                amount: formatAmountForFirstTimeInput(original.amount),
+                categoryId: "",
+                subcategoryId: "",
+            };
+        });
+        setEditableTransactions(updatedTransactions);
+        setInputFieldErrorsMap((prevMap) => {
+            const newMap = { ...prevMap };
+            selectedTransactionIds.forEach((id) => {
+                delete newMap[id];
+            });
+            return newMap;
+        });
+        toast.success(`${selectedTransactionIds.size} transaction(s) reset successfully.`, {
+            position: "top-center",
+            autoClose: 3000
+        });
+    }
+
+    function handleRemoveSelectedTransactions() {
+        if (selectedTransactionIds.size === 0) return;
+        const updatedTransactions = editableTransactions.filter((txn) => !selectedTransactionIds.has(txn._id));
+        setEditableTransactions(updatedTransactions);
+        setInputFieldErrorsMap((prevMap) => {
+            const newMap = { ...prevMap };
+            selectedTransactionIds.forEach((id) => {
+                delete newMap[id];
+            });
+            return newMap;
+        });
+        toast.success(`${selectedTransactionIds.size} transaction(s) removed successfully.`, {
+            position: "top-center",
+            autoClose: 3000
+        });
+        handleUnselectAllTransactions();
+    }
+
     const currentUploadContextValue = {
         transactionFile,
         isExtractingTransactions,
@@ -372,9 +468,16 @@ export function TransactionUploadContextProvider({ children }) {
         handleModifyTransaction,
         handleRemoveTransaction,
         handleResetTransaction,
+        checkIfTransactionSelected,
+        checkIfAnyTransactionSelected,
+        checkIfAllTransactionSelected,
+        handleToggleTransactionSelection,
+        handleToggleAllTransactionSelections,
         handleUploadBulkTransactions,
         resetErrorUploadingTransactions,
         getEditTransactionFieldError,
+        handleResetSelectedTransactions,
+        handleRemoveSelectedTransactions
     };
 
     return (

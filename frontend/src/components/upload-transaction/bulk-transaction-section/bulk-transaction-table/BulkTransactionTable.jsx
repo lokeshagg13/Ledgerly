@@ -1,17 +1,33 @@
 import { useContext } from "react";
 
 import TransactionUploadContext from "../../../../store/context/transactionUploadContext";
-import EditBulkTransactionRow from "./edit-bulk-transaction-row/EditBulkTransactionRow";
+import BulkTransactionRow from "./bulk-transaction-row/BulkTransactionRow";
+import { Form } from "react-bootstrap";
 
-function EditBulkTransactionTable() {
-  const { editableTransactions } = useContext(TransactionUploadContext);
+function BulkTransactionTable() {
+  const {
+    editableTransactions,
+    checkIfAllTransactionSelected,
+    handleToggleAllTransactionSelections,
+  } = useContext(TransactionUploadContext);
 
   return (
     <div className="bulk-transaction-table-wrapper">
       <table className="bulk-transaction-table" role="table">
         <thead>
           <tr role="row">
-            <th scope="col"></th>
+            <th scope="col">
+              <Form.Check
+                type="checkbox"
+                className="bulk-transaction-all-checkbox"
+                id={`editBulkTransactionAllCheckbox`}
+                checked={checkIfAllTransactionSelected()}
+                onChange={() => handleToggleAllTransactionSelections()}
+                aria-label={`${
+                  checkIfAllTransactionSelected() ? "Unselect" : "Select"
+                } all transactions`}
+              />
+            </th>
             <th scope="col">S.No.</th>
             <th scope="col">Type</th>
             <th scope="col">Amount</th>
@@ -31,11 +47,7 @@ function EditBulkTransactionTable() {
             </tr>
           ) : (
             editableTransactions.map((data, index) => (
-              <EditBulkTransactionRow
-                key={data._id}
-                index={index}
-                data={data}
-              />
+              <BulkTransactionRow key={data._id} index={index} data={data} />
             ))
           )}
         </tbody>
@@ -44,4 +56,4 @@ function EditBulkTransactionTable() {
   );
 }
 
-export default EditBulkTransactionTable;
+export default BulkTransactionTable;

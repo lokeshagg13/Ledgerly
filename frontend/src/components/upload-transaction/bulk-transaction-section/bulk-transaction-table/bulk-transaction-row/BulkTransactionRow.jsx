@@ -4,7 +4,7 @@ import { Form, InputGroup, OverlayTrigger, Tooltip } from "react-bootstrap";
 import TransactionUploadContext from "../../../../../store/context/transactionUploadContext";
 import FormDatePicker from "../../../../ui/elements/FormDatePicker";
 import { formatAmountWithCommas } from "../../../../../utils/formatUtils";
-import EditBulkTransactionRowControl from "./edit-bulk-transaction-row-control/EditBulkTransactionRowControl";
+import BulkTransactionRowControl from "./bulk-transaction-row-control/BulkTransactionRowControl";
 
 function WithErrorTooltip({ children, error }) {
   if (!error) return children;
@@ -24,7 +24,7 @@ function WithErrorTooltip({ children, error }) {
   );
 }
 
-function EditBulkTransactionRow({ index, data }) {
+function BulkTransactionRow({ index, data }) {
   const { _id, type, amount, categoryId, subcategoryId, remarks, date } = data;
 
   const {
@@ -34,6 +34,8 @@ function EditBulkTransactionRow({ index, data }) {
     subcategoryMapping,
     handleModifyTransaction,
     getEditTransactionFieldError,
+    checkIfTransactionSelected,
+    handleToggleTransactionSelection,
   } = useContext(TransactionUploadContext);
 
   const [subcategories, setSubcategories] = useState([]);
@@ -82,11 +84,13 @@ function EditBulkTransactionRow({ index, data }) {
       <td className="checkbox">
         <Form.Check
           type="checkbox"
-          className="edit-bulk-transaction-checkbox"
+          className="bulk-transaction-checkbox"
           id={`editBulkTransaction${_id}`}
-          // checked={selectedCategories.includes(categoryId)}
-          // onChange={() => toggleCategorySelection(categoryId)}
-          aria-label={`Select transaction ${index}`}
+          checked={checkIfTransactionSelected(_id)}
+          onChange={() => handleToggleTransactionSelection(_id)}
+          aria-label={`${
+            checkIfTransactionSelected(_id) ? "Unselect" : "Select"
+          } transaction ${index}`}
         />
       </td>
 
@@ -242,10 +246,10 @@ function EditBulkTransactionRow({ index, data }) {
 
       {/* Controls */}
       <td className="controls">
-        <EditBulkTransactionRowControl _id={_id} />
+        <BulkTransactionRowControl _id={_id} />
       </td>
     </tr>
   );
 }
 
-export default React.memo(EditBulkTransactionRow);
+export default React.memo(BulkTransactionRow);

@@ -1,10 +1,11 @@
 import { useContext, useEffect } from "react";
 
 import TransactionUploadContext from "../../../store/context/transactionUploadContext";
-import EditBulkTransactionTable from "./edit-bulk-transaction-table/EditBulkTransactionTable";
-import EditBulkTransactionControl from "./edit-bulk-transaction-control/EditBulkTransactionControl";
+import BulkTransactionTable from "./bulk-transaction-table/BulkTransactionTable";
+import BulkTransactionFooterControl from "./bulk-transaction-footer-control/BulkTransactionFooterControl";
+import BulkTransactionTopControl from "./bulk-transaction-top-control/BulkTransactionTopControl";
 
-function EditBulkTransactionSection() {
+function BulkTransactionSection() {
   const {
     extractedTransactions,
     isEditTransactionSectionVisible,
@@ -29,15 +30,16 @@ function EditBulkTransactionSection() {
       <div className="bulk-transaction-header">
         <h3>Edit Transactions</h3>
       </div>
-      <EditBulkTransactionTable />
+      <BulkTransactionTopControl />
+      <BulkTransactionTable />
       {errorUploadingTransactions && (
         <div className="error-message" role="alert" aria-live="polite">
           {errorUploadingTransactions}
         </div>
       )}
-      <EditBulkTransactionControl />
+      <BulkTransactionFooterControl />
     </div>
   );
 }
 
-export default EditBulkTransactionSection;
+export default BulkTransactionSection;

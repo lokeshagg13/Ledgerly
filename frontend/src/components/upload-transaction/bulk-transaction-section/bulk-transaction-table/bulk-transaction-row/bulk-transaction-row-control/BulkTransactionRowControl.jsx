@@ -4,13 +4,13 @@ import TransactionUploadContext from "../../../../../../store/context/transactio
 import TrashIcon from "../../../../../ui/icons/TrashIcon";
 import RotateIcon from "../../../../../ui/icons/RotateIcon";
 
-function EditBulkTransactionRowControl({ _id }) {
+function BulkTransactionRowControl({ _id }) {
   const { handleRemoveTransaction, handleResetTransaction } = useContext(
     TransactionUploadContext
   );
 
   return (
-    <div className="edit-bulk-transaction-row-control">
+    <div className="bulk-transaction-row-control">
       <Button
         type="button"
         className="reset-btn"
@@ -32,4 +32,4 @@ function EditBulkTransactionRowControl({ _id }) {
   );
 }
 
-export default EditBulkTransactionRowControl;
+export default BulkTransactionRowControl;

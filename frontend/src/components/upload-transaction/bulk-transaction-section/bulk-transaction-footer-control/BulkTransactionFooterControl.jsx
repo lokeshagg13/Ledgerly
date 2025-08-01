@@ -2,15 +2,15 @@ import { useContext } from "react";
 import { Button } from "react-bootstrap";
 import TransactionUploadContext from "../../../../store/context/transactionUploadContext";
 
-function EditBulkTransactionControl() {
+function BulkTransactionFooterControl() {
   const { isUploadingBulkTransactions, handleUploadBulkTransactions } = useContext(
     TransactionUploadContext
   );
 
   return (
-    <div className="edit-bulk-transaction-control">
+    <div className="bulk-transaction-footer-control">
       <Button
-        className="edit-bulk-transaction-button"
+        className="btn-blue"
         onClick={handleUploadBulkTransactions}
         disabled={isUploadingBulkTransactions}
       >
@@ -31,4 +31,4 @@ function EditBulkTransactionControl() {
   );
 }
 
-export default EditBulkTransactionControl;
+export default BulkTransactionFooterControl;
