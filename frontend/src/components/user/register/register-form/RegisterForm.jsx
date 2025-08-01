@@ -5,6 +5,7 @@ import { Button, Form } from "react-bootstrap";
 import axios from "../../../../api/axios";
 import EyeOpenIcon from "../../../ui/icons/EyeOpenIcon";
 import EyeSlashIcon from "../../../ui/icons/EyeSlashIcon";
+import { toast } from "react-toastify";
 
 function RegisterForm() {
   const nameRef = useRef();
@@ -175,6 +176,10 @@ function RegisterForm() {
           },
         }
       );
+      toast.success("Registration completed. Kindly proceed to login.", {
+        position: "top-center",
+        autoClose: 3000,
+      });
       setRegisterSuccess(true);
       setPasswordMismatch(false);
       setInputFieldErrors({});

@@ -4,6 +4,7 @@ import { Form, Button } from "react-bootstrap";
 import { axiosPrivate } from "../../../../api/axios";
 import EyeOpenIcon from "../../../ui/icons/EyeOpenIcon";
 import EyeSlashIcon from "../../../ui/icons/EyeSlashIcon";
+import { toast } from "react-toastify";
 
 function PasswordUpdateForm() {
   const [formData, setFormData] = useState({
@@ -160,7 +161,10 @@ function PasswordUpdateForm() {
           newPassword,
         })
       );
-
+      toast.success("Password updated successfully.", {
+        position: "top-center",
+        autoClose: 3000,
+      });
       setPasswordMismatch(false);
       setInputFieldErrors({});
       setCommonErrorMessage("");

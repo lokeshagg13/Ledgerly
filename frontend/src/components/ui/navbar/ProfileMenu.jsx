@@ -11,6 +11,7 @@ import useAuth from "../../../store/hooks/useAuth";
 import KeyIcon from "../icons/KeyIcon";
 import LogoutIcon from "../icons/LogoutIcon";
 import useAxiosPrivate from "../../../store/hooks/useAxiosPrivate";
+import { toast } from "react-toastify";
 
 function ProfileMenu() {
   const navigate = useNavigate();
@@ -37,6 +38,10 @@ function ProfileMenu() {
   async function handleLogout() {
     try {
       await axiosPrivate.get("/user/logout");
+      toast.success("Logout successful.", {
+        position: "top-center",
+        autoClose: 3000,
+      });
       setAuth({});
       navigate("/", { replace: true });
     } catch (error) {
