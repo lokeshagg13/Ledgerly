@@ -186,6 +186,20 @@ export function TransactionUploadContextProvider({ children }) {
         setEditableTransactions((prev) =>
             prev.map((txn) => (txn._id === id ? { ...txn, [field]: value } : txn))
         );
+
+        // Clear error for the specific field if it exists
+        setInputFieldErrorsMap((prevErrorsMap) => {
+            const txnErrors = prevErrorsMap[id];
+            if (!txnErrors || !txnErrors[field]) return prevErrorsMap;
+            const { [field]: _, ...remainingErrors } = txnErrors;
+            const newErrorsMap = { ...prevErrorsMap };
+            if (Object.keys(remainingErrors).length === 0) {
+                delete newErrorsMap[id];
+            } else {
+                newErrorsMap[id] = remainingErrors;
+            }
+            return newErrorsMap;
+        })
     }, []);
 
     function handleRemoveTransaction(id) {

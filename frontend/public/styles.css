@@ -2682,8 +2682,8 @@ body,
   border-color: #dc3545;
 }
 
-.bulk-transaction-table td.type input.is-invalid,
-.bulk-transaction-table td.category input.is-invalid,
+.bulk-transaction-table td.type select.is-invalid,
+.bulk-transaction-table td.category select.is-invalid,
 .bulk-transaction-table td.date .date-input.is-invalid {
   border-color: #dc3545;
 }
