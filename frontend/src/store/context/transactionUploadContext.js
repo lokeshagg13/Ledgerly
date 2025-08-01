@@ -226,6 +226,13 @@ export function TransactionUploadContextProvider({ children }) {
                     : txn
             ))
         );
+
+        setInputFieldErrorsMap((prevErrorsMap) => {
+            if (!prevErrorsMap[id]) return prevErrorsMap;
+            const newErrorsMap = { ...prevErrorsMap };
+            delete newErrorsMap[id];
+            return newErrorsMap;
+        });
         const sno = editableTransactions.findIndex(txn => txn._id === id);
         toast.success(`Transaction ID ${sno + 1} reset successfully.`, {
             position: "top-center",
