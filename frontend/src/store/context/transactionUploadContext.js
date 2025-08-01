@@ -364,7 +364,7 @@ export function TransactionUploadContextProvider({ children }) {
 
         setIsUploadingBulkTransactions(true);
         try {
-            const res = await axiosPrivate.post("/user/transactions/upload", {
+            await axiosPrivate.post("/user/transactions/upload", {
                 transactions: editableTransactions
             });
             toast.success("Transactions uploaded successfully.", {

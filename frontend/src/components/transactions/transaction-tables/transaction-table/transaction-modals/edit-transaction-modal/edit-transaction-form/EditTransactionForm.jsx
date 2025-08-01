@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Form, InputGroup } from "react-bootstrap";
 import TransactionContext from "../../../../../../../store/context/transactionContext";
 import { formatAmountWithCommas } from "../../../../../../../utils/formatUtils";
@@ -11,23 +11,21 @@ function EditTransactionForm() {
     inputFieldErrors,
     isLoadingCategories,
     categories,
-    isLoadingSubcategories,
-    subcategories,
-    fetchSubcategoriesFromDB,
+    isLoadingSubcategoryMapping,
+    getSubcategoriesForCategory,
     modifyEditTransactionFormData,
     checkIfInputFieldInvalid,
     updateInputFieldErrors,
   } = useContext(TransactionContext);
 
+  const [subcategories, setSubcategories] = useState(() =>
+    getSubcategoriesForCategory(formData.categoryId)
+  );
+
   useEffect(() => {
     amountInputRef.current.focus();
     // eslint-disable-next-line
   }, []);
-
-  useEffect(() => {
-    fetchSubcategoriesFromDB();
-    // eslint-disable-next-line
-  }, [formData.categoryId]);
 
   // For hiding input field error messages after 6 seconds
   useEffect(() => {
@@ -53,7 +51,11 @@ function EditTransactionForm() {
         }
         break;
       case "category":
-        modifyEditTransactionFormData("categoryId", value || null);
+        const categoryId = value || null;
+        const subcategoryList = getSubcategoriesForCategory(categoryId);
+        modifyEditTransactionFormData("categoryId", categoryId);
+        setSubcategories(subcategoryList);
+        modifyEditTransactionFormData("subcategoryId", null);
         break;
       case "subcategory":
         modifyEditTransactionFormData("subcategoryId", value || null);
@@ -184,7 +186,7 @@ function EditTransactionForm() {
           aria-label="Select subcategory"
           value={formData.subcategoryId ?? ""}
           onChange={handleChange}
-          disabled={!formData.categoryId || isLoadingSubcategories}
+          disabled={!formData.categoryId || isLoadingSubcategoryMapping}
         >
           <option value="">None</option>
           {subcategories.map((sub) => (

@@ -11,8 +11,8 @@ const TransactionContext = createContext({
     editTransactionFormData: {},
     categories: [],
     isLoadingCategories: false,
-    subcategories: [],
-    isLoadingSubcategories: false,
+    subcategoryMapping: [],
+    isLoadingSubcategoryMapping: false,
     isAddCategoryFormVisible: false,
     isAddSubcategoryFormVisible: false,
     inputFieldErrors: {},
@@ -29,7 +29,8 @@ const TransactionContext = createContext({
     openAddSubcategoryForm: () => { },
     closeAddSubcategoryForm: () => { },
     fetchCategoriesFromDB: () => { },
-    fetchSubcategoriesFromDB: () => { },
+    fetchSubcategoryMappingFromDB: () => { },
+    getSubcategoriesForCategory: (categoryId) => { },
     checkIfInputFieldInvalid: (fieldName) => { },
     updateInputFieldErrors: (errors) => { }
 });
@@ -57,8 +58,8 @@ export const TransactionProvider = ({ children }) => {
     });
     const [categories, setCategories] = useState([]);
     const [isLoadingCategories, setIsLoadingCategories] = useState(false);
-    const [subcategories, setSubcategories] = useState([]);
-    const [isLoadingSubcategories, setIsLoadingSubcategories] = useState(false);
+    const [subcategoryMapping, setSubcategoryMapping] = useState([]);
+    const [isLoadingSubcategoryMapping, setIsLoadingSubcategoryMapping] = useState(false);
     const [isAddCategoryFormVisible, setIsAddCategoryFormVisible] = useState(false);
     const [isAddSubcategoryFormVisible, setIsAddSubcategoryFormVisible] = useState(false);
     const [inputFieldErrors, setInputFieldErrors] = useState({});
@@ -198,25 +199,24 @@ export const TransactionProvider = ({ children }) => {
         }
     };
 
-    async function fetchSubcategoriesFromDB() {
-        if (!addTransactionFormData.categoryId) {
-            setSubcategories([]);
-            modifyAddTransactionFormData("subcategory", null);
-            return;
-        }
-        setIsLoadingSubcategories(true);
+    async function fetchSubcategoryMappingFromDB() {
+        setIsLoadingSubcategoryMapping(true);
         try {
-            const res = await axiosPrivate.get(`/user/subcategories/${addTransactionFormData.categoryId}`);
-            const fetched = res.data.subcategories || [];
-            setSubcategories(fetched);
-            if (fetched.length === 0) {
-                modifyAddTransactionFormData("subcategory", null);
-            }
+            const res = await axiosPrivate.get("/user/subcategories");
+            if (res?.data?.groupedSubcategories) setSubcategoryMapping(res.data.groupedSubcategories);
         } catch (error) {
-            console.log("Error while fetching subcategories:", error);
+            console.log("Error while fetching subcategory mapping:", error);
         } finally {
-            setIsLoadingSubcategories(false);
+            setIsLoadingSubcategoryMapping(false);
         }
+    }
+
+    function getSubcategoriesForCategory(categoryId) {
+        if (!categoryId || isLoadingSubcategoryMapping) return [];
+        const categoryName = categories.filter((cat) => cat._id === categoryId)?.[0]
+            ?.name;
+        if (!categoryName) return [];
+        return subcategoryMapping?.[categoryName] || [];
     };
 
     function checkIfInputFieldInvalid(fieldName) {
@@ -229,6 +229,7 @@ export const TransactionProvider = ({ children }) => {
 
     useEffect(() => {
         fetchCategoriesFromDB();
+        fetchSubcategoryMappingFromDB();
     }, []);
 
     const currentTransactionContext = {
@@ -240,8 +241,8 @@ export const TransactionProvider = ({ children }) => {
         editTransactionFormData,
         categories,
         isLoadingCategories,
-        subcategories,
-        isLoadingSubcategories,
+        subcategoryMapping,
+        isLoadingSubcategoryMapping,
         isAddCategoryFormVisible,
         isAddSubcategoryFormVisible,
         inputFieldErrors,
@@ -258,7 +259,8 @@ export const TransactionProvider = ({ children }) => {
         openAddSubcategoryForm,
         closeAddSubcategoryForm,
         fetchCategoriesFromDB,
-        fetchSubcategoriesFromDB,
+        fetchSubcategoryMappingFromDB,
+        getSubcategoriesForCategory,
         checkIfInputFieldInvalid,
         updateInputFieldErrors
     }

@@ -10,7 +10,7 @@ function AddSubcategoryInlineForm() {
   const {
     addTransactionFormData,
     isAddSubcategoryFormVisible,
-    fetchSubcategoriesFromDB,
+    fetchSubcategoryMappingFromDB,
     closeAddSubcategoryForm,
   } = useContext(TransactionContext);
   const [newSubcategoryName, setNewSubcategoryName] = useState("");
@@ -76,7 +76,7 @@ function AddSubcategoryInlineForm() {
         text: `Subcategory '${newSubcategoryNameTrimmed}' added successfully.`,
       });
       setNewSubcategoryName("");
-      fetchSubcategoriesFromDB();
+      fetchSubcategoryMappingFromDB();
     } catch (error) {
       if (!error?.response) {
         setMessage({

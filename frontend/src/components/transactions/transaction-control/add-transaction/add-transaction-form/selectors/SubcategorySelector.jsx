@@ -11,23 +11,22 @@ import AddSubcategoryInlineForm from "./inline-forms/AddSubcategoryInlineForm";
 import TransactionContext from "../../../../../../store/context/transactionContext";
 import AddIcon from "../../../../../ui/icons/AddIcon";
 
-function SubcategorySelector({ value, onChange }) {
+function SubcategorySelector({ value, onChange, subcategories }) {
   const {
     addTransactionFormData,
-    subcategories,
-    isLoadingSubcategories,
+    isLoadingSubcategoryMapping,
     isAddSubcategoryFormVisible,
     openAddSubcategoryForm,
   } = useContext(TransactionContext);
 
   const selectedCategory = addTransactionFormData.categoryId;
-  const isDisabled = !selectedCategory || isLoadingSubcategories;
+  const isDisabled = !selectedCategory || isLoadingSubcategoryMapping;
 
   return (
     <Form.Group className="mb-3">
       <Form.Label>Subcategory</Form.Label>
       <InputGroup>
-        {isLoadingSubcategories ? (
+        {isLoadingSubcategoryMapping ? (
           <InputGroup.Text>
             <Spinner animation="border" size="sm" />
           </InputGroup.Text>

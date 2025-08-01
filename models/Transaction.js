@@ -9,7 +9,8 @@ const transactionSchema = new mongoose.Schema({
     },
     amount: {
         type: Number,
-        required: true
+        required: true,
+        min: [0, "Amount must be positive"]
     },
     type: {
         type: String,
@@ -39,5 +40,10 @@ const transactionSchema = new mongoose.Schema({
         index: true
     }
 });
+
+transactionSchema.index({ userId: 1, date: -1 });
+transactionSchema.index({ userId: 1, type: 1, amount: 1, date: 1, remarks: 1 });
+transactionSchema.index({ userId: 1, categoryId: 1, date: 1 });
+transactionSchema.index({ remarks: "text" });
 
 module.exports = mongoose.model("Transaction", transactionSchema);

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Form, InputGroup } from "react-bootstrap";
 import TransactionContext from "../../../../../store/context/transactionContext";
 import { formatAmountWithCommas } from "../../../../../utils/formatUtils";
@@ -11,11 +11,16 @@ function AddTransactionForm() {
   const {
     addTransactionFormData: formData,
     inputFieldErrors,
-    fetchSubcategoriesFromDB,
+    subcategoryMapping,
+    getSubcategoriesForCategory,
     modifyAddTransactionFormData,
     checkIfInputFieldInvalid,
     updateInputFieldErrors,
   } = useContext(TransactionContext);
+
+  const [subcategories, setSubcategories] = useState(() =>
+    getSubcategoriesForCategory(formData.categoryId)
+  );
 
   useEffect(() => {
     amountInputRef.current.focus();
@@ -23,9 +28,8 @@ function AddTransactionForm() {
   }, []);
 
   useEffect(() => {
-    fetchSubcategoriesFromDB();
-    // eslint-disable-next-line
-  }, [formData.categoryId]);
+    setSubcategories(getSubcategoriesForCategory(formData.categoryId));
+  }, [subcategoryMapping]);
 
   // For hiding input field error messages after 6 seconds
   useEffect(() => {
@@ -51,7 +55,11 @@ function AddTransactionForm() {
         }
         break;
       case "category":
-        modifyAddTransactionFormData("categoryId", value || null);
+        const categoryId = value || null;
+        const subcategoryList = getSubcategoriesForCategory(categoryId);
+        modifyAddTransactionFormData("categoryId", categoryId);
+        setSubcategories(subcategoryList);
+        modifyAddTransactionFormData("subcategoryId", null);
         break;
       case "subcategory":
         modifyAddTransactionFormData("subcategoryId", value || null);
@@ -160,6 +168,7 @@ function AddTransactionForm() {
       <SubcategorySelector
         value={formData.subcategoryId}
         onChange={handleChange}
+        subcategories={subcategories}
       />
     </Form>
   );
