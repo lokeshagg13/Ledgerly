@@ -3,9 +3,8 @@ import { Button } from "react-bootstrap";
 import TransactionUploadContext from "../../../../store/context/transactionUploadContext";
 
 function BulkTransactionFooterControl() {
-  const { isUploadingBulkTransactions, handleUploadBulkTransactions } = useContext(
-    TransactionUploadContext
-  );
+  const { isUploadingBulkTransactions, handleUploadBulkTransactions } =
+    useContext(TransactionUploadContext);
 
   return (
     <div className="bulk-transaction-footer-control">

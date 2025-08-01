@@ -1,4 +1,5 @@
 import { createContext, useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { axiosPrivate } from "../../api/axios";
 import { toast } from "react-toastify";
 import { formatAmountForFirstTimeInput, formatCustomDateFormatForCalendarInput } from "../../utils/formatUtils";
@@ -22,7 +23,7 @@ const TransactionUploadContext = createContext({
     handleOpenFileUploadDialogBox: () => { },
     handleClearUploadedFile: () => { },
     handleChangeUploadedFile: (event) => { },
-    handleExtractTransactionsFromFile: () => { },
+    handleExtractTransactionsFromFile: async () => { },
     handleModifyTransaction: (id, field, value) => { },
     handleRemoveTransaction: (id) => { },
     handleResetTransaction: (id) => { },
@@ -31,13 +32,14 @@ const TransactionUploadContext = createContext({
     checkIfAllTransactionSelected: () => { },
     handleToggleTransactionSelection: (id) => { },
     handleToggleAllTransactionSelections: () => { },
-    handleUploadBulkTransactions: () => { },
+    handleUploadBulkTransactions: async () => { },
     resetErrorUploadingTransactions: () => { },
     getEditTransactionFieldError: (txnId, fieldName) => { },
     handleResetSelectedTransactions: () => { }, handleRemoveSelectedTransactions: () => { },
 });
 
 export function TransactionUploadContextProvider({ children }) {
+    const navigate = useNavigate();
     const [transactionFile, setTransactionFile] = useState(null);
     const [isExtractingTransactions, setIsExtractingTransactions] = useState(false);
     const [extractedTransactions, setExtractedTransactions] = useState([]);
@@ -370,6 +372,7 @@ export function TransactionUploadContextProvider({ children }) {
                 autoClose: 3000
             });
             resetAll();
+            navigate('/transactions');
         } catch (error) {
             handleErrorUploadingTransactions(error);
         } finally {
