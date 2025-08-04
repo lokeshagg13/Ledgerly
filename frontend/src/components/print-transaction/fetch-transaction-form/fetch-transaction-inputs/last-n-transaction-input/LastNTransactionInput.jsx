@@ -9,7 +9,7 @@ function LastNTransactionInput() {
     errorFetchingTransactions,
     isPrintSectionVisible,
     setLastN,
-    resetErrorFetchingTransactions,
+    handleResetErrorFetchingTransactions,
   } = useContext(TransactionPrintContext);
   const isInvalid = errorFetchingTransactions.lastN;
 
@@ -17,7 +17,7 @@ function LastNTransactionInput() {
     if (isPrintSectionVisible) return;
     const raw = e.target.value;
     if (/^\d*$/.test(raw)) {
-      resetErrorFetchingTransactions();
+      handleResetErrorFetchingTransactions();
       setLastN(raw ? parseInt(raw) : raw);
     }
   };

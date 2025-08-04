@@ -6,14 +6,13 @@ import TransactionFilterContext from "../../../../../store/context/transactionFi
 function TransactionFilterInputs() {
   const [isAdvancedFilterSectionVisible, setIsAdvancedFilterSectionVisible] =
     useState(false);
-
-  const { filteringError, resetFilteringError } = useContext(
+  const { filteringError, handleResetFilteringError } = useContext(
     TransactionFilterContext
   );
 
   useEffect(() => {
     if (filteringError.errorMessage) {
-      const timeout = setTimeout(() => resetFilteringError(), 8000);
+      const timeout = setTimeout(() => handleResetFilteringError(), 8000);
       return () => clearTimeout(timeout);
     }
     // eslint-disable-next-line

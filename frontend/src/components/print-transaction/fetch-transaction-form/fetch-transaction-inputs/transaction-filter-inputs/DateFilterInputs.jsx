@@ -20,12 +20,12 @@ function DateFilterInputs() {
     isPrintSectionVisible,
     setFromDate,
     setToDate,
-    resetErrorFetchingTransactions,
+    handleResetErrorFetchingTransactions,
   } = useContext(TransactionPrintContext);
 
   const updateFilterDates = (from, to) => {
     if (isPrintSectionVisible) return;
-    resetErrorFetchingTransactions();
+    handleResetErrorFetchingTransactions();
     if (from) setFromDate(getLocalDateString(from));
     if (to) setToDate(getLocalDateString(to));
   };

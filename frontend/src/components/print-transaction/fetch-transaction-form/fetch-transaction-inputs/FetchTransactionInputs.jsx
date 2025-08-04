@@ -11,12 +11,12 @@ function FetchTransactionInputs() {
     fetchMode,
     isPrintSectionVisible,
     setFetchMode,
-    resetErrorFetchingTransactions,
+    handleResetErrorFetchingTransactions,
   } = useContext(TransactionPrintContext);
 
   const handleModifyFetchMode = (newMode) => {
     if (isPrintSectionVisible) return;
-    resetErrorFetchingTransactions();
+    handleResetErrorFetchingTransactions();
     setFetchMode(newMode);
   };
 

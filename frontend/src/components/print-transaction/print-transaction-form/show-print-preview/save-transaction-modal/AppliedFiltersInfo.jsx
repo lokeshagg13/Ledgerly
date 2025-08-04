@@ -1,17 +1,12 @@
 import { useContext } from "react";
 import TransactionPrintContext from "../../../../../store/context/transactionPrintContext";
 import { formatCategoryNamesUsingCategoryIds } from "../../../../../utils/formatUtils";
+import CategoryContext from "../../../../../store/context/categoryContext";
 
 function AppliedFiltersInfo() {
-  const {
-    fetchMode,
-    lastN,
-    fromDate,
-    toDate,
-    categories,
-    selectedCategories,
-    printStyle,
-  } = useContext(TransactionPrintContext);
+  const { categories } = useContext(CategoryContext);
+  const { fetchMode, lastN, fromDate, toDate, selectedCategories, printStyle } =
+    useContext(TransactionPrintContext);
 
   return (
     <div className="applied-filters-box">

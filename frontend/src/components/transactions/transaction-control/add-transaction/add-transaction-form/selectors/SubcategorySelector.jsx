@@ -8,15 +8,16 @@ import {
   Tooltip,
 } from "react-bootstrap";
 import AddSubcategoryInlineForm from "./inline-forms/AddSubcategoryInlineForm";
-import TransactionContext from "../../../../../../store/context/transactionContext";
 import AddIcon from "../../../../../ui/icons/AddIcon";
+import CategoryContext from "../../../../../../store/context/categoryContext";
+import TransactionContext from "../../../../../../store/context/transactionContext";
 
 function SubcategorySelector({ value, onChange, subcategories }) {
+  const { isLoadingSubcategoryMapping } = useContext(CategoryContext);
   const {
     addTransactionFormData,
-    isLoadingSubcategoryMapping,
     isAddSubcategoryFormVisible,
-    openAddSubcategoryForm,
+    handleOpenAddSubcategoryForm,
   } = useContext(TransactionContext);
 
   const selectedCategory = addTransactionFormData.categoryId;
@@ -51,7 +52,7 @@ function SubcategorySelector({ value, onChange, subcategories }) {
               <Button
                 variant="outline-primary"
                 aria-label="Add new subcategory"
-                onClick={openAddSubcategoryForm}
+                onClick={handleOpenAddSubcategoryForm}
                 title="Add New Category"
                 disabled={isAddSubcategoryFormVisible}
               >

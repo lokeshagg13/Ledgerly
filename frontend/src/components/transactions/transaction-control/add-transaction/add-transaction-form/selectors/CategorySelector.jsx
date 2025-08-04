@@ -1,18 +1,19 @@
 import { useContext } from "react";
 import { Button, Form, InputGroup, Spinner } from "react-bootstrap";
 import AddCategoryInlineForm from "./inline-forms/AddCategoryInlineForm";
-import TransactionContext from "../../../../../../store/context/transactionContext";
 import AddIcon from "../../../../../ui/icons/AddIcon";
+import CategoryContext from "../../../../../../store/context/categoryContext";
+import TransactionContext from "../../../../../../store/context/transactionContext";
 
 function CategorySelector({ value, onChange }) {
+  const { isLoadingCategories, categories } = useContext(CategoryContext);
   const {
-    categories,
-    isLoadingCategories,
     isAddCategoryFormVisible,
     inputFieldErrors,
-    openAddCategoryForm,
+    handleOpenAddCategoryForm,
     checkIfInputFieldInvalid,
   } = useContext(TransactionContext);
+
   return (
     <Form.Group className="mb-3">
       <Form.Label>Category</Form.Label>
@@ -42,7 +43,7 @@ function CategorySelector({ value, onChange }) {
             <Button
               variant="outline-primary"
               aria-label="Add new category"
-              onClick={openAddCategoryForm}
+              onClick={handleOpenAddCategoryForm}
               title="Add New Category"
               disabled={isAddCategoryFormVisible}
             >

@@ -1,10 +1,11 @@
 import React from "react";
 import { useContext, useState } from "react";
 import { Form, InputGroup, OverlayTrigger, Tooltip } from "react-bootstrap";
-import TransactionUploadContext from "../../../../../store/context/transactionUploadContext";
 import FormDatePicker from "../../../../ui/elements/FormDatePicker";
 import { formatAmountWithCommas } from "../../../../../utils/formatUtils";
 import BulkTransactionRowControl from "./bulk-transaction-row-control/BulkTransactionRowControl";
+import CategoryContext from "../../../../../store/context/categoryContext";
+import TransactionUploadContext from "../../../../../store/context/transactionUploadContext";
 
 function WithErrorTooltip({ children, error }) {
   if (!error) return children;
@@ -26,27 +27,21 @@ function WithErrorTooltip({ children, error }) {
 
 function BulkTransactionRow({ index, data }) {
   const { _id, type, amount, categoryId, subcategoryId, remarks, date } = data;
-
   const {
     isLoadingCategories,
     categories,
     isLoadingSubcategoryMapping,
-    subcategoryMapping,
+    getSubcategoriesForCategory,
+  } = useContext(CategoryContext);
+  const {
     handleModifyTransaction,
     getEditTransactionFieldError,
     checkIfTransactionSelected,
     handleToggleTransactionSelection,
   } = useContext(TransactionUploadContext);
-
-  const [subcategories, setSubcategories] = useState([]);
-
-  const getSubcategoriesBasedOnSelectedCategory = (categoryId) => {
-    if (!categoryId || isLoadingSubcategoryMapping) return [];
-    const categoryName = categories.filter((cat) => cat._id === categoryId)?.[0]
-      ?.name;
-    if (!categoryName) return [];
-    return subcategoryMapping?.[categoryName] || [];
-  };
+  const [subcategories, setSubcategories] = useState(() =>
+    getSubcategoriesForCategory(categoryId)
+  );
 
   const handleChange = (ev, id) => {
     const { name, value } = ev.target;
@@ -64,8 +59,7 @@ function BulkTransactionRow({ index, data }) {
         break;
       case "category":
         const categoryId = value || null;
-        const subcategoryList =
-          getSubcategoriesBasedOnSelectedCategory(categoryId);
+        const subcategoryList = getSubcategoriesForCategory(categoryId);
         handleModifyTransaction(id, "categoryId", categoryId);
         setSubcategories(subcategoryList);
         handleModifyTransaction(id, "subcategoryId", null);

@@ -9,7 +9,7 @@ import SubcategoryList from "./subcategory-list/SubcategoryList";
 import CategoryName from "./category-name/CategoryName";
 
 function CategoryRow({ categoryId, categoryName }) {
-  const { selectedCategories, toggleCategorySelection } =
+  const { selectedCategories, handleToggleCategorySelection } =
     useContext(CategoryContext);
 
   return (
@@ -21,7 +21,7 @@ function CategoryRow({ categoryId, categoryName }) {
             className="category-checkbox"
             id={`category-checkbox-${categoryId}`}
             checked={selectedCategories.includes(categoryId)}
-            onChange={() => toggleCategorySelection(categoryId)}
+            onChange={() => handleToggleCategorySelection(categoryId)}
             aria-label={`Select category ${categoryName}`}
           />
         </td>

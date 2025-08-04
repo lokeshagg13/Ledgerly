@@ -13,20 +13,20 @@ function BalanceFilterSection() {
   const {
     isUpdatingFilters,
     updateFilterError,
-    resetErrorUpdatingBalanceFilters,
-    resetFilterFormData,
+    handleResetErrorUpdatingBalanceFilters,
+    handleResetFilterFormData,
     fetchFilteredBalanceAndFilters,
-    updateBalanceFilters,
+    handleUpdateBalanceFilters,
   } = useContext(DashboardContext);
 
   const handleOpenFilterPopover = (e) => {
-    resetFilterFormData();
+    handleResetFilterFormData();
     setAnchorEl(e.target);
     setIsFilterPopoverVisible(true);
   };
 
   const handleCloseFilterPopover = () => {
-    resetErrorUpdatingBalanceFilters();
+    handleResetErrorUpdatingBalanceFilters();
     setAnchorEl(null);
     setIsFilterPopoverVisible(false);
   };
@@ -38,7 +38,7 @@ function BalanceFilterSection() {
   };
 
   const handleApplyFilters = async () => {
-    const isError = await updateBalanceFilters();
+    const isError = await handleUpdateBalanceFilters();
     if (isError) return;
     await fetchFilteredBalanceAndFilters();
     handleCloseFilterPopover();

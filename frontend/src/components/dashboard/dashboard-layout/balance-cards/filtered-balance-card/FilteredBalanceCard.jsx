@@ -4,22 +4,23 @@ import {
   formatDateForDisplay,
 } from "../../../../../utils/formatUtils";
 import BalanceFilterSection from "./balance-filter-section/BalanceFilterSection";
-import DashboardContext from "../../../../../store/context/dashboardContext";
 import FilterCardNameEditor from "./filter-card-name-editor/FilterCardNameEditor";
+import CategoryContext from "../../../../../store/context/categoryContext";
+import DashboardContext from "../../../../../store/context/dashboardContext";
 
 function FilteredBalanceCard() {
+  const { categories } = useContext(CategoryContext);
   const {
-    categories,
     isLoadingFilteredBalance,
     filteredBalance,
     filteredBalanceError,
     appliedFilters,
-    resetErrorFetchingFilteredBalance,
+    handleResetErrorFetchingFilteredBalance,
     fetchFilteredBalanceAndFilters,
   } = useContext(DashboardContext);
 
   useEffect(() => {
-    resetErrorFetchingFilteredBalance();
+    handleResetErrorFetchingFilteredBalance();
     fetchFilteredBalanceAndFilters();
     // eslint-disable-next-line
   }, []);

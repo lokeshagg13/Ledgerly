@@ -10,16 +10,16 @@ const TransactionUploadContext = createContext({
     extractedTransactions: [],
     extractTransactionError: null,
     isEditTransactionSectionVisible: false,
-    isLoadingCategories: false,
-    categories: [],
-    isLoadingSubcategoryMapping: false,
-    subcategoryMapping: {},
     editableTransactions: [],
     selectedTransactionIds: new Set(),
     isUploadingBulkTransactions: false,
     inputFieldErrorsMap: {},
     errorUploadingTransactions: null,
-    resetAll: () => { },
+    checkIfTransactionSelected: (id) => { },
+    checkIfAnyTransactionSelected: () => { },
+    checkIfAllTransactionSelected: () => { },
+    getEditTransactionFieldError: (txnId, fieldName) => { },
+    handleResetAll: () => { },
     handleOpenFileUploadDialogBox: () => { },
     handleClearUploadedFile: () => { },
     handleChangeUploadedFile: (event) => { },
@@ -27,15 +27,12 @@ const TransactionUploadContext = createContext({
     handleModifyTransaction: (id, field, value) => { },
     handleRemoveTransaction: (id) => { },
     handleResetTransaction: (id) => { },
-    checkIfTransactionSelected: (id) => { },
-    checkIfAnyTransactionSelected: () => { },
-    checkIfAllTransactionSelected: () => { },
     handleToggleTransactionSelection: (id) => { },
     handleToggleAllTransactionSelections: () => { },
     handleUploadBulkTransactions: async () => { },
-    resetErrorUploadingTransactions: () => { },
-    getEditTransactionFieldError: (txnId, fieldName) => { },
-    handleResetSelectedTransactions: () => { }, handleRemoveSelectedTransactions: () => { },
+    handleResetErrorUploadingTransactions: () => { },
+    handleResetSelectedTransactions: () => { },
+    handleRemoveSelectedTransactions: () => { },
 });
 
 export function TransactionUploadContextProvider({ children }) {
@@ -45,20 +42,11 @@ export function TransactionUploadContextProvider({ children }) {
     const [extractedTransactions, setExtractedTransactions] = useState([]);
     const [extractTransactionError, setExtractTransactionError] = useState(null);
     const [isEditTransactionSectionVisible, setIsEditTransactionSectionVisible] = useState(false);
-    const [isLoadingCategories, setIsLoadingCategories] = useState(false);
-    const [categories, setCategories] = useState([]);
-    const [isLoadingSubcategoryMapping, setIsLoadingSubcategoryMapping] = useState(false);
-    const [subcategoryMapping, setSubcategoryMapping] = useState({});
     const [editableTransactions, setEditableTransactions] = useState([]);
     const [selectedTransactionIds, setSelectedTransactionIds] = useState(new Set());
     const [isUploadingBulkTransactions, setIsUploadingBulkTransactions] = useState(false);
     const [inputFieldErrorsMap, setInputFieldErrorsMap] = useState({});
     const [errorUploadingTransactions, setErrorUploadingTransactions] = useState(null);
-
-    useEffect(() => {
-        fetchCategoriesFromDB();
-        fetchSubcategoryMappingFromDB();
-    }, []);
 
     useEffect(() => {
         if (isEditTransactionSectionVisible && extractedTransactions?.length > 0) {
@@ -74,36 +62,12 @@ export function TransactionUploadContextProvider({ children }) {
         }
     }, [extractedTransactions, isEditTransactionSectionVisible]);
 
-    async function fetchCategoriesFromDB() {
-        setIsLoadingCategories(true);
-        try {
-            const res = await axiosPrivate.get("/user/categories");
-            if (res?.data?.categories) setCategories(res.data.categories);
-        } catch (error) {
-            console.log("Error while fetching categories:", error);
-        } finally {
-            setIsLoadingCategories(false);
-        }
-    }
-
-    async function fetchSubcategoryMappingFromDB() {
-        setIsLoadingSubcategoryMapping(true);
-        try {
-            const res = await axiosPrivate.get("/user/subcategories");
-            if (res?.data?.groupedSubcategories) setSubcategoryMapping(res.data.groupedSubcategories);
-        } catch (error) {
-            console.log("Error while fetching subcategory mapping:", error);
-        } finally {
-            setIsLoadingSubcategoryMapping(false);
-        }
-    }
-
     function resetFileInputValue() {
         const fileInput = document.getElementById("transactionFileInput");
         if (fileInput) fileInput.value = "";
     }
 
-    function resetAll() {
+    function handleResetAll() {
         setTransactionFile(null);
         setIsExtractingTransactions(false);
         setExtractedTransactions([]);
@@ -371,7 +335,7 @@ export function TransactionUploadContextProvider({ children }) {
                 position: "top-center",
                 autoClose: 3000
             });
-            resetAll();
+            handleResetAll();
             navigate('/transactions');
         } catch (error) {
             handleErrorUploadingTransactions(error);
@@ -396,7 +360,7 @@ export function TransactionUploadContextProvider({ children }) {
         }
     }
 
-    function resetErrorUploadingTransactions() {
+    function handleResetErrorUploadingTransactions() {
         setErrorUploadingTransactions(null);
     }
 
@@ -455,15 +419,11 @@ export function TransactionUploadContextProvider({ children }) {
         extractedTransactions,
         extractTransactionError,
         isEditTransactionSectionVisible,
-        isLoadingCategories,
-        categories,
-        isLoadingSubcategoryMapping,
-        subcategoryMapping,
         editableTransactions,
         isUploadingBulkTransactions,
         inputFieldErrorsMap,
         errorUploadingTransactions,
-        resetAll,
+        handleResetAll,
         handleOpenFileUploadDialogBox,
         handleClearUploadedFile,
         handleChangeUploadedFile,
@@ -477,7 +437,7 @@ export function TransactionUploadContextProvider({ children }) {
         handleToggleTransactionSelection,
         handleToggleAllTransactionSelections,
         handleUploadBulkTransactions,
-        resetErrorUploadingTransactions,
+        handleResetErrorUploadingTransactions,
         getEditTransactionFieldError,
         handleResetSelectedTransactions,
         handleRemoveSelectedTransactions

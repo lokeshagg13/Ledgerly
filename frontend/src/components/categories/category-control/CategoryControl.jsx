@@ -10,8 +10,8 @@ function CategoryControl() {
     isAddCategoryModalVisible,
     isDeleteSelectedCategoriesModalVisible,
     selectedCategories,
-    openAddCategoryModal,
-    openDeleteSelectedCategoriesModal,
+    handleOpenAddCategoryModal,
+    handleOpenDeleteSelectedCategoriesModal,
     fetchCategoriesFromDB,
   } = useContext(CategoryContext);
   return (
@@ -20,7 +20,7 @@ function CategoryControl() {
         type="button"
         className="control-btn btn-blue"
         aria-label="Add a new category"
-        onClick={openAddCategoryModal}
+        onClick={handleOpenAddCategoryModal}
         disabled={isLoadingCategories}
       >
         Add Category
@@ -29,7 +29,7 @@ function CategoryControl() {
         type="button"
         className="control-btn btn-outline-light"
         aria-label="Delete selected categories"
-        onClick={openDeleteSelectedCategoriesModal}
+        onClick={handleOpenDeleteSelectedCategoriesModal}
         disabled={selectedCategories.length === 0}
       >
         Delete Selected <br />

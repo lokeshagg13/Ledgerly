@@ -10,17 +10,17 @@ function BulkTransactionSection() {
     extractedTransactions,
     isEditTransactionSectionVisible,
     errorUploadingTransactions,
-    resetErrorUploadingTransactions,
+    handleResetErrorUploadingTransactions,
   } = useContext(TransactionUploadContext);
 
   useEffect(() => {
     if (errorUploadingTransactions) {
       const timeout = setTimeout(() => {
-        resetErrorUploadingTransactions();
+        handleResetErrorUploadingTransactions();
       }, 6000);
       return () => clearTimeout(timeout);
     }
-  }, [errorUploadingTransactions, resetErrorUploadingTransactions]);
+  }, [errorUploadingTransactions, handleResetErrorUploadingTransactions]);
 
   if (!isEditTransactionSectionVisible || extractedTransactions?.length === 0)
     return null;

@@ -1,23 +1,23 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Form, InputGroup } from "react-bootstrap";
-import TransactionContext from "../../../../../store/context/transactionContext";
 import { formatAmountWithCommas } from "../../../../../utils/formatUtils";
 import CategorySelector from "./selectors/CategorySelector";
 import SubcategorySelector from "./selectors/SubcategorySelector";
 import FormDatePicker from "../../../../ui/elements/FormDatePicker";
+import CategoryContext from "../../../../../store/context/categoryContext";
+import TransactionContext from "../../../../../store/context/transactionContext";
 
 function AddTransactionForm() {
   const amountInputRef = useRef();
   const {
     addTransactionFormData: formData,
     inputFieldErrors,
-    subcategoryMapping,
-    getSubcategoriesForCategory,
-    modifyAddTransactionFormData,
+    handleModifyAddTransactionFormData,
     checkIfInputFieldInvalid,
-    updateInputFieldErrors,
+    handleUpdateInputFieldErrors,
   } = useContext(TransactionContext);
-
+  const { subcategoryMapping, getSubcategoriesForCategory } =
+    useContext(CategoryContext);
   const [subcategories, setSubcategories] = useState(() =>
     getSubcategoriesForCategory(formData.categoryId)
   );
@@ -28,21 +28,22 @@ function AddTransactionForm() {
   }, []);
 
   useEffect(() => {
-    setSubcategories(getSubcategoriesForCategory(formData.categoryId));
+    const subcategoryList = getSubcategoriesForCategory(formData.categoryId);
+    setSubcategories(subcategoryList);
     // eslint-disable-next-line
   }, [subcategoryMapping]);
 
   // For hiding input field error messages after 6 seconds
   useEffect(() => {
     if (Object.keys(inputFieldErrors).length > 0) {
-      const timeout = setTimeout(() => updateInputFieldErrors({}), 6000);
+      const timeout = setTimeout(() => handleUpdateInputFieldErrors({}), 6000);
       return () => clearTimeout(timeout);
     }
-  }, [inputFieldErrors, updateInputFieldErrors]);
+  }, [inputFieldErrors, handleUpdateInputFieldErrors]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    updateInputFieldErrors({});
+    handleUpdateInputFieldErrors({});
     switch (name) {
       case "amount":
         const rawValue = value.replace(/,/g, "");
@@ -52,21 +53,21 @@ function AddTransactionForm() {
           (isValid || rawValue === "") &&
           (rawValue === "" || numericValue <= Number.MAX_SAFE_INTEGER)
         ) {
-          modifyAddTransactionFormData(name, rawValue);
+          handleModifyAddTransactionFormData(name, rawValue);
         }
         break;
       case "category":
         const categoryId = value || null;
         const subcategoryList = getSubcategoriesForCategory(categoryId);
-        modifyAddTransactionFormData("categoryId", categoryId);
+        handleModifyAddTransactionFormData("categoryId", categoryId);
         setSubcategories(subcategoryList);
-        modifyAddTransactionFormData("subcategoryId", null);
+        handleModifyAddTransactionFormData("subcategoryId", null);
         break;
       case "subcategory":
-        modifyAddTransactionFormData("subcategoryId", value || null);
+        handleModifyAddTransactionFormData("subcategoryId", value || null);
         break;
       default:
-        modifyAddTransactionFormData(name, value);
+        handleModifyAddTransactionFormData(name, value);
     }
   };
 

@@ -10,7 +10,7 @@ function PrintPreviewModal() {
     printPreviewSlideDirection,
     printPreviewZoomLevel,
     handleClosePrintPreview,
-    resetPrintPreviewZoomLevel,
+    handleResetPrintPreviewZoomLevel,
   } = useContext(TransactionPrintContext);
 
   const { imageData } = printPreviewCurrentData;
@@ -60,7 +60,7 @@ function PrintPreviewModal() {
 
   // Reset zoom on page/image change
   useEffect(() => {
-    resetPrintPreviewZoomLevel();
+    handleResetPrintPreviewZoomLevel();
     // eslint-disable-next-line
   }, [imageData]);
 

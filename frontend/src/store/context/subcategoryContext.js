@@ -3,35 +3,23 @@ import { axiosPrivate } from "../../api/axios";
 
 const SubcategoryContext = createContext({
     subcategories: [],
-    selectedSubcategories: [],
     isLoadingSubcategories: false,
     isAddSubcategoryModalVisible: false,
-    toggleSubcategorySelection: (subcategoryId) => { },
     fetchSubcategoriesFromDB: () => { },
-    openAddSubcategoryModal: () => { },
-    closeAddSubcategoryModal: () => { }
+    handleOpenAddSubcategoryModal: () => { },
+    handleCloseAddSubcategoryModal: () => { }
 });
 
 export const SubcategoryProvider = ({ categoryId, children }) => {
     const [subcategories, setSubcategories] = useState([]);
-    const [selectedSubcategories, setSelectedSubcategories] = useState([]);
     const [isLoadingSubcategories, setIsLoadingSubcategories] = useState(false);
     const [isAddSubcategoryModalVisible, setIsAddSubcategoryModalVisible] = useState(false);
-
-    function toggleSubcategorySelection(subcategoryId) {
-        setSelectedSubcategories((prev) =>
-            prev.includes(subcategoryId)
-                ? prev.filter((id) => id !== subcategoryId)
-                : [...prev, subcategoryId]
-        );
-    }
 
     async function fetchSubcategoriesFromDB() {
         setIsLoadingSubcategories(true);
         try {
             const res = await axiosPrivate.get(`/user/subcategories/${categoryId}`);
             if (res?.data?.subcategories) setSubcategories(res.data.subcategories);
-            setSelectedSubcategories([]);
         } catch (error) {
             console.log("Error while fetching subcategories:", error);
         } finally {
@@ -39,23 +27,21 @@ export const SubcategoryProvider = ({ categoryId, children }) => {
         }
     }
 
-    function openAddSubcategoryModal() {
+    function handleOpenAddSubcategoryModal() {
         setIsAddSubcategoryModalVisible(true);
     }
 
-    function closeAddSubcategoryModal() {
+    function handleCloseAddSubcategoryModal() {
         setIsAddSubcategoryModalVisible(false);
     }
 
     const currentSubcategoryContext = {
         subcategories,
-        selectedSubcategories,
         isLoadingSubcategories,
         isAddSubcategoryModalVisible,
-        toggleSubcategorySelection,
         fetchSubcategoriesFromDB,
-        openAddSubcategoryModal,
-        closeAddSubcategoryModal
+        handleOpenAddSubcategoryModal,
+        handleCloseAddSubcategoryModal
     };
 
     return (

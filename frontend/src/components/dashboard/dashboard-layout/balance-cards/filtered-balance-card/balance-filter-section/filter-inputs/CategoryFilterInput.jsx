@@ -1,15 +1,15 @@
 import { useContext } from "react";
 import MultiSelector from "../../../../../../ui/elements/MultiSelector";
-import DashboardContext from "../../../../../../../store/context/dashboardContext";
 import CancelIcon from "../../../../../../ui/icons/CancelIcon";
+import CategoryContext from "../../../../../../../store/context/categoryContext";
+import DashboardContext from "../../../../../../../store/context/dashboardContext";
 
 function CategoryFilterInput() {
+  const { isLoadingCategories, categories } = useContext(CategoryContext);
   const {
-    isLoadingCategories,
-    categories,
     filterFormData,
-    modifyFilterFormData,
-    resetErrorFetchingFilteredBalance,
+    handleModifyFilterFormData,
+    handleResetErrorFetchingFilteredBalance,
   } = useContext(DashboardContext);
 
   if (categories === null) return;
@@ -20,8 +20,8 @@ function CategoryFilterInput() {
   }));
 
   const handleCategorySelect = (newValue) => {
-    resetErrorFetchingFilteredBalance();
-    modifyFilterFormData("selectedCategories", newValue);
+    handleResetErrorFetchingFilteredBalance();
+    handleModifyFilterFormData("selectedCategories", newValue);
   };
 
   return (
@@ -49,7 +49,7 @@ function CategoryFilterInput() {
             <button
               type="button"
               className="clear-categories-button"
-              onClick={() => modifyFilterFormData("selectedCategories", [])}
+              onClick={() => handleModifyFilterFormData("selectedCategories", [])}
               aria-label="Clear selected categories"
             >
               <CancelIcon />

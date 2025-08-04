@@ -1,15 +1,15 @@
 import { useContext } from "react";
 import MultiSelector from "../../../../ui/elements/MultiSelector";
 import TransactionPrintContext from "../../../../../store/context/transactionPrintContext";
+import CategoryContext from "../../../../../store/context/categoryContext";
 
 function CategoryFilterInput() {
+  const { isLoadingCategories, categories } = useContext(CategoryContext);
   const {
-    isLoadingCategories,
-    categories,
     selectedCategories,
     isPrintSectionVisible,
     setSelectedCategories,
-    resetErrorFetchingTransactions,
+    handleResetErrorFetchingTransactions,
   } = useContext(TransactionPrintContext);
 
   if (categories === null) return;
@@ -22,7 +22,7 @@ function CategoryFilterInput() {
 
   const handleCategorySelect = (newValue) => {
     if (isPrintSectionVisible) return;
-    resetErrorFetchingTransactions();
+    handleResetErrorFetchingTransactions();
     setSelectedCategories(newValue);
   };
 

@@ -9,7 +9,7 @@ function FetchTransactionStatus() {
     isPrintSectionVisible,
     errorFetchingTransactions,
     transactions,
-    resetAll,
+    handleResetAll,
   } = useContext(TransactionPrintContext);
 
   if (
@@ -20,7 +20,7 @@ function FetchTransactionStatus() {
       <>
         <TransactionErrorModal
           message={errorFetchingTransactions.message}
-          onClose={resetAll}
+          onClose={handleResetAll}
         />
       </>
     );

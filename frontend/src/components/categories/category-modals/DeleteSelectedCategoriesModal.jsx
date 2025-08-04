@@ -10,7 +10,7 @@ function DeleteSelectedCategoriesModal() {
     selectedCategories,
     isDeleteSelectedCategoriesModalVisible,
     fetchCategoriesFromDB,
-    closeDeleteSelectedCategoriesModal,
+    handleCloseDeleteSelectedCategoriesModal,
   } = useContext(CategoryContext);
   const [deleting, setDeleting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -48,7 +48,7 @@ function DeleteSelectedCategoriesModal() {
         },
       });
       setErrorMessage("");
-      closeDeleteSelectedCategoriesModal();
+      handleCloseDeleteSelectedCategoriesModal();
       fetchCategoriesFromDB();
     } catch (error) {
       if (!error?.response) {
@@ -69,7 +69,7 @@ function DeleteSelectedCategoriesModal() {
   const handleCancel = () => {
     if (deleting) return;
     setErrorMessage("");
-    closeDeleteSelectedCategoriesModal();
+    handleCloseDeleteSelectedCategoriesModal();
   };
 
   if (

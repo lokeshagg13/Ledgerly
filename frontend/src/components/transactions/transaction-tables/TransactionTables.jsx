@@ -11,7 +11,7 @@ function TransactionTables() {
     transactions,
     isLoadingTransactions,
     errorFetchingTransactions,
-    resetErrorFetchingTransactions,
+    handleResetErrorFetchingTransactions,
     fetchTransactions,
   } = useContext(TransactionContext);
   const { appliedFilters } = useContext(TransactionFilterContext);
@@ -41,7 +41,7 @@ function TransactionTables() {
           <TransactionErrorModal
             message={errorFetchingTransactions}
             onTryAgain={() => {
-              resetErrorFetchingTransactions();
+              handleResetErrorFetchingTransactions();
               fetchTransactions(appliedFilters);
             }}
           />

@@ -15,14 +15,14 @@ function DateFilterInput() {
   const {
     filterFormData,
     filteredBalanceError,
-    modifyFilterFormData,
-    resetErrorFetchingFilteredBalance,
+    handleModifyFilterFormData,
+    handleResetErrorFetchingFilteredBalance,
   } = useContext(DashboardContext);
 
   const modifyUptoDate = (uptoDate) => {
-    resetErrorFetchingFilteredBalance();
+    handleResetErrorFetchingFilteredBalance();
     if (uptoDate)
-      modifyFilterFormData("uptoDate", getLocalDateString(uptoDate));
+      handleModifyFilterFormData("uptoDate", getLocalDateString(uptoDate));
   };
 
   const today = getToday();
@@ -56,7 +56,7 @@ function DateFilterInput() {
                 <button
                   type="button"
                   className="clear-date-button"
-                  onClick={() => modifyFilterFormData("uptoDate", null)}
+                  onClick={() => handleModifyFilterFormData("uptoDate", null)}
                   aria-label="Clear date"
                 >
                   <CancelIcon />

@@ -6,7 +6,7 @@ function ExtractTransactionControl() {
   const {
     isExtractingTransactions,
     isEditTransactionSectionVisible,
-    resetAll,
+    handleResetAll,
     handleExtractTransactionsFromFile,
   } = useContext(TransactionUploadContext);
 
@@ -32,7 +32,7 @@ function ExtractTransactionControl() {
       </Button>
       <Button
         className="reset-button"
-        onClick={resetAll}
+        onClick={handleResetAll}
         disabled={isExtractingTransactions}
       >
         Reset

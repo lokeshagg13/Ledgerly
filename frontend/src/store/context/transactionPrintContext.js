@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import { axiosPrivate } from "../../api/axios";
 import { downloadPrintPreviewPDF } from "../../utils/printUtils";
 
@@ -10,8 +10,6 @@ const TransactionPrintContext = createContext({
     selectedCategories: [],
     keepCreditDebitTxnSeparate: true,
     transactionSortOrder: null,
-    categories: [],
-    isLoadingCategories: false,
     transactions: [],
     isLoadingTransactions: false,
     errorFetchingTransactions: {},
@@ -29,17 +27,17 @@ const TransactionPrintContext = createContext({
     setSelectedCategories: (prev) => { },
     setKeepCreditDebitTxnSeparate: (prev) => { },
     setTransactionSortOrder: (prev) => { },
-    fetchTransactionsFromDB: async () => { },
-    resetAll: () => { },
-    resetErrorFetchingTransactions: () => { },
     setPrintStyle: (prev) => { },
-    handleOpenPrintPreview: () => { },
-    handleClosePrintPreview: () => { },
+    fetchTransactionsFromDB: async () => { },
     isOnFirstPrintPreviewPage: () => { },
     isOnLastPrintPreviewPage: () => { },
-    moveToPrevPrintPreviewPage: () => { },
-    moveToNextPrintPreviewPage: () => { },
-    resetPrintPreviewZoomLevel: () => { },
+    handleResetAll: () => { },
+    handleResetErrorFetchingTransactions: () => { },
+    handleOpenPrintPreview: () => { },
+    handleClosePrintPreview: () => { },
+    handleMoveToPrevPrintPreviewPage: () => { },
+    handleMoveToNextPrintPreviewPage: () => { },
+    handleResetPrintPreviewZoomLevel: () => { },
     handleZoomInPrintPreviewPage: () => { },
     handleZoomOutPrintPreviewPage: () => { },
     handleOpenSaveTransactionModal: () => { },
@@ -55,8 +53,6 @@ export function TransactionPrintContextProvider({ children }) {
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [keepCreditDebitTxnSeparate, setKeepCreditDebitTxnSeparate] = useState(true);
     const [transactionSortOrder, setTransactionSortOrder] = useState("dateAsc");    // "dateAsc" / "dateDesc" / "amountAsc" / "amountDesc"
-    const [categories, setCategories] = useState(null);
-    const [isLoadingCategories, setIsLoadingCategories] = useState(false);
     const [transactions, setTransactions] = useState([]);
     const [isLoadingTransactions, setIsLoadingTransactions] = useState(false);
     const [errorFetchingTransactions, setErrorFetchingTransactions] = useState({
@@ -81,23 +77,7 @@ export function TransactionPrintContextProvider({ children }) {
     const [tablePrintPreviewImages, setTablePrintPreviewImages] = useState([]);
     const [isSaveTransactionModalVisible, setIsSaveTransactionModalVisible] = useState(false);
 
-    useEffect(() => {
-        fetchCategoriesFromDB();
-    }, []);
-
-    async function fetchCategoriesFromDB() {
-        setIsLoadingCategories(true);
-        try {
-            const res = await axiosPrivate.get("/user/categories");
-            if (res?.data?.categories) setCategories(res.data.categories);
-        } catch (error) {
-            console.log("Error while fetching categories:", error);
-        } finally {
-            setIsLoadingCategories(false);
-        }
-    }
-
-    function resetErrorFetchingTransactions() {
+    function handleResetErrorFetchingTransactions() {
         setErrorFetchingTransactions({
             message: "",
             type: "",
@@ -107,7 +87,7 @@ export function TransactionPrintContextProvider({ children }) {
         });
     }
 
-    function resetAll() {
+    function handleResetAll() {
         setLastN(10);
         setFromDate(null);
         setToDate(null);
@@ -116,7 +96,7 @@ export function TransactionPrintContextProvider({ children }) {
         setTransactionSortOrder("dateAsc");
         setTransactions([]);
         setIsLoadingTransactions(false);
-        resetErrorFetchingTransactions();
+        handleResetErrorFetchingTransactions();
         setIsPrintSectionVisible(false);
         setPrintStyle("ca");
         setIsPrintPreviewVisible(false);
@@ -176,7 +156,7 @@ export function TransactionPrintContextProvider({ children }) {
             });
             return false;
         }
-        resetErrorFetchingTransactions();
+        handleResetErrorFetchingTransactions();
         return true;
     }
 
@@ -234,7 +214,7 @@ export function TransactionPrintContextProvider({ children }) {
 
     async function fetchTransactionsFromDB() {
         setIsLoadingTransactions(true);
-        resetErrorFetchingTransactions();
+        handleResetErrorFetchingTransactions();
         try {
             if (validateInputForFetchingTransactions()) {
                 const res = await axiosPrivate.get(`/user/transactions/print?${generateParamStringForAPI()}`);
@@ -278,7 +258,7 @@ export function TransactionPrintContextProvider({ children }) {
         );
     }
 
-    function moveToPrevPrintPreviewPage() {
+    function handleMoveToPrevPrintPreviewPage() {
         setPrintPreviewSlideDirection("right");
         setPrintPreviewCurrentData((prev) => {
             if (!prev || prev.currentPage <= 1) return prev;
@@ -293,7 +273,7 @@ export function TransactionPrintContextProvider({ children }) {
         });
     }
 
-    function moveToNextPrintPreviewPage() {
+    function handleMoveToNextPrintPreviewPage() {
         setPrintPreviewSlideDirection("left");
         setPrintPreviewCurrentData((prev) => {
             if (!prev || prev.currentPage >= prev.totalPages) return prev;
@@ -308,7 +288,7 @@ export function TransactionPrintContextProvider({ children }) {
         });
     }
 
-    function resetPrintPreviewZoomLevel() {
+    function handleResetPrintPreviewZoomLevel() {
         setPrintPreviewZoomLevel(1);
     }
 
@@ -346,8 +326,6 @@ export function TransactionPrintContextProvider({ children }) {
         selectedCategories,
         keepCreditDebitTxnSeparate,
         transactionSortOrder,
-        categories,
-        isLoadingCategories,
         transactions,
         isLoadingTransactions,
         errorFetchingTransactions,
@@ -366,16 +344,16 @@ export function TransactionPrintContextProvider({ children }) {
         setKeepCreditDebitTxnSeparate,
         setTransactionSortOrder,
         fetchTransactionsFromDB,
-        resetAll,
-        resetErrorFetchingTransactions,
+        handleResetAll,
+        handleResetErrorFetchingTransactions,
         setPrintStyle,
         handleOpenPrintPreview,
         handleClosePrintPreview,
         isOnFirstPrintPreviewPage,
         isOnLastPrintPreviewPage,
-        moveToPrevPrintPreviewPage,
-        moveToNextPrintPreviewPage,
-        resetPrintPreviewZoomLevel,
+        handleMoveToPrevPrintPreviewPage,
+        handleMoveToNextPrintPreviewPage,
+        handleResetPrintPreviewZoomLevel,
         handleZoomInPrintPreviewPage,
         handleZoomOutPrintPreviewPage,
         handleOpenSaveTransactionModal,

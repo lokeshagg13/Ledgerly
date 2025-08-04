@@ -3,21 +3,23 @@ import { Form, InputGroup } from "react-bootstrap";
 import TransactionContext from "../../../../../../../store/context/transactionContext";
 import { formatAmountWithCommas } from "../../../../../../../utils/formatUtils";
 import FormDatePicker from "../../../../../../ui/elements/FormDatePicker";
+import CategoryContext from "../../../../../../../store/context/categoryContext";
 
 function EditTransactionForm() {
   const amountInputRef = useRef();
   const {
-    editTransactionFormData: formData,
-    inputFieldErrors,
     isLoadingCategories,
     categories,
     isLoadingSubcategoryMapping,
     getSubcategoriesForCategory,
-    modifyEditTransactionFormData,
+  } = useContext(CategoryContext);
+  const {
+    editTransactionFormData: formData,
+    inputFieldErrors,
+    handleModifyEditTransactionFormData,
     checkIfInputFieldInvalid,
-    updateInputFieldErrors,
+    handleUpdateInputFieldErrors,
   } = useContext(TransactionContext);
-
   const [subcategories, setSubcategories] = useState(() =>
     getSubcategoriesForCategory(formData.categoryId)
   );
@@ -30,14 +32,14 @@ function EditTransactionForm() {
   // For hiding input field error messages after 6 seconds
   useEffect(() => {
     if (Object.keys(inputFieldErrors).length > 0) {
-      const timeout = setTimeout(() => updateInputFieldErrors({}), 6000);
+      const timeout = setTimeout(() => handleUpdateInputFieldErrors({}), 6000);
       return () => clearTimeout(timeout);
     }
-  }, [inputFieldErrors, updateInputFieldErrors]);
+  }, [inputFieldErrors, handleUpdateInputFieldErrors]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    updateInputFieldErrors({});
+    handleUpdateInputFieldErrors({});
     switch (name) {
       case "amount":
         const rawValue = value.replace(/,/g, "");
@@ -47,21 +49,21 @@ function EditTransactionForm() {
           (isValid || rawValue === "") &&
           (rawValue === "" || numericValue <= Number.MAX_SAFE_INTEGER)
         ) {
-          modifyEditTransactionFormData(name, rawValue);
+          handleModifyEditTransactionFormData(name, rawValue);
         }
         break;
       case "category":
         const categoryId = value || null;
         const subcategoryList = getSubcategoriesForCategory(categoryId);
-        modifyEditTransactionFormData("categoryId", categoryId);
+        handleModifyEditTransactionFormData("categoryId", categoryId);
         setSubcategories(subcategoryList);
-        modifyEditTransactionFormData("subcategoryId", null);
+        handleModifyEditTransactionFormData("subcategoryId", null);
         break;
       case "subcategory":
-        modifyEditTransactionFormData("subcategoryId", value || null);
+        handleModifyEditTransactionFormData("subcategoryId", value || null);
         break;
       default:
-        modifyEditTransactionFormData(name, value);
+        handleModifyEditTransactionFormData(name, value);
     }
   };
 

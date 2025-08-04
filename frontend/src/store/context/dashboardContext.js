@@ -1,9 +1,7 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import { axiosPrivate } from "../../api/axios";
 
 const DashboardContext = createContext({
-    categories: [],
-    isLoadingCategories: false,
     isLoadingOverallBalance: false,
     overallBalance: {
         amount: 0,
@@ -26,18 +24,16 @@ const DashboardContext = createContext({
         uptoDate: null,
         selectedCategories: []
     },
-    resetErrorFetchingFilteredBalance: () => { },
-    resetErrorUpdatingBalanceFilters: () => { },
-    resetFilterFormData: () => { },
-    modifyFilterFormData: (key, val) => { },
     fetchOverallBalance: async () => { },
     fetchFilteredBalanceAndFilters: async () => { },
-    updateBalanceFilters: async () => { }
+    handleResetErrorFetchingFilteredBalance: () => { },
+    handleResetErrorUpdatingBalanceFilters: () => { },
+    handleResetFilterFormData: () => { },
+    handleModifyFilterFormData: (key, val) => { },
+    handleUpdateBalanceFilters: async () => { }
 });
 
 export function DashboardContextProvider({ children }) {
-    const [categories, setCategories] = useState([]);
-    const [isLoadingCategories, setIsLoadingCategories] = useState(false);
     const [isLoadingOverallBalance, setIsLoadingOverallBalance] = useState(false);
     const [overallBalance, setOverallBalance] = useState({
         amount: 0,
@@ -65,31 +61,15 @@ export function DashboardContextProvider({ children }) {
         selectedCategories: []
     });
 
-    useEffect(() => {
-        fetchCategoriesFromDB();
-    }, []);
-
-    async function fetchCategoriesFromDB() {
-        setIsLoadingCategories(true);
-        try {
-            const res = await axiosPrivate.get("/user/categories");
-            if (res?.data?.categories) setCategories(res.data.categories);
-        } catch (error) {
-            console.log("Error while fetching categories:", error);
-        } finally {
-            setIsLoadingCategories(false);
-        }
-    }
-
     function resetErrorFetchingOverallBalance() {
         setOverallBalanceError("");
     }
 
-    function resetErrorFetchingFilteredBalance() {
+    function handleResetErrorFetchingFilteredBalance() {
         setFilteredBalanceError("");
     }
 
-    function resetErrorUpdatingBalanceFilters() {
+    function handleResetErrorUpdatingBalanceFilters() {
         setUpdateFilterError({
             message: "",
             uptoDate: false,
@@ -148,14 +128,14 @@ export function DashboardContextProvider({ children }) {
         }
     }
 
-    function resetFilterFormData() {
+    function handleResetFilterFormData() {
         setFilterFormData({
             uptoDate: appliedFilters.uptoDate || null,
             selectedCategories: appliedFilters.selectedCategories || []
         });
     }
 
-    function modifyFilterFormData(key, value) {
+    function handleModifyFilterFormData(key, value) {
         setFilterFormData(prev => ({
             ...prev,
             [key]: value
@@ -181,7 +161,7 @@ export function DashboardContextProvider({ children }) {
 
     async function fetchFilteredBalanceAndFilters() {
         setIsLoadingFilteredBalance(true);
-        resetErrorFetchingFilteredBalance();
+        handleResetErrorFetchingFilteredBalance();
         try {
             const res = await axiosPrivate.get("/user/dashboard/custom/balance");
             const { balance, latestTxnDate, uptoDate, selectedCategories } = res?.data;
@@ -198,9 +178,9 @@ export function DashboardContextProvider({ children }) {
         }
     }
 
-    async function updateBalanceFilters() {
+    async function handleUpdateBalanceFilters() {
         setIsUpdatingFilters(true);
-        resetErrorUpdatingBalanceFilters();
+        handleResetErrorUpdatingBalanceFilters();
         let isError = false;
         try {
             const { uptoDate, selectedCategories } = filterFormData;
@@ -232,8 +212,6 @@ export function DashboardContextProvider({ children }) {
     }
 
     const currentValue = {
-        isLoadingCategories,
-        categories,
         isLoadingOverallBalance,
         overallBalance,
         overallBalanceError,
@@ -244,13 +222,13 @@ export function DashboardContextProvider({ children }) {
         updateFilterError,
         appliedFilters,
         filterFormData,
-        resetErrorFetchingFilteredBalance,
-        resetErrorUpdatingBalanceFilters,
-        resetFilterFormData,
-        modifyFilterFormData,
+        handleResetErrorFetchingFilteredBalance,
+        handleResetErrorUpdatingBalanceFilters,
+        handleResetFilterFormData,
+        handleModifyFilterFormData,
         fetchOverallBalance,
         fetchFilteredBalanceAndFilters,
-        updateBalanceFilters
+        handleUpdateBalanceFilters
     };
 
     return (

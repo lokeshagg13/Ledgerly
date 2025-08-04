@@ -13,7 +13,7 @@ import TransactionContext from "../../../../../store/context/transactionContext"
 function TransactionRow({ transactionData }) {
   const { _id, date, amount, remarks, categoryName, subcategoryName } =
     transactionData;
-  const { openEditTransactionModal } = useContext(TransactionContext);
+  const { handleOpenEditTransactionModal } = useContext(TransactionContext);
   const [isDeleteTransactionModalVisible, setIsDeleteTransactionModalVisible] =
     useState(false);
 
@@ -27,7 +27,7 @@ function TransactionRow({ transactionData }) {
       <td>
         <Button
           variant="link"
-          onClick={() => openEditTransactionModal(transactionData)}
+          onClick={() => handleOpenEditTransactionModal(transactionData)}
         >
           <EditIcon />
         </Button>

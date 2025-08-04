@@ -9,8 +9,8 @@ function AddTransactionModal({ onClose }) {
   const {
     addTransactionFormData,
     fetchTransactions,
-    resetAddTransactionFormData,
-    updateInputFieldErrors,
+    handleResetAddTransactionFormData,
+    handleUpdateInputFieldErrors,
   } = useContext(TransactionContext);
   const { appliedFilters } = useContext(TransactionFilterContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -83,7 +83,7 @@ function AddTransactionModal({ onClose }) {
   const handleSubmit = async () => {
     if (isSubmitting) return;
     const errors = validateTransactionFormData();
-    updateInputFieldErrors(errors);
+    handleUpdateInputFieldErrors(errors);
     if (Object.keys(errors).length > 0) return;
 
     const { amount, date, type, remarks, categoryId, subcategoryId } =
@@ -98,7 +98,7 @@ function AddTransactionModal({ onClose }) {
         categoryId,
         subcategoryId,
       });
-      resetAddTransactionFormData();
+      handleResetAddTransactionFormData();
       onClose();
       fetchTransactions(appliedFilters);
     } catch (error) {

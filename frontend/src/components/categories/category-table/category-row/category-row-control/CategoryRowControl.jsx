@@ -4,7 +4,7 @@ import AddSubcategoryModal from "../subcategory-modals/AddSubcategoryModal";
 import SubcategoryContext from "../../../../../store/context/subcategoryContext";
 
 function CategoryRowControl({ categoryId, categoryName }) {
-  const { isAddSubcategoryModalVisible, openAddSubcategoryModal } =
+  const { isAddSubcategoryModalVisible, handleOpenAddSubcategoryModal } =
     useContext(SubcategoryContext);
   return (
     <div className="category-row-controls">
@@ -19,7 +19,7 @@ function CategoryRowControl({ categoryId, categoryName }) {
       >
         <Button
           className="control-btn btn-blue"
-          onClick={openAddSubcategoryModal}
+          onClick={handleOpenAddSubcategoryModal}
           aria-label={`Add subcategory under ${categoryName}`}
         >
           Add Subcategory

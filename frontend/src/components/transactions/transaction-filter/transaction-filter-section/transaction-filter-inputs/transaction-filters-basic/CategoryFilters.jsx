@@ -1,9 +1,11 @@
 import { useContext } from "react";
 import MultiSelector from "../../../../../ui/elements/MultiSelector";
+import CategoryContext from "../../../../../../store/context/categoryContext";
 import TransactionFilterContext from "../../../../../../store/context/transactionFilterContext";
 
 function CategoryFilters() {
-  const { categories, selectedCategories, setSelectedCategories } = useContext(
+  const { categories } = useContext(CategoryContext);
+  const { selectedCategories, setSelectedCategories } = useContext(
     TransactionFilterContext
   );
 

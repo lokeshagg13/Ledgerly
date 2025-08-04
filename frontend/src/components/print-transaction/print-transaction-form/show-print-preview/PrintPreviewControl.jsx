@@ -15,8 +15,8 @@ function PrintPreviewControl() {
     isSaveTransactionModalVisible,
     isOnFirstPrintPreviewPage,
     isOnLastPrintPreviewPage,
-    moveToPrevPrintPreviewPage,
-    moveToNextPrintPreviewPage,
+    handleMoveToPrevPrintPreviewPage,
+    handleMoveToNextPrintPreviewPage,
     handleZoomInPrintPreviewPage,
     handleZoomOutPrintPreviewPage,
     handleOpenSaveTransactionModal,
@@ -36,7 +36,7 @@ function PrintPreviewControl() {
           <div className="pagination-section">
             <button
               className="tool-btn"
-              onClick={moveToPrevPrintPreviewPage}
+              onClick={handleMoveToPrevPrintPreviewPage}
               disabled={prevPageButtonDisabled}
             >
               <LeftAngleIcon />
@@ -46,7 +46,7 @@ function PrintPreviewControl() {
             </span>
             <button
               className="tool-btn"
-              onClick={moveToNextPrintPreviewPage}
+              onClick={handleMoveToNextPrintPreviewPage}
               disabled={nextPageButtonDisabled}
             >
               <RightAngleIcon />

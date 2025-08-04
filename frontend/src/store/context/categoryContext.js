@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { axiosPrivate } from "../../api/axios";
 
 const CategoryContext = createContext({
@@ -6,16 +6,17 @@ const CategoryContext = createContext({
     selectedCategories: [],
     isLoadingCategories: false,
     isAddCategoryModalVisible: false,
-    isDeleteCategoryModalVisible: false,
     isDeleteSelectedCategoriesModalVisible: false,
-    toggleCategorySelection: (categoryId) => { },
+    subcategoryMapping: [],
+    isLoadingSubcategoryMapping: false,
     fetchCategoriesFromDB: () => { },
-    openAddCategoryModal: () => { },
-    closeAddCategoryModal: () => { },
-    openDeleteCategoryModal: () => { },
-    closeDeleteCategoryModal: () => { },
-    openDeleteSelectedCategoriesModal: () => { },
-    closeDeleteSelectedCategoriesModal: () => { }
+    fetchSubcategoryMappingFromDB: () => { },
+    getSubcategoriesForCategory: (categoryId) => { },
+    handleToggleCategorySelection: (categoryId) => { },
+    handleOpenAddCategoryModal: () => { },
+    handleCloseAddCategoryModal: () => { },
+    handleOpenDeleteSelectedCategoriesModal: () => { },
+    handleCloseDeleteSelectedCategoriesModal: () => { }
 });
 
 export const CategoryProvider = ({ children }) => {
@@ -23,16 +24,14 @@ export const CategoryProvider = ({ children }) => {
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [isLoadingCategories, setIsLoadingCategories] = useState(false);
     const [isAddCategoryModalVisible, setIsAddCategoryModalVisible] = useState(false);
-    const [isDeleteCategoryModalVisible, setIsDeleteCategoryModalVisible] = useState(false);
     const [isDeleteSelectedCategoriesModalVisible, setIsDeleteSelectedCategoriesModalVisible] = useState(false);
+    const [subcategoryMapping, setSubcategoryMapping] = useState([]);
+    const [isLoadingSubcategoryMapping, setIsLoadingSubcategoryMapping] = useState(false);
 
-    function toggleCategorySelection(categoryId) {
-        setSelectedCategories((prev) =>
-            prev.includes(categoryId)
-                ? prev.filter((c) => c !== categoryId)
-                : [...prev, categoryId]
-        );
-    }
+    useEffect(() => {
+        fetchCategoriesFromDB();
+        fetchSubcategoryMappingFromDB();
+    }, []);
 
     async function fetchCategoriesFromDB() {
         setIsLoadingCategories(true);
@@ -47,27 +46,47 @@ export const CategoryProvider = ({ children }) => {
         }
     }
 
-    function openAddCategoryModal() {
+    async function fetchSubcategoryMappingFromDB() {
+        setIsLoadingSubcategoryMapping(true);
+        try {
+            const res = await axiosPrivate.get("/user/subcategories");
+            if (res?.data?.groupedSubcategories) setSubcategoryMapping(res.data.groupedSubcategories);
+        } catch (error) {
+            console.log("Error while fetching subcategory mapping:", error);
+        } finally {
+            setIsLoadingSubcategoryMapping(false);
+        }
+    }
+
+    function getSubcategoriesForCategory(categoryId) {
+        if (!categoryId || isLoadingSubcategoryMapping) return [];
+        const categoryName = categories.filter((cat) => cat._id === categoryId)?.[0]
+            ?.name;
+        if (!categoryName) return [];
+        return subcategoryMapping?.[categoryName] || [];
+    };
+
+    function handleToggleCategorySelection(categoryId) {
+        setSelectedCategories((prev) =>
+            prev.includes(categoryId)
+                ? prev.filter((c) => c !== categoryId)
+                : [...prev, categoryId]
+        );
+    }
+
+    function handleOpenAddCategoryModal() {
         setIsAddCategoryModalVisible(true);
     }
 
-    function closeAddCategoryModal() {
+    function handleCloseAddCategoryModal() {
         setIsAddCategoryModalVisible(false);
     }
 
-    function openDeleteCategoryModal() {
-        setIsDeleteCategoryModalVisible(true);
-    }
-
-    function closeDeleteCategoryModal() {
-        setIsDeleteCategoryModalVisible(false);
-    }
-
-    function openDeleteSelectedCategoriesModal() {
+    function handleOpenDeleteSelectedCategoriesModal() {
         setIsDeleteSelectedCategoriesModalVisible(true);
     }
 
-    function closeDeleteSelectedCategoriesModal() {
+    function handleCloseDeleteSelectedCategoriesModal() {
         setIsDeleteSelectedCategoriesModalVisible(false);
     }
 
@@ -76,16 +95,17 @@ export const CategoryProvider = ({ children }) => {
         selectedCategories,
         isLoadingCategories,
         isAddCategoryModalVisible,
-        isDeleteCategoryModalVisible,
         isDeleteSelectedCategoriesModalVisible,
-        toggleCategorySelection,
+        subcategoryMapping,
+        isLoadingSubcategoryMapping,
         fetchCategoriesFromDB,
-        openAddCategoryModal,
-        closeAddCategoryModal,
-        openDeleteCategoryModal,
-        closeDeleteCategoryModal,
-        openDeleteSelectedCategoriesModal,
-        closeDeleteSelectedCategoriesModal
+        fetchSubcategoryMappingFromDB,
+        getSubcategoriesForCategory,
+        handleToggleCategorySelection,
+        handleOpenAddCategoryModal,
+        handleCloseAddCategoryModal,
+        handleOpenDeleteSelectedCategoriesModal,
+        handleCloseDeleteSelectedCategoriesModal,
     };
 
     return (

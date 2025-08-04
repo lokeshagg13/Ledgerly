@@ -19,11 +19,11 @@ function DateFilters() {
     setFromDate,
     setToDate,
     filteringError,
-    resetFilteringError,
+    handleResetFilteringError,
   } = useContext(TransactionFilterContext);
 
   const updateFilterDates = (from, to) => {
-    resetFilteringError();
+    handleResetFilteringError();
     if (from) setFromDate(getLocalDateString(from));
     if (to) setToDate(getLocalDateString(to));
   };

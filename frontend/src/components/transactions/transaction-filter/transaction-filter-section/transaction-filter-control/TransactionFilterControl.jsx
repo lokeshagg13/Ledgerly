@@ -4,7 +4,7 @@ import { Button } from "react-bootstrap";
 import TransactionFilterContext from "../../../../../store/context/transactionFilterContext";
 
 function TransactionFilterControl() {
-  const { applyFilters, clearFilters } = useContext(TransactionFilterContext);
+  const { handleApplyFilters, handleClearFilters } = useContext(TransactionFilterContext);
 
   return (
     <div className="transaction-filter-controls">
@@ -12,7 +12,7 @@ function TransactionFilterControl() {
         type="button"
         className="control-btn btn-blue"
         aria-label="Apply filters"
-        onClick={applyFilters}
+        onClick={handleApplyFilters}
       >
         Apply Filters
       </Button>
@@ -20,7 +20,7 @@ function TransactionFilterControl() {
         type="button"
         className="control-btn btn-outline-light"
         aria-label="Clear filters"
-        onClick={clearFilters}
+        onClick={handleClearFilters}
       >
         Clear Filters
       </Button>

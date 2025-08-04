@@ -6,7 +6,7 @@ function FetchTransactionControl() {
   const {
     isLoadingTransactions,
     isPrintSectionVisible,
-    resetAll,
+    handleResetAll,
     fetchTransactionsFromDB,
   } = useContext(TransactionPrintContext);
 
@@ -37,7 +37,7 @@ function FetchTransactionControl() {
       </Button>
       <Button
         className="reset-transaction-button"
-        onClick={resetAll}
+        onClick={handleResetAll}
         disabled={isLoadingTransactions}
       >
         Reset

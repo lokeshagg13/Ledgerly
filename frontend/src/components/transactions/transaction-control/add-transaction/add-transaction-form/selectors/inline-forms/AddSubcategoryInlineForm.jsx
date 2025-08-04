@@ -2,17 +2,18 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Button, Form, InputGroup, Alert } from "react-bootstrap";
 
 import { axiosPrivate } from "../../../../../../../api/axios";
-import TransactionContext from "../../../../../../../store/context/transactionContext";
 import CancelIcon from "../../../../../../ui/icons/CancelIcon";
+import CategoryContext from "../../../../../../../store/context/categoryContext";
+import TransactionContext from "../../../../../../../store/context/transactionContext";
 
 function AddSubcategoryInlineForm() {
   const newSubcategoryNameRef = useRef();
   const {
     addTransactionFormData,
     isAddSubcategoryFormVisible,
-    fetchSubcategoryMappingFromDB,
-    closeAddSubcategoryForm,
+    handleCloseAddSubcategoryForm,
   } = useContext(TransactionContext);
+  const { fetchSubcategoryMappingFromDB } = useContext(CategoryContext);
   const [newSubcategoryName, setNewSubcategoryName] = useState("");
   const [isAdding, setIsAdding] = useState(false);
   const [message, setMessage] = useState(null);
@@ -98,7 +99,7 @@ function AddSubcategoryInlineForm() {
     if (isAdding) return;
     setMessage(null);
     setNewSubcategoryName("");
-    closeAddSubcategoryForm();
+    handleCloseAddSubcategoryForm();
   };
 
   if (!isAddSubcategoryFormVisible) return null;

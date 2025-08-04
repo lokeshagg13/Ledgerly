@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "react-bootstrap";
 
@@ -7,23 +7,17 @@ import TransactionFilterContext from "../../../store/context/transactionFilterCo
 import AddTransactionModal from "./add-transaction/AddTransactionModal";
 
 function TransactionControl() {
-  const { isLoadingTransactions, fetchTransactions } =
-    useContext(TransactionContext);
-
+  const {
+    isLoadingTransactions,
+    isAddTransactionModalVisible,
+    fetchTransactions,
+    handleOpenAddTransactionModal,
+    handleCloseAddTransactionModal,
+  } = useContext(TransactionContext);
   const { appliedFilters } = useContext(TransactionFilterContext);
-  const [isAddTransactionModalVisible, setIsAddTransactionModalVisible] =
-    useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  const handleOpenAddTransactionModal = () => {
-    setIsAddTransactionModalVisible(true);
-  };
-
-  const handleCloseAddTransactionModal = () => {
-    setIsAddTransactionModalVisible(false);
-  };
 
   const handleNavigateToPrintTransactionsPage = () => {
     navigate("/transactions/print", {

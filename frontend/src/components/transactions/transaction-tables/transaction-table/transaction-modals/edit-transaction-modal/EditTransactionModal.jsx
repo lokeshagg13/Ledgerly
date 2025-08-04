@@ -10,9 +10,9 @@ function EditTransactionModal() {
     isEditTransactionModalVisible,
     editTransactionFormData,
     fetchTransactions,
-    closeEditTransactionModal,
-    resetEditTransactionFormData,
-    updateInputFieldErrors,
+    handleCloseEditTransactionModal,
+    handleResetEditTransactionFormData,
+    handleUpdateInputFieldErrors,
   } = useContext(TransactionContext);
   const { appliedFilters } = useContext(TransactionFilterContext);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -30,7 +30,7 @@ function EditTransactionModal() {
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (!isUpdating && e.key === "Escape") {
-        closeEditTransactionModal();
+        handleCloseEditTransactionModal();
       }
     };
     document.addEventListener("keydown", handleKeyDown);
@@ -38,7 +38,7 @@ function EditTransactionModal() {
       document.removeEventListener("keydown", handleKeyDown);
     };
     // eslint-disable-next-line
-  }, [isEditTransactionModalVisible, isUpdating, closeEditTransactionModal]);
+  }, [isEditTransactionModalVisible, isUpdating, handleCloseEditTransactionModal]);
 
   const validateTransactionFormData = () => {
     const { amount, date, type, remarks, categoryId } = editTransactionFormData;
@@ -81,7 +81,7 @@ function EditTransactionModal() {
   const handleSubmit = async () => {
     if (isUpdating) return;
     const errors = validateTransactionFormData();
-    updateInputFieldErrors(errors);
+    handleUpdateInputFieldErrors(errors);
     if (Object.keys(errors).length > 0) return;
 
     const { amount, date, type, remarks, categoryId, subcategoryId } =
@@ -99,8 +99,8 @@ function EditTransactionModal() {
           subcategoryId,
         }
       );
-      resetEditTransactionFormData();
-      closeEditTransactionModal();
+      handleResetEditTransactionFormData();
+      handleCloseEditTransactionModal();
       fetchTransactions(appliedFilters);
     } catch (error) {
       if (!error?.response) {
@@ -120,7 +120,7 @@ function EditTransactionModal() {
   return (
     <Modal
       show={isEditTransactionModalVisible}
-      onHide={closeEditTransactionModal}
+      onHide={handleCloseEditTransactionModal}
       centered
       size="lg"
       className="edit-transaction-modal"
@@ -140,7 +140,7 @@ function EditTransactionModal() {
         <Button
           type="button"
           variant="secondary"
-          onClick={closeEditTransactionModal}
+          onClick={handleCloseEditTransactionModal}
         >
           Cancel
         </Button>

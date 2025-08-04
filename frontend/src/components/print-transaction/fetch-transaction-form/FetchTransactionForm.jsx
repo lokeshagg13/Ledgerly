@@ -9,12 +9,12 @@ import FetchTransactionControl from "./fetch-transaction-control/FetchTransactio
 function FetchTransactionForm() {
   const {
     errorFetchingTransactions,
-    resetErrorFetchingTransactions,
+    handleResetErrorFetchingTransactions,
   } = useContext(TransactionPrintContext);
 
   useEffect(() => {
     if (errorFetchingTransactions.mesesage) {
-      const timeout = setTimeout(() => resetErrorFetchingTransactions(), 8000);
+      const timeout = setTimeout(() => handleResetErrorFetchingTransactions(), 8000);
       return () => clearTimeout(timeout);
     }
     // eslint-disable-next-line

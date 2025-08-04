@@ -9,7 +9,7 @@ function AddCategoryModal() {
   const {
     isAddCategoryModalVisible,
     fetchCategoriesFromDB,
-    closeAddCategoryModal,
+    handleCloseAddCategoryModal,
   } = useContext(CategoryContext);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [isAdding, setIsAdding] = useState(false);
@@ -72,7 +72,7 @@ function AddCategoryModal() {
       });
       setErrorMessage("");
       setNewCategoryName("");
-      closeAddCategoryModal();
+      handleCloseAddCategoryModal();
       fetchCategoriesFromDB();
     } catch (error) {
       if (!error?.response) {
@@ -91,7 +91,7 @@ function AddCategoryModal() {
     if (isAdding) return;
     setErrorMessage("");
     setNewCategoryName("");
-    closeAddCategoryModal();
+    handleCloseAddCategoryModal();
   };
 
   return (

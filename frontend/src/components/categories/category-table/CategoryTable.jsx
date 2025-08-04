@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Spinner, Table } from "react-bootstrap";
 
 import CategoryContext from "../../../store/context/categoryContext";
@@ -6,13 +6,7 @@ import CategoryRow from "./category-row/CategoryRow";
 import { ContextMenuProvider } from "../../../store/context/contextMenuContext";
 
 function CategoryTable() {
-  const { categories, isLoadingCategories, fetchCategoriesFromDB } =
-    useContext(CategoryContext);
-
-  useEffect(() => {
-    fetchCategoriesFromDB();
-    // eslint-disable-next-line
-  }, []);
+  const { isLoadingCategories, categories } = useContext(CategoryContext);
 
   if (isLoadingCategories) {
     return (

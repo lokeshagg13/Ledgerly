@@ -1,27 +1,22 @@
-import { createContext, useEffect, useState } from "react";
-import { axiosPrivate } from "../../api/axios";
+import { createContext, useState } from "react";
 
 const TransactionFilterContext = createContext({
     fromDate: null,
     toDate: null,
-    categories: [],
-    isLoadingCategories: false,
     selectedCategories: [],
     appliedFilters: {},
     filteringError: {},
     setFromDate: (prev) => { },
     setToDate: (prev) => { },
     setSelectedCategories: (prev) => { },
-    resetFilteringError: () => { },
-    applyFilters: () => { },
-    clearFilters: () => { }
+    handleResetFilteringError: () => { },
+    handleApplyFilters: () => { },
+    handleClearFilters: () => { }
 });
 
-export function TransactionFilterProvider({ children }) {
+export function TransactionFilterContextProvider({ children }) {
     const [fromDate, setFromDate] = useState(null);
     const [toDate, setToDate] = useState(null);
-    const [categories, setCategories] = useState(null);
-    const [isLoadingCategories, setIsLoadingCategories] = useState(false);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [appliedFilters, setAppliedFilters] = useState(null);
     const [filteringError, setFilteringError] = useState({
@@ -30,23 +25,7 @@ export function TransactionFilterProvider({ children }) {
         toDate: false
     });
 
-    useEffect(() => {
-        fetchCategoriesFromDB();
-    }, []);
-
-    async function fetchCategoriesFromDB() {
-        setIsLoadingCategories(true);
-        try {
-            const res = await axiosPrivate.get("/user/categories");
-            if (res?.data?.categories) setCategories(res.data.categories);
-        } catch (error) {
-            console.log("Error while fetching categories:", error);
-        } finally {
-            setIsLoadingCategories(false);
-        }
-    }
-
-    function resetFilteringError() {
+    function handleResetFilteringError() {
         setFilteringError({
             message: "",
             fromDate: false,
@@ -73,11 +52,11 @@ export function TransactionFilterProvider({ children }) {
             setFilteringError({ message: errorMessage, ...errorState });
             return false;
         }
-        resetFilteringError();
+        handleResetFilteringError();
         return true;
     }
 
-    function applyFilters() {
+    function handleApplyFilters() {
         if (validateFilters()) {
             setAppliedFilters({
                 fromDate,
@@ -87,28 +66,26 @@ export function TransactionFilterProvider({ children }) {
         }
     }
 
-    function clearFilters() {
+    function handleClearFilters() {
         setFromDate(null);
         setToDate(null);
         setSelectedCategories([]);
         setAppliedFilters(null);
-        resetFilteringError();
+        handleResetFilteringError();
     }
 
     const currentFilterContextValue = {
         fromDate,
         toDate,
         selectedCategories,
-        categories,
-        isLoadingCategories,
         appliedFilters,
         filteringError,
         setFromDate,
         setToDate,
         setSelectedCategories,
-        resetFilteringError,
-        applyFilters,
-        clearFilters,
+        handleResetFilteringError,
+        handleApplyFilters,
+        handleClearFilters,
     };
 
     return (
