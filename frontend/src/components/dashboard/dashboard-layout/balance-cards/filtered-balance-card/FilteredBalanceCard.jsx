@@ -7,6 +7,7 @@ import BalanceFilterSection from "./balance-filter-section/BalanceFilterSection"
 import FilterCardNameEditor from "./filter-card-name-editor/FilterCardNameEditor";
 import CategoryContext from "../../../../../store/context/categoryContext";
 import DashboardContext from "../../../../../store/context/dashboardContext";
+import BalanceCardSkeleton from "../../../../ui/skeletons/BalanceCardSkeleton";
 
 function FilteredBalanceCard() {
   const { categories } = useContext(CategoryContext);
@@ -69,7 +70,7 @@ function FilteredBalanceCard() {
       </div>
 
       {isLoadingFilteredBalance ? (
-        <>Loading...</>
+        <BalanceCardSkeleton />
       ) : filteredBalanceError ? (
         <div className="text-danger">{filteredBalanceError}</div>
       ) : (

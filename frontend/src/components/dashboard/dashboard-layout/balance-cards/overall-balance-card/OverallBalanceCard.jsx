@@ -5,6 +5,7 @@ import {
   formatDateForDisplay,
 } from "../../../../../utils/formatUtils";
 import DashboardContext from "../../../../../store/context/dashboardContext";
+import BalanceCardSkeleton from "../../../../ui/skeletons/BalanceCardSkeleton";
 
 function OverallBalanceCard() {
   const {
@@ -26,7 +27,7 @@ function OverallBalanceCard() {
       <h6 className="balance-title">Net Balance</h6>
 
       {isLoadingOverallBalance ? (
-        <>Loading...</>
+        <BalanceCardSkeleton />
       ) : overallBalanceError ? (
         <div className="text-danger">{overallBalanceError}</div>
       ) : (
