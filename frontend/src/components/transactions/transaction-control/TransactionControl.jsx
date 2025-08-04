@@ -1,12 +1,13 @@
 import { useContext } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "react-bootstrap";
 
 import TransactionContext from "../../../store/context/transactionContext";
 import TransactionFilterContext from "../../../store/context/transactionFilterContext";
 import AddTransactionModal from "./add-transaction/AddTransactionModal";
+import useAppNavigate from "../../../store/hooks/useAppNavigate";
 
 function TransactionControl() {
+  const { handleNavigateToPath } = useAppNavigate();
   const {
     isLoadingTransactions,
     isAddTransactionModalVisible,
@@ -15,21 +16,6 @@ function TransactionControl() {
     handleCloseAddTransactionModal,
   } = useContext(TransactionContext);
   const { appliedFilters } = useContext(TransactionFilterContext);
-
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleNavigateToPrintTransactionsPage = () => {
-    navigate("/transactions/print", {
-      state: { from: location.pathname },
-    });
-  };
-
-  const handleNavigateToUploadTransactionsPage = () => {
-    navigate("/transactions/upload", {
-      state: { from: location.pathname },
-    });
-  };
 
   return (
     <div className="transaction-controls">
@@ -46,7 +32,7 @@ function TransactionControl() {
         type="button"
         className="control-btn btn-outline-light"
         aria-label="Upload transactions"
-        onClick={handleNavigateToUploadTransactionsPage}
+        onClick={() => handleNavigateToPath("/transactions/upload")}
         disabled={isLoadingTransactions}
       >
         Upload Transactions
@@ -55,7 +41,7 @@ function TransactionControl() {
         type="button"
         className="control-btn btn-outline-light"
         aria-label="Add a new transaction"
-        onClick={handleNavigateToPrintTransactionsPage}
+        onClick={() => handleNavigateToPath("/transactions/print")}
         disabled={isLoadingTransactions}
       >
         Print Transactions

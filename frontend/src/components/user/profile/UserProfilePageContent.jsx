@@ -1,22 +1,16 @@
 import { useEffect, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 
 import LeftArrowIcon from "../../ui/icons/LeftArrowIcon";
 import UserProfileForm from "./user-profile-form/UserProfileForm";
 import PasswordUpdateForm from "./password-update-form/PasswordUpdateForm";
+import useAppNavigate from "../../../store/hooks/useAppNavigate";
 
 function UserProfilePageContent() {
-  const location = useLocation();
-  const navigate = useNavigate();
   const userProfileRef = useRef();
   const profileInfoRef = useRef();
   const changePasswordRef = useRef();
-
-  const handleNavigateBack = () => {
-    const previousPage = location.state?.from || "/dashboard";
-    navigate(previousPage);
-  };
+  const { location, handleNavigateBack } = useAppNavigate();
 
   useEffect(() => {
     if (location.hash === "#change-password" && changePasswordRef.current) {

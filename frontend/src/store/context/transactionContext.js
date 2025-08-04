@@ -121,7 +121,7 @@ export const TransactionProvider = ({ children }) => {
 
     function handleCloseAddTransactionModal() {
         setInputFieldErrors({});
-        setIsEditTransactionModalVisible(false);
+        setIsAddTransactionModalVisible(false);
     }
 
     function handleResetAddTransactionFormData() {

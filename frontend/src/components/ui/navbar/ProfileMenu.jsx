@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
@@ -12,11 +11,12 @@ import KeyIcon from "../icons/KeyIcon";
 import LogoutIcon from "../icons/LogoutIcon";
 import useAxiosPrivate from "../../../store/hooks/useAxiosPrivate";
 import { toast } from "react-toastify";
+import useAppNavigate from "../../../store/hooks/useAppNavigate";
 
-function ProfileMenu() {
-  const navigate = useNavigate();
-  const axiosPrivate = useAxiosPrivate();
+function ProfileMenu({ handleNavCollapse }) {
   const { auth, setAuth } = useAuth();
+  const { handleNavigateToPath } = useAppNavigate();
+  const axiosPrivate = useAxiosPrivate();
   const anchorElementRef = useRef();
   const [isMenuOpened, setIsMenuOpened] = useState(false);
 
@@ -35,6 +35,18 @@ function ProfileMenu() {
     else handleOpenMenu(e);
   };
 
+  const handleNavigateToProfileInfoSection = () => {
+    handleNavigateToPath("/user/profile#profile-info");
+    handleCloseMenu();
+    handleNavCollapse();
+  };
+
+  const handleNavigateToChangePasswordSection = () => {
+    handleNavigateToPath("/user/profile#change-password");
+    handleCloseMenu();
+    handleNavCollapse();
+  };
+
   async function handleLogout() {
     try {
       await axiosPrivate.get("/user/logout");
@@ -43,7 +55,8 @@ function ProfileMenu() {
         autoClose: 3000,
       });
       setAuth({});
-      navigate("/", { replace: true });
+      handleNavigateToPath("/", { replace: true });
+      handleNavCollapse();
     } catch (error) {
       if (!error?.response) {
         alert("No server response.");
@@ -135,18 +148,14 @@ function ProfileMenu() {
           Hello <strong>{auth?.name?.split(" ")?.[0] || "User"},</strong>
         </Box>
         <MenuItem
-          component={Link}
-          to="/user/profile#profile-info"
           className="profile-menu-list-item"
-          onClick={handleCloseMenu}
+          onClick={handleNavigateToProfileInfoSection}
         >
           <Avatar /> Manage Profile
         </MenuItem>
         <MenuItem
-          component={Link}
-          to="/user/profile#change-password"
           className="profile-menu-list-item"
-          onClick={handleCloseMenu}
+          onClick={handleNavigateToChangePasswordSection}
         >
           <Avatar>
             <KeyIcon fill="#fff" width="0.9rem" height="0.9rem" />

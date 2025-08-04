@@ -1,9 +1,10 @@
 import { useContext } from "react";
-import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import TransactionUploadContext from "../../../../store/context/transactionUploadContext";
+import useAppNavigate from "../../../../store/hooks/useAppNavigate";
 
 function BulkTransactionTopControl() {
+  const { handleNavigateToPath } = useAppNavigate();
   const {
     isUploadingBulkTransactions,
     checkIfAnyTransactionSelected,
@@ -16,11 +17,13 @@ function BulkTransactionTopControl() {
   return (
     <div className="bulk-transaction-top-control-wrapper">
       <div className="bulk-transaction-top-control">
-        <Link to="/categories">
-          <Button className="btn-blue" disabled={isUploadingBulkTransactions}>
-            Manage Categories
-          </Button>
-        </Link>
+        <Button
+          className="btn-blue"
+          disabled={isUploadingBulkTransactions}
+          onClick={() => handleNavigateToPath("/categories")}
+        >
+          Manage Categories
+        </Button>
         <Button
           className="btn-outline"
           onClick={handleResetSelectedTransactions}

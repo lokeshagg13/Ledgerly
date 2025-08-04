@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
 import { Button, Form } from "react-bootstrap";
 
 import { axiosPrivate } from "../../../../api/axios";
 import useAuth from "../../../../store/hooks/useAuth";
 import EyeOpenIcon from "../../../ui/icons/EyeOpenIcon";
 import EyeSlashIcon from "../../../ui/icons/EyeSlashIcon";
+import useAppNavigate from "../../../../store/hooks/useAppNavigate";
 
 function LoginForm() {
   const emailRef = useRef();
   const { setAuth } = useAuth();
-  const navigate = useNavigate();
+  const { handleNavigateToPath } = useAppNavigate();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -99,7 +99,7 @@ function LoginForm() {
       setAuth({ email, name, accessToken, createdAt, openingBalance });
       setErrorMessage("");
       setFormData({ email: "", password: "" });
-      navigate("/dashboard", { replace: true });
+      handleNavigateToPath("/dashboard", { replace: true });
     } catch (error) {
       if (!error?.response) {
         setErrorMessage("Login failed: No server response.");
@@ -167,7 +167,13 @@ function LoginForm() {
         )}
       </Button>
       <div className="register-link">
-        Not Registered? <Link to="/register">Signup here</Link>
+        Not Registered?{" "}
+        <button
+          className="link-btn"
+          onClick={() => handleNavigateToPath("/register")}
+        >
+          Signup here
+        </button>
       </div>
     </Form>
   );

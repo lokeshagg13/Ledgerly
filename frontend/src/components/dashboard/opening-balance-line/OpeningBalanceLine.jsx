@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
 import useAuth from "../../../store/hooks/useAuth";
 import { formatAmountForDisplay } from "../../../utils/formatUtils";
+import useAppNavigate from "../../../store/hooks/useAppNavigate";
 
 function OpeningBalanceLine() {
   const { auth } = useAuth();
+  const { handleNavigateToPath } = useAppNavigate();
 
   let openingBalance = auth?.openingBalance?.amount;
   if (openingBalance == null) return null;
@@ -28,7 +29,14 @@ function OpeningBalanceLine() {
       <span className={`opening-balance-value ${balanceClass}`}>
         {openingBalance}.
       </span>
-      Manage your opening balance from <Link to="/user/profile">here</Link>.
+      Manage your opening balance from{" "}
+      <button
+        className="link-btn"
+        onClick={() => handleNavigateToPath("/user/profile")}
+      >
+        here
+      </button>
+      .
     </div>
   );
 }

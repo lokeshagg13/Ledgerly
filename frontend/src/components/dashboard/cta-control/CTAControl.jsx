@@ -1,43 +1,34 @@
-import { useLocation, useNavigate } from "react-router-dom";
-
+import useAppNavigate from "../../../store/hooks/useAppNavigate";
 import DownloadIcon from "../../ui/icons/DownloadIcon";
 import FileIcon from "../../ui/icons/FileIcon";
 import GearIcon from "../../ui/icons/GearIcon";
 
 function CTAControl() {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleViewTransactions = () =>
-    navigate("/transactions", {
-      state: { from: location.pathname },
-    });
-
-  const handlePrintTransactions = () =>
-    navigate("/transactions/print", {
-      state: { from: location.pathname },
-    });
-
-  const handleManageCategories = () =>
-    navigate("/categories", {
-      state: { from: location.pathname },
-    });
-
+  const { handleNavigateToPath } = useAppNavigate();
   return (
-    <div className="cta-container">
-      <button className="cta-button" onClick={handleViewTransactions}>
+    <div className="dashboard-cta-container">
+      <button
+        className="cta-button"
+        onClick={() => handleNavigateToPath("/transactions")}
+      >
         <span className="cta-icon">
           <FileIcon />
         </span>
         <span className="cta-label">View Your Transactions</span>
       </button>
-      <button className="cta-button" onClick={handlePrintTransactions}>
+      <button
+        className="cta-button"
+        onClick={() => handleNavigateToPath("/transactions/print")}
+      >
         <span className="cta-icon">
           <DownloadIcon />
         </span>
         <span className="cta-label">Save Transactions as PDF</span>
       </button>
-      <button className="cta-button" onClick={handleManageCategories}>
+      <button
+        className="cta-button"
+        onClick={() => handleNavigateToPath("/categories")}
+      >
         <span className="cta-icon">
           <GearIcon />
         </span>

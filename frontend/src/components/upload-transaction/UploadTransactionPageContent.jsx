@@ -1,19 +1,13 @@
 import { Button } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom";
 import ExtractTransactionForm from "./extract-transaction-form/ExtractTransactionForm";
-import LeftArrowIcon from "../ui/icons/LeftArrowIcon";
 import BulkTransactionSection from "./bulk-transaction-section/BulkTransactionSection";
+import LeftArrowIcon from "../ui/icons/LeftArrowIcon";
 import { CategoryProvider } from "../../store/context/categoryContext";
 import { TransactionUploadContextProvider } from "../../store/context/transactionUploadContext";
+import useAppNavigate from "../../store/hooks/useAppNavigate";
 
 function UploadTransactionPageContent() {
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const handleNavigateBack = () => {
-    const previousPage = location.state?.from || "/dashboard";
-    navigate(previousPage);
-  };
+  const { handleNavigateBack } = useAppNavigate();
 
   return (
     <CategoryProvider>

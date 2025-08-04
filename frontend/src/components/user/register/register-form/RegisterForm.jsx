@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import { Button, Form } from "react-bootstrap";
 
 import axios from "../../../../api/axios";
 import EyeOpenIcon from "../../../ui/icons/EyeOpenIcon";
 import EyeSlashIcon from "../../../ui/icons/EyeSlashIcon";
 import { toast } from "react-toastify";
+import useAppNavigate from "../../../../store/hooks/useAppNavigate";
 
 function RegisterForm() {
+  const { handleNavigateToPath } = useAppNavigate();
   const nameRef = useRef();
   const [formData, setFormData] = useState({
     name: "",
@@ -307,7 +308,13 @@ function RegisterForm() {
         )}
       </Button>
       <div className="login-link">
-        Already Registered? <Link to="/login">Login here</Link>
+        Already Registered?{" "}
+        <button
+          className="link-btn"
+          onClick={() => handleNavigateToPath("/login")}
+        >
+          Login here
+        </button>
       </div>
       {registerSuccess && (
         <div className="message">

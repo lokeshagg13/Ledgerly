@@ -1,8 +1,8 @@
 import { createContext, useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { axiosPrivate } from "../../api/axios";
 import { toast } from "react-toastify";
 import { formatAmountForFirstTimeInput, formatCustomDateFormatForCalendarInput } from "../../utils/formatUtils";
+import useAppNavigate from "../hooks/useAppNavigate";
 
 const TransactionUploadContext = createContext({
     transactionFile: null,
@@ -36,7 +36,7 @@ const TransactionUploadContext = createContext({
 });
 
 export function TransactionUploadContextProvider({ children }) {
-    const navigate = useNavigate();
+    const { handleNavigateToPath } = useAppNavigate();
     const [transactionFile, setTransactionFile] = useState(null);
     const [isExtractingTransactions, setIsExtractingTransactions] = useState(false);
     const [extractedTransactions, setExtractedTransactions] = useState([]);
@@ -336,7 +336,7 @@ export function TransactionUploadContextProvider({ children }) {
                 autoClose: 3000
             });
             handleResetAll();
-            navigate('/transactions');
+            handleNavigateToPath("/transactions");
         } catch (error) {
             handleErrorUploadingTransactions(error);
         } finally {

@@ -1,19 +1,13 @@
 import { Button } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom";
 import FetchTransactionForm from "./fetch-transaction-form/FetchTransactionForm";
 import PrintTransactionForm from "./print-transaction-form/PrintTransactionForm";
 import LeftArrowIcon from "../ui/icons/LeftArrowIcon";
 import { CategoryProvider } from "../../store/context/categoryContext";
 import { TransactionPrintContextProvider } from "../../store/context/transactionPrintContext";
+import useAppNavigate from "../../store/hooks/useAppNavigate";
 
 function PrintTransactionPageContent() {
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const handleNavigateBack = () => {
-    const previousPage = location.state?.from || "/dashboard";
-    navigate(previousPage);
-  };
+  const { handleNavigateBack } = useAppNavigate();
 
   return (
     <CategoryProvider>
