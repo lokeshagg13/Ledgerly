@@ -1,29 +1,10 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useContext } from "react";
 
+import NavContext from "../context/navContext";
+
+// Simple hook (custom) to use nav context
 function useAppNavigate() {
-    const navigate = useNavigate();
-    const location = useLocation();
-
-    const handleNavigateToPath = (path, { replace } = {}) => {
-        if (replace) {
-            navigate(path, { replace: true });
-        } else {
-            navigate(path, {
-                state: { from: location.pathname },
-            });
-        }
-    };
-
-    const handleNavigateBack = (defaultPath = "/dashboard") => {
-        const previousPage = location.state?.from || defaultPath;
-        navigate(previousPage);
-    };
-
-    return {
-        location,
-        handleNavigateToPath,
-        handleNavigateBack,
-    }
+    return useContext(NavContext);
 }
 
 export default useAppNavigate;
