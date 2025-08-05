@@ -679,7 +679,7 @@ body,
 /* #endregion */
 
 /* #region - User profile form */
-.user-profile-form {
+.profile-info-form {
   width: 100%;
   margin: 0 auto;
   padding: 1rem;
@@ -689,41 +689,41 @@ body,
   gap: 1rem;
 }
 
-.user-profile-form h5 {
+.profile-info-form h5 {
   text-align: left;
 }
 
-.user-profile-form .custom-input-group {
+.profile-info-form .custom-input-group {
   display: flex;
   flex-direction: row;
   align-items: baseline;
   justify-content: space-between;
 }
 
-.user-profile-form .custom-input-col {
+.profile-info-form .custom-input-col {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
-.user-profile-form .form-label {
+.profile-info-form .form-label {
   width: 50%;
   text-align: left;
   font-weight: 500;
   margin-bottom: 0;
 }
 
-.user-profile-form .form-input {
+.profile-info-form .form-input {
   font-size: 0.95rem;
   padding: 0.5rem 0.75rem;
   margin-bottom: 0;
 }
 
-.user-profile-form #profileOpeningBalance {
+.profile-info-form #profileOpeningBalance {
   padding-right: 2rem;
 }
 
-.user-profile-form .form-fixed {
+.profile-info-form .form-fixed {
   background-color: #f5f5f5;
   border: 1px solid #d1d5db;
   color: #6b7280;
@@ -731,54 +731,59 @@ body,
   pointer-events: none;
 }
 
-.user-profile-form .text-danger {
+.profile-info-form .text-danger {
   text-align: left;
   margin-top: 0.2rem;
   font-size: 0.9rem;
   animation: fadeIn 0.5s ease-in-out;
 }
 
-.user-profile-form select#profileBalanceType {
+.profile-info-form select#profileBalanceType {
   max-width: 72px;
   background-color: #e7f3ff;
 }
 
-.user-profile-form-control {
+.profile-info-form-control {
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
   margin-top: 1rem;
 }
 
-.user-profile-form .message {
+.profile-info-form .message {
   margin-top: 1rem;
   color: #0c7b39;
   font-weight: 500;
 }
 
-.user-profile-form .error {
+.profile-info-form .error {
   color: #b00020;
   font-size: 0.9rem;
   margin-top: 0.5rem;
 }
 
-.user-profile-form .last-updated-text {
+.profile-info-form .last-updated-text {
   text-align: left;
 }
 
-.user-profile-form .opening-balance-input-wrapper {
+.profile-info-form .opening-balance-input-wrapper {
   position: relative;
   flex: 1;
 }
 
-.user-profile-form .opening-balance-info-icon {
+.profile-info-form .opening-balance-info-icon {
   position: absolute;
   transform: translateY(-140%);
   right: 0.5rem;
 }
 
-.user-profile-form input.is-invalid + span {
+.profile-info-form input.is-invalid + span {
   margin-right: 1.5rem;
+}
+
+.profile-info-form .form-input.unsaved {
+  border-color: #ffc107 !important;
+  box-shadow: 0 0 0 0.15rem rgba(255, 193, 7, 0.25);
 }
 
 #balInfoTooltip.show {
@@ -831,18 +836,18 @@ body,
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
-  .user-profile-form .custom-input-group {
+  .profile-info-form .custom-input-group {
     flex-direction: column;
   }
 
-  .user-profile-form .form-label {
+  .profile-info-form .form-label {
     width: 100%;
     margin-bottom: 0.25rem;
   }
 }
 
 @media (max-width: 300px) {
-  .user-profile-form-control {
+  .profile-info-form-control {
     flex-direction: column;
   }
 }

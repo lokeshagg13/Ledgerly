@@ -8,8 +8,9 @@ import {
   formatDateForFancyDisplay,
 } from "../../../../utils/formatUtils";
 import OpeningBalanceTooltip from "./opening-balance-tooltip/OpeningBalanceTooltip";
+import OpeningBalanceChangeModal from "./opening-balance-change-modal/OpeningBalanceChangeModal";
 
-function UserProfileForm() {
+function ProfileInfoForm() {
   const { auth, setAuth } = useAuth();
 
   const originalData = {
@@ -17,16 +18,24 @@ function UserProfileForm() {
     openingBalance: Math.abs(auth?.openingBalance?.amount || 0).toString(),
     balanceType: auth?.openingBalance?.amount >= 0 ? "credit" : "debit",
   };
-  const [hasChanges, setHasChanges] = useState(false);
   const [formData, setFormData] = useState({
     name: originalData.name,
     openingBalance: originalData.openingBalance,
     balanceType: originalData.balanceType,
   });
+  const [unsavedFields, setUnsavedFields] = useState({
+    name: false,
+    openingBalance: false,
+    balanceType: false,
+  });
+  const [hasChanges, setHasChanges] = useState(false);
+  const [isBalanceChangeModalVisible, setIsBalanceChangeModalVisible] =
+    useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [inputFieldErrors, setInputFieldErrors] = useState({});
   const [commonErrorMessage, setCommonErrorMessage] = useState("");
+  let pendingUpdatePayload = null;
 
   // Make the common error disappear after 6 seconds
   useEffect(() => {
@@ -44,9 +53,11 @@ function UserProfileForm() {
     const { name, value } = e.target;
     setInputFieldErrors({ ...inputFieldErrors, [name]: null });
     let newFormData = { ...formData };
+    let newUnsavedFields = { ...unsavedFields };
     if (name === "name" || name === "balanceType") {
-      newFormData = { ...formData, [name]: value };
-      setFormData(newFormData);
+      const valueTrimmed = value.trim();
+      newFormData[name] = valueTrimmed;
+      newUnsavedFields[name] = valueTrimmed !== originalData[name];
     } else if (name === "openingBalance") {
       const rawValue = value.replace(/,/g, "");
       const isValid = /^(\d+)?(\.\d{0,2})?$/.test(rawValue);
@@ -55,17 +66,15 @@ function UserProfileForm() {
         (isValid || rawValue === "") &&
         (rawValue === "" || numericValue <= Number.MAX_SAFE_INTEGER)
       ) {
-        newFormData = { ...formData, [name]: rawValue };
+        newFormData[name] = rawValue;
+        newUnsavedFields[name] = rawValue !== originalData[name];
         setFormData(newFormData);
       }
     }
 
-    const isNameChanged = newFormData.name.trim() !== originalData.name.trim();
-    const isBalanceChanged =
-      newFormData.openingBalance !== originalData.openingBalance;
-    const isTypeChanged = newFormData.balanceType !== originalData.balanceType;
-
-    setHasChanges(isNameChanged || isBalanceChanged || isTypeChanged);
+    setFormData(newFormData);
+    setUnsavedFields(newUnsavedFields);
+    setHasChanges(Object.values(newUnsavedFields).some(Boolean));
   };
 
   // Name validation function
@@ -116,7 +125,7 @@ function UserProfileForm() {
     return errors;
   };
 
-  // Handle update of profile
+  // Handle update of profile (check which fields are changed and show confirmation modal for change in balance)
   const handleUpdate = async () => {
     if (isUpdating) return;
     const errors = validateProfileFormData();
@@ -124,29 +133,38 @@ function UserProfileForm() {
     if (Object.keys(errors).length > 0) return;
 
     const { name, openingBalance, balanceType } = formData;
+    const payload = {};
+
+    if (name.trim() !== originalData.name.trim()) {
+      payload.name = name.trim();
+    }
+
+    if (
+      openingBalance !== originalData.openingBalance ||
+      balanceType !== originalData.balanceType
+    ) {
+      const formattedAmount = `${
+        balanceType === "debit" ? "-" : ""
+      }${openingBalance}`;
+      payload.openingBalance = parseFloat(formattedAmount);
+      pendingUpdatePayload = payload;
+      handleOpenBalanceChangeModal();
+      return;
+    }
+
+    if (Object.keys(payload).length === 0) {
+      setCommonErrorMessage("No changes detected to update.");
+      return;
+    }
+
+    // If only name changed, proceed directly
+    performProfileInfoUpdate(payload);
+  };
+
+  // Perform actual profile info update via the api call
+  const performProfileInfoUpdate = async (payload) => {
     setIsUpdating(true);
     try {
-      const payload = {};
-
-      if (name.trim() !== originalData.name.trim()) {
-        payload.name = name.trim();
-      }
-
-      if (
-        openingBalance !== originalData.openingBalance ||
-        balanceType !== originalData.balanceType
-      ) {
-        const formattedAmount = `${
-          balanceType === "debit" ? "-" : ""
-        }${openingBalance}`;
-        // Convert balance to float, negative if debit
-        payload.openingBalance = parseFloat(formattedAmount);
-      }
-
-      if (Object.keys(payload).length === 0) {
-        throw new Error("No changes detected to update.");
-      }
-
       const response = await axiosPrivate.put(
         "/user/profile",
         JSON.stringify(payload)
@@ -159,6 +177,7 @@ function UserProfileForm() {
       setInputFieldErrors({});
       setCommonErrorMessage("");
       setAuth({ ...auth, name: updatedName, openingBalance: updatedBalance });
+      setHasChanges(false);
     } catch (error) {
       setUpdateSuccess(false);
       if (!error?.response) {
@@ -172,21 +191,50 @@ function UserProfileForm() {
       }
     } finally {
       setIsUpdating(false);
+      handleCloseBalanceChangeModal();
     }
   };
 
   // Reset profile form
-  const handleReset = () => {
+  const handleResetProfileForm = () => {
     if (isUpdating) return;
+    setFormData(originalData);
+    setUnsavedFields({
+      name: false,
+      openingBalance: false,
+      balanceType: false,
+    });
+    setHasChanges(false);
     setUpdateSuccess(false);
     setInputFieldErrors({});
     setCommonErrorMessage("");
-    setFormData(originalData);
-    setHasChanges(false);
+  };
+
+  // Open Balance Change Modal
+  const handleOpenBalanceChangeModal = () => {
+    setIsBalanceChangeModalVisible(true);
+  };
+
+  // Close Balance Change Modal
+  const handleCloseBalanceChangeModal = () => {
+    setIsBalanceChangeModalVisible(false);
+  };
+
+  // Cancelling Balance Change Modal
+  const handleCancelBalanceChangeModal = () => {
+    handleCloseBalanceChangeModal();
+    pendingUpdatePayload = null;
+  };
+
+  // Confirm Balance Change Modal
+  const handleConfirmBalanceChangeModal = () => {
+    if (pendingUpdatePayload) {
+      performProfileInfoUpdate(pendingUpdatePayload);
+    }
   };
 
   return (
-    <Form className="user-profile-form">
+    <Form className="profile-info-form">
       <h5 className="mb-3">Profile Info</h5>
       <Form.Group className="custom-input-group">
         <Form.Label>Name</Form.Label>
@@ -201,7 +249,7 @@ function UserProfileForm() {
             isInvalid={checkIfInputFieldInvalid("name")}
             className={`form-input ${
               checkIfInputFieldInvalid("name") ? "shake" : ""
-            }`}
+            } ${unsavedFields.name ? "unsaved" : ""}`}
             required
           />
           {checkIfInputFieldInvalid("name") && (
@@ -249,7 +297,12 @@ function UserProfileForm() {
                 isInvalid={checkIfInputFieldInvalid("openingBalance")}
                 className={`form-input ${
                   checkIfInputFieldInvalid("openingBalance") ? "shake" : ""
-                }`}
+                } ${
+                  unsavedFields.openingBalance || unsavedFields.balanceType
+                    ? "unsaved"
+                    : ""
+                }
+                `}
                 inputMode="decimal"
                 required
               />
@@ -290,7 +343,7 @@ function UserProfileForm() {
       {updateSuccess && (
         <div className="message">Profile updated successfully.</div>
       )}
-      <div className="user-profile-form-control">
+      <div className="profile-info-form-control">
         <Button
           variant="primary"
           type="button"
@@ -313,14 +366,19 @@ function UserProfileForm() {
         <Button
           variant="outline-primary"
           type="button"
-          onClick={handleReset}
+          onClick={handleResetProfileForm}
           disabled={isUpdating}
         >
           Reset
         </Button>
       </div>
+      <OpeningBalanceChangeModal
+        show={isBalanceChangeModalVisible}
+        onClose={handleCancelBalanceChangeModal}
+        onConfirm={handleConfirmBalanceChangeModal}
+      />
     </Form>
   );
 }
 
-export default UserProfileForm;
+export default ProfileInfoForm;

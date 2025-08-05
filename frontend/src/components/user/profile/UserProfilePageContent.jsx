@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 
 import LeftArrowIcon from "../../ui/icons/LeftArrowIcon";
-import UserProfileForm from "./user-profile-form/UserProfileForm";
+import ProfileInfoForm from "./profile-info-form/ProfileInfoForm";
 import PasswordUpdateForm from "./password-update-form/PasswordUpdateForm";
 import useAppNavigate from "../../../store/hooks/useAppNavigate";
 
@@ -36,7 +36,7 @@ function UserProfilePageContent() {
       </div>
       <div className="user-profile-page-body">
         <div ref={profileInfoRef} id="profile-info">
-          <UserProfileForm />
+          <ProfileInfoForm />
         </div>
         <hr />
         <div ref={changePasswordRef} id="change-password">
