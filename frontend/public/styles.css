@@ -853,6 +853,34 @@ body,
 }
 /* #endregion */
 
+/* #region - Opening balance change confirmation modal */
+.opening-balance-change-modal .balance-change-summary {
+  font-size: 1.05rem;
+  font-weight: 500;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.opening-balance-change-modal .old-balance {
+  color: #6b7280;
+  text-decoration: line-through;
+}
+
+.opening-balance-change-modal .new-balance {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.opening-balance-change-modal .balance-arrow {
+  font-size: 1.2rem;
+  color: #9ca3af;
+}
+/* #endregion */
+
 /* #region - Password update form */
 .password-update-form {
   width: 100%;

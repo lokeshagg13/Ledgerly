@@ -1,18 +1,44 @@
 import { Modal, Button } from "react-bootstrap";
+import { formatAmountForDisplay } from "../../../../../utils/formatUtils";
+import RightArrowIcon from "../../../../ui/icons/RightArrowIcon";
 
-function OpeningBalanceChangeModal({ show, onClose, onConfirm }) {
+function OpeningBalanceChangeModal({
+  show,
+  onClose,
+  onConfirm,
+  prevBalance,
+  prevType,
+  newBalance,
+  newType,
+}) {
+  const formatBalanceDisplay = (amount, type) => {
+    const label = type === "debit" ? "Dr" : "Cr";
+    const isZero = amount === "0";
+    console.log(amount, typeof amount);
+    return `${formatAmountForDisplay(amount)} ${
+      isZero ? "" : "(" + label + ")"
+    }`;
+  };
+
   return (
-    <Modal show={show} onHide={onClose} centered backdrop="static">
+    <Modal className="opening-balance-change-modal" show={show} onHide={onClose} centered backdrop="static">
       <Modal.Header closeButton>
         <Modal.Title>Confirm Opening Balance Change</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <div>
-          You are about to update your opening balance.
-          <div className="warning-message mt-2">
-            Going forward, all balances will be recalculated based on the new
-            opening balance you provide.
-          </div>
+        <p>You are about to update your opening balance.</p>
+        <div className="balance-change-summary">
+          <span className="old-balance">
+            {formatBalanceDisplay(prevBalance, prevType)}
+          </span>
+          <span className="balance-arrow mx-2">→</span>
+          <span className="new-balance">
+            {formatBalanceDisplay(newBalance, newType)}
+          </span>
+        </div>
+        <div className="warning-message">
+          Going forward, all balances will be recalculated based on the new
+          opening balance.
         </div>
       </Modal.Body>
       <Modal.Footer>

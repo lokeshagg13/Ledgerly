@@ -53,7 +53,7 @@ function ProfileInfoForm() {
     setInputFieldErrors({ ...inputFieldErrors, [name]: null });
     let newFormData = { ...formData };
     let newUnsavedFields = { ...unsavedFields };
-    if (name === "name" || name === "balanceType") {
+    if (name === "name") {
       const valueTrimmed = value.trim();
       newFormData[name] = value;
       newUnsavedFields[name] = valueTrimmed !== originalData[name];
@@ -66,9 +66,24 @@ function ProfileInfoForm() {
         (rawValue === "" || numericValue <= Number.MAX_SAFE_INTEGER)
       ) {
         newFormData[name] = rawValue;
-        newUnsavedFields[name] = rawValue !== originalData[name];
-        setFormData(newFormData);
+        const parsedNew = parseFloat(rawValue || "0");
+        const parsedOriginal = parseFloat(originalData.openingBalance || "0");
+        newUnsavedFields[name] = parsedNew !== parsedOriginal;
+        const isZeroBalance = parsedNew === 0;
+        if (isZeroBalance) {
+          newUnsavedFields.balanceType = false;
+        } else {
+          newUnsavedFields.balanceType =
+            newFormData.balanceType !== originalData.balanceType;
+        }
       }
+    } else if (name === "balanceType") {
+      const valueTrimmed = value.trim();
+      newFormData[name] = valueTrimmed;
+      const parsedBalance = parseFloat(newFormData.openingBalance || "0");
+      const isZeroBalance = parsedBalance === 0;
+      newUnsavedFields[name] =
+        !isZeroBalance && valueTrimmed !== originalData[name];
     }
 
     setFormData(newFormData);
@@ -379,6 +394,10 @@ function ProfileInfoForm() {
         show={isBalanceChangeModalVisible}
         onClose={handleCancelBalanceChangeModal}
         onConfirm={handleConfirmBalanceChangeModal}
+        prevBalance={originalData.openingBalance}
+        prevType={originalData.balanceType}
+        newBalance={formData.openingBalance}
+        newType={formData.balanceType}
       />
     </Form>
   );
