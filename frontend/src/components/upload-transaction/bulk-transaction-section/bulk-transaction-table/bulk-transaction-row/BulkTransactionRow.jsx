@@ -240,7 +240,7 @@ function BulkTransactionRow({ index, data }) {
 
       {/* Controls */}
       <td className="controls">
-        <BulkTransactionRowControl _id={_id} />
+        <BulkTransactionRowControl index={index} _id={_id} />
       </td>
     </tr>
   );

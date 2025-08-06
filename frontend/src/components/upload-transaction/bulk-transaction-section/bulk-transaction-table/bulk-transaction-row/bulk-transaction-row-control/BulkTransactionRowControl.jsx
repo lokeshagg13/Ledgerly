@@ -1,13 +1,33 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Button } from "react-bootstrap";
 import TransactionUploadContext from "../../../../../../store/context/transactionUploadContext";
 import TrashIcon from "../../../../../ui/icons/TrashIcon";
 import RotateIcon from "../../../../../ui/icons/RotateIcon";
+import BulkTransactionRowRemoveModal from "./bulk-transaction-row-remove-modal/BulkTransactionRowRemoveModal";
 
-function BulkTransactionRowControl({ _id }) {
+function BulkTransactionRowControl({ index, _id }) {
   const { handleRemoveTransaction, handleResetTransaction } = useContext(
     TransactionUploadContext
   );
+  const [isRemoveTransactionModalVisible, setIsRemoveTransactionModalVisible] =
+    useState(false);
+
+  const handleOpenRemoveTransactionModal = () => {
+    setIsRemoveTransactionModalVisible(true);
+  };
+
+  const handleCloseRemoveTransactionModal = () => {
+    setIsRemoveTransactionModalVisible(false);
+  };
+
+  const handleConfirmRemoveTransactionModal = () => {
+    handleRemoveTransaction(_id);
+    handleCloseRemoveTransactionModal();
+  };
+
+  const handleCancelRemoveTransactionModal = () => {
+    handleCloseRemoveTransactionModal();
+  };
 
   return (
     <div className="bulk-transaction-row-control">
@@ -23,11 +43,20 @@ function BulkTransactionRowControl({ _id }) {
       <Button
         type="button"
         className="delete-btn"
-        onClick={() => handleRemoveTransaction(_id)}
+        onClick={handleOpenRemoveTransactionModal}
         title="Remove this transaction"
       >
         <TrashIcon fill="red" width="0.9rem" height="0.9rem" />
       </Button>
+
+      {isRemoveTransactionModalVisible && (
+        <BulkTransactionRowRemoveModal
+          transactionIdx={index}
+          show={isRemoveTransactionModalVisible}
+          onClose={handleCancelRemoveTransactionModal}
+          onConfirm={handleConfirmRemoveTransactionModal}
+        />
+      )}
     </div>
   );
 }

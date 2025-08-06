@@ -420,6 +420,7 @@ export function TransactionUploadContextProvider({ children }) {
         extractTransactionError,
         isEditTransactionSectionVisible,
         editableTransactions,
+        selectedTransactionIds,
         isUploadingBulkTransactions,
         inputFieldErrorsMap,
         errorUploadingTransactions,
