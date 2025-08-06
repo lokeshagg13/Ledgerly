@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Form, Button, InputGroup } from "react-bootstrap";
 
 import useAuth from "../../../../store/hooks/useAuth";
@@ -9,6 +9,7 @@ import {
 } from "../../../../utils/formatUtils";
 import OpeningBalanceTooltip from "./opening-balance-tooltip/OpeningBalanceTooltip";
 import OpeningBalanceChangeModal from "./opening-balance-change-modal/OpeningBalanceChangeModal";
+import { toast } from "react-toastify";
 
 function ProfileInfoForm() {
   const { auth, setAuth } = useAuth();
@@ -31,11 +32,10 @@ function ProfileInfoForm() {
   const [hasChanges, setHasChanges] = useState(false);
   const [isBalanceChangeModalVisible, setIsBalanceChangeModalVisible] =
     useState(false);
-  const [updateSuccess, setUpdateSuccess] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [inputFieldErrors, setInputFieldErrors] = useState({});
   const [commonErrorMessage, setCommonErrorMessage] = useState("");
-  let pendingUpdatePayload = null;
+  const pendingUpdatePayload = useRef(null);
 
   // Make the common error disappear after 6 seconds
   useEffect(() => {
@@ -48,7 +48,6 @@ function ProfileInfoForm() {
 
   // Handle changes in the input fields
   const handleChange = (e) => {
-    setUpdateSuccess(false);
     setCommonErrorMessage("");
     const { name, value } = e.target;
     setInputFieldErrors({ ...inputFieldErrors, [name]: null });
@@ -56,7 +55,7 @@ function ProfileInfoForm() {
     let newUnsavedFields = { ...unsavedFields };
     if (name === "name" || name === "balanceType") {
       const valueTrimmed = value.trim();
-      newFormData[name] = valueTrimmed;
+      newFormData[name] = value;
       newUnsavedFields[name] = valueTrimmed !== originalData[name];
     } else if (name === "openingBalance") {
       const rawValue = value.replace(/,/g, "");
@@ -147,7 +146,7 @@ function ProfileInfoForm() {
         balanceType === "debit" ? "-" : ""
       }${openingBalance}`;
       payload.openingBalance = parseFloat(formattedAmount);
-      pendingUpdatePayload = payload;
+      pendingUpdatePayload.current = payload;
       handleOpenBalanceChangeModal();
       return;
     }
@@ -173,13 +172,16 @@ function ProfileInfoForm() {
       const { name: updatedName, openingBalance: updatedBalance } =
         response?.data?.updated;
 
-      setUpdateSuccess(true);
+      toast.success("Profile updated successfully.", {
+        position: "top-center",
+        autoClose: 3000,
+      });
       setInputFieldErrors({});
       setCommonErrorMessage("");
       setAuth({ ...auth, name: updatedName, openingBalance: updatedBalance });
       setHasChanges(false);
+      handleResetUnsavedFields();
     } catch (error) {
-      setUpdateSuccess(false);
       if (!error?.response) {
         setCommonErrorMessage(
           "Error while updating your profile: No server response."
@@ -195,17 +197,21 @@ function ProfileInfoForm() {
     }
   };
 
-  // Reset profile form
-  const handleResetProfileForm = () => {
-    if (isUpdating) return;
-    setFormData(originalData);
+  // Reset unsaved fields
+  const handleResetUnsavedFields = () => {
     setUnsavedFields({
       name: false,
       openingBalance: false,
       balanceType: false,
     });
+  };
+
+  // Reset profile form
+  const handleResetProfileForm = () => {
+    if (isUpdating) return;
+    handleResetUnsavedFields();
+    setFormData(originalData);
     setHasChanges(false);
-    setUpdateSuccess(false);
     setInputFieldErrors({});
     setCommonErrorMessage("");
   };
@@ -223,13 +229,13 @@ function ProfileInfoForm() {
   // Cancelling Balance Change Modal
   const handleCancelBalanceChangeModal = () => {
     handleCloseBalanceChangeModal();
-    pendingUpdatePayload = null;
+    pendingUpdatePayload.current = null;
   };
 
   // Confirm Balance Change Modal
   const handleConfirmBalanceChangeModal = () => {
-    if (pendingUpdatePayload) {
-      performProfileInfoUpdate(pendingUpdatePayload);
+    if (pendingUpdatePayload.current) {
+      performProfileInfoUpdate(pendingUpdatePayload.current);
     }
   };
 
@@ -340,9 +346,6 @@ function ProfileInfoForm() {
         </div>
       </Form.Group>
       {commonErrorMessage && <p className="error">{commonErrorMessage}</p>}
-      {updateSuccess && (
-        <div className="message">Profile updated successfully.</div>
-      )}
       <div className="profile-info-form-control">
         <Button
           variant="primary"
