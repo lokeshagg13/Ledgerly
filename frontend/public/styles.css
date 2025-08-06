@@ -2817,24 +2817,37 @@ body,
 /* #region - Upload - Bulk transaction footer control */
 .bulk-transaction-footer-control {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 1rem;
-  margin-top: 1rem;
 }
 
-.bulk-transaction-footer-control .btn-blue {
+.bulk-transaction-footer-control-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.bulk-transaction-footer-control-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 10px;
+}
+
+.bulk-transaction-footer-control .btn-blue,
+.bulk-transaction-footer-control .btn-outline {
   padding: 0.55rem 1.5rem;
-  background-color: #2563eb;
-  color: white;
   font-weight: 600;
   font-size: 1rem;
-  border: none;
   border-radius: 8px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.bulk-transaction-footer-control .btn-blue:hover {
+.bulk-transaction-footer-control .btn-blue {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bulk-transaction-footer-control .btn-blue:hover:not(:disabled) {
   background-color: #1d4ed8;
   transform: translateY(-1px);
 }
@@ -2843,6 +2856,29 @@ body,
   background-color: #cbd5e1;
   cursor: not-allowed;
   color: #374151;
+  box-shadow: none;
+}
+
+.bulk-transaction-footer-control .btn-outline {
+  background-color: transparent;
+  color: #2563eb;
+  border: 2px solid #2563eb;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.1);
+}
+
+.bulk-transaction-footer-control .btn-outline:hover:not(:disabled) {
+  background-color: #1d4ed8;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+}
+
+.bulk-transaction-footer-control .btn-outline:disabled {
+  color: #94a3b8;
+  border-color: #cbd5e1;
+  background-color: transparent;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 /* #endregion */
 
@@ -2884,7 +2920,7 @@ body,
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
-.bulk-transaction-top-control .btn-blue:hover {
+.bulk-transaction-top-control .btn-blue:hover:not(:disabled) {
   background-color: #1d4ed8;
   transform: translateY(-1px);
 }
@@ -2893,6 +2929,7 @@ body,
   background-color: #cbd5e1;
   cursor: not-allowed;
   color: #374151;
+  box-shadow: none;
 }
 
 .bulk-transaction-top-control .btn-outline {
@@ -2902,8 +2939,8 @@ body,
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.1);
 }
 
-.bulk-transaction-top-control .btn-outline:hover {
-  background-color: #2563eb;
+.bulk-transaction-top-control .btn-outline:hover:not(:disabled) {
+  background-color: #1d4ed8;
   color: white;
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);

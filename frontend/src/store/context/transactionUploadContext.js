@@ -33,6 +33,7 @@ const TransactionUploadContext = createContext({
     handleResetErrorUploadingTransactions: () => { },
     handleResetSelectedTransactions: () => { },
     handleRemoveSelectedTransactions: () => { },
+    handleResetAllTransactions: () => { }
 });
 
 export function TransactionUploadContextProvider({ children }) {
@@ -413,6 +414,24 @@ export function TransactionUploadContextProvider({ children }) {
         handleUnselectAllTransactions();
     }
 
+    function handleResetAllTransactions() {
+        const tCopy = extractedTransactions.map(txn => ({
+            ...txn,
+            date: formatCustomDateFormatForCalendarInput(txn.date, "dd/mm/yyyy"),
+            amount: formatAmountForFirstTimeInput(txn.amount),
+            categoryId: "",
+            subcategoryId: "",
+        }))
+        setEditableTransactions([...tCopy]);
+        handleUnselectAllTransactions();
+        setInputFieldErrorsMap({});
+        setErrorUploadingTransactions(null);
+        toast.success(`All transactions have been reset successfully.`, {
+            position: "top-center",
+            autoClose: 3000
+        });
+    }
+
     const currentUploadContextValue = {
         transactionFile,
         isExtractingTransactions,
@@ -441,7 +460,8 @@ export function TransactionUploadContextProvider({ children }) {
         handleResetErrorUploadingTransactions,
         getEditTransactionFieldError,
         handleResetSelectedTransactions,
-        handleRemoveSelectedTransactions
+        handleRemoveSelectedTransactions,
+        handleResetAllTransactions
     };
 
     return (

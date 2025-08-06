@@ -3,11 +3,21 @@ import { Button } from "react-bootstrap";
 import TransactionUploadContext from "../../../../store/context/transactionUploadContext";
 
 function BulkTransactionFooterControl() {
-  const { isUploadingBulkTransactions, handleUploadBulkTransactions } =
-    useContext(TransactionUploadContext);
+  const {
+    isUploadingBulkTransactions,
+    handleResetAllTransactions,
+    handleUploadBulkTransactions,
+  } = useContext(TransactionUploadContext);
 
   return (
     <div className="bulk-transaction-footer-control">
+      <Button
+        className="btn-outline"
+        onClick={handleResetAllTransactions}
+        disabled={isUploadingBulkTransactions}
+      >
+        Reset Transactions
+      </Button>
       <Button
         className="btn-blue"
         onClick={handleUploadBulkTransactions}

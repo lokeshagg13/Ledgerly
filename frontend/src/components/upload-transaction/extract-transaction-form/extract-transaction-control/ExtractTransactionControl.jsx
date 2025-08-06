@@ -35,7 +35,7 @@ function ExtractTransactionControl() {
         onClick={handleResetAll}
         disabled={isExtractingTransactions}
       >
-        Reset
+        {isEditTransactionSectionVisible ? "Upload New" : "Reset"}
       </Button>
     </div>
   );
