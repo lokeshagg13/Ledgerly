@@ -4,6 +4,7 @@ import { axiosPrivate } from "../../../../api/axios";
 import TransactionContext from "../../../../store/context/transactionContext";
 import AddTransactionForm from "./add-transaction-form/AddTransactionForm";
 import TransactionFilterContext from "../../../../store/context/transactionFilterContext";
+import { toast } from "react-toastify";
 
 function AddTransactionModal({ onClose }) {
   const {
@@ -100,6 +101,10 @@ function AddTransactionModal({ onClose }) {
       });
       handleResetAddTransactionFormData();
       onClose();
+      toast.success("Transaction added successfully.", {
+        position: "top-center",
+        autoClose: 3000,
+      });
       fetchTransactions(appliedFilters);
     } catch (error) {
       if (!error?.response) {

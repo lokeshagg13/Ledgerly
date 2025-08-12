@@ -6,6 +6,7 @@ import FunnelIcon from "../../../../../ui/icons/FunnelIcon";
 import DateFilterInput from "./filter-inputs/DateFilterInput";
 import CategoryFilterInput from "./filter-inputs/CategoryFilterInput";
 import DashboardContext from "../../../../../../store/context/dashboardContext";
+import { toast } from "react-toastify";
 
 function BalanceFilterSection() {
   const [isFilterPopoverVisible, setIsFilterPopoverVisible] = useState(false);
@@ -40,6 +41,10 @@ function BalanceFilterSection() {
   const handleApplyFilters = async () => {
     const isError = await handleUpdateBalanceFilters();
     if (isError) return;
+    toast.success("Balance filters updated successfully.", {
+      position: "top-center",
+      autoClose: 3000,
+    });
     await fetchFilteredBalanceAndFilters();
     handleCloseFilterPopover();
   };

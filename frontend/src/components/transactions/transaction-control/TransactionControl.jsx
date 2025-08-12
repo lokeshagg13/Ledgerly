@@ -5,6 +5,7 @@ import TransactionContext from "../../../store/context/transactionContext";
 import TransactionFilterContext from "../../../store/context/transactionFilterContext";
 import AddTransactionModal from "./add-transaction/AddTransactionModal";
 import useAppNavigate from "../../../store/hooks/useAppNavigate";
+import { toast } from "react-toastify";
 
 function TransactionControl() {
   const { handleNavigateToPath } = useAppNavigate();
@@ -16,6 +17,14 @@ function TransactionControl() {
     handleCloseAddTransactionModal,
   } = useContext(TransactionContext);
   const { appliedFilters } = useContext(TransactionFilterContext);
+
+  const handleRefreshTransactions = () => {
+    fetchTransactions(appliedFilters);
+    toast.success("Refresh completed.", {
+      autoClose: 500,
+      position: "top-center",
+    });
+  };
 
   return (
     <div className="transaction-controls">
@@ -50,7 +59,7 @@ function TransactionControl() {
         type="button"
         className="control-btn btn-outline-light"
         aria-label="Reload transactions"
-        onClick={() => fetchTransactions(appliedFilters)}
+        onClick={handleRefreshTransactions}
         disabled={isLoadingTransactions}
         title="Click to reload your transactions"
       >
