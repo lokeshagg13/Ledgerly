@@ -14,6 +14,10 @@ function CategorySelector({ value, onChange }) {
     checkIfInputFieldInvalid,
   } = useContext(TransactionContext);
 
+  const handleNewCategoryAdded = (newCategoryId) => {
+    onChange({ target: { name: "category", value: newCategoryId } });
+  };
+
   return (
     <Form.Group className="mb-3">
       <Form.Label>Category</Form.Label>
@@ -55,7 +59,9 @@ function CategorySelector({ value, onChange }) {
       {checkIfInputFieldInvalid("category") && (
         <div className="text-danger">{inputFieldErrors.category}</div>
       )}
-      {isAddCategoryFormVisible && <AddCategoryInlineForm />}
+      {isAddCategoryFormVisible && (
+        <AddCategoryInlineForm onCategoryAdded={handleNewCategoryAdded} />
+      )}
     </Form.Group>
   );
 }

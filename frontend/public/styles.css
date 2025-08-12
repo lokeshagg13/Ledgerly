@@ -1951,20 +1951,64 @@ body,
   box-shadow: none;
   pointer-events: auto;
 }
+
+.add-transaction-form .btn.btn-outline-primary:hover svg {
+  fill: white;
+}
 /* #endregion */
 
 /* #region - Add category inline form */
 .add-category-inline-form {
   margin-top: 1rem;
   margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #f9fafb;
   animation: fadeIn 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.add-category-inline-form .form-control {
+  font-size: 1rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.add-category-inline-form .control-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }
 
 .add-category-inline-form .add-button,
 .add-category-inline-form .cancel-button {
-  padding-left: 0.75rem !important;
-  padding-right: 0.75rem !important;
+  padding: 0.45rem 1rem !important;
   font-size: 1rem !important;
+  font-weight: 500;
+  border-radius: 6px;
+}
+
+.add-category-inline-form .add-button {
+  background-color: #10b981;
+  border: none;
+  color: white;
+}
+
+.add-category-inline-form .add-button:hover {
+  background-color: #059669;
+}
+
+.add-category-inline-form .cancel-button {
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  background-color: white;
+}
+
+.add-category-inline-form .cancel-button:hover {
+  background-color: #ef4444;
+  color: white;
 }
 
 .add-category-inline-form .cancel-button svg {
@@ -1977,10 +2021,9 @@ body,
 }
 
 .add-category-inline-form .alert-message {
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  margin-top: 0.5rem;
-  margin-bottom: 0;
+  padding: 0.5rem;
+  margin: 0;
+  font-size: 0.95rem;
 }
 /* #endregion */
 
@@ -1988,14 +2031,54 @@ body,
 .add-subcategory-inline-form {
   margin-top: 1rem;
   margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #f9fafb;
   animation: fadeIn 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.add-subcategory-inline-form .form-control {
+  font-size: 1rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.add-subcategory-inline-form .control-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }
 
 .add-subcategory-inline-form .add-button,
 .add-subcategory-inline-form .cancel-button {
-  padding-left: 0.75rem !important;
-  padding-right: 0.75rem !important;
+  padding: 0.45rem 1rem !important;
   font-size: 1rem !important;
+  font-weight: 500;
+  border-radius: 6px;
+}
+
+.add-subcategory-inline-form .add-button {
+  background-color: #10b981;
+  border: none;
+  color: white;
+}
+
+.add-subcategory-inline-form .add-button:hover {
+  background-color: #059669;
+}
+
+.add-subcategory-inline-form .cancel-button {
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  background-color: white;
+}
+
+.add-category-inline-form .cancel-button:hover {
+  background-color: #ef4444;
+  color: white;
 }
 
 .add-subcategory-inline-form .cancel-button svg {
@@ -2008,10 +2091,9 @@ body,
 }
 
 .add-subcategory-inline-form .alert-message {
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  margin-top: 0.5rem;
-  margin-bottom: 0;
+  padding: 0.5rem;
+  margin: 0;
+  font-size: 0.95rem;
 }
 /* #endregion */
 

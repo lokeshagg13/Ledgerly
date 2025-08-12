@@ -1,22 +1,23 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Button, Form, InputGroup, Alert } from "react-bootstrap";
+import { Button, Form, Alert } from "react-bootstrap";
 
 import { axiosPrivate } from "../../../../../../../api/axios";
-import CancelIcon from "../../../../../../ui/icons/CancelIcon";
 import CategoryContext from "../../../../../../../store/context/categoryContext";
 import TransactionContext from "../../../../../../../store/context/transactionContext";
+import { toast } from "react-toastify";
 
-function AddSubcategoryInlineForm() {
+function AddSubcategoryInlineForm({ onSubcategoryAdded }) {
   const newSubcategoryNameRef = useRef();
   const {
     addTransactionFormData,
     isAddSubcategoryFormVisible,
     handleCloseAddSubcategoryForm,
   } = useContext(TransactionContext);
-  const { fetchSubcategoryMappingFromDB } = useContext(CategoryContext);
+  const { categories, fetchSubcategoryMappingFromDB } =
+    useContext(CategoryContext);
   const [newSubcategoryName, setNewSubcategoryName] = useState("");
   const [isAdding, setIsAdding] = useState(false);
-  const [message, setMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   // Focus input field on mount
   useEffect(() => {
@@ -27,42 +28,33 @@ function AddSubcategoryInlineForm() {
 
   // For hiding error message after 6 seconds
   useEffect(() => {
-    if (message) {
-      const timeout = setTimeout(() => setMessage(null), 6000);
+    if (errorMessage) {
+      const timeout = setTimeout(() => setErrorMessage(null), 6000);
       return () => clearTimeout(timeout);
     }
-  }, [message]);
+  }, [errorMessage]);
 
   // For hiding empty input error message on user writes something
   useEffect(() => {
-    if (newSubcategoryName && message?.text?.includes("cannot be empty")) {
-      setMessage(null);
+    if (newSubcategoryName && errorMessage?.includes("cannot be empty")) {
+      setErrorMessage(null);
     }
-  }, [newSubcategoryName, message]);
+  }, [newSubcategoryName, errorMessage]);
 
   const handleAddSubcategory = async () => {
     if (isAdding) return;
     const { categoryId } = addTransactionFormData;
     const newSubcategoryNameTrimmed = newSubcategoryName.trim();
     if (!categoryId) {
-      setMessage({
-        variant: "danger",
-        message: "Select a category first.",
-      });
+      setErrorMessage("Select a category first.");
       return;
     }
     if (!newSubcategoryNameTrimmed) {
-      setMessage({
-        variant: "danger",
-        text: "Subcategory name cannot be empty.",
-      });
+      setErrorMessage("Subcategory name cannot be empty.");
       return;
     }
     if (newSubcategoryNameTrimmed.length > 20) {
-      setMessage({
-        variant: "danger",
-        text: "Subcategory name is too long (max 20 characters).",
-      });
+      setErrorMessage("Subcategory name is too long (max 20 characters).");
       return;
     }
 
@@ -72,23 +64,34 @@ function AddSubcategoryInlineForm() {
         name: newSubcategoryNameTrimmed,
         categoryId: categoryId,
       });
-      setMessage({
-        variant: "success",
-        text: `Subcategory '${newSubcategoryNameTrimmed}' added successfully.`,
-      });
+      toast.success(
+        `Subcategory '${newSubcategoryNameTrimmed}' added successfully.`,
+        {
+          autoClose: 3000,
+          position: "top-center",
+        }
+      );
       setNewSubcategoryName("");
-      fetchSubcategoryMappingFromDB();
+      handleCloseAddSubcategoryForm();
+      const updatedSubcategoryMapping = await fetchSubcategoryMappingFromDB();
+      const categoryName = Object.keys(updatedSubcategoryMapping).find(
+        (key) => key === categories.find((cat) => cat._id === categoryId)?.name
+      );
+      if (categoryName) {
+        const newlyAdded = updatedSubcategoryMapping[categoryName].find(
+          (sub) => sub.name === newSubcategoryNameTrimmed
+        );
+        if (newlyAdded && onSubcategoryAdded) {
+          onSubcategoryAdded(newlyAdded._id);
+        }
+      }
     } catch (error) {
       if (!error?.response) {
-        setMessage({
-          variant: "danger",
-          text: "Failed to add subcategory: No server response.",
-        });
+        setErrorMessage("Failed to add subcategory: No server response.");
       } else {
-        setMessage({
-          variant: "danger",
-          text: error?.response?.data?.error || "Failed to add subcategory.",
-        });
+        setErrorMessage(
+          error?.response?.data?.error || "Failed to add subcategory."
+        );
       }
     } finally {
       setIsAdding(false);
@@ -97,7 +100,7 @@ function AddSubcategoryInlineForm() {
 
   const handleCancel = () => {
     if (isAdding) return;
-    setMessage(null);
+    setErrorMessage(null);
     setNewSubcategoryName("");
     handleCloseAddSubcategoryForm();
   };
@@ -106,18 +109,25 @@ function AddSubcategoryInlineForm() {
 
   return (
     <div className="add-subcategory-inline-form">
-      <InputGroup>
+      <div className="input-row">
         <Form.Control
           aria-label="New subcategory name"
           type="text"
           placeholder="Enter new subcategory name"
           value={newSubcategoryName}
           onChange={(e) => setNewSubcategoryName(e.target.value)}
-          isInvalid={message?.variant === "danger"}
-          className={`${message?.variant === "danger" ? "shake" : ""}`}
+          isInvalid={Boolean(errorMessage)}
+          className={`${errorMessage ? "shake" : ""}`}
           ref={newSubcategoryNameRef}
           maxLength={20}
         />
+      </div>
+      {errorMessage && (
+        <Alert variant="danger" className="alert-message">
+          {errorMessage}
+        </Alert>
+      )}
+      <div className="control-row">
         <Button
           variant="success"
           onClick={handleAddSubcategory}
@@ -145,14 +155,9 @@ function AddSubcategoryInlineForm() {
           className="cancel-button"
           disabled={isAdding}
         >
-          <CancelIcon />
+          Cancel
         </Button>
-      </InputGroup>
-      {message && (
-        <Alert variant={message?.variant} className="alert-message">
-          {message?.text}
-        </Alert>
-      )}
+      </div>
     </div>
   );
 }

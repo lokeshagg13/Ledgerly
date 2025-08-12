@@ -23,6 +23,10 @@ function SubcategorySelector({ value, onChange, subcategories }) {
   const selectedCategory = addTransactionFormData.categoryId;
   const isDisabled = !selectedCategory || isLoadingSubcategoryMapping;
 
+  const handleNewSubcategoryAdded = (newSubcategoryId) => {
+    onChange({ target: { name: "subcategory", value: newSubcategoryId } });
+  };
+
   return (
     <Form.Group className="mb-3">
       <Form.Label>Subcategory</Form.Label>
@@ -81,7 +85,9 @@ function SubcategorySelector({ value, onChange, subcategories }) {
         )}
       </InputGroup>
       {selectedCategory && isAddSubcategoryFormVisible && (
-        <AddSubcategoryInlineForm />
+        <AddSubcategoryInlineForm
+          onSubcategoryAdded={handleNewSubcategoryAdded}
+        />
       )}
     </Form.Group>
   );

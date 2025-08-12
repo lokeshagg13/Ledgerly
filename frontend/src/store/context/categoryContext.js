@@ -9,8 +9,8 @@ const CategoryContext = createContext({
     isDeleteSelectedCategoriesModalVisible: false,
     subcategoryMapping: [],
     isLoadingSubcategoryMapping: false,
-    fetchCategoriesFromDB: () => { },
-    fetchSubcategoryMappingFromDB: () => { },
+    fetchCategoriesFromDB: async () => { },
+    fetchSubcategoryMappingFromDB: async () => { },
     getSubcategoriesForCategory: (categoryId) => { },
     handleToggleCategorySelection: (categoryId) => { },
     handleOpenAddCategoryModal: () => { },
@@ -39,11 +39,13 @@ export const CategoryProvider = ({ children }) => {
             const res = await axiosPrivate.get("/user/categories");
             if (res?.data?.categories) setCategories(res.data.categories);
             setSelectedCategories([]);
+            return res.data.categories;
         } catch (error) {
             console.log("Error while fetching categories:", error);
         } finally {
             setIsLoadingCategories(false);
         }
+        return [];
     }
 
     async function fetchSubcategoryMappingFromDB() {
@@ -51,11 +53,13 @@ export const CategoryProvider = ({ children }) => {
         try {
             const res = await axiosPrivate.get("/user/subcategories");
             if (res?.data?.groupedSubcategories) setSubcategoryMapping(res.data.groupedSubcategories);
+            return res.data.groupedSubcategories;
         } catch (error) {
             console.log("Error while fetching subcategory mapping:", error);
         } finally {
             setIsLoadingSubcategoryMapping(false);
         }
+        return [];
     }
 
     function getSubcategoriesForCategory(categoryId) {

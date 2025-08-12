@@ -6,7 +6,7 @@ import CategoryContext from "../../../../../../../store/context/categoryContext"
 import TransactionContext from "../../../../../../../store/context/transactionContext";
 import { toast } from "react-toastify";
 
-function AddCategoryInlineForm() {
+function AddCategoryInlineForm({ onCategoryAdded }) {
   const newCategoryNameRef = useRef();
   const { isAddCategoryFormVisible, handleCloseAddCategoryForm } =
     useContext(TransactionContext);
@@ -64,7 +64,13 @@ function AddCategoryInlineForm() {
       );
       setNewCategoryName("");
       handleCloseAddCategoryForm();
-      fetchCategoriesFromDB();
+      const updatedCategories = await fetchCategoriesFromDB();
+      const newlyAdded = updatedCategories.find(
+        (c) => c.name === newCategoryNameTrimmed
+      );
+      if (newlyAdded && onCategoryAdded) {
+        onCategoryAdded(newlyAdded._id);
+      }
     } catch (error) {
       if (!error?.response) {
         setErrorMessage("Failed to add category: No server response.");
@@ -96,7 +102,7 @@ function AddCategoryInlineForm() {
           placeholder="Enter new category name e.g. Shopping, PPF"
           value={newCategoryName}
           onChange={(e) => setNewCategoryName(e.target.value)}
-          isInvalid={errorMessage !== null}
+          isInvalid={Boolean(errorMessage)}
           className={`${errorMessage ? "shake" : ""}`}
           ref={newCategoryNameRef}
           maxLength={20}
