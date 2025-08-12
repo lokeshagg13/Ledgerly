@@ -1,12 +1,12 @@
 import { useContext, useState } from "react";
 import { Button } from "react-bootstrap";
+import { toast } from "react-toastify";
 import Popover from "@mui/material/Popover";
 
 import FunnelIcon from "../../../../../ui/icons/FunnelIcon";
 import DateFilterInput from "./filter-inputs/DateFilterInput";
 import CategoryFilterInput from "./filter-inputs/CategoryFilterInput";
 import DashboardContext from "../../../../../../store/context/dashboardContext";
-import { toast } from "react-toastify";
 
 function BalanceFilterSection() {
   const [isFilterPopoverVisible, setIsFilterPopoverVisible] = useState(false);

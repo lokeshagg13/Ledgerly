@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 import axios from "../../../../api/axios";
 import EyeOpenIcon from "../../../ui/icons/EyeOpenIcon";
 import EyeSlashIcon from "../../../ui/icons/EyeSlashIcon";
-import { toast } from "react-toastify";
 import useAppNavigate from "../../../../store/hooks/useAppNavigate";
 
 function RegisterForm() {

@@ -1,11 +1,13 @@
 import { createContext, useState } from "react";
+import { toast } from "react-toastify";
+
 import { axiosPrivate } from "../../api/axios";
 
 const SubcategoryContext = createContext({
     subcategories: [],
     isLoadingSubcategories: false,
     isAddSubcategoryModalVisible: false,
-    fetchSubcategoriesFromDB: () => { },
+    fetchSubcategoriesFromDB: async () => { },
     handleOpenAddSubcategoryModal: () => { },
     handleCloseAddSubcategoryModal: () => { }
 });
@@ -21,7 +23,10 @@ export const SubcategoryProvider = ({ categoryId, children }) => {
             const res = await axiosPrivate.get(`/user/subcategories/${categoryId}`);
             if (res?.data?.subcategories) setSubcategories(res.data.subcategories);
         } catch (error) {
-            console.log("Error while fetching subcategories:", error);
+            toast.error(`Error occured while fetching subcategories: ${error.message}`, {
+                autoClose: 5000,
+                position: "top-center"
+            });
         } finally {
             setIsLoadingSubcategories(false);
         }

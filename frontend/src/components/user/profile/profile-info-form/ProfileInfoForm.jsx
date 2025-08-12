@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Form, Button, InputGroup } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 import useAuth from "../../../../store/hooks/useAuth";
 import { axiosPrivate } from "../../../../api/axios";
@@ -9,7 +10,6 @@ import {
 } from "../../../../utils/formatUtils";
 import OpeningBalanceTooltip from "./opening-balance-tooltip/OpeningBalanceTooltip";
 import OpeningBalanceChangeModal from "./opening-balance-change-modal/OpeningBalanceChangeModal";
-import { toast } from "react-toastify";
 
 function ProfileInfoForm() {
   const { auth, setAuth } = useAuth();

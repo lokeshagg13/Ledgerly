@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { toast } from "react-toastify";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
@@ -10,7 +11,6 @@ import useAuth from "../../../store/hooks/useAuth";
 import KeyIcon from "../icons/KeyIcon";
 import LogoutIcon from "../icons/LogoutIcon";
 import useAxiosPrivate from "../../../store/hooks/useAxiosPrivate";
-import { toast } from "react-toastify";
 import useAppNavigate from "../../../store/hooks/useAppNavigate";
 
 function ProfileMenu({ handleNavCollapse }) {

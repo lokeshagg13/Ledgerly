@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Modal, Button } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 import { axiosPrivate } from "../../../api/axios";
 import CategoryContext from "../../../store/context/categoryContext";
@@ -47,6 +48,15 @@ function DeleteSelectedCategoriesModal() {
           categoryIds: selectedCategories,
         },
       });
+      toast.success(
+        `${selectedCategories.length} ${
+          selectedCategories.length === 1 ? "category" : "categories"
+        } deleted successfully.`,
+        {
+          autoClose: 3000,
+          position: "top-center",
+        }
+      );
       setErrorMessage("");
       handleCloseDeleteSelectedCategoriesModal();
       fetchCategoriesFromDB();

@@ -1,5 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 import { axiosPrivate } from "../../../api/axios";
 import CategoryContext from "../../../store/context/categoryContext";
@@ -69,6 +70,10 @@ function AddCategoryModal() {
     try {
       await axiosPrivate.post("/user/categories", {
         name: newCategoryNameTrimmed,
+      });
+      toast.success(`Category ${newCategoryNameTrimmed} added successfully.`, {
+        autoClose: 3000,
+        position: "top-center",
       });
       setErrorMessage("");
       setNewCategoryName("");

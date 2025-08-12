@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Form, Button } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 import { axiosPrivate } from "../../../../api/axios";
 import EyeOpenIcon from "../../../ui/icons/EyeOpenIcon";
 import EyeSlashIcon from "../../../ui/icons/EyeSlashIcon";
-import { toast } from "react-toastify";
 
 function PasswordUpdateForm() {
   const [formData, setFormData] = useState({

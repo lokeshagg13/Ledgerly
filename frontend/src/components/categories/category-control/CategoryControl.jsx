@@ -14,6 +14,7 @@ function CategoryControl() {
     handleOpenDeleteSelectedCategoriesModal,
     fetchCategoriesFromDB,
   } = useContext(CategoryContext);
+
   return (
     <div className="category-controls">
       <Button
@@ -39,7 +40,7 @@ function CategoryControl() {
         type="button"
         className="control-btn btn-outline-light"
         aria-label="Reload categories"
-        onClick={fetchCategoriesFromDB}
+        onClick={() => fetchCategoriesFromDB(true)}
         disabled={isLoadingCategories}
         title="Click to reload your categories"
       >
@@ -57,7 +58,9 @@ function CategoryControl() {
         )}
       </Button>
       {isAddCategoryModalVisible && <AddCategoryModal />}
-      {isDeleteSelectedCategoriesModalVisible && <DeleteSelectedCategoriesModal />}
+      {isDeleteSelectedCategoriesModalVisible && (
+        <DeleteSelectedCategoriesModal />
+      )}
     </div>
   );
 }

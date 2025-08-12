@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Modal, Button } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 import { axiosPrivate } from "../../../../../api/axios";
 import SubcategoryContext from "../../../../../store/context/subcategoryContext";
@@ -37,6 +38,10 @@ function DeleteSubcategoryModal({ subcategoryId, subcategoryName, onClose }) {
     setDeleting(true);
     try {
       await axiosPrivate.delete(`/user/subcategories/${subcategoryId}`);
+      toast.success(`Subcategory ${subcategoryName} deleted successfully.`, {
+        autoClose: 3000,
+        position: "top-center",
+      });
       setErrorMessage("");
       closeModal();
       fetchSubcategoriesFromDB();

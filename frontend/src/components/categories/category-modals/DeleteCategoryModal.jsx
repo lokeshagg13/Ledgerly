@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Modal, Button } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 import { axiosPrivate } from "../../../api/axios";
 import CategoryContext from "../../../store/context/categoryContext";
@@ -37,6 +38,10 @@ function DeleteCategoryModal({ categoryId, categoryName, onClose }) {
     setDeleting(true);
     try {
       await axiosPrivate.delete(`/user/categories/${categoryId}`);
+      toast.success(`Category ${categoryName} deleted successfully.`, {
+        autoClose: 3000,
+        position: "top-center",
+      });
       setErrorMessage("");
       closeModal();
       fetchCategoriesFromDB();

@@ -1,10 +1,10 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Button, Form, Alert } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 import { axiosPrivate } from "../../../../../../../api/axios";
 import CategoryContext from "../../../../../../../store/context/categoryContext";
 import TransactionContext from "../../../../../../../store/context/transactionContext";
-import { toast } from "react-toastify";
 
 function AddCategoryInlineForm({ onCategoryAdded }) {
   const newCategoryNameRef = useRef();

@@ -1,4 +1,6 @@
 import { createContext, useState } from "react";
+import { toast } from "react-toastify";
+
 import { axiosPrivate } from "../../api/axios";
 import { formatAmountForFirstTimeInput, formatDateForCalendarInput } from "../../utils/formatUtils";
 
@@ -13,7 +15,7 @@ const TransactionContext = createContext({
     isAddCategoryFormVisible: false,
     isAddSubcategoryFormVisible: false,
     inputFieldErrors: {},
-    fetchTransactions: (appliedFilters) => { },
+    fetchTransactions: (appliedFilters, manual = false) => { },
     checkIfInputFieldInvalid: (fieldName) => { },
     handleResetErrorFetchingTransactions: () => { },
     handleOpenAddTransactionModal: () => { },
@@ -58,7 +60,7 @@ export const TransactionProvider = ({ children }) => {
     const [isAddSubcategoryFormVisible, setIsAddSubcategoryFormVisible] = useState(false);
     const [inputFieldErrors, setInputFieldErrors] = useState({});
 
-    async function fetchTransactionsFromDB({ mode = "all", limit = 10, from, to, type, categoryIds } = {}) {
+    async function fetchTransactionsFromDB({ mode = "all", limit = 10, from, to, type, categoryIds, manual = false } = {}) {
         setIsLoadingTransactions(true);
         setErrorFetchingTransactions(null);
         try {
@@ -79,6 +81,12 @@ export const TransactionProvider = ({ children }) => {
             }
             const res = await axiosPrivate.get(`/user/transactions?${params.toString()}`);
             if (res?.data?.transactions) setTransactions(res.data.transactions);
+            if (manual) {
+                toast.success("Refresh completed.", {
+                    autoClose: 500,
+                    position: "top-center",
+                });
+            }
         } catch (error) {
             if (!error?.response) {
                 setErrorFetchingTransactions(
@@ -98,15 +106,16 @@ export const TransactionProvider = ({ children }) => {
         }
     }
 
-    function fetchTransactions(appliedFilters) {
+    function fetchTransactions(appliedFilters, manual = false) {
         if (appliedFilters === null) {
-            fetchTransactionsFromDB();
+            fetchTransactionsFromDB({ manual });
         } else {
             fetchTransactionsFromDB({
                 mode: "filtered",
                 from: appliedFilters.fromDate,
                 to: appliedFilters.toDate,
                 categoryIds: appliedFilters.categories,
+                manual: manual
             });
         }
     }

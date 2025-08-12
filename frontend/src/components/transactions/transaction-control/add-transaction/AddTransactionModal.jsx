@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { Modal, Button } from "react-bootstrap";
+import { toast } from "react-toastify";
+
 import { axiosPrivate } from "../../../../api/axios";
 import TransactionContext from "../../../../store/context/transactionContext";
 import AddTransactionForm from "./add-transaction-form/AddTransactionForm";
 import TransactionFilterContext from "../../../../store/context/transactionFilterContext";
-import { toast } from "react-toastify";
 
 function AddTransactionModal({ onClose }) {
   const {

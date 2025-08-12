@@ -1,5 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 import { axiosPrivate } from "../../../../../api/axios";
 import SubcategoryContext from "../../../../../store/context/subcategoryContext";
@@ -71,6 +72,13 @@ function AddSubcategoryModal({ categoryId }) {
         categoryId: categoryId,
         name: newSubcategoryNameTrimmed,
       });
+      toast.success(
+        `Subcategory ${newSubcategoryNameTrimmed} added successfully.`,
+        {
+          autoClose: 3000,
+          position: "top-center",
+        }
+      );
       setErrorMessage("");
       setNewSubcategoryName("");
       handleCloseAddSubcategoryModal();

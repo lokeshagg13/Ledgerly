@@ -1,4 +1,6 @@
 import { createContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
 import { axiosPrivate } from "../../api/axios";
 
 const CategoryContext = createContext({
@@ -9,7 +11,7 @@ const CategoryContext = createContext({
     isDeleteSelectedCategoriesModalVisible: false,
     subcategoryMapping: [],
     isLoadingSubcategoryMapping: false,
-    fetchCategoriesFromDB: async () => { },
+    fetchCategoriesFromDB: async (manual) => { },
     fetchSubcategoryMappingFromDB: async () => { },
     getSubcategoriesForCategory: (categoryId) => { },
     handleToggleCategorySelection: (categoryId) => { },
@@ -33,15 +35,24 @@ export const CategoryProvider = ({ children }) => {
         fetchSubcategoryMappingFromDB();
     }, []);
 
-    async function fetchCategoriesFromDB() {
+    async function fetchCategoriesFromDB(manual = false) {
         setIsLoadingCategories(true);
         try {
             const res = await axiosPrivate.get("/user/categories");
             if (res?.data?.categories) setCategories(res.data.categories);
             setSelectedCategories([]);
+            if (manual) {
+                toast.success("Refresh completed.", {
+                    autoClose: 500,
+                    position: "top-center"
+                });
+            }
             return res.data.categories;
         } catch (error) {
-            console.log("Error while fetching categories:", error);
+            toast.error(`Error occured while fetching categories: ${error.message}`, {
+                autoClose: 5000,
+                position: "top-center"
+            });
         } finally {
             setIsLoadingCategories(false);
         }
@@ -55,7 +66,10 @@ export const CategoryProvider = ({ children }) => {
             if (res?.data?.groupedSubcategories) setSubcategoryMapping(res.data.groupedSubcategories);
             return res.data.groupedSubcategories;
         } catch (error) {
-            console.log("Error while fetching subcategory mapping:", error);
+            toast.error(`Error occured while fetching subcategories for all categories: ${error.message}`, {
+                autoClose: 5000,
+                position: "top-center"
+            });
         } finally {
             setIsLoadingSubcategoryMapping(false);
         }
