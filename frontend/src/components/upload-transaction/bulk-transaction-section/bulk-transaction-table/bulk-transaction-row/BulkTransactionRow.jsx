@@ -79,7 +79,7 @@ function BulkTransactionRow({ index, data }) {
         <Form.Check
           type="checkbox"
           className="bulk-transaction-checkbox"
-          id={`editBulkTransaction${_id}`}
+          id={`editBulkTransactionCheckbox${_id}`}
           checked={checkIfTransactionSelected(_id)}
           onChange={() => handleToggleTransactionSelection(_id)}
           aria-label={`${
@@ -96,7 +96,7 @@ function BulkTransactionRow({ index, data }) {
         <WithErrorTooltip error={getEditTransactionFieldError(_id, "type")}>
           <Form.Select
             name="type"
-            id="editBulkTransactionType"
+            id={`editBulkTransactionType${_id}`}
             value={type}
             onChange={(ev) => handleChange(ev, _id)}
             isInvalid={!!getEditTransactionFieldError(_id, "type")}
@@ -116,7 +116,7 @@ function BulkTransactionRow({ index, data }) {
             <Form.Control
               type="text"
               name="amount"
-              id="editBulkTransactionAmount"
+              id={`editBulkTransactionAmount${_id}`}
               value={amount !== "" ? formatAmountWithCommas(amount) : ""}
               autoComplete="on"
               onChange={(ev) => handleChange(ev, _id)}
@@ -146,7 +146,7 @@ function BulkTransactionRow({ index, data }) {
             <Form.Select
               name="category"
               aria-label="Select category"
-              id="editBulkTransactionCategory"
+              id={`editBulkTransactionCategory${_id}`}
               value={categoryId}
               onChange={(ev) => handleChange(ev, _id)}
               disabled={isLoadingCategories}
@@ -181,7 +181,7 @@ function BulkTransactionRow({ index, data }) {
             <Form.Select
               name="subcategory"
               aria-label="Select subcategory"
-              id="editBulkTransactionSubcategory"
+              id={`editBulkTransactionSubcategory${_id}`}
               value={subcategoryId ?? ""}
               onChange={(ev) => handleChange(ev, _id)}
               disabled={!categoryId || isLoadingSubcategoryMapping}
@@ -203,7 +203,7 @@ function BulkTransactionRow({ index, data }) {
           <Form.Control
             type="text"
             name="remarks"
-            id="editBulkTransactionRemarks"
+            id={`editBulkTransactionRemarks${_id}`}
             value={remarks}
             onChange={(ev) => handleChange(ev, _id)}
             placeholder="Remarks"
@@ -227,7 +227,7 @@ function BulkTransactionRow({ index, data }) {
           >
             <FormDatePicker
               name="date"
-              id="editBulkTransactionRemarks"
+              id={`editBulkTransactionDate${_id}`}
               value={date}
               onChange={(ev) => handleChange(ev, _id)}
               maxDate={new Date()}

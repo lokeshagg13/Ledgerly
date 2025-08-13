@@ -1,6 +1,5 @@
 import { Modal, Button } from "react-bootstrap";
 import { formatAmountForDisplay } from "../../../../../utils/formatUtils";
-import RightArrowIcon from "../../../../ui/icons/RightArrowIcon";
 
 function OpeningBalanceChangeModal({
   show,
