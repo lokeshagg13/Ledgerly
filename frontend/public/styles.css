@@ -1165,12 +1165,6 @@ body,
   min-height: 100px;
 }
 
-.pie-chart-card {
-  flex: 1 1 250px;
-  min-width: 200px;
-  min-height: 300px;
-}
-
 .bar-chart-card {
   flex: 1;
   min-height: 250px;
@@ -1490,6 +1484,121 @@ body,
 .balance-filter .filter-card-name-btn:disabled svg {
   transform: none;
 }
+/* #endregion */
+
+/* #region - Pie chart card */
+.dashboard-card.pie-chart-card {
+  flex: 1 1 250px;
+  min-width: 200px;
+  min-height: 300px;
+  height: 100%;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: transform 0.2s ease-in-out;
+}
+
+.pie-chart-card .pie-chart-title {
+  font-weight: 600;
+  color: #444;
+  margin: 0;
+}
+
+.dashboard-card.pie-chart-card > div {
+  flex: 1;
+}
+/* #endregion */
+
+/* #region - Pie chart */
+.pie-chart {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.pie-chart-empty,
+.pie-chart-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 1rem;
+  text-align: center;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.pie-chart-empty img {
+  max-width: 150px;
+  height: auto;
+  margin-bottom: 0.75rem;
+  opacity: 0.9;
+}
+
+.pie-chart-empty p,
+.pie-chart-error p {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.pie-chart-empty p {
+  color: #555;
+}
+
+.pie-chart-error p {
+  color: #d32f2f;
+  word-break: keep-all;
+  text-align: left;
+}
+
+.pie-chart .pie-info-container {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  color: rgba(0, 0, 0, 0.87);
+  padding: 6px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+  font-size: 14px;
+}
+
+.pie-chart .pie-info-container table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin: 0;
+}
+
+.pie-chart .pie-info-container td:nth-child(1) {
+  padding: 0 0.5rem 0 0;
+}
+
+.pie-chart .pie-info-container td:nth-child(2) {
+  padding: 0 1rem 0 0;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.pie-chart .pie-info-container td:nth-child(3) {
+  padding: 0;
+  white-space: nowrap;
+  font-weight: 600;
+  text-align: right;
+}
+
+.pie-chart .pie-info-container div.pie-info-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
 /* #endregion */
 
 /* #region - Transactions page */

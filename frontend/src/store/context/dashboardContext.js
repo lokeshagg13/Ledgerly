@@ -1,6 +1,10 @@
 import { createContext, useState } from "react";
 import { axiosPrivate } from "../../api/axios";
 
+const MAX_PIES = 5;
+const COLORS = ["#4254FB", "#FFB422", "#FA4F58", "#0DBEFF", "#22BF75"];
+
+
 const DashboardContext = createContext({
     isLoadingOverallBalance: false,
     overallBalance: {
@@ -24,13 +28,16 @@ const DashboardContext = createContext({
         uptoDate: null,
         selectedCategories: []
     },
+    isLoadingSpendingPieChart: false,
+    spendingPieChartError: "",
     fetchOverallBalance: async () => { },
     fetchFilteredBalanceAndFilters: async () => { },
     handleResetErrorFetchingFilteredBalance: () => { },
     handleResetErrorUpdatingBalanceFilters: () => { },
     handleResetFilterFormData: () => { },
     handleModifyFilterFormData: (key, val) => { },
-    handleUpdateBalanceFilters: async () => { }
+    handleUpdateBalanceFilters: async () => { },
+    fetchSpendingPieChartData: async () => { },
 });
 
 export function DashboardContextProvider({ children }) {
@@ -60,6 +67,8 @@ export function DashboardContextProvider({ children }) {
         uptoDate: null,
         selectedCategories: []
     });
+    const [isLoadingSpendingPieChart, setIsLoadingSpendingPieChart] = useState(false);
+    const [spendingPieChartError, setSpendingPieChartError] = useState(false);
 
     function resetErrorFetchingOverallBalance() {
         setOverallBalanceError("");
@@ -211,6 +220,75 @@ export function DashboardContextProvider({ children }) {
         return isError;
     }
 
+    function handleErrorFetchingSpendingPieChartData(error) {
+        if (!error?.response) {
+            setSpendingPieChartError("Apologies for the inconvenience. We couldn’t connect to the server at the moment. This might be a temporary issue. Kindly try again shortly.");
+        } else if (error?.response?.data?.error) {
+            setSpendingPieChartError(`Apologies for the inconvenience. There was an error while fetching data for spending pie chart. ${error?.response?.data?.error}`);
+        } else {
+            setSpendingPieChartError("Apologies for the inconvenience. There was some error while fetching data for spending pie chart. Please try again after some time.");
+        }
+    }
+
+    async function fetchSpendingPieChartData() {
+        let chartData = null;
+        try {
+            setIsLoadingSpendingPieChart(true);
+            const res = await axiosPrivate.get("/user/transactions?type=debit");
+            const transactions = res?.data?.transactions || [];
+
+            // 1. Aggregate totals by category
+            const categoryTotals = {};
+            for (const txn of transactions) {
+                const categoryName = txn.categoryName || "Others";
+                categoryTotals[categoryName] = (categoryTotals[categoryName] || 0) + txn.amount;
+            }
+
+            // 2. Sort categories by total amount (descending)
+            const sortedData = Object.entries(categoryTotals)
+                .map(([name, amount]) => ({ label: name, value: amount }))
+                .sort((a, b) => b.value - a.value);
+
+            // 3. Compute total to calculate angles
+            const total = sortedData.reduce((sum, item) => sum + item.value, 0);
+
+            // 4. Separate out small slices (<10 degrees of pie angle)
+            const smallSlices = [];
+            const largeSlices = [];
+            sortedData.forEach(item => {
+                const angle = (item.value / total) * 360;
+                if (angle < 10) {
+                    smallSlices.push(item);
+                } else {
+                    largeSlices.push(item);
+                }
+            });
+
+            // 5. Combine small slices into "Others"
+            const smallTotal = smallSlices.reduce((sum, item) => sum + item.value, 0);
+            let combined = [...largeSlices];
+            if (smallTotal > 0) {
+                combined.push({ label: "Others", value: smallTotal });
+            }
+
+            // 6. Keep only top MAX_PIES categories (including "Others" if present)
+            const topCategories = combined.slice(0, MAX_PIES);
+
+            // 7. Map to chart data with colors
+            chartData = topCategories.map((item, index) => ({
+                id: index,
+                label: item.label,
+                value: item.value.toFixed(2),
+                color: COLORS[index]
+            }));
+        } catch (error) {
+            handleErrorFetchingSpendingPieChartData(error);
+        } finally {
+            setIsLoadingSpendingPieChart(false);
+        }
+        return chartData;
+    }
+
     const currentValue = {
         isLoadingOverallBalance,
         overallBalance,
@@ -222,13 +300,16 @@ export function DashboardContextProvider({ children }) {
         updateFilterError,
         appliedFilters,
         filterFormData,
+        isLoadingSpendingPieChart,
+        spendingPieChartError,
         handleResetErrorFetchingFilteredBalance,
         handleResetErrorUpdatingBalanceFilters,
         handleResetFilterFormData,
         handleModifyFilterFormData,
         fetchOverallBalance,
         fetchFilteredBalanceAndFilters,
-        handleUpdateBalanceFilters
+        handleUpdateBalanceFilters,
+        fetchSpendingPieChartData
     };
 
     return (

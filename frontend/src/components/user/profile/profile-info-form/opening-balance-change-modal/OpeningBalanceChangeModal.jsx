@@ -13,7 +13,6 @@ function OpeningBalanceChangeModal({
   const formatBalanceDisplay = (amount, type) => {
     const label = type === "debit" ? "Dr" : "Cr";
     const isZero = amount === "0";
-    console.log(amount, typeof amount);
     return `${formatAmountForDisplay(amount)} ${
       isZero ? "" : "(" + label + ")"
     }`;

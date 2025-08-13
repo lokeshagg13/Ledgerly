@@ -1,7 +1,8 @@
-import OverallBalanceCard from "./balance-cards/overall-balance-card/OverallBalanceCard";
-import FilteredBalanceCard from "./balance-cards/filtered-balance-card/FilteredBalanceCard";
 import { CategoryProvider } from "../../../store/context/categoryContext";
 import { DashboardContextProvider } from "../../../store/context/dashboardContext";
+import OverallBalanceCard from "./balance-cards/overall-balance-card/OverallBalanceCard";
+import FilteredBalanceCard from "./balance-cards/filtered-balance-card/FilteredBalanceCard";
+import SpendingPieChartCard from "./spending-pie-chart-card/SpendingPieChartCard";
 
 function DashboardLayout() {
   return (
@@ -17,7 +18,7 @@ function DashboardLayout() {
                     <OverallBalanceCard />
                     <FilteredBalanceCard />
                   </div>
-                  <div className="dashboard-card pie-chart-card">Pie Chart</div>
+                  <SpendingPieChartCard />
                 </div>
               </div>
               <div className="subsection">
