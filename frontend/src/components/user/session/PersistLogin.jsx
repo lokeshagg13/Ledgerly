@@ -4,7 +4,6 @@ import { Outlet } from "react-router-dom";
 import useAuth from "../../../store/hooks/useAuth";
 import useRefreshToken from "../../../store/hooks/useRefreshToken";
 import PageSkeleton from "../../ui/skeletons/PageSkeleton";
-import { toast } from "react-toastify";
 
 // Persist login component to continue a session even on refresh page or expiry of access token until refresh token is not expired
 function PersistLogin() {
@@ -17,10 +16,7 @@ function PersistLogin() {
       try {
         await refresh();
       } catch (error) {
-        toast.error(`Error while refreshing the login: ${error.message}`, {
-          autoClose: 10000,
-          position: "top-center",
-        });
+        console.error(`Error while refreshing the login: ${error.message}`);
       } finally {
         setAuthLoading(false);
       }
