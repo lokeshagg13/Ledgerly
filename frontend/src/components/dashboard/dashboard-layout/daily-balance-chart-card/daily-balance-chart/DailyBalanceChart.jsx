@@ -105,19 +105,23 @@ function DailyBalanceChart() {
                   <stop offset="100%" stopColor="#42a5f5" stopOpacity={0.9} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" />
+              <CartesianGrid stroke="#e0e0e0" strokeDasharray="3 3" />
               <XAxis
                 dataKey="date"
                 angle={-30}
                 textAnchor="end"
                 height={30}
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: 12, fill: "#444" }}
+                axisLine={{ stroke: "#cbd5e0" }}
+                tickLine={{ stroke: "#cbd5e0" }}
               />
               <YAxis
                 tickFormatter={formatYAxis}
                 tickMargin={4}
                 width={40}
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: 12, fill: "#444" }}
+                axisLine={{ stroke: "#cbd5e0" }}
+                tickLine={{ stroke: "#cbd5e0" }}
                 label={
                   unit
                     ? {
@@ -127,14 +131,22 @@ function DailyBalanceChart() {
                         offset: 0,
                         style: {
                           textAnchor: "middle",
-                          fontSize: 14,
-                          fill: "#444",
+                          fontSize: 13,
+                          fill: "#555",
+                          fontWeight: 500,
                         },
                       }
                     : undefined
                 }
               />
               <Tooltip
+                contentStyle={{
+                  backgroundColor: "#ffffff",
+                  border: "1px solid #ddd",
+                  borderRadius: "8px",
+                  fontSize: "12px",
+                  color: "#444",
+                }}
                 formatter={(value) =>
                   `₹${(value / divisor).toFixed(2)} ${unit}`
                 }
@@ -142,9 +154,15 @@ function DailyBalanceChart() {
               <Line
                 type="monotone"
                 dataKey="balance"
-                stroke="#1976d2"
-                strokeWidth={2}
-                dot={false}
+                stroke="url(#balanceLine)"
+                strokeWidth={3}
+                dot={{ r: 3, stroke: "#fff", strokeWidth: 1, fill: "#1976d2" }}
+                activeDot={{
+                  r: 5,
+                  stroke: "#42a5f5",
+                  strokeWidth: 2,
+                  fill: "#fff",
+                }}
               />
             </LineChart>
           </ResponsiveContainer>
