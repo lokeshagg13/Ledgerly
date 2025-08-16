@@ -209,3 +209,85 @@ exports.updateCustomBalanceCardTitle = async (req, res) => {
     }
 };
 
+// @desc    Get cumulative daily balance series for line chart
+// @route   GET /api/dashboard/balance/daily-series
+// @access  Private
+exports.getDailyBalanceSeries = async (req, res) => {
+    try {
+        const user = await UserModel.findById(req.userId).select("openingBalance createdAt");
+        if (!user) return res.status(404).json({ error: "User not found" });
+
+        const openingBalance = user.openingBalance?.amount || 0;
+
+        // 1. Get first and last transaction dates
+        const firstTxn = await TransactionModel.findOne({ userId: user._id })
+            .sort({ date: 1 })
+            .select("date");
+        const lastTxn = await TransactionModel.findOne({ userId: user._id })
+            .sort({ date: -1 })
+            .select("date");
+
+        if (!firstTxn || !lastTxn) {
+            // No transactions: just return opening balance as a single point
+            return res.status(200).json([
+                {
+                    date: normalizeDate(user.createdAt || new Date(), "dayStart"),
+                    balance: parseFloat(openingBalance.toFixed(2))
+                }
+            ]);
+        }
+
+        // 2. Start date = 5 days before firstTxn.date
+        const startDate = new Date(firstTxn.date);
+        startDate.setDate(startDate.getDate() - 5);
+
+        // 3. Fetch all transactions sorted by date ascending
+        const transactions = await TransactionModel.find({
+            userId: user._id,
+            date: { $gte: startDate, $lte: lastTxn.date }
+        })
+            .sort({ date: 1 })
+            .lean();
+
+        // 4. Initialize map for daily totals
+        const dailyTotals = {};
+        transactions.forEach(txn => {
+            const day = normalizeDate(txn.date, "dayStart");
+            if (!dailyTotals[day]) {
+                dailyTotals[day] = { credit: 0, debit: 0 };
+            }
+            if (txn.type === "credit") {
+                dailyTotals[day].credit += txn.amount;
+            } else if (txn.type === "debit") {
+                dailyTotals[day].debit += txn.amount;
+            }
+        });
+
+        // 5. Iterate day by day and compute cumulative balance
+        const series = [];
+        let currentBalance = openingBalance;
+        const cursorDate = new Date(startDate);
+        const endDate = normalizeDate(lastTxn.date, "dayStart");
+
+        while (cursorDate <= endDate) {
+            const dayStr = normalizeDate(cursorDate, "dayStart");
+            const totals = dailyTotals[dayStr] || { credit: 0, debit: 0 };
+
+            currentBalance += totals.credit - totals.debit;
+
+            series.push({
+                date: dayStr,
+                balance: parseFloat(currentBalance.toFixed(2))
+            });
+
+            // Move to next day
+            cursorDate.setDate(cursorDate.getDate() + 1);
+        }
+
+        return res.status(200).json(series);
+
+    } catch (error) {
+        console.error("Error generating daily balance series:", error);
+        res.status(500).json({ error: "Server error while generating daily balance series" });
+    }
+};

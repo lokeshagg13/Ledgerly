@@ -10,5 +10,6 @@ router.get("/custom/balance", dashboardController.getCustomBalance);
 router.get("/custom/title", dashboardController.getCustomBalanceCardTitle);
 router.put("/custom/filters", dashboardController.updateCustomBalanceCardFilters);
 router.put("/custom/title", dashboardController.updateCustomBalanceCardTitle);
+router.get("/series/dailyBalance", dashboardController.getDailyBalanceSeries);
 
 module.exports = router;

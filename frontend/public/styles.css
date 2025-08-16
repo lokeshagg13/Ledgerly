@@ -1159,20 +1159,9 @@ body,
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
-.balance-card {
-  flex: 1 1 150px;
-  min-width: 200px;
-  min-height: 100px;
-}
-
 .bar-chart-card {
   flex: 1;
   min-height: 250px;
-}
-
-.line-chart-card {
-  flex: 1 1;
-  min-height: 200px;
 }
 
 @media (max-width: 425px) {
@@ -1598,6 +1587,21 @@ body,
   border-radius: 50%;
   border: 1px solid rgba(0, 0, 0, 0.2);
 }
+
+/* #endregion */
+
+/* #region - Line chart common */
+.dashboard-card.line-chart-card {
+  flex: 1 1;
+  min-height: 200px;
+}
+
+.line-chart-card .line-chart-title {
+  font-weight: 600;
+  color: #444;
+  margin: 0;
+}
+
 
 /* #endregion */
 

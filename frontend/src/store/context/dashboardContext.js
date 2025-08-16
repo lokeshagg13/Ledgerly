@@ -30,6 +30,8 @@ const DashboardContext = createContext({
     },
     isLoadingSpendingPieChart: false,
     spendingPieChartError: "",
+    isLoadingDailyBalanceChart: false,
+    dailyBalanceChartError: "",
     fetchOverallBalance: async () => { },
     fetchFilteredBalanceAndFilters: async () => { },
     handleResetErrorFetchingFilteredBalance: () => { },
@@ -38,6 +40,7 @@ const DashboardContext = createContext({
     handleModifyFilterFormData: (key, val) => { },
     handleUpdateBalanceFilters: async () => { },
     fetchSpendingPieChartData: async () => { },
+    fetchDailyBalanceChartData: async () => { }
 });
 
 export function DashboardContextProvider({ children }) {
@@ -68,7 +71,9 @@ export function DashboardContextProvider({ children }) {
         selectedCategories: []
     });
     const [isLoadingSpendingPieChart, setIsLoadingSpendingPieChart] = useState(false);
-    const [spendingPieChartError, setSpendingPieChartError] = useState(false);
+    const [spendingPieChartError, setSpendingPieChartError] = useState("");
+    const [isLoadingDailyBalanceChart, setIsLoadingDailyBalanceChart] = useState(false);
+    const [dailyBalanceChartError, setDailyBalanceChartError] = useState("");
 
     function resetErrorFetchingOverallBalance() {
         setOverallBalanceError("");
@@ -231,7 +236,7 @@ export function DashboardContextProvider({ children }) {
     }
 
     async function fetchSpendingPieChartData() {
-        let chartData = null;
+        let chartData = [];
         try {
             setIsLoadingSpendingPieChart(true);
             const res = await axiosPrivate.get("/user/transactions?type=debit");
@@ -289,6 +294,35 @@ export function DashboardContextProvider({ children }) {
         return chartData;
     }
 
+    function handleErrorFetchingDailyBalanceChartData(error) {
+        if (!error?.response) {
+            setDailyBalanceChartError("Apologies for the inconvenience. We couldn’t connect to the server at the moment. This might be a temporary issue. Kindly try again shortly.");
+        } else if (error?.response?.data?.error) {
+            setDailyBalanceChartError(`Apologies for the inconvenience. There was an error while fetching data for daily balance chart. ${error?.response?.data?.error}`);
+        } else {
+            setDailyBalanceChartError("Apologies for the inconvenience. There was some error while fetching data for daily balance chart. Please try again after some time.");
+        }
+    }
+
+    async function fetchDailyBalanceChartData() {
+        let chartData = [];
+        try {
+            setIsLoadingDailyBalanceChart(true);
+            const res = await axiosPrivate.get("/user/dashboard/series/dailyBalance");
+            const series = res?.data || [];
+            chartData = series.map(item => ({
+                date: new Date(item.date),
+                balance: item.balance || 0
+            }));
+            chartData.sort((a, b) => a.date - b.date);
+        } catch (error) {
+            handleErrorFetchingDailyBalanceChartData(error);
+        } finally {
+            setIsLoadingDailyBalanceChart(false);
+        }
+        return chartData;
+    }
+
     const currentValue = {
         isLoadingOverallBalance,
         overallBalance,
@@ -302,6 +336,8 @@ export function DashboardContextProvider({ children }) {
         filterFormData,
         isLoadingSpendingPieChart,
         spendingPieChartError,
+        isLoadingDailyBalanceChart,
+        dailyBalanceChartError,
         handleResetErrorFetchingFilteredBalance,
         handleResetErrorUpdatingBalanceFilters,
         handleResetFilterFormData,
@@ -309,7 +345,8 @@ export function DashboardContextProvider({ children }) {
         fetchOverallBalance,
         fetchFilteredBalanceAndFilters,
         handleUpdateBalanceFilters,
-        fetchSpendingPieChartData
+        fetchSpendingPieChartData,
+        fetchDailyBalanceChartData
     };
 
     return (

@@ -3,6 +3,7 @@ import { DashboardContextProvider } from "../../../store/context/dashboardContex
 import OverallBalanceCard from "./balance-cards/overall-balance-card/OverallBalanceCard";
 import FilteredBalanceCard from "./balance-cards/filtered-balance-card/FilteredBalanceCard";
 import SpendingPieChartCard from "./spending-pie-chart-card/SpendingPieChartCard";
+import DailyBalanceChartCard from "./daily-balance-chart-card/DailyBalanceChartCard";
 
 function DashboardLayout() {
   return (
@@ -30,7 +31,7 @@ function DashboardLayout() {
 
             {/* Section 2 - contains line charts*/}
             <div className="dashboard-section col-lg-5">
-              <div className="dashboard-card line-chart-card">Line Chart 1</div>
+              <DailyBalanceChartCard />
               <div className="dashboard-card line-chart-card">Line Chart 2</div>
             </div>
           </div>
