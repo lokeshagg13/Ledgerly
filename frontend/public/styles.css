@@ -1601,10 +1601,9 @@ body,
   color: #444;
   margin: 0;
 }
-
 /* #endregion */
 
-/* #region - Daily balance chart */
+/* #region - Daily balance chart section */
 .dashboard-card.daily-balance-chart-card {
   min-height: fit-content;
 }
@@ -1615,12 +1614,6 @@ body,
   display: flex;
   flex-direction: column;
   gap: 1rem;
-}
-
-.daily-balance-chart-nav-controls {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
 }
 
 .daily-balance-chart-container {
@@ -1641,6 +1634,75 @@ body,
 .daily-balance-chart-wrapper::-webkit-scrollbar-thumb {
   background-color: #cbd5e0;
   border-radius: 10px;
+}
+/* #endregion */
+
+/* #region - Daily balance chart */
+.daily-balance-chart-tooltip {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  line-height: 1.4;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.daily-balance-chart-tooltip-date {
+  font-weight: 500;
+  margin-bottom: 4;
+}
+/* #endregion */
+
+/* #region - Daily balance chart controls */
+.daily-balance-chart-controls {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.daily-balance-chart-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border: 1px solid #1976d2;
+  border-radius: 6px !important;
+  background-color: #ffffff;
+  color: #1976d2;
+  font-size: 16px;
+  transition: all 0.2s ease-in-out;
+}
+
+.daily-balance-chart-btn.left svg {
+  transform: rotate(90deg);
+}
+
+.daily-balance-chart-btn.right svg {
+  transform: rotate(-90deg);
+}
+
+.daily-balance-chart-btn:hover:not(:disabled) {
+  background-color: #1976d2;
+  color: #ffffff;
+  border-color: #1565c0;
+}
+
+.daily-balance-chart-btn:hover:not(:disabled) svg {
+  fill: #fff;
+}
+
+.daily-balance-chart-btn:disabled {
+  opacity: 0.5;
+  background-color: #f8f9fa;
+  color: #a0aec0;
+  border-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+.daily-balance-chart-controls .btn {
+  margin: 0 4px;
+  min-width: 40px;
 }
 /* #endregion */
 
