@@ -42,10 +42,12 @@ function OverallBalanceCard() {
               ({balanceAmt >= 0 ? "CR" : "DR"})
             </span>
           </h4>
-          <h6 className="balance-date">
-            Latest transaction:{" "}
-            {formatDateForDisplay(overallBalance.latestTxnDate, "-", true)}
-          </h6>
+          {overallBalance?.latestTxnDate && (
+            <h6 className="balance-date">
+              Latest transaction:{" "}
+              {formatDateForDisplay(overallBalance.latestTxnDate, "-", true)}
+            </h6>
+          )}
         </>
       )}
     </div>
