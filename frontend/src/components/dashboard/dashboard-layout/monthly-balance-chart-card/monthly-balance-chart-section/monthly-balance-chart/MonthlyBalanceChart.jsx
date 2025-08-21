@@ -39,15 +39,19 @@ function MonthlyBalanceChart({ data }) {
   };
 
   // Custom tooltip for both debit and credit
-  const CustomTooltip = ({ active, payload, label }) => {
+  const CustomTooltip = ({ active, payload }) => {
     if (!active || !payload || payload.length === 0) return null;
+
+    const { month, year } = payload[0].payload;
     const balance = payload[0].value;
     const isPositive = balance >= 0;
     const color = isPositive ? "#2e7d32" : "#d32f2f";
     const crdr = isPositive ? "CR" : "DR";
     return (
       <div className="monthly-balance-chart-tooltip">
-        <div className="tooltip-month">Month: {label}</div>
+        <div className="tooltip-month">
+          Month: {month} {String(year)}
+        </div>
         <div style={{ color }}>
           Balance: {formatAmountForDisplay(Math.abs(balance))} {crdr}
         </div>
@@ -67,11 +71,15 @@ function MonthlyBalanceChart({ data }) {
         <CartesianGrid stroke="#e0e0e0" strokeDasharray="3 3" />
         <XAxis
           dataKey="month"
-          textAnchor="end"
+          textAnchor="middle"
           height={30}
           tick={{ fontSize: 12, fill: "#444" }}
           axisLine={{ stroke: "#cbd5e0" }}
           tickLine={{ stroke: "#cbd5e0" }}
+          tickFormatter={(value, index) => {
+            const { year } = data[index];
+            return `${value} ${String(year)}`;
+          }}
         />
         <YAxis
           tick={<CustomYAxisTick />}

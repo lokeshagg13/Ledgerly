@@ -379,6 +379,7 @@ export function DashboardContextProvider({ children }) {
             const data = res?.data || [];
             chartData = data.map(item => ({
                 month: item.month,
+                year: item.year,
                 credit: item.credit || 0,
                 debit: item.debit || 0
             }));
@@ -408,6 +409,7 @@ export function DashboardContextProvider({ children }) {
             const data = res?.data || [];
             chartData = data.map(item => ({
                 month: item.month,
+                year: item.year,
                 balance: item.balance || 0
             }));
         } catch (error) {

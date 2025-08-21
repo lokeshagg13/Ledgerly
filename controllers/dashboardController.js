@@ -444,6 +444,7 @@ exports.getMonthlySpendingSeries = async (req, res) => {
             const { credit = 0, debit = 0 } = monthlyMap[ym] || {};
             data.push({
                 month: current.toLocaleString("default", { month: "short" }),
+                year: current.getFullYear(),
                 credit: parseFloat(credit.toFixed(2)),
                 debit: parseFloat(debit.toFixed(2))
             });
@@ -556,6 +557,7 @@ exports.getMonthlyBalanceSeries = async (req, res) => {
             currentBalance += credit - debit;
             data.push({
                 month: cursor.toLocaleString("default", { month: "short" }),
+                year: cursor.getFullYear(),
                 balance: parseFloat(currentBalance.toFixed(2))
             });
             cursor.setMonth(cursor.getMonth() + 1);
