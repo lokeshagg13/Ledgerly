@@ -7,9 +7,9 @@ require("dotenv").config();
 // Controller for logging user in
 exports.loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, type } = req.body;
     // Checking if the login body is correct
-    if (!email || !password) {
+    if (!email || !password || !type || !["individual", "firm"].includes(type)) {
       return res
         .status(400)
         .json({ error: "Invalid request for user login" });
@@ -21,9 +21,15 @@ exports.loginUser = async (req, res) => {
     }
 
     // Check if email is registered or not
-    const user = await UserModel.findOne({ email });
+    const emailCheck = await UserModel.findOne({ email });
+    if (!emailCheck) {
+      return res.status(401).json({ error: "User is not registered." });
+    }
+
+    // Check if email is registered or not as that type
+    const user = await UserModel.findOne({ email, type });
     if (!user) {
-      return res.status(401).json({ error: "User is not registered" });
+      return res.status(406).json({ error: `User is not registered as ${type}.` });
     }
 
     // Compare password
@@ -37,6 +43,7 @@ exports.loginUser = async (req, res) => {
       {
         email: user.email,
         userId: user._id,
+        type: user.type
       },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
@@ -46,6 +53,7 @@ exports.loginUser = async (req, res) => {
       {
         email: user.email,
         userId: user._id,
+        type: user.type
       },
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
@@ -53,7 +61,7 @@ exports.loginUser = async (req, res) => {
 
     // Set refresh tokens in the user DB so as to allow early logouts from user (when user logs out before the expiry of refresh tokens)
     await UserModel.updateOne(
-      { email: user.email },
+      { email: user.email, type: user.type },
       { $set: { refreshToken } }
     );
     // Refresh tokens will be HTTP only so that they cant be accessed within Javascript
@@ -69,6 +77,7 @@ exports.loginUser = async (req, res) => {
       accessToken,
       name: user.name,
       email: user.email,
+      type: user.type,
       createdAt: user.createdAt,
       openingBalance: user.openingBalance
     });

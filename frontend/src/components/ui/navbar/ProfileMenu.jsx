@@ -55,7 +55,7 @@ function ProfileMenu({ handleNavCollapse }) {
         autoClose: 3000,
       });
       setAuth({});
-      handleNavigateToPath("/", { replace: true });
+      handleNavigateToPath("/home", { replace: true });
       handleNavCollapse();
     } catch (error) {
       if (!error?.response) {

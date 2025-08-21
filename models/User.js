@@ -22,6 +22,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "",
     },
+    type: {
+        type: String,
+        enum: ["individual", "firm"],
+        required: true,
+        default: "individual"
+    },
     createdAt: {
         type: Date,
         default: Date.now
@@ -56,14 +62,34 @@ const userSchema = new mongoose.Schema({
                 }
             }
         },
-        default: () => ({
-            title: "Filtered Balance",
-            filters: {
-                uptoDate: null,
-                selectedCategories: []
+        default: function () {
+            if (this.type === "individual") {
+                return {
+                    title: "Filtered Balance",
+                    filters: {
+                        uptoDate: null,
+                        selectedCategories: []
+                    }
+                };
             }
-        })
+            return undefined;
+
+        },
+        validate: {
+            validator: function (value) {
+                return this.type === "individual" || value === undefined || value === null;
+            },
+            message: "custom balance card is only allowed for individual users."
+        }
     }
+});
+
+// Optional: pre-save hook to automatically remove it if type is firm
+userSchema.pre("save", function (next) {
+    if (this.type === "firm") {
+        this.customBalanceCard = undefined;
+    }
+    next();
 });
 
 const userModel = mongoose.model("userModel", userSchema, "users");

@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 
-import { axiosPrivate } from "../../../../api/axios";
-import useAuth from "../../../../store/hooks/useAuth";
-import EyeOpenIcon from "../../../ui/icons/EyeOpenIcon";
-import EyeSlashIcon from "../../../ui/icons/EyeSlashIcon";
-import useAppNavigate from "../../../../store/hooks/useAppNavigate";
+import { axiosPrivate } from "../../../../../api/axios";
+import useAuth from "../../../../../store/hooks/useAuth";
+import EyeOpenIcon from "../../../../ui/icons/EyeOpenIcon";
+import EyeSlashIcon from "../../../../ui/icons/EyeSlashIcon";
+import useAppNavigate from "../../../../../store/hooks/useAppNavigate";
 
-function LoginForm() {
+function LoginForm({ userType }) {
   const emailRef = useRef();
   const { setAuth } = useAuth();
   const { handleNavigateToPath } = useAppNavigate();
@@ -85,20 +85,20 @@ function LoginForm() {
         JSON.stringify({
           email: formData.email.trim(),
           password: formData.password,
+          type: userType,
         }),
         {
           headers: {
             "Content-Type": "application/json",
-            withCredentials: true,
           },
+          withCredentials: true,
         }
       );
 
-      const { email, name, accessToken, createdAt, openingBalance } =
+      const { email, name, type, accessToken, createdAt, openingBalance } =
         response?.data || {};
-      setAuth({ email, name, accessToken, createdAt, openingBalance });
+      setAuth({ email, name, type, accessToken, createdAt, openingBalance });
       setErrorMessage("");
-      setFormData({ email: "", password: "" });
       handleNavigateToPath("/dashboard", { replace: true });
     } catch (error) {
       if (!error?.response) {
@@ -110,6 +110,12 @@ function LoginForm() {
       } else if (error.response?.status === 401) {
         setErrorMessage(
           "User not found. Please check your email or sign up to create a new account."
+        );
+      } else if (error.response?.status === 406) {
+        setErrorMessage(
+          `User is not registered as ${
+            userType === "individual" ? "an" : "a"
+          } ${userType}. Please check carefully and try again.`
         );
       } else {
         setErrorMessage(`Login Failed.`);
@@ -169,6 +175,7 @@ function LoginForm() {
       <div className="register-link">
         Not Registered?{" "}
         <button
+          type="button"
           className="link-btn"
           onClick={() => handleNavigateToPath("/register")}
         >

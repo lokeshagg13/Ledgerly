@@ -12,6 +12,7 @@ function RegisterForm() {
   const nameRef = useRef();
   const [formData, setFormData] = useState({
     name: "",
+    type: "individual",
     email: "",
     password: "",
     confirmPassword: "",
@@ -62,6 +63,14 @@ function RegisterForm() {
     setCommonErrorMessage("");
     setInputFieldErrors({ ...inputFieldErrors, [e.target.name]: null });
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // Type validation function
+  const checkTypeValidity = (type) => {
+    if (!type) return "User type is required.";
+    if (!["individual", "firm"].includes(type))
+      return "User type must be either individual or firm.";
+    return null;
   };
 
   // Name validation function
@@ -125,8 +134,14 @@ function RegisterForm() {
 
   // Validate register form data
   const validateRegisterFormData = () => {
-    const { name, email, password, confirmPassword } = formData;
+    const { type, name, email, password, confirmPassword } = formData;
     const errors = {};
+
+    // Validate type field
+    const typeError = checkTypeValidity(type);
+    if (typeError) {
+      errors.type = typeError;
+    }
 
     // Validate name field
     const nameError = checkNameValidity(name);
@@ -167,6 +182,7 @@ function RegisterForm() {
         "/user/register",
         JSON.stringify({
           name: formData.name,
+          type: formData.type,
           email: formData.email,
           password: formData.password,
         }),
@@ -185,7 +201,13 @@ function RegisterForm() {
       setPasswordMismatch(false);
       setInputFieldErrors({});
       setCommonErrorMessage("");
-      setFormData({ name: "", email: "", password: "", confirmPassword: "" });
+      setFormData({
+        name: "",
+        type: "individual",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
     } catch (error) {
       setRegisterSuccess(false);
       if (!error?.response) {
@@ -204,6 +226,36 @@ function RegisterForm() {
 
   return (
     <Form className="register-form">
+      <Form.Group className="mb-3">
+        <div className="register-user-type-row">
+          <Form.Label className="me-3 mb-0">Register as</Form.Label>
+          <div className="register-user-types">
+            <Form.Check
+              inline
+              type="radio"
+              id="registerIndividual"
+              label="Individual"
+              name="type"
+              value="individual"
+              checked={formData.type === "individual"}
+              onChange={handleChange}
+            />
+            <Form.Check
+              inline
+              type="radio"
+              id="registerFirm"
+              label="Firm"
+              name="type"
+              value="firm"
+              checked={formData.type === "firm"}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+        {checkIfInputFieldInvalid("type") && (
+          <div className="text-danger">{inputFieldErrors.type}</div>
+        )}
+      </Form.Group>
       <Form.Group className="mb-3">
         <Form.Control
           type="text"

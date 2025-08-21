@@ -21,10 +21,14 @@ const validatePassword = (pwd) => {
 
 exports.registerUser = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, type, email, password } = req.body;
 
-        if (!name || !email || !password) {
-            return res.status(400).json({ error: "Name, email and password are required." });
+        if (!name || !type || !email || !password) {
+            return res.status(400).json({ error: "Name, type, email and password are required." });
+        }
+
+        if (!["individual", "firm"].includes(type)) {
+            return res.status(400).json({ error: "Invalid user type." });
         }
 
         if (!isValidEmail(email)) {
@@ -45,6 +49,7 @@ exports.registerUser = async (req, res) => {
 
         const user = new UserModel({
             name,
+            type,
             email: email.toLowerCase().trim(),
             password: hashedPassword
         });
@@ -53,6 +58,7 @@ exports.registerUser = async (req, res) => {
         res.status(201).json({
             id: user._id,
             name: user.name,
+            type: user.type,
             email: user.email,
             createdAt: user.createdAt
         });

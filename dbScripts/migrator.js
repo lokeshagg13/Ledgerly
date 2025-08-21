@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const UserModel = require("../models/User"); 
+const UserModel = require("../models/User");
 const CategoryModel = require("../models/Category");
 require("dotenv").config();
 
@@ -10,28 +10,26 @@ async function migrateUsers() {
         await mongoose.connect(MONGO_URI);
         console.log("Connected to MongoDB");
 
-        const users = await UserModel.find();
-        console.log(`Found ${users.length} users to update`);
+        const users = await UserModel.find({});
+        console.log(`Found ${users.length} users.`);
 
+        let updatedCount = 0;
         for (const user of users) {
-            // Add openingBalance if missing
-            user.customBalanceCard = {
-                title: "Filtered Balance",
-                filters: {
-                    uptoDate: null,
-                    selectedCategories: []
-                }
-            };
-
-
-            await user.save();
-            console.log(`Migrated user: ${user.email}`);
+            console.log(user.type)
+            if (!user.type) {
+                user.type = "individual";
+                await user.save();
+                updatedCount++;
+            }
         }
 
-        console.log("Migration complete");
+        console.log(`✅ Updated ${updatedCount} users.`);
+
+        mongoose.connection.close();
+        console.log("🎉 Migration completed successfully");
         process.exit(0);
     } catch (err) {
-        console.error("Migration failed:", err);
+        console.error("❌ Migration failed:", err);
         process.exit(1);
     }
 }
@@ -62,5 +60,5 @@ async function migrateCategories() {
     }
 }
 
-// migrateUsers();
-migrateCategories();
+migrateUsers();
+// migrateCategories();

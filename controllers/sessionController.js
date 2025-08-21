@@ -26,19 +26,21 @@ exports.handleRefreshToken = async (req, res) => {
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET,
       (err, decoded) => {
-        if (err || decoded.email !== user.email) {
+        if (err || decoded.email !== user.email || decoded.type !== user.type) {
           return res.status(403).json({ error: "Refresh token is invalid" });
         }
         const accessToken = jwt.sign(
           {
             email: decoded.email,
-            userId: user._id
+            userId: user._id,
+            type: decoded.type
           },
           process.env.ACCESS_TOKEN_SECRET,
           { expiresIn: `${process.env.ACCESS_TOKEN_EXPIRY}` }
         );
         res.status(200).json({
           email: decoded.email,
+          type: decoded.type,
           name: user.name,
           accessToken,
           createdAt: user.createdAt,

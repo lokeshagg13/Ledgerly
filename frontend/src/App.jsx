@@ -9,7 +9,9 @@ import RequireAuth from "./components/user/session/RequireAuth";
 import Page404 from "./pages/page404";
 import HomePage from "./pages/home-page/HomePage";
 import DashboardPage from "./pages/dashboard-page/DashboardPage";
-import LoginPage from "./pages/login-page/LoginPage";
+import LoginOptionsPage from "./pages/login-options-page/LoginOptionsPage";
+import LoginIndividualPage from "./pages/login-individual-page/LoginIndividualPage";
+import LoginFirmPage from "./pages/login-firm-page/LoginFirmPage";
 import RegisterPage from "./pages/register-page/RegisterPage";
 import UserProfilePage from "./pages/user-profile-page/UserProfilePage";
 import TransactionPage from "./pages/transaction-page/TransactionPage";
@@ -19,16 +21,17 @@ import PrintTransactionPage from "./pages/print-transaction-page/PrintTransactio
 
 function App() {
   const { auth } = useAuth();
+
   return (
     <div className="app-wrapper">
       <NavbarComponent />
 
       <div className="app-content">
         <Routes>
+          <Route path="/home" element={<HomePage />} />
+
           {/* Protected Routes */}
           <Route element={<PersistLogin />}>
-            <Route path="/home" element={<HomePage />} />
-
             <Route
               exact
               path="/"
@@ -47,7 +50,29 @@ function App() {
                 auth?.email && auth?.accessToken ? (
                   <Navigate to="/dashboard" replace />
                 ) : (
-                  <LoginPage />
+                  <LoginOptionsPage />
+                )
+              }
+            />
+
+            <Route
+              path="/login/individual"
+              element={
+                auth?.email && auth?.accessToken ? (
+                  <Navigate to="/dashboard" replace />
+                ) : (
+                  <LoginIndividualPage />
+                )
+              }
+            />
+
+            <Route
+              path="/login/firm"
+              element={
+                auth?.email && auth?.accessToken ? (
+                  <Navigate to="/dashboard" replace />
+                ) : (
+                  <LoginFirmPage />
                 )
               }
             />
@@ -66,16 +91,44 @@ function App() {
             <Route element={<RequireAuth />}>
               <Route path="/user/profile" element={<UserProfilePage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/transactions" element={<TransactionPage />} />
+
+              {/* Individual-only routes */}
+              <Route
+                path="/transactions"
+                element={
+                  auth?.type === "individual" ? (
+                    <TransactionPage />
+                  ) : (
+                    <Page404 />
+                  )
+                }
+              />
               <Route
                 path="/transactions/print"
-                element={<PrintTransactionPage />}
+                element={
+                  auth?.type === "individual" ? (
+                    <PrintTransactionPage />
+                  ) : (
+                    <Page404 />
+                  )
+                }
               />
               <Route
                 path="/transactions/upload"
-                element={<UploadTransactionPage />}
+                element={
+                  auth?.type === "individual" ? (
+                    <UploadTransactionPage />
+                  ) : (
+                    <Page404 />
+                  )
+                }
               />
-              <Route path="/categories" element={<CategoryPage />} />
+              <Route
+                path="/categories"
+                element={
+                  auth?.type === "individual" ? <CategoryPage /> : <Page404 />
+                }
+              />
             </Route>
           </Route>
 

@@ -11,8 +11,8 @@ function useRefreshToken() {
       withCredentials: true,
     });
     // Set new auth access token and email
-    const { email, name, accessToken, createdAt, openingBalance } = response?.data || {};
-    setAuth({ email, name, accessToken, createdAt, openingBalance });
+    const { email, name, type, accessToken, createdAt, openingBalance } = response?.data || {};
+    setAuth({ type, email, name, accessToken, createdAt, openingBalance });
     return response.data.accessToken;
   };
 
