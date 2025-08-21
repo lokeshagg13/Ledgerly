@@ -63,7 +63,7 @@ async function computeBalance({ userId, uptoDate, selectedCategories, openingBal
 }
 
 // @desc    Get user's overall balance and latest txn date
-// @route   GET /api/dashboard/overallBalance
+// @route   GET /api/user/dashboard/overallBalance
 // @access  Private
 exports.getOverallBalance = async (req, res) => {
     try {
@@ -84,7 +84,7 @@ exports.getOverallBalance = async (req, res) => {
 };
 
 // @desc    Get user's current balance and last updated date
-// @route   GET /api/dashboard/custom/balance
+// @route   GET /api/user/dashboard/custom/balance
 // @access  Private
 exports.getCustomBalance = async (req, res) => {
     try {
@@ -112,7 +112,7 @@ exports.getCustomBalance = async (req, res) => {
 };
 
 // @desc    Get custom balance card title
-// @route   GET /api/dashboard/custom/title
+// @route   GET /api/user/dashboard/custom/title
 // @access  Private
 exports.getCustomBalanceCardTitle = async (req, res) => {
     try {
@@ -126,7 +126,7 @@ exports.getCustomBalanceCardTitle = async (req, res) => {
 };
 
 // @desc    Update filters for the user's custom balance card
-// @route   PUT /api/dashboard/custom/filters
+// @route   PUT /api/user/dashboard/custom/filters
 // @access  Private
 exports.updateCustomBalanceCardFilters = async (req, res) => {
     try {
@@ -172,7 +172,7 @@ exports.updateCustomBalanceCardFilters = async (req, res) => {
 };
 
 // @desc    Update title for the user's custom balance card
-// @route   PUT /api/dashboard/custom/title
+// @route   PUT /api/user/dashboard/custom/title
 // @access  Private
 exports.updateCustomBalanceCardTitle = async (req, res) => {
     try {
@@ -210,7 +210,7 @@ exports.updateCustomBalanceCardTitle = async (req, res) => {
 };
 
 // @desc    Get list of financial years from user's transaction data
-// @route   GET /api/dashboard/financial-years
+// @route   GET /api/user/dashboard/financial-years
 // @access  Private
 exports.getFinancialYears = async (req, res) => {
     try {
@@ -256,7 +256,7 @@ exports.getFinancialYears = async (req, res) => {
 };
 
 // @desc    Get cumulative daily balance series for a given financial year
-// @route   GET /api/dashboard/balance/daily-series?fy=2023-24
+// @route   GET /api/user/dashboard/series/dailyBalance?fy=2023-24
 // @access  Private
 exports.getDailyBalanceSeries = async (req, res) => {
     try {
@@ -380,9 +380,9 @@ exports.getDailyBalanceSeries = async (req, res) => {
 };
 
 // @desc    Get monthly debit/credit totals for a given financial year
-// @route   GET /api/dashboard/series/spending/monthly?fy=2023-24
+// @route   GET /api/dashboard/series/monthlySpending?fy=2023-24
 // @access  Private
-exports.getMonthlySpendingChart = async (req, res) => {
+exports.getMonthlySpendingSeries = async (req, res) => {
     try {
         const userId = req.userId;
         const { fy } = req.query;
@@ -456,3 +456,116 @@ exports.getMonthlySpendingChart = async (req, res) => {
         res.status(500).json({ error: "Server error while fetching monthly spending chart." });
     }
 };
+
+// @desc    Get cumulative monthly balance for a given financial year
+// @route   GET /api/user/dashboard/series/monthlyBalance?fy=2023-24
+// @access  Private
+exports.getMonthlyBalanceSeries = async (req, res) => {
+    try {
+        const user = await UserModel.findById(req.userId).select("openingBalance createdAt");
+        if (!user) return res.status(404).json({ error: "User not found" });
+
+        const openingBalance = user.openingBalance?.amount || 0;
+        const { fy } = req.query;
+
+        if (!fy || !/^\d{4}-\d{2}$/.test(fy)) {
+            return res.status(400).json({ error: "Invalid or missing financial year format. Use YYYY-YY." });
+        }
+
+        // Parse FY string into start and end dates
+        const [startYearStr, endYearSuffix] = fy.split("-");
+        const startYear = parseInt(startYearStr, 10);
+        const endYear = parseInt(startYearStr.slice(0, 2) + endYearSuffix, 10);
+
+        const startDate = new Date(startYear, 3, 1); // Apr 1
+        const endDate = new Date(endYear, 2, 31, 23, 59, 59, 999); // Mar 31
+
+        // 1. Find user's last transaction date
+        const lastTxn = await TransactionModel.findOne({ userId: user._id })
+            .sort({ date: -1 })
+            .select("date");
+        const lastTxnDate = lastTxn?.date;
+        if (!lastTxnDate) {
+            // no transactions ever → return opening balance only
+            return res.status(200).json([
+                { month: startDate.toLocaleString("default", { month: "short" }), balance: parseFloat(openingBalance.toFixed(2)) }
+            ]);
+        }
+
+        // 2. Clamp FY end to last transaction date if earlier
+        const effectiveEndDate = lastTxnDate < endDate ? lastTxnDate : endDate;
+
+        // 3. Get cumulative balance up to FY start
+        const priorAgg = await TransactionModel.aggregate([
+            {
+                $match: {
+                    userId: user._id,
+                    date: { $lt: startDate }
+                }
+            },
+            {
+                $group: {
+                    _id: "$type",
+                    total: { $sum: "$amount" }
+                }
+            }
+        ]);
+        let creditBefore = 0, debitBefore = 0;
+        priorAgg.forEach(item => {
+            if (item._id === "credit") creditBefore = item.total;
+            if (item._id === "debit") debitBefore = item.total;
+        });
+        let currentBalance = openingBalance + creditBefore - debitBefore;
+
+        // 4. Aggregate by month for this FY up to effectiveEndDate
+        const result = await TransactionModel.aggregate([
+            {
+                $match: {
+                    userId: user._id,
+                    date: { $gte: startDate, $lte: effectiveEndDate }
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$date" },
+                        month: { $month: "$date" },
+                        type: "$type"
+                    },
+                    total: { $sum: "$amount" }
+                }
+            }
+        ]);
+
+        // 5. Convert aggregation to a map: { 'YYYY-MM': {credit, debit} }
+        const monthlyMap = {};
+        result.forEach(item => {
+            const ym = `${item._id.year}-${String(item._id.month).padStart(2, "0")}`;
+            if (!monthlyMap[ym]) {
+                monthlyMap[ym] = { credit: 0, debit: 0 };
+            }
+            monthlyMap[ym][item._id.type] = item.total;
+        });
+
+        // 6. Build cumulative monthly balance series
+        const data = [];
+        let cursor = new Date(startDate);
+        while (cursor <= effectiveEndDate) {
+            const ym = `${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, "0")}`;
+            const { credit = 0, debit = 0 } = monthlyMap[ym] || {};
+            currentBalance += credit - debit;
+            data.push({
+                month: cursor.toLocaleString("default", { month: "short" }),
+                balance: parseFloat(currentBalance.toFixed(2))
+            });
+            cursor.setMonth(cursor.getMonth() + 1);
+        }
+
+        res.status(200).json(data);
+
+    } catch (error) {
+        console.error("Error generating cumulative monthly balance series:", error);
+        res.status(500).json({ error: "Server error while generating cumulative monthly balance series" });
+    }
+};
+

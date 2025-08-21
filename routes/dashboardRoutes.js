@@ -10,8 +10,9 @@ router.get("/custom/balance", dashboardController.getCustomBalance);
 router.get("/custom/title", dashboardController.getCustomBalanceCardTitle);
 router.put("/custom/filters", dashboardController.updateCustomBalanceCardFilters);
 router.put("/custom/title", dashboardController.updateCustomBalanceCardTitle);
-router.get("/series/dailyBalance", dashboardController.getDailyBalanceSeries);
 router.get("/financial-years", dashboardController.getFinancialYears);
-router.get("/series/spending/monthly", dashboardController.getMonthlySpendingChart);
+router.get("/series/dailyBalance", dashboardController.getDailyBalanceSeries);
+router.get("/series/monthlySpending", dashboardController.getMonthlySpendingSeries);
+router.get("/series/monthlyBalance", dashboardController.getMonthlyBalanceSeries);
 
 module.exports = router;

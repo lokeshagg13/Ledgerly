@@ -11,22 +11,33 @@ import {
 import { formatAmountForDisplay } from "../../../../../../utils/formatUtils";
 
 function DailyBalanceChart({ data, zoomIndex }) {
+  // Calculate max absolute value to scale Y axis properly
+  const maxAmount = useMemo(() => {
+    return Math.max(...data.map((d) => d.balance));
+  }, [data]);
+
+  // Determine unit (Thousands, Lacs, Crores)
+  const { divisor, unit } = useMemo(() => {
+    if (maxAmount >= 1e7) return { divisor: 1e7, unit: "Crores" };
+    if (maxAmount >= 1e5) return { divisor: 1e5, unit: "Lacs" };
+    if (maxAmount >= 1e3) return { divisor: 1e3, unit: "Thousands" };
+    return { divisor: 1, unit: "" };
+  }, [maxAmount]);
+
   const formatYAxis = (value) => (value / divisor).toFixed(0);
+
+  // Custom Y-axis tick (green for credit, red for debit)
   const CustomYAxisTick = ({ x, y, payload }) => {
     const value = payload.value;
     const color = value > 0 ? "#2e7d32" : "#d32f2f";
     return (
-      <text
-        x={x}
-        y={y + 4} // adjust vertical alignment
-        textAnchor="end"
-        fill={color}
-        fontSize={12}
-      >
+      <text x={x} y={y + 4} textAnchor="end" fill={color} fontSize={12}>
         {formatYAxis(value)}
       </text>
     );
   };
+
+  // Custom tooltip
   const CustomTooltip = ({ active, payload, label }) => {
     if (!active || !payload || payload.length === 0) return null;
     const balance = payload[0].value;
@@ -49,17 +60,6 @@ function DailyBalanceChart({ data, zoomIndex }) {
       </div>
     );
   };
-
-  const maxBalance = useMemo(() => {
-    return Math.max(...data.map((d) => d.balance));
-  }, [data]);
-
-  const { divisor, unit } = useMemo(() => {
-    if (maxBalance >= 1e7) return { divisor: 1e7, unit: "Crores" };
-    if (maxBalance >= 1e5) return { divisor: 1e5, unit: "Lacs" };
-    if (maxBalance >= 1e3) return { divisor: 1e3, unit: "Thousands" };
-    return { divisor: 1, unit: "" };
-  }, [maxBalance]);
 
   return (
     <ResponsiveContainer width="100%" height={200}>

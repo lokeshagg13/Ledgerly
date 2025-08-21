@@ -1,23 +1,20 @@
 import { useMemo } from "react";
 import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   Tooltip,
   CartesianGrid,
   ResponsiveContainer,
-  Legend,
 } from "recharts";
 import { formatAmountForDisplay } from "../../../../../../utils/formatUtils";
 
-function MonthlySpendingChart({ data }) {
+function MonthlyBalanceChart({ data }) {
   // Calculate max absolute value to scale Y axis properly
   const maxAmount = useMemo(() => {
     if (!data || data.length === 0) return 0;
-    return Math.max(
-      ...data.flatMap((d) => [Math.abs(d.debit || 0), Math.abs(d.credit || 0)])
-    );
+    return Math.max(...data.map((d) => d.balance));
   }, [data]);
 
   // Determine unit (Thousands, Lacs, Crores)
@@ -33,7 +30,7 @@ function MonthlySpendingChart({ data }) {
   // Custom Y-axis tick (green for credit, red for debit)
   const CustomYAxisTick = ({ x, y, payload }) => {
     const value = payload.value;
-    const color = value >= 0 ? "#388e3c" : "#c62828";
+    const color = value > 0 ? "#2e7d32" : "#d32f2f";
     return (
       <text x={x} y={y + 4} textAnchor="end" fill={color} fontSize={12}>
         {formatYAxis(value)}
@@ -44,58 +41,41 @@ function MonthlySpendingChart({ data }) {
   // Custom tooltip for both debit and credit
   const CustomTooltip = ({ active, payload, label }) => {
     if (!active || !payload || payload.length === 0) return null;
-    const debit = payload.find((p) => p.dataKey === "debit")?.value || 0;
-    const credit = payload.find((p) => p.dataKey === "credit")?.value || 0;
-
+    const balance = payload[0].value;
+    const isPositive = balance >= 0;
+    const color = isPositive ? "#2e7d32" : "#d32f2f";
+    const crdr = isPositive ? "CR" : "DR";
     return (
-      <div className="monthly-spending-chart-tooltip">
+      <div className="monthly-balance-chart-tooltip">
         <div className="tooltip-month">Month: {label}</div>
-        <div style={{ color: "#c62828" }}>
-          Debit: {formatAmountForDisplay(debit)}
+        <div style={{ color }}>
+          Balance: {formatAmountForDisplay(Math.abs(balance))} {crdr}
         </div>
-        <div style={{ color: "#388e3c" }}>
-          Credit: {formatAmountForDisplay(credit)}
-        </div>
-      </div>
-    );
-  };
-
-  // Custom legend renderer
-  const CustomLegend = ({ payload }) => {
-    if (!payload) return null;
-    return (
-      <div className="monthly-spending-chart-legend">
-        {payload.map((entry) => (
-          <div
-            key={entry.value}
-            className="monthly-spending-chart-legend-entry"
-          >
-            <span
-              className="monthly-spending-chart-legend-color"
-              style={{
-                backgroundColor: entry.color,
-              }}
-            />
-            {entry.value}
-          </div>
-        ))}
       </div>
     );
   };
 
   return (
-    <ResponsiveContainer width="100%" height={250}>
-      <BarChart data={data} height={250} barGap={0} barCategoryGap={12}>
+    <ResponsiveContainer width="100%" height={200}>
+      <LineChart data={data} height={200}>
+        <defs>
+          <linearGradient id="balanceLine" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#1976d2" stopOpacity={0.9} />
+            <stop offset="100%" stopColor="#42a5f5" stopOpacity={0.9} />
+          </linearGradient>
+        </defs>
         <CartesianGrid stroke="#e0e0e0" strokeDasharray="3 3" />
         <XAxis
           dataKey="month"
+          textAnchor="end"
+          height={30}
           tick={{ fontSize: 12, fill: "#444" }}
           axisLine={{ stroke: "#cbd5e0" }}
           tickLine={{ stroke: "#cbd5e0" }}
         />
         <YAxis
           tick={<CustomYAxisTick />}
-          width={50}
+          width={40}
           axisLine={{ stroke: "#cbd5e0" }}
           tickLine={{ stroke: "#cbd5e0" }}
           label={
@@ -116,12 +96,17 @@ function MonthlySpendingChart({ data }) {
           }
         />
         <Tooltip content={<CustomTooltip />} />
-        <Legend verticalAlign="top" height={36} content={<CustomLegend />} />
-        <Bar dataKey="debit" fill="#e57373" name="Debit" />
-        <Bar dataKey="credit" fill="#66bb6a" name="Credit" />
-      </BarChart>
+        <Line
+          type="monotone"
+          dataKey="balance"
+          stroke="url(#balanceLine)"
+          strokeWidth={3}
+          dot={{ r: 3, stroke: "#fff", strokeWidth: 1, fill: "#1976d2" }}
+          activeDot={{ r: 5, stroke: "#42a5f5", strokeWidth: 2, fill: "#fff" }}
+        />
+      </LineChart>
     </ResponsiveContainer>
   );
 }
 
-export default MonthlySpendingChart;
+export default MonthlyBalanceChart;

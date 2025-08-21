@@ -30,13 +30,15 @@ const DashboardContext = createContext({
     },
     isLoadingSpendingPieChart: false,
     spendingPieChartError: "",
-    isLoadingDailyBalanceChart: false,
-    dailyBalanceChartError: "",
     isLoadingFinancialYears: false,
     financialYears: [],
     financialYearsFetchError: "",
+    isLoadingDailyBalanceChart: false,
+    dailyBalanceChartError: "",
     isLoadingMonthlySpendingChart: false,
     monthlySpendingChartError: "",
+    isLoadingMonthlyBalanceChart: false,
+    monthlyBalanceChartError: "",
     fetchOverallBalance: async () => { },
     fetchFilteredBalanceAndFilters: async () => { },
     handleResetErrorFetchingFilteredBalance: () => { },
@@ -47,6 +49,7 @@ const DashboardContext = createContext({
     fetchSpendingPieChartData: async () => { },
     fetchDailyBalanceChartData: async (fy) => { },
     fetchMonthlySpendingChartData: async (fy) => { },
+    fetchMonthlyBalanceChartData: async (fy) => { }
 });
 
 export function DashboardContextProvider({ children }) {
@@ -85,6 +88,8 @@ export function DashboardContextProvider({ children }) {
     const [financialYearsFetchError, setFinancialYearsFetchError] = useState("");
     const [isLoadingMonthlySpendingChart, setIsLoadingMonthlySpendingChart] = useState(false);
     const [monthlySpendingChartError, setMonthlySpendingChartError] = useState("");
+    const [isLoadingMonthlyBalanceChart, setIsLoadingMonthlyBalanceChart] = useState(false);
+    const [monthlyBalanceChartError, setMonthlyBalanceChartError] = useState("");
 
     function resetErrorFetchingOverallBalance() {
         setOverallBalanceError("");
@@ -370,7 +375,7 @@ export function DashboardContextProvider({ children }) {
         let chartData = [];
         try {
             setIsLoadingMonthlySpendingChart(true);
-            const res = await axiosPrivate.get(`/user/dashboard/series/spending/monthly?fy=${fy}`);
+            const res = await axiosPrivate.get(`/user/dashboard/series/monthlySpending?fy=${fy}`);
             const data = res?.data || [];
             chartData = data.map(item => ({
                 month: item.month,
@@ -381,6 +386,34 @@ export function DashboardContextProvider({ children }) {
             handleErrorFetchingMonthlySpendingChartData(error);
         } finally {
             setIsLoadingMonthlySpendingChart(false);
+        }
+        return chartData;
+    }
+
+    function handleErrorFetchingMonthlyBalanceChartData(error) {
+        if (!error?.response) {
+            setMonthlyBalanceChartError("Apologies for the inconvenience. We couldn’t connect to the server at the moment. This might be a temporary issue. Kindly try again shortly.");
+        } else if (error?.response?.data?.error) {
+            setMonthlyBalanceChartError(`Apologies for the inconvenience. There was an error while fetching data for monthly balance chart. ${error?.response?.data?.error}`);
+        } else {
+            setMonthlyBalanceChartError("Apologies for the inconvenience. There was some error while fetching data for monthly balance chart. Please try again after some time.");
+        }
+    }
+
+    async function fetchMonthlyBalanceChartData(fy) {
+        let chartData = [];
+        try {
+            setIsLoadingMonthlyBalanceChart(true);
+            const res = await axiosPrivate.get(`/user/dashboard/series/monthlyBalance?fy=${fy}`);
+            const data = res?.data || [];
+            chartData = data.map(item => ({
+                month: item.month,
+                balance: item.balance || 0
+            }));
+        } catch (error) {
+            handleErrorFetchingMonthlyBalanceChartData(error);
+        } finally {
+            setIsLoadingMonthlyBalanceChart(false);
         }
         return chartData;
     }
@@ -402,13 +435,15 @@ export function DashboardContextProvider({ children }) {
         filterFormData,
         isLoadingSpendingPieChart,
         spendingPieChartError,
-        isLoadingDailyBalanceChart,
-        dailyBalanceChartError,
         isLoadingFinancialYears,
         financialYears,
         financialYearsFetchError,
+        isLoadingDailyBalanceChart,
+        dailyBalanceChartError,
         isLoadingMonthlySpendingChart,
         monthlySpendingChartError,
+        isLoadingMonthlyBalanceChart,
+        monthlyBalanceChartError,
         handleResetErrorFetchingFilteredBalance,
         handleResetErrorUpdatingBalanceFilters,
         handleResetFilterFormData,
@@ -418,7 +453,8 @@ export function DashboardContextProvider({ children }) {
         handleUpdateBalanceFilters,
         fetchSpendingPieChartData,
         fetchDailyBalanceChartData,
-        fetchMonthlySpendingChartData
+        fetchMonthlySpendingChartData,
+        fetchMonthlyBalanceChartData
     };
 
     return (

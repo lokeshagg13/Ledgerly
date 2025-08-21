@@ -5,6 +5,7 @@ import FilteredBalanceCard from "./balance-cards/filtered-balance-card/FilteredB
 import SpendingPieChartCard from "./spending-pie-chart-card/SpendingPieChartCard";
 import DailyBalanceChartCard from "./daily-balance-chart-card/DailyBalanceChartCard";
 import MonthlySpendingChartCard from "./monthly-spending-chart-card/MonthlySpendingChartCard";
+import MonthlyBalanceChartCard from "./monthly-balance-chart-card/MonthlyBalanceChartCard";
 
 function DashboardLayout() {
   return (
@@ -31,7 +32,7 @@ function DashboardLayout() {
             {/* Section 2 - contains line charts*/}
             <div className="dashboard-section col-lg-5">
               <DailyBalanceChartCard />
-              <div className="dashboard-card line-chart-card">Line Chart 2</div>
+              <MonthlyBalanceChartCard />
             </div>
           </div>
         </DashboardContextProvider>
