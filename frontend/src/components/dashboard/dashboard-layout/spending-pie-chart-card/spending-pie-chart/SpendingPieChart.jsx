@@ -1,9 +1,9 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
 
-import PieChartErrorImage from "../../../../../images/pie-chart-error.png";
 import DashboardContext from "../../../../../store/context/dashboardContext";
 import { formatAmountForDisplay } from "../../../../../utils/formatUtils";
+import ChartErrorImage from "../../../../../images/chart-error.png";
 import PieChartSkeleton from "../../../../ui/skeletons/PieChartSkeleton";
 
 function SpendingPieChart() {
@@ -36,7 +36,7 @@ function SpendingPieChart() {
   if (spendingPieChartError) {
     return (
       <div className="pie-chart-error">
-        <img src={PieChartErrorImage} alt="" width={150} height="auto" />
+        <img src={ChartErrorImage} alt="" width={150} height="auto" />
         <p>{spendingPieChartError}</p>
       </div>
     );
@@ -45,7 +45,7 @@ function SpendingPieChart() {
   if (chartData.length === 0) {
     return (
       <div className="pie-chart-empty">
-        <img src={PieChartErrorImage} alt="" width={150} height="auto" />
+        <img src={ChartErrorImage} alt="" width={150} height="auto" />
         <p>No debit transactions found.</p>
       </div>
     );

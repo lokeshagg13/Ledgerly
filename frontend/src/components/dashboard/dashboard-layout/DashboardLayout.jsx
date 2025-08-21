@@ -4,6 +4,7 @@ import OverallBalanceCard from "./balance-cards/overall-balance-card/OverallBala
 import FilteredBalanceCard from "./balance-cards/filtered-balance-card/FilteredBalanceCard";
 import SpendingPieChartCard from "./spending-pie-chart-card/SpendingPieChartCard";
 import DailyBalanceChartCard from "./daily-balance-chart-card/DailyBalanceChartCard";
+import MonthlySpendingChartCard from "./monthly-spending-chart-card/MonthlySpendingChartCard";
 
 function DashboardLayout() {
   return (
@@ -23,9 +24,7 @@ function DashboardLayout() {
                 </div>
               </div>
               <div className="subsection">
-                <div className="dashboard-card bar-chart-card">
-                  Grouped Bar Chart
-                </div>
+                <MonthlySpendingChartCard />
               </div>
             </div>
 

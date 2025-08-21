@@ -1159,16 +1159,6 @@ body,
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
-.bar-chart-card {
-  flex: 1;
-  min-height: 250px;
-}
-
-@media (max-width: 425px) {
-  .balance-card {
-    min-width: 150px;
-  }
-}
 /* #endregion */
 
 /* #region - Balance cards common */
@@ -1219,6 +1209,12 @@ body,
   color: #dc3545;
   font-size: 14px;
   margin: 0.5rem 0 0;
+}
+
+@media (max-width: 425px) {
+  .balance-card {
+    min-width: 150px;
+  }
 }
 /* #endregion */
 
@@ -1590,6 +1586,197 @@ body,
 
 /* #endregion */
 
+/* #region - Monthly spending grouped bar chart card */
+.dashboard-card.bar-chart-card {
+  flex: 1;
+  min-height: 250px;
+}
+
+.bar-chart-card .bar-chart-title {
+  font-weight: 600;
+  color: #444;
+  margin: 0;
+}
+
+.dashboard-card.monthly-spending-chart-card {
+  min-height: fit-content;
+}
+/* #endregion */
+
+/* #region - Monthly spending bar chart */
+.bar-chart-empty,
+.bar-chart-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 1rem;
+  text-align: center;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.bar-chart-empty img {
+  max-width: 150px;
+  height: auto;
+  margin-bottom: 0.75rem;
+  opacity: 0.9;
+}
+
+.bar-chart-empty p,
+.bar-chart-error p {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.bar-chart-empty p {
+  color: #555;
+}
+
+.bar-chart-error p {
+  color: #d32f2f;
+  word-break: keep-all;
+  text-align: left;
+}
+/* #endregion */
+
+/* #region - Monthly spending chart section */
+.monthly-spending-chart-main {
+  width: 100%;
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.monthly-spending-chart-container {
+  overflow-x: scroll;
+  padding-bottom: 0.75rem;
+}
+
+.monthly-spending-chart-wrapper {
+  min-width: 600px;
+  width: 100%;
+  min-height: 200px;
+}
+
+.monthly-spending-chart-wrapper::-webkit-scrollbar {
+  height: 4px;
+}
+
+.monthly-spending-chart-wrapper::-webkit-scrollbar-thumb {
+  background-color: #cbd5e0;
+  border-radius: 10px;
+}
+/* #endregion */
+
+/* #region - Monthly spending chart */
+.monthly-spending-chart-tooltip {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  line-height: 1.4;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.monthly-spending-chart-tooltip .tooltip-month {
+  font-weight: 500;
+  margin-bottom: 4;
+}
+
+.monthly-spending-chart-legend {
+  display: flex;
+  justify-content: flex-start;
+  gap: 1.5rem;
+  font-size: 13px;
+  font-weight: 500;
+  color: #444;
+  padding-bottom: 8px;
+}
+
+.monthly-spending-chart-legend-entry {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.monthly-spending-chart-legend-color {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2;
+}
+/* #endregion */
+
+/* #region - Monthly spending chart controls */
+.monthly-spending-chart-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.monthly-spending-year-selector {
+  display: flex;
+  align-items: center;
+}
+
+.monthly-spending-year-selector select {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.9rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  background-color: #fff;
+  color: #212529;
+  outline: none;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.monthly-spending-year-selector select:hover {
+  border-color: #86b7fe;
+}
+
+.monthly-spending-year-selector select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.monthly-spending-chart-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border: 1px solid #1976d2;
+  border-radius: 6px !important;
+  background-color: #ffffff;
+  color: #1976d2;
+  font-size: 16px;
+  transition: all 0.2s ease-in-out;
+}
+
+.monthly-spending-chart-btn:hover:not(:disabled) {
+  background-color: #1976d2;
+  color: #ffffff;
+  border-color: #1565c0;
+}
+
+.monthly-spending-chart-btn:hover:not(:disabled) svg {
+  fill: #fff;
+}
+
+.monthly-spending-chart-btn:disabled {
+  opacity: 0.5;
+  background-color: #f8f9fa;
+  color: #a0aec0;
+  border-color: #e0e0e0;
+  cursor: not-allowed;
+}
+/* #endregion */
+
 /* #region - Line chart common */
 .dashboard-card.line-chart-card {
   flex: 1 1;
@@ -1601,13 +1788,52 @@ body,
   color: #444;
   margin: 0;
 }
+
+.line-chart-empty,
+.line-chart-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 1rem;
+  text-align: center;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.line-chart-empty img {
+  max-width: 150px;
+  height: auto;
+  margin-bottom: 0.75rem;
+  opacity: 0.9;
+}
+
+.line-chart-empty p,
+.line-chart-error p {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.line-chart-empty p {
+  color: #555;
+}
+
+.line-chart-error p {
+  color: #d32f2f;
+  word-break: keep-all;
+  text-align: left;
+}
 /* #endregion */
 
-/* #region - Daily balance chart section */
+/* #region - Daily balance chart card */
 .dashboard-card.daily-balance-chart-card {
   min-height: fit-content;
 }
+/* #endregion */
 
+/* #region - Daily balance chart section */
 .daily-balance-chart-main {
   width: 100%;
   padding: 1rem 0;
@@ -1658,7 +1884,35 @@ body,
 .daily-balance-chart-controls {
   display: flex;
   gap: 8px;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  row-gap: 1rem;
+}
+
+.daily-balance-year-selector {
+  display: flex;
+  align-items: center;
+}
+
+.daily-balance-year-selector select {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.9rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  background-color: #fff;
+  color: #212529;
+  outline: none;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.daily-balance-year-selector select:hover {
+  border-color: #86b7fe;
+}
+
+.daily-balance-year-selector select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
 }
 
 .daily-balance-chart-btn {

@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { axiosPrivate } from "../../api/axios";
 
 const MAX_PIES = 5;
@@ -32,6 +32,11 @@ const DashboardContext = createContext({
     spendingPieChartError: "",
     isLoadingDailyBalanceChart: false,
     dailyBalanceChartError: "",
+    isLoadingFinancialYears: false,
+    financialYears: [],
+    financialYearsFetchError: "",
+    isLoadingMonthlySpendingChart: false,
+    monthlySpendingChartError: "",
     fetchOverallBalance: async () => { },
     fetchFilteredBalanceAndFilters: async () => { },
     handleResetErrorFetchingFilteredBalance: () => { },
@@ -40,7 +45,8 @@ const DashboardContext = createContext({
     handleModifyFilterFormData: (key, val) => { },
     handleUpdateBalanceFilters: async () => { },
     fetchSpendingPieChartData: async () => { },
-    fetchDailyBalanceChartData: async () => { }
+    fetchDailyBalanceChartData: async (fy) => { },
+    fetchMonthlySpendingChartData: async (fy) => { },
 });
 
 export function DashboardContextProvider({ children }) {
@@ -74,6 +80,11 @@ export function DashboardContextProvider({ children }) {
     const [spendingPieChartError, setSpendingPieChartError] = useState("");
     const [isLoadingDailyBalanceChart, setIsLoadingDailyBalanceChart] = useState(false);
     const [dailyBalanceChartError, setDailyBalanceChartError] = useState("");
+    const [isLoadingFinancialYears, setIsLoadingFinancialYears] = useState(false);
+    const [financialYears, setFinancialYears] = useState([]);
+    const [financialYearsFetchError, setFinancialYearsFetchError] = useState("");
+    const [isLoadingMonthlySpendingChart, setIsLoadingMonthlySpendingChart] = useState(false);
+    const [monthlySpendingChartError, setMonthlySpendingChartError] = useState("");
 
     function resetErrorFetchingOverallBalance() {
         setOverallBalanceError("");
@@ -294,6 +305,28 @@ export function DashboardContextProvider({ children }) {
         return chartData;
     }
 
+    function handleErrorFetchingFinancialYearsData(error) {
+        if (!error?.response) {
+            setFinancialYearsFetchError("Apologies for the inconvenience. We couldn’t connect to the server at the moment. This might be a temporary issue. Kindly try again shortly.");
+        } else if (error?.response?.data?.error) {
+            setFinancialYearsFetchError(`Apologies for the inconvenience. There was an error while fetching data for financial years. ${error?.response?.data?.error}`);
+        } else {
+            setFinancialYearsFetchError("Apologies for the inconvenience. There was some error while fetching data for financial years. Please try again after some time.");
+        }
+    }
+
+    async function fetchFinancialYearsData() {
+        try {
+            setIsLoadingFinancialYears(true);
+            const res = await axiosPrivate.get("/user/dashboard/financial-years");
+            setFinancialYears(res?.data || []);
+        } catch (error) {
+            handleErrorFetchingFinancialYearsData(error);
+        } finally {
+            setIsLoadingFinancialYears(false);
+        }
+    }
+
     function handleErrorFetchingDailyBalanceChartData(error) {
         if (!error?.response) {
             setDailyBalanceChartError("Apologies for the inconvenience. We couldn’t connect to the server at the moment. This might be a temporary issue. Kindly try again shortly.");
@@ -304,11 +337,11 @@ export function DashboardContextProvider({ children }) {
         }
     }
 
-    async function fetchDailyBalanceChartData() {
+    async function fetchDailyBalanceChartData(fy) {
         let chartData = [];
         try {
             setIsLoadingDailyBalanceChart(true);
-            const res = await axiosPrivate.get("/user/dashboard/series/dailyBalance");
+            const res = await axiosPrivate.get(`/user/dashboard/series/dailyBalance?fy=${fy}`);
             const series = res?.data || [];
             chartData = series.map(item => ({
                 date: new Date(item.date),
@@ -322,6 +355,39 @@ export function DashboardContextProvider({ children }) {
         }
         return chartData;
     }
+
+    function handleErrorFetchingMonthlySpendingChartData(error) {
+        if (!error?.response) {
+            setMonthlySpendingChartError("Apologies for the inconvenience. We couldn’t connect to the server at the moment. This might be a temporary issue. Kindly try again shortly.");
+        } else if (error?.response?.data?.error) {
+            setMonthlySpendingChartError(`Apologies for the inconvenience. There was an error while fetching data for monthly debit vs credit chart. ${error?.response?.data?.error}`);
+        } else {
+            setMonthlySpendingChartError("Apologies for the inconvenience. There was some error while fetching data for monthly debit vs credit chart. Please try again after some time.");
+        }
+    }
+
+    async function fetchMonthlySpendingChartData(fy) {
+        let chartData = [];
+        try {
+            setIsLoadingMonthlySpendingChart(true);
+            const res = await axiosPrivate.get(`/user/dashboard/series/spending/monthly?fy=${fy}`);
+            const data = res?.data || [];
+            chartData = data.map(item => ({
+                month: item.month,
+                credit: item.credit || 0,
+                debit: item.debit || 0
+            }));
+        } catch (error) {
+            handleErrorFetchingMonthlySpendingChartData(error);
+        } finally {
+            setIsLoadingMonthlySpendingChart(false);
+        }
+        return chartData;
+    }
+
+    useEffect(() => {
+        fetchFinancialYearsData();
+    }, []);
 
     const currentValue = {
         isLoadingOverallBalance,
@@ -338,6 +404,11 @@ export function DashboardContextProvider({ children }) {
         spendingPieChartError,
         isLoadingDailyBalanceChart,
         dailyBalanceChartError,
+        isLoadingFinancialYears,
+        financialYears,
+        financialYearsFetchError,
+        isLoadingMonthlySpendingChart,
+        monthlySpendingChartError,
         handleResetErrorFetchingFilteredBalance,
         handleResetErrorUpdatingBalanceFilters,
         handleResetFilterFormData,
@@ -346,7 +417,8 @@ export function DashboardContextProvider({ children }) {
         fetchFilteredBalanceAndFilters,
         handleUpdateBalanceFilters,
         fetchSpendingPieChartData,
-        fetchDailyBalanceChartData
+        fetchDailyBalanceChartData,
+        fetchMonthlySpendingChartData
     };
 
     return (

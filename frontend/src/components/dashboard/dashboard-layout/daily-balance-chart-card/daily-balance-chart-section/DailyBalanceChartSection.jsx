@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import DashboardContext from "../../../../../store/context/dashboardContext";
 import DailyBalanceChartControl from "./daily-balance-chart-control/DailyBalanceChartControl";
 import DailyBalanceChart from "./daily-balance-chart/DailyBalanceChart";
+import ChartErrorImage from "../../../../../images/chart-error.png";
+import LineChartSkeleton from "../../../../ui/skeletons/LineChartSkeleton";
 
 const zoomLevels = [
   { label: "7-day", length: 7 },
@@ -12,19 +14,23 @@ const zoomLevels = [
 
 function DailyBalanceChartSection() {
   const {
+    financialYears,
     isLoadingDailyBalanceChart,
     dailyBalanceChartError,
+    financialYearsFetchError,
     fetchDailyBalanceChartData,
   } = useContext(DashboardContext);
 
   const [chartData, setChartData] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
   const [zoomIndex, setZoomIndex] = useState(1);
+  const [selectedYear, setSelectedYear] = useState(null);
 
   const windowLength = zoomLevels[zoomIndex].length;
 
   async function handleFetchChartData() {
-    const data = await fetchDailyBalanceChartData();
+    if (!selectedYear) return;
+    const data = await fetchDailyBalanceChartData(selectedYear);
     const formatted = data.map((item) => ({
       ...item,
       originalDate: item.date,
@@ -38,23 +44,49 @@ function DailyBalanceChartSection() {
   }
 
   useEffect(() => {
+    if (financialYears?.length > 0) {
+      const latestYear = financialYears[financialYears.length - 1];
+      setSelectedYear(latestYear);
+    }
+  }, [financialYears]);
+
+  useEffect(() => {
     handleFetchChartData();
     // eslint-disable-next-line
-  }, []);
+  }, [selectedYear]);
 
   const endIndex = startIndex + windowLength;
   const currentData = chartData.slice(startIndex, endIndex);
 
   if (isLoadingDailyBalanceChart) {
-    return <div>Loading...</div>;
+    return <LineChartSkeleton />;
+  }
+
+  if (financialYearsFetchError) {
+    return (
+      <div className="line-chart-error">
+        <img src={ChartErrorImage} alt="" width={150} height="auto" />
+        <p>{financialYearsFetchError}</p>
+      </div>
+    );
   }
 
   if (dailyBalanceChartError) {
-    return <div>{dailyBalanceChartError}</div>;
+    return (
+      <div className="line-chart-error">
+        <img src={ChartErrorImage} alt="" width={150} height="auto" />
+        <p>{dailyBalanceChartError}</p>
+      </div>
+    );
   }
 
   if (chartData.length === 0) {
-    return <div>Nothing found</div>;
+    return (
+      <div className="line-chart-empty">
+        <img src={ChartErrorImage} alt="" width={150} height="auto" />
+        <p>No transactions found.</p>
+      </div>
+    );
   }
 
   const handlePrev = () => {
@@ -88,6 +120,9 @@ function DailyBalanceChartSection() {
   return (
     <div className="daily-balance-chart-main">
       <DailyBalanceChartControl
+        financialYears={financialYears}
+        selectedYear={selectedYear}
+        onYearSelect={setSelectedYear}
         onPrev={handlePrev}
         onNext={handleNext}
         onZoomIn={handleZoomIn}
