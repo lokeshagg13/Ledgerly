@@ -3,39 +3,39 @@ import DownloadIcon from "../../ui/icons/DownloadIcon";
 import FileIcon from "../../ui/icons/FileIcon";
 import GearIcon from "../../ui/icons/GearIcon";
 
-function CTAControl() {
+function FirmCTAControl() {
   const { handleNavigateToPath } = useAppNavigate();
   return (
     <div className="dashboard-cta-container">
       <button
         className="cta-button"
-        onClick={() => handleNavigateToPath("/transactions")}
+        onClick={() => handleNavigateToPath("/entries")}
       >
         <span className="cta-icon">
           <FileIcon />
         </span>
-        <span className="cta-label">View Your Transactions</span>
+        <span className="cta-label">View Entries</span>
       </button>
       <button
         className="cta-button"
-        onClick={() => handleNavigateToPath("/transactions/print")}
+        onClick={() => handleNavigateToPath("/summary")}
       >
         <span className="cta-icon">
           <DownloadIcon />
         </span>
-        <span className="cta-label">Save Transactions as PDF</span>
+        <span className="cta-label">View Summary</span>
       </button>
       <button
         className="cta-button"
-        onClick={() => handleNavigateToPath("/categories")}
+        onClick={() => handleNavigateToPath("/heads")}
       >
         <span className="cta-icon">
           <GearIcon />
         </span>
-        <span className="cta-label">Manage Categories</span>
+        <span className="cta-label">Manage Heads</span>
       </button>
     </div>
   );
 }
 
-export default CTAControl;
+export default FirmCTAControl;

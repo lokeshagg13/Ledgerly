@@ -18,6 +18,9 @@ import TransactionPage from "./pages/transaction-page/TransactionPage";
 import CategoryPage from "./pages/category-page/CategoryPage";
 import UploadTransactionPage from "./pages/upload-transaction-page/UploadTransactionPage";
 import PrintTransactionPage from "./pages/print-transaction-page/PrintTransactionPage";
+import HeadsPage from "./pages/heads-page/HeadsPage";
+import SummaryPage from "./pages/summary-page/SummaryPage";
+import EntriesPage from "./pages/entries-page/EntriesPage";
 
 function App() {
   const { auth } = useAuth();
@@ -128,6 +131,20 @@ function App() {
                 element={
                   auth?.type === "individual" ? <CategoryPage /> : <Page404 />
                 }
+              />
+
+              {/* Firm-only routes */}
+              <Route
+                path="/heads"
+                element={auth?.type === "firm" ? <HeadsPage /> : <Page404 />}
+              />
+              <Route
+                path="/entries"
+                element={auth?.type === "firm" ? <EntriesPage /> : <Page404 />}
+              />
+              <Route
+                path="/summary"
+                element={auth?.type === "firm" ? <SummaryPage /> : <Page404 />}
               />
             </Route>
           </Route>

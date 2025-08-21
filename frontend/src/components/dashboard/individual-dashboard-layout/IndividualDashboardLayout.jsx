@@ -7,7 +7,7 @@ import DailyBalanceChartCard from "./daily-balance-chart-card/DailyBalanceChartC
 import MonthlySpendingChartCard from "./monthly-spending-chart-card/MonthlySpendingChartCard";
 import MonthlyBalanceChartCard from "./monthly-balance-chart-card/MonthlyBalanceChartCard";
 
-function DashboardLayout() {
+function IndividualDashboardLayout() {
   return (
     <div className="dashboard-wrapper">
       <CategoryProvider>
@@ -41,4 +41,4 @@ function DashboardLayout() {
   );
 }
 
-export default DashboardLayout;
+export default IndividualDashboardLayout;

@@ -63,12 +63,26 @@ function NavbarComponent() {
                 <Nav.Link onClick={() => handleNavClick("/dashboard")}>
                   Dashboard
                 </Nav.Link>
-                <Nav.Link onClick={() => handleNavClick("/transactions")}>
-                  Your Transactions
-                </Nav.Link>
-                <Nav.Link onClick={() => handleNavClick("/categories")}>
-                  Categories
-                </Nav.Link>
+                {auth?.type === "individual" ? (
+                  <>
+                    <Nav.Link onClick={() => handleNavClick("/transactions")}>
+                      Your Transactions
+                    </Nav.Link>
+                    <Nav.Link onClick={() => handleNavClick("/categories")}>
+                      Categories
+                    </Nav.Link>
+                  </>
+                ) : (
+                  <>
+                    {" "}
+                    <Nav.Link onClick={() => handleNavClick("/heads")}>
+                      Heads
+                    </Nav.Link>
+                    <Nav.Link onClick={() => handleNavClick("/summary")}>
+                      Summary
+                    </Nav.Link>
+                  </>
+                )}
                 <div className="d-none d-lg-block">
                   <ProfileMenu handleNavCollapse={() => setExpanded(false)} />
                 </div>
