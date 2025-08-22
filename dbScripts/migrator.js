@@ -60,5 +60,19 @@ async function migrateCategories() {
     }
 }
 
-migrateUsers();
+async function renameCollection() {
+    await mongoose.connect(MONGO_URI);
+    console.log("Connected to MongoDB");
+
+    const db = mongoose.connection.db;
+
+    await db.collection("head").rename("heads");
+
+    console.log("Collection renamed from 'heads' to 'head'");
+    mongoose.connection.close();
+}
+
+
+// migrateUsers();
 // migrateCategories();
+renameCollection();

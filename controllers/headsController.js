@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const HeadsModel = require("../models/Heads");
+const HeadModel = require("../models/Head");
 
 // 1. Get all heads (with optional filter for active ones)
 exports.getHeads = async (req, res) => {
@@ -10,7 +10,7 @@ exports.getHeads = async (req, res) => {
       filter.active = active === "true";
     }
 
-    const heads = await HeadsModel.find(filter);
+    const heads = await HeadModel.find(filter);
     return res.status(200).json({ heads });
   } catch (error) {
     res.status(500).json({ error: "Error fetching heads: " + error.message });
@@ -30,7 +30,7 @@ exports.addHead = async (req, res) => {
       return res.status(400).json({ error: "Head name must be under 50 characters." });
     }
 
-    const existing = await HeadsModel.findOne({
+    const existing = await HeadModel.findOne({
       name: { $regex: `^${name.trim()}$`, $options: "i" },
       userId: req.userId
     });
@@ -38,7 +38,7 @@ exports.addHead = async (req, res) => {
       return res.status(409).json({ error: `Head '${existing.name}' already exists.` });
     }
 
-    const newHead = await HeadsModel.create({
+    const newHead = await HeadModel.create({
       name: name.trim(),
       userId: req.userId,
       active: active !== undefined ? active : true
@@ -63,13 +63,13 @@ exports.updateHead = async (req, res) => {
       return res.status(400).json({ error: "Head name must be under 50 characters." });
     }
 
-    const current = await HeadsModel.findOne({ _id: headId, userId: req.userId });
+    const current = await HeadModel.findOne({ _id: headId, userId: req.userId });
     if (!current) {
       return res.status(404).json({ error: "Head not found." });
     }
 
     if (newName && newName.trim().toLowerCase() !== current.name.toLowerCase()) {
-      const duplicate = await HeadsModel.findOne({
+      const duplicate = await HeadModel.findOne({
         _id: { $ne: headId },
         name: { $regex: `^${newName.trim()}$`, $options: "i" },
         userId: req.userId
@@ -98,7 +98,7 @@ exports.deleteSingleHead = async (req, res) => {
 
     // Add code for associated entries later??
 
-    const deleted = await HeadsModel.findOneAndDelete({
+    const deleted = await HeadModel.findOneAndDelete({
       _id: headId,
       userId: req.userId
     });
@@ -127,7 +127,7 @@ exports.deleteMultipleHeads = async (req, res) => {
 
     // Add code for associated entries later??
 
-    const deletedResult = await HeadsModel.deleteMany({
+    const deletedResult = await HeadModel.deleteMany({
       _id: { $in: headIds },
       userId: req.userId
     });

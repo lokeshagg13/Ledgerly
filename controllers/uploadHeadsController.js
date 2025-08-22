@@ -2,7 +2,7 @@ const fs = require('fs');
 const { PdfReader } = require('pdfreader');
 const mongoose = require('mongoose');
 
-const HeadsModel = require('../models/Heads');
+const HeadModel = require('../models/Head');
 
 function fetchHeadData(data) {
     const heads = data.filter(item => /[^0-9]/.test(item));
@@ -58,7 +58,7 @@ exports.uploadBulkHeads = async (req, res) => {
                 return res.status(400).json({ error: `${indexLabel}: Head name must not exceed 50 characters.` });
             }
 
-            const duplicate = await HeadsModel.findOne({ userId, name: headNameTrimmed });
+            const duplicate = await HeadModel.findOne({ userId, name: headNameTrimmed });
             if (duplicate) {
                 return res.status(400).json({ error: `${indexLabel}: Duplicate head detected.` });
             }
@@ -71,7 +71,7 @@ exports.uploadBulkHeads = async (req, res) => {
         }
 
         // Step 2: Insert in bulk only if all valid
-        await HeadsModel.insertMany(normalizedHeads);
+        await HeadModel.insertMany(normalizedHeads);
 
         return res.status(201).json({
             message: `${normalizedHeads.length} head(s) added successfully.`,
