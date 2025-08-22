@@ -1,10 +1,12 @@
 const express = require("express");
 const verifyJWT = require("../middlewares/verifyJWT");
+const { verifyIndividualUser } = require("../middlewares/verifyUserType");
 const subcategoriesController = require("../controllers/subcategoriesController");
 
 const router = express.Router();
 
 router.use(verifyJWT);
+router.use(verifyIndividualUser);
 
 router.get("/", subcategoriesController.getAllGrouped);
 router.get("/:categoryId", subcategoriesController.getByCategory);
