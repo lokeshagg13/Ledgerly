@@ -3,8 +3,10 @@ import { Button } from "react-bootstrap";
 import HeadsContext from "../../../store/context/headsContext";
 import AddHeadModal from "../heads-modals/AddHeadModal";
 import DeleteSelectedHeadsModal from "../heads-modals/DeleteSelectedHeadsModal";
+import useAppNavigate from "../../../store/hooks/useAppNavigate";
 
 function HeadsControl() {
+  const { handleNavigateToPath } = useAppNavigate();
   const {
     isLoadingHeads,
     isAddHeadModalVisible,
@@ -30,7 +32,7 @@ function HeadsControl() {
         type="button"
         className="control-btn btn-outline-light"
         aria-label="Upload bulk heads"
-        onClick={() => {}}
+        onClick={() => handleNavigateToPath("/heads/upload")}
         disabled={isLoadingHeads}
       >
         Upload Heads

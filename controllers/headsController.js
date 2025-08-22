@@ -50,51 +50,7 @@ exports.addHead = async (req, res) => {
   }
 };
 
-// 3. Add bulk heads
-exports.addBulkHeads = async (req, res) => {
-  try {
-    let { heads } = req.body; // array of {name, active?}
-
-    if (!heads || !Array.isArray(heads) || heads.length === 0) {
-      return res.status(400).json({ error: "Heads array is required." });
-    }
-
-    const trimmedNames = heads.map(h => (h.name || "").trim()).filter(n => n !== "");
-    if (trimmedNames.some(n => n.length > 50)) {
-      return res.status(400).json({ error: "Each head name must be under 50 characters." });
-    }
-
-    // Check duplicates in request itself
-    const uniqueNames = new Set(trimmedNames.map(n => n.toLowerCase()));
-    if (uniqueNames.size !== trimmedNames.length) {
-      return res.status(400).json({ error: "Duplicate head names provided." });
-    }
-
-    // Check for existing heads in DB
-    const existingHeads = await HeadsModel.find({
-      userId: req.userId,
-      name: { $in: trimmedNames }
-    });
-
-    if (existingHeads.length > 0) {
-      const existingNames = existingHeads.map(h => h.name).join(", ");
-      return res.status(409).json({ error: `Heads already exist: ${existingNames}` });
-    }
-
-    const docsToInsert = heads.map(h => ({
-      userId: req.userId,
-      name: (h.name || "").trim(),
-      active: h.active !== undefined ? h.active : true
-    }));
-
-    const inserted = await HeadsModel.insertMany(docsToInsert);
-    return res.status(201).json({ heads: inserted });
-  } catch (error) {
-    res.status(500).json({ error: "Error adding bulk heads: " + error.message });
-  }
-};
-
-// 4. Update head (name and/or active)
+// 3. Update head (name and/or active)
 exports.updateHead = async (req, res) => {
   try {
     const { headId } = req.params;
@@ -135,7 +91,7 @@ exports.updateHead = async (req, res) => {
   }
 };
 
-// 5. Delete single head
+// 4. Delete single head
 exports.deleteSingleHead = async (req, res) => {
   try {
     const { headId } = req.params;
@@ -157,7 +113,7 @@ exports.deleteSingleHead = async (req, res) => {
   }
 };
 
-// 6. Delete multiple heads
+// 5. Delete multiple heads
 exports.deleteMultipleHeads = async (req, res) => {
   try {
     let { headIds } = req.body;

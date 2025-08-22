@@ -21,6 +21,7 @@ import PrintTransactionPage from "./pages/print-transaction-page/PrintTransactio
 import HeadsPage from "./pages/heads-page/HeadsPage";
 import SummaryPage from "./pages/summary-page/SummaryPage";
 import EntriesPage from "./pages/entries-page/EntriesPage";
+import UploadHeadsPage from "./pages/upload-heads-page/UploadHeadsPage";
 
 function App() {
   const { auth } = useAuth();
@@ -145,6 +146,12 @@ function App() {
               <Route
                 path="/summary"
                 element={auth?.type === "firm" ? <SummaryPage /> : <Page404 />}
+              />
+              <Route
+                path="/heads/upload"
+                element={
+                  auth?.type === "firm" ? <UploadHeadsPage /> : <Page404 />
+                }
               />
             </Route>
           </Route>
