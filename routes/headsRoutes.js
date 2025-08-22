@@ -1,12 +1,12 @@
 const express = require("express");
 const verifyJWT = require("../middlewares/verifyJWT");
-const { verifyIndividualUser, verifyFirmUser } = require("../middlewares/verifyUserType");
+const { verifyFirmUser } = require("../middlewares/verifyUserType");
 const headsController = require("../controllers/headsController");
 
 const router = express.Router();
 
 router.use(verifyJWT);
-router.use(verifyIndividualUser);
+router.use(verifyFirmUser);
 
 router.get("/", headsController.getHeads);
 router.post("/", headsController.addHead);
