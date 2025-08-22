@@ -8,7 +8,6 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        unique: true,
         required: true,
         lowercase: true,
         trim: true
@@ -91,6 +90,8 @@ userSchema.pre("save", function (next) {
     }
     next();
 });
+
+userSchema.index({ email: 1, type: 1 }, { unique: true });
 
 const userModel = mongoose.model("userModel", userSchema, "users");
 

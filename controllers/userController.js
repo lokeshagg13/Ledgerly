@@ -40,7 +40,7 @@ exports.registerUser = async (req, res) => {
             return res.status(400).json({ error: passwordError });
         }
 
-        const existing = await UserModel.findOne({ email: email.toLowerCase() });
+        const existing = await UserModel.findOne({ email: email.toLowerCase(), type: type });
         if (existing) {
             return res.status(400).json({ error: "Email already exists." });
         }
