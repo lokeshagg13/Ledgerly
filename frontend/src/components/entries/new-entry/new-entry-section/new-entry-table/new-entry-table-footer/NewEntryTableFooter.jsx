@@ -1,8 +1,8 @@
 import { useContext, useMemo } from "react";
 
-import NewEntryContext from "../../../../../store/context/newEntryContext";
-import { formatAmountForDisplay } from "../../../../../utils/formatUtils";
-import FirmDashboardContext from "../../../../../store/context/firmDashboardContext";
+import NewEntryContext from "../../../../../../store/context/newEntryContext";
+import { formatAmountForDisplay } from "../../../../../../utils/formatUtils";
+import FirmDashboardContext from "../../../../../../store/context/firmDashboardContext";
 
 function NewEntryTableFooter() {
   const { entryDataRows } = useContext(NewEntryContext);

@@ -5862,6 +5862,7 @@ body,
   gap: 2rem;
   flex-wrap: wrap;
   margin-bottom: 1rem;
+  padding: 0 1rem;
 }
 
 .new-entry-section {
@@ -5911,10 +5912,25 @@ body,
   }
 }
 
-@media (max-width: 320px) {
+@media (max-width: 375px) {
+  .new-entry-header {
+    gap: 1rem 1rem;
+  }
+
   .new-entry-value,
   .new-entry-date {
-    max-width: 150px;
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 320px) {
+  .new-entry-header {
+    gap: 1rem 0.8rem;
+  }
+
+  .new-entry-value,
+  .new-entry-date {
+    max-width: 144px;
   }
 }
 /* #endregion */

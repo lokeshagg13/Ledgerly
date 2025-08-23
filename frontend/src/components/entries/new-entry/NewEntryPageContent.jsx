@@ -1,12 +1,11 @@
 import { Button } from "react-bootstrap";
 import useAppNavigate from "../../../store/hooks/useAppNavigate";
 import LeftArrowIcon from "../../ui/icons/LeftArrowIcon";
-import NewEntryHeader from "./new-entry-header/NewEntryHeader";
-import NewEntryTable from "./new-entry-table/NewEntryTable";
 import { HeadsProvider } from "../../../store/context/headsContext";
 import { ContextMenuProvider } from "../../../store/context/contextMenuContext";
 import { NewEntryContextProvider } from "../../../store/context/newEntryContext";
 import { FirmDashboardContextProvider } from "../../../store/context/firmDashboardContext";
+import NewEntrySection from "./new-entry-section/NewEntrySection";
 
 function NewEntryPageContent() {
   const { handleNavigateBack } = useAppNavigate();
@@ -28,8 +27,7 @@ function NewEntryPageContent() {
             </div>
 
             <div className="new-entry-page-body">
-              <NewEntryHeader />
-              <NewEntryTable />
+              <NewEntrySection />
             </div>
           </ContextMenuProvider>
         </HeadsProvider>

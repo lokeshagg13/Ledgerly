@@ -58,6 +58,7 @@ export function FirmDashboardContextProvider({ children }) {
 
     useEffect(() => {
         fetchOverallBalance();
+        //eslint-disable-next-line
     }, []);
 
     const currentValue = {

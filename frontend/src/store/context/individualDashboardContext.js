@@ -421,6 +421,7 @@ export function IndividualDashboardContextProvider({ children }) {
 
     useEffect(() => {
         fetchFinancialYearsData();
+        // eslint-disable-next-line
     }, []);
 
     const currentValue = {

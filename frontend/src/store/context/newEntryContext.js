@@ -1,5 +1,5 @@
 import { createContext, createRef, useRef, useEffect, useLayoutEffect, useState } from "react";
-import { formatAmountForFirstTimeInput, formatAmountWithCommas } from "../../utils/formatUtils";
+import { formatAmountForFirstTimeInput } from "../../utils/formatUtils";
 import { toast } from "react-toastify";
 
 const DEFAULT_ROWS = 20;

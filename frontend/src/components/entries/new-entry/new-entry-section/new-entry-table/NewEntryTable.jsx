@@ -1,13 +1,13 @@
 import { useContext, useEffect } from "react";
 import { toast } from "react-toastify";
 
-import ContextMenuContext from "../../../../store/context/contextMenuContext";
+import ContextMenuContext from "../../../../../store/context/contextMenuContext";
+import NewEntryContext from "../../../../../store/context/newEntryContext";
+import FirmDashboardContext from "../../../../../store/context/firmDashboardContext";
 import NewEntryRowContextMenu from "./new-entry-row-context-menu/NewEntryRowContextMenu";
-import NewEntryContext from "../../../../store/context/newEntryContext";
 import NewEntryTableRow from "./new-entry-table-row/NewEntryTableRow";
 import NewEntryTableFooter from "./new-entry-table-footer/NewEntryTableFooter";
-import FirmDashboardContext from "../../../../store/context/firmDashboardContext";
-import ErrorImage from "../../../../images/chart-error.png";
+import ErrorImage from "../../../../../images/chart-error.png";
 
 function NewEntryTable() {
   const { entryDataRows, menuPos, clickedRow, handleKeyPress } =
