@@ -1,8 +1,10 @@
+import { useState } from "react";
 import useAuth from "../../../../store/hooks/useAuth";
-import DatePicker from "../../../ui/elements/FormDatePicker";
+import FormDatePicker from "../../../ui/elements/FormDatePicker";
 
 function NewEntryHeader() {
   const { auth } = useAuth();
+  const [entryDate, setEntryDate] = useState(null);
 
   return (
     <div className="new-entry-header">
@@ -12,7 +14,15 @@ function NewEntryHeader() {
       </div>
       <div className="new-entry-section">
         <label className="new-entry-label">Date:</label>
-        <div className="new-entry-date"><DatePicker /></div>
+        <div className="new-entry-date">
+          <FormDatePicker
+            name="date"
+            id="entryDate"
+            value={entryDate}
+            onChange={(e) => setEntryDate(e.target.value)}
+            maxDate={new Date()}
+          />
+        </div>
       </div>
     </div>
   );

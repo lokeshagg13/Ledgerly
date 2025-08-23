@@ -2,7 +2,7 @@ import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 
-function SearchInput({ id, className, options, value, onChange }) {
+function SearchInput({ id, ref, className, options, value, onChange }) {
   const [inputValue, setInputValue] = useState("");
   return (
     <Autocomplete
@@ -18,6 +18,7 @@ function SearchInput({ id, className, options, value, onChange }) {
       renderInput={(params) => (
         <TextField
           {...params}
+          inputRef={ref}
           label={undefined}
           slotProps={{
             input: {
