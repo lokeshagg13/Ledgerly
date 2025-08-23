@@ -18,6 +18,7 @@ function NewEntryTableRow({ idx, data }) {
 
   const isDebitActive = type === "D";
   const isCreditActive = type === "C";
+  const isCashRow = head?.trim()?.toLowerCase() === "cash";
 
   return (
     <tr
@@ -36,6 +37,7 @@ function NewEntryTableRow({ idx, data }) {
           onChange={(e) => handleModifyFieldValue(idx, "type", e.target.value)}
           autoComplete="off"
           className="form-control form-control-sm"
+          disabled={isCashRow}
         />
       </td>
       <td>
@@ -59,7 +61,7 @@ function NewEntryTableRow({ idx, data }) {
           onChange={(e) => handleModifyFieldValue(idx, "debit", e.target.value)}
           autoComplete="off"
           className="form-control form-control-sm"
-          disabled={!isDebitActive}
+          disabled={!isDebitActive || isCashRow}
         />
       </td>
       <td>
@@ -73,7 +75,7 @@ function NewEntryTableRow({ idx, data }) {
           }
           autoComplete="off"
           className="form-control form-control-sm"
-          disabled={!isCreditActive}
+          disabled={!isCreditActive || isCashRow}
         />
       </td>
     </tr>

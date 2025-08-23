@@ -1,4 +1,6 @@
 import { createContext, createRef, useRef, useEffect, useLayoutEffect, useState } from "react";
+import { formatAmountWithCommas } from "../../utils/formatUtils";
+import { toast } from "react-toastify";
 
 const DEFAULT_ROWS = 20;
 const MAX_ROWS = 1000;
@@ -11,8 +13,10 @@ const NewEntryContext = createContext({
     clickedRow: null,
     inputRefs: [],
     setEntryDate: (newVal) => { },
+    findFirstEmptyRowIndex: () => { },
     handleInsertRow: (atIdx) => { },
     handleDeleteRow: (atIdx) => { },
+    handleInsertCashEntryRow: (rowIdx) => { },
     handleModifyFieldValue: (rowIdx, field, value) => { },
     handleKeyPress: (e) => { },
     handleContextMenuSetup: (e, rowIdx) => { }
@@ -72,6 +76,29 @@ export const NewEntryContextProvider = ({ children }) => {
         return false;
     }
 
+    function calculateCashEntryValues(rows) {
+        const debitTotal = rows.reduce((sum, r) => sum + (parseFloat(r.debit) || 0), 0);
+        const creditTotal = rows.reduce((sum, r) => sum + (parseFloat(r.credit) || 0), 0);
+        const diff = formatAmountWithCommas(Math.abs(creditTotal - debitTotal));
+        if (creditTotal > debitTotal) {
+            return { type: "D", debit: diff, credit: "" };
+        } else {
+            return { type: "C", debit: "", credit: diff };
+        }
+    }
+
+    function findFirstEmptyRowIndex() {
+        const idx = entryDataRows.findIndex(row => {
+            const { type, head, debit, credit } = row;
+            return (
+                (!type || type === "") &&
+                (!head || head === "") &&
+                (!debit || debit === "") &&
+                (!credit || credit === "")
+            );
+        });
+        return idx === -1 ? entryDataRows.length : idx;
+    }
 
     function handleModifyFieldValue(rowIdx, field, value) {
         let newValue = value;
@@ -102,6 +129,10 @@ export const NewEntryContextProvider = ({ children }) => {
                 return;
             }
         }
+        if (field === "head" && value?.trim()?.toLowerCase() === "cash") {
+            const status = handleInsertCashEntryRow(rowIdx);
+            if (!status) return;
+        }
         setEntryDataRows((prev) =>
             prev.map((row, i) => (i === rowIdx ? { ...row, [field]: newValue } : row))
         );
@@ -120,6 +151,15 @@ export const NewEntryContextProvider = ({ children }) => {
             });
         });
         if (currentRow === -1 || currentCol === -1) return;
+        if (e.key === "Enter") {
+            if (COLS[currentCol] === "head") {
+                const currentValue = entryDataRows[currentRow].head.trim().toLowerCase();
+                if (currentValue === "cash") {
+                    const status = handleInsertCashEntryRow(currentRow);
+                    if (!status) return;
+                }
+            }
+        }
         if (e.key === "Tab" || e.key === "Enter") {
             e.preventDefault();
             let nextRow = currentRow;
@@ -229,6 +269,38 @@ export const NewEntryContextProvider = ({ children }) => {
         setPendingFocus({ row: atIdx, col: 0 });
     }
 
+    function handleInsertCashEntryRow(rowIdx) {
+        const alreadyExists = entryDataRows.some((r, idx) =>
+            idx !== rowIdx && r.head.trim().toLowerCase() === "cash"
+        );
+        if (alreadyExists) {
+            toast.error("Cash entry already exists", { position: "top-center", autoClose: 5000 });
+            return false;
+        }
+        const otherRows = entryDataRows.filter((_, idx) => idx !== rowIdx);
+        const { type, debit, credit } = calculateCashEntryValues(otherRows);
+        if (rowIdx < entryDataRows.length) {
+            setEntryDataRows(prev =>
+                prev.map((row, idx) =>
+                    idx === rowIdx ? { ...row, head: "CASH", type, debit, credit } : row
+                )
+            );
+        } else {
+            setEntryDataRows((prev) => [
+                ...prev,
+                {
+                    sno: rowIdx + 1,
+                    type,
+                    head: "CASH",
+                    debit,
+                    credit
+                }
+            ]);
+        }
+        setPendingFocus({ row: rowIdx, col: 1 });
+        return true;
+    }
+
     useEffect(() => {
         inputRefs.current = entryDataRows.map(
             (_, rowIdx) => inputRefs.current[rowIdx] || COLS.map(() => createRef())
@@ -255,8 +327,10 @@ export const NewEntryContextProvider = ({ children }) => {
         clickedRow,
         inputRefs,
         setEntryDate,
+        findFirstEmptyRowIndex,
         handleInsertRow,
         handleDeleteRow,
+        handleInsertCashEntryRow,
         handleModifyFieldValue,
         handleKeyPress,
         handleContextMenuSetup

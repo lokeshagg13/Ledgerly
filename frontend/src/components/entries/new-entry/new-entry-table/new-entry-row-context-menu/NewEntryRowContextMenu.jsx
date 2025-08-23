@@ -7,8 +7,10 @@ function NewEntryRowContextMenu() {
     entryDataRows,
     clickedRow,
     menuPos,
+    findFirstEmptyRowIndex,
     handleInsertRow,
     handleDeleteRow,
+    handleInsertCashEntryRow,
   } = useContext(NewEntryContext);
   const { handleCloseContextMenus } = useContext(ContextMenuContext);
 
@@ -49,6 +51,15 @@ function NewEntryRowContextMenu() {
             Delete Row
           </li>
         )}
+        <li
+          onClick={() => {
+            const rowIdx = findFirstEmptyRowIndex();
+            handleInsertCashEntryRow(rowIdx);
+            handleCloseContextMenus();
+          }}
+        >
+          Insert Cash Entry
+        </li>
       </ul>
     </div>
   );
