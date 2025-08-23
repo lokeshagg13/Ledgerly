@@ -56,18 +56,6 @@ function NewEntryTableRow({ idx, data }) {
         <Form.Control
           ref={inputRefs.current[idx]?.[2]}
           type="text"
-          id={`entryDebitAmount${idx}`}
-          value={debit !== "" ? formatAmountWithCommas(debit) : ""}
-          onChange={(e) => handleModifyFieldValue(idx, "debit", e.target.value)}
-          autoComplete="off"
-          className="form-control form-control-sm"
-          disabled={!isDebitActive || isCashRow}
-        />
-      </td>
-      <td>
-        <Form.Control
-          ref={inputRefs.current[idx]?.[3]}
-          type="text"
           id={`entryCreditAmount${idx}`}
           value={credit !== "" ? formatAmountWithCommas(credit) : ""}
           onChange={(e) =>
@@ -76,6 +64,18 @@ function NewEntryTableRow({ idx, data }) {
           autoComplete="off"
           className="form-control form-control-sm"
           disabled={!isCreditActive || isCashRow}
+        />
+      </td>
+      <td>
+        <Form.Control
+          ref={inputRefs.current[idx]?.[3]}
+          type="text"
+          id={`entryDebitAmount${idx}`}
+          value={debit !== "" ? formatAmountWithCommas(debit) : ""}
+          onChange={(e) => handleModifyFieldValue(idx, "debit", e.target.value)}
+          autoComplete="off"
+          className="form-control form-control-sm"
+          disabled={!isDebitActive || isCashRow}
         />
       </td>
     </tr>

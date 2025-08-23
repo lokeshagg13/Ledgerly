@@ -9,17 +9,17 @@ function NewEntryTableFooter() {
   const { isLoadingOverallBalance, overallBalance } =
     useContext(FirmDashboardContext);
 
-  const totalDebit = useMemo(
-    () =>
-      entryDataRows.reduce((sum, row) => sum + (parseFloat(row.debit) || 0), 0),
-    [entryDataRows]
-  );
   const totalCredit = useMemo(
     () =>
       entryDataRows.reduce(
         (sum, row) => sum + (parseFloat(row.credit) || 0),
         0
       ),
+    [entryDataRows]
+  );
+  const totalDebit = useMemo(
+    () =>
+      entryDataRows.reduce((sum, row) => sum + (parseFloat(row.debit) || 0), 0),
     [entryDataRows]
   );
 
@@ -55,10 +55,10 @@ function NewEntryTableFooter() {
           )}
         </td>
         <td>
-          <strong>{formatAmountForDisplay(totalDebit)}</strong>
+          <strong>{formatAmountForDisplay(totalCredit)}</strong>
         </td>
         <td>
-          <strong>{formatAmountForDisplay(totalCredit)}</strong>
+          <strong>{formatAmountForDisplay(totalDebit)}</strong>
         </td>
       </tr>
     </tfoot>

@@ -46,8 +46,8 @@ function NewEntryTable() {
             <th className="col-sno"></th>
             <th className="col-type">Type (C/D)</th>
             <th className="col-head">Head</th>
-            <th className="col-debit">Debit</th>
             <th className="col-credit">Credit</th>
+            <th className="col-debit">Debit</th>
           </tr>
         </thead>
         <tbody>

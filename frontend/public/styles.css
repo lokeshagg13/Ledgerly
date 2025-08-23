@@ -5930,31 +5930,28 @@ body,
 }
 
 .new-entry-table {
-  width: 900px;
+  width: 100%;
+  min-width: 900px;
+  padding: 0 1rem;
   min-height: max-content;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 .new-entry-table th,
 .new-entry-table td {
   text-align: left;
   vertical-align: middle;
+  border: 1px solid #ccc;
 }
 
 .new-entry-table th {
   text-align: center;
   padding: 0.5rem 0;
-}
-
-.new-entry-table tfoot .footer-row {
   position: sticky;
-  bottom: 0;
-  background-color: #fff3cd;
+  top: 0;
   z-index: 2;
-}
-
-.new-entry-table tfoot td {
-  padding: 0.5rem 0.5rem 0.5rem 0;
-  text-align: right;
+  box-shadow: inset 0 -1px #ccc;
 }
 
 .new-entry-table th.col-sno {
@@ -5966,14 +5963,30 @@ body,
 }
 
 .new-entry-table th.col-head {
-  width: 40%;
+  width: 45%;
 }
 
 .new-entry-table th.col-debit,
 .new-entry-table th.col-credit {
   width: 20%;
 }
+/* #endregion */
 
+/* #region - New entry table footer */
+.new-entry-table tfoot .footer-row {
+  position: sticky;
+  bottom: 0;
+  background-color: #fff3cd;
+  z-index: 2;
+}
+
+.new-entry-table tfoot td {
+  padding: 0.5rem 0.5rem 0.5rem 0;
+  text-align: right;
+}
+/* #endregion */
+
+/* #region - New entry table row */
 .new-entry-table td {
   padding: 0.2rem;
 }

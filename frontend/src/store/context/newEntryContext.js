@@ -1,10 +1,10 @@
 import { createContext, createRef, useRef, useEffect, useLayoutEffect, useState } from "react";
-import { formatAmountWithCommas } from "../../utils/formatUtils";
+import { formatAmountForFirstTimeInput, formatAmountWithCommas } from "../../utils/formatUtils";
 import { toast } from "react-toastify";
 
 const DEFAULT_ROWS = 20;
 const MAX_ROWS = 1000;
-const COLS = ["type", "head", "debit", "credit"];
+const COLS = ["type", "head", "credit", "debit"];   // will also affect ref order in row component of new entry table
 
 const NewEntryContext = createContext({
     entryDate: null,
@@ -28,8 +28,8 @@ export const NewEntryContextProvider = ({ children }) => {
         sno: i + 1,
         type: "",
         head: "",
-        debit: "",
         credit: "",
+        debit: "",
     })));
     const [pendingFocus, setPendingFocus] = useState(null);
     const [menuPos, setMenuPos] = useState(null);
@@ -51,8 +51,8 @@ export const NewEntryContextProvider = ({ children }) => {
                 sno: prev.length + 1,
                 type: "",
                 head: "",
-                debit: "",
                 credit: "",
+                debit: "",
             };
             const newRows = [...prev];
             newRows.splice(atIdx, 0, newRow);
@@ -71,15 +71,15 @@ export const NewEntryContextProvider = ({ children }) => {
         const row = entryDataRows[rowIdx];
         if (!row) return true;
         const field = COLS[colIdx];
-        if (field === "debit") return row.type !== "D";
         if (field === "credit") return row.type !== "C";
+        if (field === "debit") return row.type !== "D";
         return false;
     }
 
     function calculateCashEntryValues(rows) {
-        const debitTotal = rows.reduce((sum, r) => sum + (parseFloat(r.debit) || 0), 0);
         const creditTotal = rows.reduce((sum, r) => sum + (parseFloat(r.credit) || 0), 0);
-        const diff = formatAmountWithCommas(Math.abs(creditTotal - debitTotal));
+        const debitTotal = rows.reduce((sum, r) => sum + (parseFloat(r.debit) || 0), 0);
+        const diff = formatAmountForFirstTimeInput(Math.abs(creditTotal - debitTotal));
         if (creditTotal > debitTotal) {
             return { type: "D", debit: diff, credit: "" };
         } else {
@@ -93,8 +93,8 @@ export const NewEntryContextProvider = ({ children }) => {
             return (
                 (!type || type === "") &&
                 (!head || head === "") &&
-                (!debit || debit === "") &&
-                (!credit || credit === "")
+                (!credit || credit === "") &&
+                (!debit || debit === "")
             );
         });
         return idx === -1 ? entryDataRows.length : idx;
