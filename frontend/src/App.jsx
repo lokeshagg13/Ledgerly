@@ -22,6 +22,7 @@ import HeadsPage from "./pages/heads-page/HeadsPage";
 import SummaryPage from "./pages/summary-page/SummaryPage";
 import EntriesPage from "./pages/entries-page/EntriesPage";
 import UploadHeadsPage from "./pages/upload-heads-page/UploadHeadsPage";
+import NewEntryPage from "./pages/new-entry-page/NewEntryPage";
 
 function App() {
   const { auth } = useAuth();
@@ -152,6 +153,10 @@ function App() {
                 element={
                   auth?.type === "firm" ? <UploadHeadsPage /> : <Page404 />
                 }
+              />
+              <Route
+                path="/entries/add"
+                element={auth?.type === "firm" ? <NewEntryPage /> : <Page404 />}
               />
             </Route>
           </Route>

@@ -5763,3 +5763,259 @@ body,
   box-shadow: none;
 }
 /* #endregion */
+
+/* #region - Entry page */
+.entry-page {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0;
+  padding-bottom: 1rem;
+}
+
+@media (max-width: 1032px) {
+  .entry-page {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}
+/* #endregion */
+
+/* #region - Entry page content */
+.entry-page-header {
+  color: white;
+  padding: 1rem 2rem;
+  background: #142842;
+  color: white;
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.entry-page-header h2 {
+  margin: 0;
+  text-align: left;
+}
+
+.entry-page-body-wrapper {
+  overflow-x: auto;
+  padding: 1rem 2rem;
+}
+
+.entry-page-body {
+  min-width: max-content;
+}
+/* #endregion */
+
+/* #region - New entry page */
+.new-entry-page {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0;
+  padding-bottom: 1rem;
+}
+
+@media (max-width: 1032px) {
+  .new-entry-page {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}
+/* #endregion */
+
+/* #region - New entry page content */
+.new-entry-page-header {
+  color: white;
+  padding: 1rem 2rem;
+  background: #142842;
+  color: white;
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.new-entry-page-header h2 {
+  margin: 0;
+  text-align: left;
+}
+
+.new-entry-page-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+}
+/* #endregion */
+
+/* #region - New entry header section */
+.new-entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.new-entry-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.new-entry-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #555;
+}
+
+.new-entry-value {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #222;
+}
+
+.new-entry-date {
+  max-width: 250px;
+  width: 100%;
+  justify-self: start;
+}
+
+@media (max-width: 800px) {
+  .new-entry-header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem 2rem;
+  }
+
+  .new-entry-section {
+    display: contents;
+  }
+
+  .new-entry-label,
+  .new-entry-value,
+  .new-entry-date {
+    align-self: center;
+    text-align: left;
+  }
+
+  .new-entry-date {
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 320px) {
+  .new-entry-value,
+  .new-entry-date {
+    max-width: 150px;
+  }
+}
+/* #endregion */
+
+/* #region - New entry table section */
+.new-entry-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+.new-entry-table {
+  width: 900px;
+}
+
+.new-entry-table th,
+.new-entry-table td {
+  text-align: left;
+  vertical-align: middle;
+}
+
+.new-entry-table th {
+  text-align: center;
+  padding: 0.5rem 0;
+}
+
+.new-entry-table th.col-sno {
+  width: 5%;
+}
+
+.new-entry-table th.col-type {
+  width: 10%;
+}
+
+.new-entry-table th.col-head {
+  width: 40%;
+}
+
+.new-entry-table th.col-debit,
+.new-entry-table th.col-credit {
+  width: 20%;
+}
+
+.new-entry-table td {
+  padding: 0.2rem;
+}
+
+.new-entry-table td input {
+  border: none;
+}
+
+.new-entry-table td input:focus {
+  border-radius: 0;
+  border: 1px solid #a0522d;
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(160, 82, 45, 0.4);
+}
+
+.new-entry-table td:nth-child(1) {
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+.new-entry-table td:nth-child(2) input {
+  text-align: center;
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.new-entry-table td:nth-child(3) > div.form-control,
+.new-entry-table td:nth-child(3) div.MuiInputBase-root {
+  border: none;
+  padding: 0;
+  outline: none;
+  border-radius: 0;
+}
+
+.new-entry-table td:nth-child(3) input:focus {
+  border-radius: 0;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.new-entry-table td:nth-child(3) div.MuiInputBase-root.Mui-focused {
+  border-radius: 0;
+  border: 1px solid #a0522d;
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(160, 82, 45, 0.4);
+}
+
+.new-entry-table td:nth-child(3) .MuiOutlinedInput-root fieldset {
+  border: none !important;
+}
+
+.new-entry-table td:nth-child(3) .MuiInput-underline:after {
+  border-bottom: none !important;
+}
+
+.new-entry-table input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.add-row-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+/* #endregion */
