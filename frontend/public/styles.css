@@ -1199,7 +1199,7 @@ body,
 }
 /* #endregion */
 
-/* #region - Dashboard page content */
+/* #region - Dashboard page content (Individual and firm) */
 .dashboard-container {
   background-color: #f4f6f8;
   overflow-y: auto;
@@ -1211,7 +1211,7 @@ body,
 }
 /* #endregion */
 
-/* #region - Dashboard welcome banner */
+/* #region - Dashboard welcome banner (Individual and firm) */
 .dashboard-header {
   display: flex;
   justify-content: center;
@@ -1246,7 +1246,7 @@ body,
 }
 /* #endregion */
 
-/* #region - Dashboard cta control */
+/* #region - Dashboard cta control (Individual and firm) */
 .dashboard-cta-container {
   display: flex;
   flex-wrap: wrap;
@@ -1300,7 +1300,7 @@ body,
 }
 /* #endregion */
 
-/* #region - Dashboard opening balance line */
+/* #region - Dashboard opening balance line (Individual and firm) */
 .opening-balance-line {
   background-color: white;
   padding: 0.75rem 1rem;
@@ -1335,7 +1335,7 @@ body,
 }
 /* #endregion */
 
-/* #region - Dashboard layout */
+/* #region - Dashboard layout (Individual and firm) */
 .dashboard-layout {
   font-size: clamp(14px, 1.5vw, 18px);
 }
@@ -1370,7 +1370,13 @@ body,
 
 /* #endregion */
 
-/* #region - Balance cards common */
+/* #region - Specific to firm Dashboard layout */
+.dashboard-layout.firm .balance-cards-section {
+  max-width: 300px;
+}
+/* #endregion */
+
+/* #region - Balance cards common (Individual and firm) */
 .dashboard-card.balance-card {
   background-color: #ffffff;
   border-radius: 0.75rem;
@@ -1427,7 +1433,7 @@ body,
 }
 /* #endregion */
 
-/* #region - Overall Balance card */
+/* #region - Overall Balance card (Individual and firm) */
 .balance-card.overall .balance-date {
   font-size: 12px;
   color: #888;

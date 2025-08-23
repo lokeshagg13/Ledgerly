@@ -4,6 +4,7 @@ import IndividualDashboardLayout from "./individual-dashboard-layout/IndividualD
 import OpeningBalanceLine from "./opening-balance-line/OpeningBalanceLine";
 import useAuth from "../../store/hooks/useAuth";
 import FirmCTAControl from "./firm-cta-control/FirmCTAControl";
+import FirmDashboardLayout from "./firm-dashboard-layout/FirmDashboardLayout";
 
 function DashboardPageContent() {
   const { auth } = useAuth();
@@ -16,7 +17,11 @@ function DashboardPageContent() {
         <FirmCTAControl />
       )}
       <OpeningBalanceLine />
-      {auth?.type === "individual" ? <IndividualDashboardLayout /> : <></>}
+      {auth?.type === "individual" ? (
+        <IndividualDashboardLayout />
+      ) : (
+        <FirmDashboardLayout />
+      )}
     </>
   );
 }
