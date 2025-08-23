@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useContext } from "react";
 import useAuth from "../../../../store/hooks/useAuth";
 import FormDatePicker from "../../../ui/elements/FormDatePicker";
+import NewEntryContext from "../../../../store/context/newEntryContext";
 
 function NewEntryHeader() {
   const { auth } = useAuth();
-  const [entryDate, setEntryDate] = useState(null);
+
+  const { entryDate, setEntryDate } = useContext(NewEntryContext);
 
   return (
     <div className="new-entry-header">
