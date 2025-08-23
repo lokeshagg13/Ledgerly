@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { Button, ButtonGroup } from "react-bootstrap";
 
 import RotateIcon from "../../../../../ui/icons/RotateIcon";
-import DashboardContext from "../../../../../../store/context/dashboardContext";
+import IndividualDashboardContext from "../../../../../../store/context/individualDashboardContext";
 
 function MonthlySpendingChartControl({
   financialYears,
@@ -10,7 +10,7 @@ function MonthlySpendingChartControl({
   onYearSelect,
   onRefresh,
 }) {
-  const { isLoadingFinancialYears } = useContext(DashboardContext);
+  const { isLoadingFinancialYears } = useContext(IndividualDashboardContext);
   return (
     <div className="monthly-spending-chart-controls">
       <div className="monthly-spending-year-selector">

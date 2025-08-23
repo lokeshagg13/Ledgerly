@@ -4,8 +4,7 @@ import { axiosPrivate } from "../../api/axios";
 const MAX_PIES = 5;
 const COLORS = ["#4254FB", "#FFB422", "#FA4F58", "#0DBEFF", "#22BF75"];
 
-
-const DashboardContext = createContext({
+const IndividualDashboardContext = createContext({
     isLoadingOverallBalance: false,
     overallBalance: {
         amount: 0,
@@ -52,7 +51,7 @@ const DashboardContext = createContext({
     fetchMonthlyBalanceChartData: async (fy) => { }
 });
 
-export function DashboardContextProvider({ children }) {
+export function IndividualDashboardContextProvider({ children }) {
     const [isLoadingOverallBalance, setIsLoadingOverallBalance] = useState(false);
     const [overallBalance, setOverallBalance] = useState({
         amount: 0,
@@ -176,7 +175,7 @@ export function DashboardContextProvider({ children }) {
         setIsLoadingOverallBalance(true);
         resetErrorFetchingOverallBalance();
         try {
-            const res = await axiosPrivate.get("/user/dashboard/overallBalance");
+            const res = await axiosPrivate.get("/user/dashboard/individual/overallBalance");
             const { balance, latestTxnDate } = res?.data;
             setOverallBalance({
                 amount: balance,
@@ -193,7 +192,7 @@ export function DashboardContextProvider({ children }) {
         setIsLoadingFilteredBalance(true);
         handleResetErrorFetchingFilteredBalance();
         try {
-            const res = await axiosPrivate.get("/user/dashboard/custom/balance");
+            const res = await axiosPrivate.get("/user/dashboard/individual/custom/balance");
             const { balance, latestTxnDate, uptoDate, selectedCategories } = res?.data;
             setFilteredBalance({
                 amount: balance,
@@ -228,7 +227,7 @@ export function DashboardContextProvider({ children }) {
                     isError = true;
                 }
             }
-            await axiosPrivate.put("/user/dashboard/custom/filters", {
+            await axiosPrivate.put("/user/dashboard/individual/custom/filters", {
                 uptoDate,
                 selectedCategories
             });
@@ -323,7 +322,7 @@ export function DashboardContextProvider({ children }) {
     async function fetchFinancialYearsData() {
         try {
             setIsLoadingFinancialYears(true);
-            const res = await axiosPrivate.get("/user/dashboard/financial-years");
+            const res = await axiosPrivate.get("/user/dashboard/individual/financial-years");
             setFinancialYears(res?.data || []);
         } catch (error) {
             handleErrorFetchingFinancialYearsData(error);
@@ -346,7 +345,7 @@ export function DashboardContextProvider({ children }) {
         let chartData = [];
         try {
             setIsLoadingDailyBalanceChart(true);
-            const res = await axiosPrivate.get(`/user/dashboard/series/dailyBalance?fy=${fy}`);
+            const res = await axiosPrivate.get(`/user/dashboard/individual/series/dailyBalance?fy=${fy}`);
             const series = res?.data || [];
             chartData = series.map(item => ({
                 date: new Date(item.date),
@@ -375,7 +374,7 @@ export function DashboardContextProvider({ children }) {
         let chartData = [];
         try {
             setIsLoadingMonthlySpendingChart(true);
-            const res = await axiosPrivate.get(`/user/dashboard/series/monthlySpending?fy=${fy}`);
+            const res = await axiosPrivate.get(`/user/dashboard/individual/series/monthlySpending?fy=${fy}`);
             const data = res?.data || [];
             chartData = data.map(item => ({
                 month: item.month,
@@ -405,7 +404,7 @@ export function DashboardContextProvider({ children }) {
         let chartData = [];
         try {
             setIsLoadingMonthlyBalanceChart(true);
-            const res = await axiosPrivate.get(`/user/dashboard/series/monthlyBalance?fy=${fy}`);
+            const res = await axiosPrivate.get(`/user/dashboard/individual/series/monthlyBalance?fy=${fy}`);
             const data = res?.data || [];
             chartData = data.map(item => ({
                 month: item.month,
@@ -460,12 +459,12 @@ export function DashboardContextProvider({ children }) {
     };
 
     return (
-        <DashboardContext.Provider
+        <IndividualDashboardContext.Provider
             value={currentValue}
         >
             {children}
-        </DashboardContext.Provider>
+        </IndividualDashboardContext.Provider>
     );
 }
 
-export default DashboardContext;
+export default IndividualDashboardContext;

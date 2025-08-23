@@ -6,7 +6,7 @@ import Popover from "@mui/material/Popover";
 import FunnelIcon from "../../../../../ui/icons/FunnelIcon";
 import DateFilterInput from "./filter-inputs/DateFilterInput";
 import CategoryFilterInput from "./filter-inputs/CategoryFilterInput";
-import DashboardContext from "../../../../../../store/context/dashboardContext";
+import IndividualDashboardContext from "../../../../../../store/context/individualDashboardContext";
 
 function BalanceFilterSection() {
   const [isFilterPopoverVisible, setIsFilterPopoverVisible] = useState(false);
@@ -18,7 +18,7 @@ function BalanceFilterSection() {
     handleResetFilterFormData,
     fetchFilteredBalanceAndFilters,
     handleUpdateBalanceFilters,
-  } = useContext(DashboardContext);
+  } = useContext(IndividualDashboardContext);
 
   const handleOpenFilterPopover = (e) => {
     handleResetFilterFormData();

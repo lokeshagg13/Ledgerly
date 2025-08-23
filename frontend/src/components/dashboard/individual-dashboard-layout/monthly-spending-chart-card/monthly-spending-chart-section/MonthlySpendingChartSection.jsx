@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import DashboardContext from "../../../../../store/context/dashboardContext";
+import IndividualDashboardContext from "../../../../../store/context/individualDashboardContext";
 import MonthlySpendingChart from "./monthly-spending-chart/MonthlySpendingChart";
 import MonthlySpendingChartControl from "./monthly-spending-chart-control/MonthlySpendingChartControl";
 import ChartErrorImage from "../../../../../images/chart-error.png";
@@ -12,7 +12,7 @@ function MonthlySpendingChartSection() {
     monthlySpendingChartError,
     financialYearsFetchError,
     fetchMonthlySpendingChartData,
-  } = useContext(DashboardContext);
+  } = useContext(IndividualDashboardContext);
 
   const [chartData, setChartData] = useState([]);
   const [selectedYear, setSelectedYear] = useState(null);

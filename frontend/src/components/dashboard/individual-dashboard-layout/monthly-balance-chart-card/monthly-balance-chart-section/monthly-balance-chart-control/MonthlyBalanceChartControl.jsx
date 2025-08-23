@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { ButtonGroup, Button } from "react-bootstrap";
 
 import RotateIcon from "../../../../../ui/icons/RotateIcon";
-import DashboardContext from "../../../../../../store/context/dashboardContext";
+import IndividualDashboardContext from "../../../../../../store/context/individualDashboardContext";
 
 function MonthlyBalanceChartControl({
   financialYears,
@@ -10,7 +10,7 @@ function MonthlyBalanceChartControl({
   onYearSelect,
   onRefresh,
 }) {
-  const { isLoadingFinancialYears } = useContext(DashboardContext);
+  const { isLoadingFinancialYears } = useContext(IndividualDashboardContext);
   return (
     <div className="monthly-balance-chart-controls">
       <div className="monthly-balance-year-selector">

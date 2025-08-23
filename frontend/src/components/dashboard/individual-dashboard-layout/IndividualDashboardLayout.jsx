@@ -1,5 +1,5 @@
 import { CategoryProvider } from "../../../store/context/categoryContext";
-import { DashboardContextProvider } from "../../../store/context/dashboardContext";
+import { IndividualDashboardContextProvider } from "../../../store/context/individualDashboardContext";
 import OverallBalanceCard from "./balance-cards/overall-balance-card/OverallBalanceCard";
 import FilteredBalanceCard from "./balance-cards/filtered-balance-card/FilteredBalanceCard";
 import SpendingPieChartCard from "./spending-pie-chart-card/SpendingPieChartCard";
@@ -11,7 +11,7 @@ function IndividualDashboardLayout() {
   return (
     <div className="dashboard-wrapper">
       <CategoryProvider>
-        <DashboardContextProvider>
+        <IndividualDashboardContextProvider>
           <div className="dashboard-layout row g-3">
             {/* Section 1 - contains balance card, pie chart and bar chart */}
             <div className="dashboard-section col-lg-7">
@@ -35,7 +35,7 @@ function IndividualDashboardLayout() {
               <MonthlyBalanceChartCard />
             </div>
           </div>
-        </DashboardContextProvider>
+        </IndividualDashboardContextProvider>
       </CategoryProvider>
     </div>
   );

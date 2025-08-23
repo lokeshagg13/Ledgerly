@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
 
-import DashboardContext from "../../../../../store/context/dashboardContext";
+import IndividualDashboardContext from "../../../../../store/context/individualDashboardContext";
 import { formatAmountForDisplay } from "../../../../../utils/formatUtils";
 import ChartErrorImage from "../../../../../images/chart-error.png";
 import PieChartSkeleton from "../../../../ui/skeletons/PieChartSkeleton";
@@ -11,7 +11,7 @@ function SpendingPieChart() {
     isLoadingSpendingPieChart,
     spendingPieChartError,
     fetchSpendingPieChartData,
-  } = useContext(DashboardContext);
+  } = useContext(IndividualDashboardContext);
   const [chartData, setChartData] = useState([]);
   const [touchedPieInfo, setTouchedPieInfo] = useState(null);
   const tooltipTimeoutRef = useRef(null);

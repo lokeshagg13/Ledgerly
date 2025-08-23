@@ -11,10 +11,11 @@ const userRouter = require("./routes/userRoutes");
 const authRouter = require("./routes/authRoutes");
 const sessionRouter = require("./routes/sessionRoutes");
 const logoutRouter = require("./routes/logoutRoutes");
-const dashboardRouter = require("./routes/dashboardRoutes");
+const individualDashboardRouter = require("./routes/individualDashboardRoutes");
 const transactionRouter = require("./routes/transactionRoutes");
 const categoryRouter = require("./routes/categoryRoutes");
 const subcategoryRouter = require("./routes/subcategoryRoutes");
+const firmDashboardRouter = require("./routes/firmDashboardRoutes");
 const headsRouter = require("./routes/headsRoutes");
 const entryRouter = require("./routes/entryRoutes");
 
@@ -45,7 +46,6 @@ app.use("/api/user", userRouter);
 app.use("/api/user", authRouter);
 app.use("/api/user", sessionRouter);
 app.use("/api/user", logoutRouter);
-app.use("/api/user/dashboard", dashboardRouter);
 
 app.use("/api/user/transactions", transactionRouter);
 app.use("/api/user/categories", categoryRouter);
@@ -53,6 +53,9 @@ app.use("/api/user/subcategories", subcategoryRouter);
 
 app.use("/api/user/heads", headsRouter);
 app.use("/api/user/entries", entryRouter);
+
+app.use("/api/user/dashboard/individual", individualDashboardRouter);
+app.use("/api/user/dashboard/firm", firmDashboardRouter);
 
 // Custom Middleware for handling invalid api paths
 app.all("*", (req, res, next) => {

@@ -2,7 +2,7 @@ import { useContext } from "react";
 import MultiSelector from "../../../../../../ui/elements/MultiSelector";
 import CancelIcon from "../../../../../../ui/icons/CancelIcon";
 import CategoryContext from "../../../../../../../store/context/categoryContext";
-import DashboardContext from "../../../../../../../store/context/dashboardContext";
+import IndividualDashboardContext from "../../../../../../../store/context/individualDashboardContext";
 
 function CategoryFilterInput() {
   const { isLoadingCategories, categories } = useContext(CategoryContext);
@@ -10,7 +10,7 @@ function CategoryFilterInput() {
     filterFormData,
     handleModifyFilterFormData,
     handleResetErrorFetchingFilteredBalance,
-  } = useContext(DashboardContext);
+  } = useContext(IndividualDashboardContext);
 
   if (categories === null) return;
 

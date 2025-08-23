@@ -8,7 +8,7 @@ import {
   getEndDateOfFinancialYear,
 } from "../../../../../../../utils/dateUtils";
 import FilterDatePicker from "../../../../../../ui/elements/FilterDatePicker";
-import DashboardContext from "../../../../../../../store/context/dashboardContext";
+import IndividualDashboardContext from "../../../../../../../store/context/individualDashboardContext";
 import CancelIcon from "../../../../../../ui/icons/CancelIcon";
 
 function DateFilterInput() {
@@ -17,7 +17,7 @@ function DateFilterInput() {
     filteredBalanceError,
     handleModifyFilterFormData,
     handleResetErrorFetchingFilteredBalance,
-  } = useContext(DashboardContext);
+  } = useContext(IndividualDashboardContext);
 
   const modifyUptoDate = (uptoDate) => {
     handleResetErrorFetchingFilteredBalance();

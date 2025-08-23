@@ -26,7 +26,7 @@ function FilterCardNameEditor() {
 
   const fetchTitle = async () => {
     try {
-      const res = await axiosPrivate.get("/user/dashboard/custom/title");
+      const res = await axiosPrivate.get("/user/dashboard/individual/custom/title");
       const title = res?.data?.title?.trim() || "Filtered Balance";
       setFilterCardName(title);
     } catch (error) {
@@ -40,7 +40,7 @@ function FilterCardNameEditor() {
     try {
       setIsUpdating(true);
       setErrorMessage("");
-      await axiosPrivate.put("/user/dashboard/custom/title", {
+      await axiosPrivate.put("/user/dashboard/individual/custom/title", {
         title: trimmedName,
       });
       setFilterCardName(trimmedName);

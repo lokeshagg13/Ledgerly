@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import DashboardContext from "../../../../../store/context/dashboardContext";
+import IndividualDashboardContext from "../../../../../store/context/individualDashboardContext";
 import DailyBalanceChartControl from "./daily-balance-chart-control/DailyBalanceChartControl";
 import DailyBalanceChart from "./daily-balance-chart/DailyBalanceChart";
 import ChartErrorImage from "../../../../../images/chart-error.png";
@@ -19,7 +19,7 @@ function DailyBalanceChartSection() {
     dailyBalanceChartError,
     financialYearsFetchError,
     fetchDailyBalanceChartData,
-  } = useContext(DashboardContext);
+  } = useContext(IndividualDashboardContext);
 
   const [chartData, setChartData] = useState([]);
   const [startIndex, setStartIndex] = useState(0);

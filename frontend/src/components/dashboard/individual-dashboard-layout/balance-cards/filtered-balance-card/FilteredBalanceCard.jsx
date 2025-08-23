@@ -6,7 +6,7 @@ import {
 import BalanceFilterSection from "./balance-filter-section/BalanceFilterSection";
 import FilterCardNameEditor from "./filter-card-name-editor/FilterCardNameEditor";
 import CategoryContext from "../../../../../store/context/categoryContext";
-import DashboardContext from "../../../../../store/context/dashboardContext";
+import IndividualDashboardContext from "../../../../../store/context/individualDashboardContext";
 import BalanceCardSkeleton from "../../../../ui/skeletons/BalanceCardSkeleton";
 
 function FilteredBalanceCard() {
@@ -18,7 +18,7 @@ function FilteredBalanceCard() {
     appliedFilters,
     handleResetErrorFetchingFilteredBalance,
     fetchFilteredBalanceAndFilters,
-  } = useContext(DashboardContext);
+  } = useContext(IndividualDashboardContext);
 
   useEffect(() => {
     handleResetErrorFetchingFilteredBalance();

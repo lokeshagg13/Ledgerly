@@ -4,7 +4,7 @@ import {
   formatAmountForDisplay,
   formatDateForDisplay,
 } from "../../../../../utils/formatUtils";
-import DashboardContext from "../../../../../store/context/dashboardContext";
+import IndividualDashboardContext from "../../../../../store/context/individualDashboardContext";
 import BalanceCardSkeleton from "../../../../ui/skeletons/BalanceCardSkeleton";
 
 function OverallBalanceCard() {
@@ -13,7 +13,7 @@ function OverallBalanceCard() {
     overallBalance,
     overallBalanceError,
     fetchOverallBalance,
-  } = useContext(DashboardContext);
+  } = useContext(IndividualDashboardContext);
 
   useEffect(() => {
     fetchOverallBalance();

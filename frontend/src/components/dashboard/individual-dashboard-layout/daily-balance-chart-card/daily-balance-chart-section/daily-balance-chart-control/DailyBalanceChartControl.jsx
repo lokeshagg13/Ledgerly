@@ -5,7 +5,7 @@ import CaretDownIcon from "../../../../../ui/icons/CaretDownIcon";
 import ZoomInIcon from "../../../../../ui/icons/ZoomInIcon";
 import ZoomOutIcon from "../../../../../ui/icons/ZoomOutIcon";
 import RotateIcon from "../../../../../ui/icons/RotateIcon";
-import DashboardContext from "../../../../../../store/context/dashboardContext";
+import IndividualDashboardContext from "../../../../../../store/context/individualDashboardContext";
 
 function DailyBalanceChartControl({
   financialYears,
@@ -21,7 +21,7 @@ function DailyBalanceChartControl({
   canZoomIn,
   canZoomOut,
 }) {
-  const { isLoadingFinancialYears } = useContext(DashboardContext);
+  const { isLoadingFinancialYears } = useContext(IndividualDashboardContext);
   return (
     <div className="daily-balance-chart-controls">
       <div className="daily-balance-year-selector">
