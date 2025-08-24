@@ -5940,7 +5940,6 @@ body,
   width: 100%;
   overflow-x: auto;
   overflow-y: auto;
-  margin-bottom: 1rem;
   max-height: 500px;
   position: relative;
 }
@@ -6127,5 +6126,71 @@ body,
     opacity: 1;
     transform: scale(1);
   }
+}
+/* #endregion */
+
+/* #region - New entry control */
+.new-entry-control {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 0 1rem;
+}
+
+.new-entry-control-btn {
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.6rem 1.4rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease,
+    box-shadow 0.25s ease, transform 0.2s ease;
+  outline: none;
+}
+
+.new-entry-control-btn.btn-clear {
+  background: transparent;
+  border: 2px solid #999;
+  color: #333;
+}
+
+.new-entry-control-btn.btn-clear:hover:not(:disabled) {
+  background: #f2f2f2;
+  border-color: #666;
+}
+
+.new-entry-control-btn.btn-clear:focus-visible {
+  box-shadow: 0 0 0 3px rgba(160, 160, 160, 0.4);
+}
+
+.new-entry-control-btn.btn-clear:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.new-entry-control-btn.btn-save {
+  background: #007bff;
+  border: 2px solid #007bff;
+  color: #fff;
+}
+
+.new-entry-control-btn.btn-save:hover:not(:disabled) {
+  background: #0056d2;
+  border-color: #0056d2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.new-entry-control-btn.btn-save:focus-visible {
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.4);
+}
+
+.new-entry-control-btn.btn-save:disabled {
+  background: #a0c8f0;
+  border-color: #a0c8f0;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }
 /* #endregion */

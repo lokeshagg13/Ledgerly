@@ -19,7 +19,8 @@ const NewEntryContext = createContext({
     handleInsertCashEntryRow: (rowIdx) => { },
     handleModifyFieldValue: (rowIdx, field, value) => { },
     handleKeyPress: (e) => { },
-    handleContextMenuSetup: (e, rowIdx) => { }
+    handleContextMenuSetup: (e, rowIdx) => { },
+    handleClearRows: () => { },
 });
 
 export const NewEntryContextProvider = ({ children }) => {
@@ -301,6 +302,17 @@ export const NewEntryContextProvider = ({ children }) => {
         return true;
     }
 
+    function handleClearRows() {
+        setEntryDataRows(prev => prev.map((_, i) => ({
+            sno: i + 1,
+            type: "",
+            head: "",
+            credit: "",
+            debit: "",
+        })));
+        setPendingFocus({ row: 0, col: 0 });
+    }
+
     useEffect(() => {
         inputRefs.current = entryDataRows.map(
             (_, rowIdx) => inputRefs.current[rowIdx] || COLS.map(() => createRef())
@@ -333,7 +345,8 @@ export const NewEntryContextProvider = ({ children }) => {
         handleInsertCashEntryRow,
         handleModifyFieldValue,
         handleKeyPress,
-        handleContextMenuSetup
+        handleContextMenuSetup,
+        handleClearRows
     };
 
     return (
