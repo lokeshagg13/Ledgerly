@@ -6006,6 +6006,10 @@ body,
   padding: 0.2rem;
 }
 
+.new-entry-table td.erroneous {
+  border: 1px solid #dc3545;
+}
+
 .new-entry-table td input {
   border: none;
 }
@@ -6076,6 +6080,7 @@ body,
   border-radius: 0;
   outline: none;
 }
+
 /* #endregion */
 
 /* #region - New entry context menu */

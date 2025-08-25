@@ -1,6 +1,11 @@
-import { createContext, createRef, useRef, useEffect, useLayoutEffect, useState } from "react";
-import { formatAmountForFirstTimeInput } from "../../utils/formatUtils";
+import { createContext, createRef, useRef, useEffect, useLayoutEffect, useState, useContext } from "react";
 import { toast } from "react-toastify";
+import { v4 as uuidv4 } from 'uuid';
+
+import { axiosPrivate } from "../../api/axios";
+import { formatAmountForFirstTimeInput } from "../../utils/formatUtils";
+import useAppNavigate from "../hooks/useAppNavigate";
+import HeadsContext from "./headsContext";
 
 const DEFAULT_ROWS = 20;
 const MAX_ROWS = 1000;
@@ -12,6 +17,9 @@ const NewEntryContext = createContext({
     menuPos: null,
     clickedRow: null,
     inputRefs: [],
+    isSavingNewEntry: false,
+    inputFieldErrorsMap: {},
+    errorSavingEntry: null,
     setEntryDate: (newVal) => { },
     findFirstEmptyRowIndex: () => { },
     handleInsertRow: (atIdx) => { },
@@ -21,20 +29,31 @@ const NewEntryContext = createContext({
     handleKeyPress: (e) => { },
     handleContextMenuSetup: (e, rowIdx) => { },
     handleClearRows: () => { },
+    handleSaveNewEntry: async () => { },
+    handleResetErrorSavingEntry: () => { },
+    getEntryFieldError: (rowIdx, fieldName) => { },
 });
 
 export const NewEntryContextProvider = ({ children }) => {
+    const { handleNavigateToPath } = useAppNavigate();
+    const { heads } = useContext(HeadsContext);
     const [entryDate, setEntryDate] = useState(new Date());
     const [entryDataRows, setEntryDataRows] = useState(Array.from({ length: DEFAULT_ROWS }, (_, i) => ({
+        id: uuidv4(),
         sno: i + 1,
         type: "",
         head: "",
+        headId: "",
         credit: "",
         debit: "",
     })));
     const [pendingFocus, setPendingFocus] = useState(null);
     const [menuPos, setMenuPos] = useState(null);
     const [clickedRow, setClickedRow] = useState(null);
+    const [isSavingNewEntry, setIsSavingNewEntry] = useState(false);
+    const [inputFieldErrorsMap, setInputFieldErrorsMap] = useState({});
+    const [errorSavingEntry, setErrorSavingEntry] = useState(null);
+
     const inputRefs = useRef([]);
 
     function handleFocusCell(rowIdx, colIdx) {
@@ -49,9 +68,11 @@ export const NewEntryContextProvider = ({ children }) => {
         if (entryDataRows.length >= MAX_ROWS) return;
         setEntryDataRows((prev) => {
             const newRow = {
+                id: uuidv4(),
                 sno: prev.length + 1,
                 type: "",
                 head: "",
+                headId: "",
                 credit: "",
                 debit: "",
             };
@@ -102,7 +123,34 @@ export const NewEntryContextProvider = ({ children }) => {
     }
 
     function handleModifyFieldValue(rowIdx, field, value) {
+        const rowId = entryDataRows[rowIdx].id;
+        setInputFieldErrorsMap((prevErrorsMap) => {
+            const txnErrors = prevErrorsMap[rowId];
+            if (!txnErrors || !txnErrors[field]) return prevErrorsMap;
+            const { [field]: _, ...remainingErrors } = txnErrors;
+            const newErrorsMap = { ...prevErrorsMap };
+            if (Object.keys(remainingErrors).length === 0) {
+                delete newErrorsMap[rowId];
+            } else {
+                newErrorsMap[rowId] = remainingErrors;
+            }
+            return newErrorsMap;
+        });
+
         let newValue = value;
+        if (field === "head") {
+            if (value?.trim()?.toLowerCase() === "cash") {
+                const status = handleInsertCashEntryRow(rowIdx);
+                if (!status) return;
+            }
+            const matchedHead = heads.find(h => h.name === value);
+            setEntryDataRows((prev) =>
+                prev.map((row, i) =>
+                    i === rowIdx ? { ...row, head: value, headId: matchedHead ? matchedHead._id : null } : row
+                )
+            );
+            return;
+        }
         if (field === "type") {
             const rawValue = value.toUpperCase();
             if (rawValue === "" || rawValue.endsWith(" ")) {
@@ -129,10 +177,6 @@ export const NewEntryContextProvider = ({ children }) => {
             } else {
                 return;
             }
-        }
-        if (field === "head" && value?.trim()?.toLowerCase() === "cash") {
-            const status = handleInsertCashEntryRow(rowIdx);
-            if (!status) return;
         }
         setEntryDataRows((prev) =>
             prev.map((row, i) => (i === rowIdx ? { ...row, [field]: newValue } : row))
@@ -182,7 +226,7 @@ export const NewEntryContextProvider = ({ children }) => {
                 }
             }
         }
-        if (e.key === "ArrowRight") {
+        if (e.key === "ArrowRight" && e.shiftKey) {
             e.preventDefault();
             let nextRow = currentRow;
             let nextCol = currentCol;
@@ -199,7 +243,7 @@ export const NewEntryContextProvider = ({ children }) => {
                 }
             }
         }
-        if (e.key === "ArrowLeft") {
+        if (e.key === "ArrowLeft" && e.shiftKey) {
             e.preventDefault();
             let prevRow = currentRow;
             let prevCol = currentCol;
@@ -216,7 +260,7 @@ export const NewEntryContextProvider = ({ children }) => {
                 }
             }
         }
-        if (e.key === "ArrowUp" && currentCol !== COLS.indexOf("head")) {
+        if (e.key === "ArrowUp" && e.shiftKey && currentCol !== COLS.indexOf("head")) {
             e.preventDefault();
             let prevRow = currentRow - 1;
             while (prevRow >= 0) {
@@ -227,7 +271,7 @@ export const NewEntryContextProvider = ({ children }) => {
                 prevRow--;
             }
         }
-        if (e.key === "ArrowDown" && currentCol !== COLS.indexOf("head")) {
+        if (e.key === "ArrowDown" && e.shiftKey && currentCol !== COLS.indexOf("head")) {
             e.preventDefault();
             let nextRow = currentRow + 1;
             while (nextRow < entryDataRows.length) {
@@ -280,10 +324,12 @@ export const NewEntryContextProvider = ({ children }) => {
         }
         const otherRows = entryDataRows.filter((_, idx) => idx !== rowIdx);
         const { type, debit, credit } = calculateCashEntryValues(otherRows);
+        const cashHead = heads.find(h => h.name?.trim()?.toLowerCase() === "cash");
+        const cashHeadId = cashHead ? cashHead._id : null;
         if (rowIdx < entryDataRows.length) {
             setEntryDataRows(prev =>
                 prev.map((row, idx) =>
-                    idx === rowIdx ? { ...row, head: "CASH", type, debit, credit } : row
+                    idx === rowIdx ? { ...row, head: "CASH", headId: cashHeadId, type, debit, credit } : row
                 )
             );
         } else {
@@ -293,6 +339,7 @@ export const NewEntryContextProvider = ({ children }) => {
                     sno: rowIdx + 1,
                     type,
                     head: "CASH",
+                    headId: cashHeadId,
                     debit,
                     credit
                 }
@@ -307,10 +354,170 @@ export const NewEntryContextProvider = ({ children }) => {
             sno: i + 1,
             type: "",
             head: "",
+            headId: "",
             credit: "",
             debit: "",
         })));
         setPendingFocus({ row: 0, col: 0 });
+        setInputFieldErrorsMap({});
+        setErrorSavingEntry(null);
+    }
+
+    function getNonEmptyRows() {
+        return entryDataRows.filter(row =>
+            row.head !== "" || row.type !== "" || row.credit !== "" || row.debit !== ""
+        );
+    }
+
+    function validateAmountField(value) {
+        if (value === "") {
+            return "amount is required.";
+        }
+        const amount = parseFloat(value);
+        if (isNaN(amount) || amount <= 0) {
+            return "amount must be a positive number.";
+        }
+        if (amount > 1e9) {
+            return "amount cannot exceed 100 crore.";
+        }
+        return null;
+    }
+
+    function validateInputForSavingEntryData(rows = entryDataRows) {
+        const errorsMap = {};
+
+        // Entry date validation
+        if (!entryDate) {
+            setErrorSavingEntry("Entry date is invalid");
+            return false;
+        }
+        const selectedDate = new Date(entryDate);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        selectedDate.setHours(0, 0, 0, 0);
+        if (selectedDate > today) {
+            setErrorSavingEntry("Entry date must not exceed today.");
+            return false;
+        }
+
+        // Entry data rows validation
+        const serials = [];
+        rows.forEach((row) => {
+            const rowErrors = {};
+            const { id, sno, type, head, credit, debit } = row;
+
+            if (!head.trim()) rowErrors.head = "Head is required.";
+            if (!type.trim()) rowErrors.type = "Type is required.";
+            const upperType = type.trim().toUpperCase();
+            if (type && !(upperType === "C" || upperType === "D")) {
+                rowErrors.type = "Type must be C or D.";
+            }
+            if (upperType === "C") {
+                const amountError = validateAmountField(credit);
+                if (amountError) {
+                    rowErrors.credit = `Credit ${amountError}`;
+                }
+            }
+            if (upperType === "D") {
+                const amountError = validateAmountField(debit);
+                if (amountError) {
+                    rowErrors.debit = `Debit ${amountError}`;
+                }
+            }
+            serials.push(sno);
+
+            if (Object.keys(rowErrors).length > 0) {
+                errorsMap[id] = rowErrors;
+            }
+        });
+
+        setInputFieldErrorsMap(errorsMap);
+        if (Object.keys(errorsMap).length > 0) {
+            setErrorSavingEntry("Some of these rows have errors. Please review and correct all highlighted fields before saving the entries.");
+            return false;
+        }
+
+        // Check duplicate/missing serials
+        const uniqueSerials = new Set(serials);
+        if (uniqueSerials.size !== rows.length) {
+            setErrorSavingEntry("Duplicate serial numbers found.");
+            return false;
+        }
+        for (let i = 1; i <= rows.length; i++) {
+            if (!uniqueSerials.has(i)) {
+                setErrorSavingEntry(`Missing serial number: ${i}`);
+                return false;
+            }
+        }
+
+        // Must contain CASH entry
+        const hasCash = rows.some(r => r.head.trim().toLowerCase() === "cash");
+        if (!hasCash) {
+            setErrorSavingEntry("At least one Cash entry is required.");
+            return false;
+        }
+
+        // Validate totals
+        const totalCredit = rows.reduce((sum, r) => sum + (parseFloat(r.credit) || 0), 0);
+        const totalDebit = rows.reduce((sum, r) => sum + (parseFloat(r.debit) || 0), 0);
+        if (Math.abs(totalCredit - totalDebit) > 0.001) {
+            setErrorSavingEntry("Total credits and debits must be equal.");
+            return false;
+        }
+
+        return true;
+    }
+
+    async function handleSaveNewEntry() {
+        const nonEmptyRows = getNonEmptyRows();
+        if (!nonEmptyRows || nonEmptyRows.length === 0) {
+            setErrorSavingEntry("Must have at least one data entry row.");
+            return;
+        }
+        setInputFieldErrorsMap({});
+        setErrorSavingEntry(null);
+
+        const isValid = validateInputForSavingEntryData(nonEmptyRows);
+        if (!isValid) return;
+
+        setIsSavingNewEntry(true);
+        try {
+            const payload = {
+                date: entryDate,
+                entries: nonEmptyRows.map(r => ({
+                    serial: r.sno,
+                    type: r.type === "C" ? "credit" : "debit",
+                    headId: r.headId,
+                    amount: parseFloat(r.credit || r.debit)
+                }))
+            };
+            await axiosPrivate.post("/user/entries", JSON.stringify(payload));
+            toast.success("Entry saved successfully!", { position: "top-center", autoClose: 5000 });
+            handleClearRows();
+            handleNavigateToPath("/entries");
+        } catch (error) {
+            handleErrorSavingEntry(error);
+        } finally {
+            setIsSavingNewEntry(false);
+        }
+    }
+
+    function handleErrorSavingEntry(error) {
+        if (!error?.response) {
+            setErrorSavingEntry("Apologies for the inconvenience. We couldn’t connect to the server at the moment. This might be a temporary issue. Kindly try again shortly.");
+        } else if (error?.response?.data?.error) {
+            setErrorSavingEntry(`Apologies for the inconvenience. There was an error while saving these entries. ${error?.response?.data?.error}`);
+        } else {
+            setErrorSavingEntry("Apologies for the inconvenience. There was some error while saving these entries. Please try again after some time.");
+        }
+    }
+
+    function handleResetErrorSavingEntry() {
+        setErrorSavingEntry(null);
+    }
+
+    function getEntryFieldError(id, fieldName) {
+        return inputFieldErrorsMap[id]?.[fieldName] || null;
     }
 
     useEffect(() => {
@@ -338,6 +545,9 @@ export const NewEntryContextProvider = ({ children }) => {
         menuPos,
         clickedRow,
         inputRefs,
+        isSavingNewEntry,
+        inputFieldErrorsMap,
+        errorSavingEntry,
         setEntryDate,
         findFirstEmptyRowIndex,
         handleInsertRow,
@@ -346,7 +556,10 @@ export const NewEntryContextProvider = ({ children }) => {
         handleModifyFieldValue,
         handleKeyPress,
         handleContextMenuSetup,
-        handleClearRows
+        handleClearRows,
+        handleSaveNewEntry,
+        handleResetErrorSavingEntry,
+        getEntryFieldError,
     };
 
     return (

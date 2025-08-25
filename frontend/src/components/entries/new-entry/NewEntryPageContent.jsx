@@ -11,9 +11,9 @@ function NewEntryPageContent() {
   const { handleNavigateBack } = useAppNavigate();
 
   return (
-    <NewEntryContextProvider>
-      <FirmDashboardContextProvider>
-        <HeadsProvider>
+    <HeadsProvider>
+      <NewEntryContextProvider>
+        <FirmDashboardContextProvider>
           <ContextMenuProvider>
             <div className="new-entry-page-header">
               <Button
@@ -30,9 +30,9 @@ function NewEntryPageContent() {
               <NewEntrySection />
             </div>
           </ContextMenuProvider>
-        </HeadsProvider>
-      </FirmDashboardContextProvider>
-    </NewEntryContextProvider>
+        </FirmDashboardContextProvider>
+      </NewEntryContextProvider>
+    </HeadsProvider>
   );
 }
 

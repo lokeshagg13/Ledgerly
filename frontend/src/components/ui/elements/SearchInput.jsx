@@ -8,7 +8,15 @@ const normalizeString = (str) =>
     .replace(/[^a-z0-9]/gi, "")
     .toLowerCase();
 
-function SearchInput({ id, ref, className, options, value, onChange }) {
+function SearchInput({
+  id,
+  ref,
+  className,
+  options,
+  value,
+  onChange,
+  isInvalid = false,
+}) {
   const [inputValue, setInputValue] = useState("");
 
   const filterOptions = (options, { inputValue }) => {
@@ -43,6 +51,7 @@ function SearchInput({ id, ref, className, options, value, onChange }) {
         <TextField
           {...params}
           inputRef={ref}
+          error={isInvalid}
           label={undefined}
           slotProps={{
             input: {

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Entry = require("../models/Entry");
 const Head = require("../models/Head");
+const { normalizeDate } = require("./utils/formatters");
 
 /**
  * Controller to create a new daily entry for a user.
@@ -16,15 +17,14 @@ exports.createEntry = async (req, res) => {
         if (!date) {
             return res.status(400).json({ error: "Date is required." });
         }
-        const entryDate = new Date(date);
+        let entryDate = new Date(date);
         if (isNaN(entryDate.getTime())) {
             return res.status(400).json({ error: "Invalid date format." });
         }
+        entryDate = normalizeDate(entryDate);
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        entryDate.setHours(0, 0, 0, 0);
-
         if (entryDate > today) {
             return res.status(400).json({ error: "Date cannot be in the future." });
         }

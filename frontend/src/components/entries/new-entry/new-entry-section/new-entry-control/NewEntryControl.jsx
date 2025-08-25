@@ -4,7 +4,8 @@ import NewEntryClearConfirmModal from "./new-entry-clear-confirm-modal/NewEntryC
 import NewEntryContext from "../../../../../store/context/newEntryContext";
 
 function NewEntryControl() {
-  const { handleClearRows } = useContext(NewEntryContext);
+  const { isSavingNewEntry, handleClearRows, handleSaveNewEntry } =
+    useContext(NewEntryContext);
   const [isClearConfirmModalVisible, setIsClearConfirmModalVisible] =
     useState(false);
 
@@ -27,6 +28,7 @@ function NewEntryControl() {
         type="button"
         className="new-entry-control-btn btn-clear"
         title="Clear all"
+        disabled={isSavingNewEntry}
         onClick={() => handleOpenClearConfirmModal()}
       >
         Clear
@@ -35,8 +37,21 @@ function NewEntryControl() {
         type="button"
         className="new-entry-control-btn btn-save"
         title="Save this entry"
+        disabled={isSavingNewEntry}
+        onClick={handleSaveNewEntry}
       >
-        Save Entry
+        {isSavingNewEntry ? (
+          <>
+            <span
+              className="spinner-border spinner-border-sm me-2"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            Saving...
+          </>
+        ) : (
+          "Save Entry"
+        )}
       </Button>
       {isClearConfirmModalVisible && (
         <NewEntryClearConfirmModal
