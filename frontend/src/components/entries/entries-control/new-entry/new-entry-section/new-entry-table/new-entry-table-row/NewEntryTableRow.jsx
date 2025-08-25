@@ -1,11 +1,11 @@
 import { useContext } from "react";
 import { Form, OverlayTrigger, Tooltip } from "react-bootstrap";
 
-import SearchInput from "../../../../../ui/elements/SearchInput";
-import NewEntryContext from "../../../../../../store/context/newEntryContext";
-import ContextMenuContext from "../../../../../../store/context/contextMenuContext";
-import HeadsContext from "../../../../../../store/context/headsContext";
-import { formatAmountWithCommas } from "../../../../../../utils/formatUtils";
+import SearchInput from "../../../../../../ui/elements/SearchInput";
+import NewEntryContext from "../../../../../../../store/context/newEntryContext";
+import ContextMenuContext from "../../../../../../../store/context/contextMenuContext";
+import HeadsContext from "../../../../../../../store/context/headsContext";
+import { formatAmountWithCommas } from "../../../../../../../utils/formatUtils";
 
 function WithErrorTooltip({ children, error }) {
   if (!error) return children;

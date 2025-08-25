@@ -2,7 +2,7 @@ import NewEntryTable from "./new-entry-table/NewEntryTable";
 import NewEntryHeader from "./new-entry-header/NewEntryHeader";
 import NewEntryControl from "./new-entry-control/NewEntryControl";
 import { useContext, useEffect } from "react";
-import NewEntryContext from "../../../../store/context/newEntryContext";
+import NewEntryContext from "../../../../../store/context/newEntryContext";
 
 function NewEntrySection() {
   const { errorSavingEntry, handleResetErrorSavingEntry } =

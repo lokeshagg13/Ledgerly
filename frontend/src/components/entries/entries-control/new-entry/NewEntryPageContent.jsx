@@ -1,10 +1,10 @@
 import { Button } from "react-bootstrap";
-import useAppNavigate from "../../../store/hooks/useAppNavigate";
-import LeftArrowIcon from "../../ui/icons/LeftArrowIcon";
-import { HeadsProvider } from "../../../store/context/headsContext";
-import { ContextMenuProvider } from "../../../store/context/contextMenuContext";
-import { NewEntryContextProvider } from "../../../store/context/newEntryContext";
-import { FirmDashboardContextProvider } from "../../../store/context/firmDashboardContext";
+import useAppNavigate from "../../../../store/hooks/useAppNavigate";
+import LeftArrowIcon from "../../../ui/icons/LeftArrowIcon";
+import { HeadsProvider } from "../../../../store/context/headsContext";
+import { ContextMenuProvider } from "../../../../store/context/contextMenuContext";
+import { NewEntryContextProvider } from "../../../../store/context/newEntryContext";
+import { FirmDashboardContextProvider } from "../../../../store/context/firmDashboardContext";
 import NewEntrySection from "./new-entry-section/NewEntrySection";
 
 function NewEntryPageContent() {

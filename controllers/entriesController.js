@@ -115,3 +115,65 @@ exports.createEntry = async (req, res) => {
         return res.status(500).json({ message: "Internal server error." });
     }
 };
+
+/**
+ * Get all entries for the authenticated user.
+ * Returns array of { _id, date }
+ */
+exports.getAllDaywiseEntries = async (req, res) => {
+    try {
+        const userId = req.userId;
+
+        const daywiseEntries = await Entry.find({ userId })
+            .select("_id date")
+            .sort({ date: -1 }); // newest first
+
+        return res.status(200).json(daywiseEntries);
+    } catch (error) {
+        console.error("Error fetching all daywise entries:", error);
+        return res.status(500).json({ message: "Internal server error." });
+    }
+};
+
+/**
+ * Get entry items by entry ID (and optionally validate date)
+ * Returns { date, entries }
+ */
+exports.getEntryItemsForId = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const { id } = req.params;
+        const { date } = req.query;
+
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid or missing entry ID." });
+        }
+
+        const entry = await Entry.findOne({ _id: id, userId });
+        if (!entry) {
+            return res.status(404).json({ message: "Entry not found." });
+        }
+
+        // Optional date consistency check
+        if (date) {
+            const requestDate = new Date(date);
+            requestDate.setHours(0, 0, 0, 0);
+            const entryDate = new Date(entry.date);
+            entryDate.setHours(0, 0, 0, 0);
+
+            if (requestDate.getTime() !== entryDate.getTime()) {
+                return res.status(400).json({
+                    message: "Date does not match entry ID."
+                });
+            }
+        }
+
+        return res.status(200).json({
+            date: entry.date,
+            entries: entry.entries
+        });
+    } catch (error) {
+        console.error("Error fetching entry items:", error);
+        return res.status(500).json({ message: "Internal server error." });
+    }
+};

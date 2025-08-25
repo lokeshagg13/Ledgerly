@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Button } from "react-bootstrap";
 import NewEntryClearConfirmModal from "./new-entry-clear-confirm-modal/NewEntryClearConfirmModal";
-import NewEntryContext from "../../../../../store/context/newEntryContext";
+import NewEntryContext from "../../../../../../store/context/newEntryContext";
 
 function NewEntryControl() {
   const { isSavingNewEntry, handleClearRows, handleSaveNewEntry } =

@@ -9,5 +9,7 @@ router.use(verifyJWT);
 router.use(verifyFirmUser);
 
 router.post("/", entriesController.createEntry);
+router.get("/", entriesController.getAllDaywiseEntries);
+router.get("/:id", entriesController.getEntryItemsForId);
 
 module.exports = router;

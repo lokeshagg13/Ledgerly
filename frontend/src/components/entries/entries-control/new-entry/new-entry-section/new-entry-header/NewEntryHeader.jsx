@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import useAuth from "../../../../../store/hooks/useAuth";
-import FormDatePicker from "../../../../ui/elements/FormDatePicker";
-import NewEntryContext from "../../../../../store/context/newEntryContext";
+import useAuth from "../../../../../../store/hooks/useAuth";
+import FormDatePicker from "../../../../../ui/elements/FormDatePicker";
+import NewEntryContext from "../../../../../../store/context/newEntryContext";
 
 function NewEntryHeader() {
   const { auth } = useAuth();
