@@ -7,7 +7,7 @@ const EntryContext = createContext({
     isLoadingDaywiseEntries: false,
     daywiseEntries: [],
     errorFetchingDaywiseEntries: null,
-    fetchDaywiseEntries: async () => { }
+    fetchDaywiseEntries: async (manual) => { }
 });
 
 export const EntryContextProvider = ({ children }) => {
@@ -22,9 +22,9 @@ export const EntryContextProvider = ({ children }) => {
             const res = await axiosPrivate.get("/user/entries");
             if (res?.data) setDaywiseEntries(res.data);
             if (manual) {
-                toast.success("All daywise entries fetched successfully", {
-                    position: "top-center",
-                    autoClose: 3000
+                toast.success("Refresh completed.", {
+                    autoClose: 1000,
+                    position: "top-center"
                 });
             }
         } catch (error) {

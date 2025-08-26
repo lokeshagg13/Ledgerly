@@ -5810,6 +5810,109 @@ body,
 
 .entry-page-body {
   min-width: max-content;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+/* #endregion */
+
+/* #region - Entry control */
+.entries-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.entries-controls .control-btn {
+  white-space: nowrap;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.entries-controls .control-btn.btn-blue {
+  background-color: #2563eb;
+  color: white;
+  border: 1px solid #2563eb;
+}
+
+.entries-controls .control-btn.btn-blue:hover {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.entries-controls .control-btn.btn-outline-light {
+  background-color: white;
+  color: #1f2937;
+  border: 1px solid #d1d5db;
+}
+
+.entries-controls .control-btn.btn-outline-light:hover {
+  color: #111827;
+  border-color: #9ca3af;
+  background-color: #f9fafb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+.entries-controls .control-btn:disabled,
+.entries-controls .control-btn[disabled] {
+  opacity: 0.4 !important;
+  border-color: #d1d5db !important;
+  background-color: #f3f4f6 !important;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+/* #endregion */
+
+/* #region - Entry table */
+.entries-table-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.75rem;
+}
+
+.entries-table {
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid #e0e6ed;
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 1.1rem;
+  background-color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+}
+
+.entries-table thead {
+  background-color: #1d1f21;
+  color: white;
+}
+
+.entries-table thead th {
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 14px 18px;
+  text-align: left;
+  background-color: #1d1f21;
+  border: none;
+  border-bottom: 1px solid #c6d0d9;
+  color: #ffffff;
+}
+
+.entries-table-loading,
+.entries-table-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 120px;
+  font-size: 1rem;
 }
 /* #endregion */
 

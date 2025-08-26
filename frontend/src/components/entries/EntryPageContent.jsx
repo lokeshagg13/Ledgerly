@@ -2,9 +2,11 @@ import { Button } from "react-bootstrap";
 import useAppNavigate from "../../store/hooks/useAppNavigate";
 import LeftArrowIcon from "../ui/icons/LeftArrowIcon";
 import { EntryContextProvider } from "../../store/context/entryContext";
+import EntriesControl from "./entries-control/EntriesControl";
+import EntriesTable from "./entries-table/EntriesTable";
 
 function EntryPageContent() {
-  const { handleNavigateToPath, handleNavigateBack } = useAppNavigate();
+  const { handleNavigateBack } = useAppNavigate();
 
   return (
     <EntryContextProvider>
@@ -21,9 +23,8 @@ function EntryPageContent() {
 
       <div className="entry-page-body-wrapper">
         <div className="entry-page-body">
-          <Button onClick={() => handleNavigateToPath("/entries/add")}>
-            Add a new entry
-          </Button>
+          <EntriesControl />
+          <EntriesTable />
         </div>
       </div>
     </EntryContextProvider>
