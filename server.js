@@ -17,7 +17,7 @@ const categoryRouter = require("./routes/categoryRoutes");
 const subcategoryRouter = require("./routes/subcategoryRoutes");
 const firmDashboardRouter = require("./routes/firmDashboardRoutes");
 const headsRouter = require("./routes/headsRoutes");
-const entryRouter = require("./routes/entryRoutes");
+const entrySetRouter = require("./routes/entrySetRoutes");
 
 require("dotenv").config();
 
@@ -52,7 +52,7 @@ app.use("/api/user/categories", categoryRouter);
 app.use("/api/user/subcategories", subcategoryRouter);
 
 app.use("/api/user/heads", headsRouter);
-app.use("/api/user/entries", entryRouter);
+app.use("/api/user/entrySet", entrySetRouter);
 
 app.use("/api/user/dashboard/individual", individualDashboardRouter);
 app.use("/api/user/dashboard/firm", firmDashboardRouter);

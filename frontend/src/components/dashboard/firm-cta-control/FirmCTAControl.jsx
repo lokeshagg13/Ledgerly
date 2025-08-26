@@ -9,7 +9,7 @@ function FirmCTAControl() {
     <div className="dashboard-cta-container">
       <button
         className="cta-button"
-        onClick={() => handleNavigateToPath("/entries")}
+        onClick={() => handleNavigateToPath("/entry-sets")}
       >
         <span className="cta-icon">
           <FileIcon />

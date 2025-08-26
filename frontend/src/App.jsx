@@ -20,9 +20,9 @@ import UploadTransactionPage from "./pages/upload-transaction-page/UploadTransac
 import PrintTransactionPage from "./pages/print-transaction-page/PrintTransactionPage";
 import HeadsPage from "./pages/heads-page/HeadsPage";
 import SummaryPage from "./pages/summary-page/SummaryPage";
-import EntriesPage from "./pages/entries-page/EntriesPage";
+import EntrySetsPage from "./pages/entry-sets-page/EntrySetsPage";
 import UploadHeadsPage from "./pages/upload-heads-page/UploadHeadsPage";
-import NewEntryPage from "./pages/new-entry-page/NewEntryPage";
+import NewEntrySetPage from "./pages/new-entry-set-page/NewEntryPage";
 
 function App() {
   const { auth } = useAuth();
@@ -141,8 +141,10 @@ function App() {
                 element={auth?.type === "firm" ? <HeadsPage /> : <Page404 />}
               />
               <Route
-                path="/entries"
-                element={auth?.type === "firm" ? <EntriesPage /> : <Page404 />}
+                path="/entry-sets"
+                element={
+                  auth?.type === "firm" ? <EntrySetsPage /> : <Page404 />
+                }
               />
               <Route
                 path="/summary"
@@ -155,8 +157,10 @@ function App() {
                 }
               />
               <Route
-                path="/entries/add"
-                element={auth?.type === "firm" ? <NewEntryPage /> : <Page404 />}
+                path="/entry-sets/new"
+                element={
+                  auth?.type === "firm" ? <NewEntrySetPage /> : <Page404 />
+                }
               />
             </Route>
           </Route>

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const EntryModel = require("../models/Entry");   // Adjust path as needed
+const EntrySetModel = require("../models/EntrySet");   // Adjust path as needed
 const UserModel = require("../models/User"); // Adjust path as needed
 
 /**
@@ -19,7 +19,7 @@ exports.getCurrentBalance = async (req, res) => {
         const openingBalance = user.openingBalance?.amount || 0;
 
         // 2. Aggregate all credits and debits from entries
-        const result = await EntryModel.aggregate([
+        const result = await EntrySetModel.aggregate([
             { $match: { userId: new mongoose.Types.ObjectId(userId) } },
             { $unwind: "$entries" },
             {
@@ -38,7 +38,7 @@ exports.getCurrentBalance = async (req, res) => {
         });
 
         // 3. Get latest entry date
-        const latestEntry = await EntryModel.findOne({ userId })
+        const latestEntry = await EntrySetModel.findOne({ userId })
             .sort({ date: -1 })
             .select("date")
             .lean();
