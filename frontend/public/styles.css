@@ -5783,13 +5783,13 @@ body,
 
 /* #region - Entry sets page */
 .entry-sets-page {
-  max-width: 1000px;
+  max-width: 600px;
   margin: 2rem auto;
   padding: 0;
   padding-bottom: 1rem;
 }
 
-@media (max-width: 1032px) {
+@media (max-width: 632px) {
   .entry-sets-page {
     margin-left: 1rem;
     margin-right: 1rem;
@@ -5924,6 +5924,54 @@ body,
   align-items: center;
   min-height: 120px;
   font-size: 1rem;
+}
+/* #endregion */
+
+/* #region - Entry set row */
+.entry-set-row {
+  transition: background-color 0.2s ease;
+}
+
+.entry-set-row td:hover {
+  background-color: #f8f9fa;
+}
+
+.entry-set-row .checkbox-cell {
+  text-align: center;
+  vertical-align: middle;
+  width: 50px;
+}
+
+.entry-set-row .date-cell {
+  width: 200px;
+  font-weight: 500;
+  color: #212529;
+  vertical-align: middle;
+  font-size: 0.95rem;
+  letter-spacing: 0.2px;
+  text-align: left;
+  padding: 0 18px;
+}
+
+.entry-set-row .action-cell {
+  text-align: left;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.entry-set-row .view-button {
+  border-radius: 20px;
+  padding: 4px 16px;
+  font-size: 0.85rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.entry-set-row .view-button:hover {
+  background-color: #0d6efd; /* Bootstrap primary */
+  color: white;
 }
 /* #endregion */
 

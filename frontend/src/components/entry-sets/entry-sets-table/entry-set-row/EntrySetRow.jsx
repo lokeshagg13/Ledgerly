@@ -1,25 +1,41 @@
-import { useContext, useState } from "react";
+import { useMemo } from "react";
 import { Button, Form } from "react-bootstrap";
 
-function EntrySetsRow({ entrySetId, entrySetDate }) {
+function EntrySetRow({ entrySetId, entrySetDate }) {
+  // Format date nicely (e.g., "26 Aug 2025")
+  const formattedDate = useMemo(() => {
+    const date = new Date(entrySetDate);
+    return date.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    });
+  }, [entrySetDate]);
+
   return (
-    <tr>
-      <td>
+    <tr className="entry-set-row">
+      <td className="checkbox-cell">
         <Form.Check
           type="checkbox"
           className="entry-set-checkbox"
-          id={`entrySetCheckbox${headId}`}
-          // checked={selectedHeads.includes(headId)}
-          // onChange={() => handleToggleHeadSelection(headId)}
-          aria-label={`Select entry set for ${entrySetDate}`}
+          id={`entrySetCheckbox${entrySetId}`}
+          aria-label={`Select entry set for ${formattedDate}`}
         />
       </td>
-      <td>{entrySetDate}</td>
-      <td>
-        <Button>View</Button>
+      <td className="date-cell">{formattedDate}</td>
+      <td className="action-cell">
+        <Button variant="outline-primary" size="sm" className="view-button">
+          View
+        </Button>
+        <Button variant="outline-primary" size="sm" className="view-button">
+          Edit
+        </Button>
+        <Button variant="outline-primary" size="sm" className="view-button">
+          Download
+        </Button>
       </td>
     </tr>
   );
 }
 
-export default EntrySetsRow;
+export default EntrySetRow;

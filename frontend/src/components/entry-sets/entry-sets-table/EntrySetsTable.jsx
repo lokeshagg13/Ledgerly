@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { Spinner, Table } from "react-bootstrap";
 import EntrySetContext from "../../../store/context/entrySetContext";
+import EntrySetRow from "./entry-set-row/EntrySetRow";
 
 function EntrySetsTable() {
   const { isLoadingEntrySets, entrySets } = useContext(EntrySetContext);
@@ -36,8 +37,11 @@ function EntrySetsTable() {
           </tr>
         </thead>
         <tbody>
-          {entrySets.map((head) => (
-            <></>
+          {entrySets.map((entrySet) => (
+            <EntrySetRow
+              entrySetId={entrySet._id}
+              entrySetDate={entrySet.date}
+            />
           ))}
         </tbody>
       </Table>
