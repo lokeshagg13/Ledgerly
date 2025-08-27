@@ -2,14 +2,25 @@ import { useContext } from "react";
 import { Spinner, Table } from "react-bootstrap";
 import HeadsContext from "../../../store/context/headsContext";
 import HeadRow from "./head-row/HeadRow";
+import ErrorImage from "../../../images/chart-error.png";
 
 function HeadsTable() {
-  const { isLoadingHeads, heads } = useContext(HeadsContext);
+  const { isLoadingHeads, heads, errorFetchingHeads } =
+    useContext(HeadsContext);
 
   if (isLoadingHeads) {
     return (
       <div className="heads-table-loading">
         <Spinner animation="border" size="lg" />
+      </div>
+    );
+  }
+
+  if (errorFetchingHeads) {
+    return (
+      <div className="error-section heads-table-error">
+        <img src={ErrorImage} alt="" width={150} height="auto" />
+        <p className="error-message">{errorFetchingHeads}</p>
       </div>
     );
   }

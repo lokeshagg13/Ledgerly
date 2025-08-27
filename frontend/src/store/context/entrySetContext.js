@@ -30,6 +30,10 @@ export const EntrySetContextProvider = ({ children }) => {
             }
         } catch (error) {
             handleErrorFetchingEntrySets(error);
+            toast.error(`Error occured while fetching entry sets: ${error?.response?.data?.error || error?.message || error}`, {
+                autoClose: 5000,
+                position: "top-center"
+            });
         } finally {
             setIsLoadingEntrySets(false);
         }

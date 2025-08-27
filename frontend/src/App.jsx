@@ -22,7 +22,8 @@ import HeadsPage from "./pages/heads-page/HeadsPage";
 import SummaryPage from "./pages/summary-page/SummaryPage";
 import EntrySetsPage from "./pages/entry-sets-page/EntrySetsPage";
 import UploadHeadsPage from "./pages/upload-heads-page/UploadHeadsPage";
-import NewEntrySetPage from "./pages/new-entry-set-page/NewEntryPage";
+import NewEntrySetPage from "./pages/new-entry-set-page/NewEntrySetPage";
+import ViewEntrySetPage from "./pages/view-entry-set-page/ViewEntrySetPage";
 
 function App() {
   const { auth } = useAuth();
@@ -160,6 +161,12 @@ function App() {
                 path="/entry-sets/new"
                 element={
                   auth?.type === "firm" ? <NewEntrySetPage /> : <Page404 />
+                }
+              />
+              <Route
+                path="/entry-sets/view"
+                element={
+                  auth?.type === "firm" ? <ViewEntrySetPage /> : <Page404 />
                 }
               />
             </Route>

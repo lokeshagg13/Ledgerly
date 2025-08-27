@@ -1,16 +1,23 @@
 import { useMemo } from "react";
 import { Button, Form } from "react-bootstrap";
+import useAppNavigate from "../../../../store/hooks/useAppNavigate";
 
 function EntrySetRow({ entrySetId, entrySetDate }) {
-  // Format date nicely (e.g., "26 Aug 2025")
+  const { handleNavigateToPath } = useAppNavigate();
   const formattedDate = useMemo(() => {
     const date = new Date(entrySetDate);
     return date.toLocaleDateString("en-IN", {
       day: "2-digit",
       month: "short",
-      year: "numeric"
+      year: "numeric",
     });
   }, [entrySetDate]);
+
+  const handleViewEntrySet = () => {
+    handleNavigateToPath("/entry-sets/view", {
+      state: { entrySetId, formattedEntrySetDate: formattedDate },
+    });
+  };
 
   return (
     <tr className="entry-set-row">
@@ -24,7 +31,12 @@ function EntrySetRow({ entrySetId, entrySetDate }) {
       </td>
       <td className="date-cell">{formattedDate}</td>
       <td className="action-cell">
-        <Button variant="outline-primary" size="sm" className="view-button">
+        <Button
+          variant="outline-primary"
+          size="sm"
+          className="view-button"
+          onClick={handleViewEntrySet}
+        >
           View
         </Button>
         <Button variant="outline-primary" size="sm" className="view-button">

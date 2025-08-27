@@ -7,6 +7,7 @@ const HeadsContext = createContext({
     heads: [],
     selectedHeads: [],
     isLoadingHeads: false,
+    errorFetchingHeads: null,
     isAddHeadModalVisible: false,
     isDeleteSelectedHeadsModalVisible: false,
     fetchHeadsFromDB: async (manual) => { },
@@ -22,12 +23,9 @@ export const HeadsProvider = ({ children }) => {
     const [heads, setHeads] = useState([]);
     const [selectedHeads, setSelectedHeads] = useState([]);
     const [isLoadingHeads, setIsLoadingHeads] = useState(false);
+    const [errorFetchingHeads, setErrorFetchingHeads] = useState(null);
     const [isAddHeadModalVisible, setIsAddHeadModalVisible] = useState(false);
     const [isDeleteSelectedHeadsModalVisible, setIsDeleteSelectedHeadsModalVisible] = useState(false);
-
-    useEffect(() => {
-        fetchHeadsFromDB();
-    }, []);
 
     async function fetchHeadsFromDB(manual = false, onlyActive = null) {
         setIsLoadingHeads(true);
@@ -45,6 +43,7 @@ export const HeadsProvider = ({ children }) => {
             }
             return res.data.heads;
         } catch (error) {
+            handleErrorFetchingHeads();
             toast.error(`Error occured while fetching heads: ${error?.response?.data?.error || error?.message || error}`, {
                 autoClose: 5000,
                 position: "top-center"
@@ -53,6 +52,16 @@ export const HeadsProvider = ({ children }) => {
             setIsLoadingHeads(false);
         }
         return [];
+    }
+
+    function handleErrorFetchingHeads(error) {
+        if (!error?.response) {
+            setErrorFetchingHeads("Apologies for the inconvenience. We couldn’t connect to the server at the moment. This might be a temporary issue. Kindly try again shortly.");
+        } else if (error?.response?.data?.error) {
+            setErrorFetchingHeads(`Apologies for the inconvenience. There was an error while loading the heads. ${error?.response?.data?.error}`);
+        } else {
+            setErrorFetchingHeads("Apologies for the inconvenience. There was some error while loading the heads. Please try again after some time.");
+        }
     }
 
     function handleToggleHeadSelection(headId) {
@@ -79,10 +88,16 @@ export const HeadsProvider = ({ children }) => {
         setIsDeleteSelectedHeadsModalVisible(false);
     }
 
+    useEffect(() => {
+        fetchHeadsFromDB();
+        // eslint-disable-next-line
+    }, []);
+
     const currentHeadsContext = {
         heads,
         selectedHeads,
         isLoadingHeads,
+        errorFetchingHeads,
         isAddHeadModalVisible,
         isDeleteSelectedHeadsModalVisible,
         fetchHeadsFromDB,
