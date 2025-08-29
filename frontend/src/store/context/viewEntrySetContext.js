@@ -39,7 +39,6 @@ export const ViewEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
                     debit: entry.amount && entry.type === "debit" ? entry.amount : "",
                 }));
                 const sortedEntries = formattedEntries.sort((a, b) => a.serial - b.serial);
-                console.log(sortedEntries)
                 setEntrySetDataRows(sortedEntries);
             }
             if (manual) {
