@@ -8,6 +8,7 @@ const ViewEntrySetContext = createContext({
     isLoadingEntrySetDetails: false,
     entrySetDate: null,
     entrySetDataRows: [],
+    entrySetBalance: 0,
     errorFetchingEntrySetDetails: null,
     fetchEntrySetDetails: async (manual) => { },
     getFormattedEntrySetDate: () => { },
@@ -17,6 +18,7 @@ export const ViewEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
     const { heads } = useContext(HeadsContext);
     const [entrySetDate, setEntrySetDate] = useState(new Date());
     const [entrySetDataRows, setEntrySetDataRows] = useState([]);
+    const [entrySetBalance, setEntrySetBalance] = useState(0);
     const [isLoadingEntrySetDetails, setIsLoadingEntrySetDetails] = useState(false);
     const [errorFetchingEntrySetDetails, setErrorFetchingEntrySetDetails] = useState(null);
 
@@ -27,6 +29,7 @@ export const ViewEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
             const res = await axiosPrivate.get(`/user/entrySet/${entrySetId}`);
             if (res?.data) {
                 setEntrySetDate(res.data.date);
+                setEntrySetBalance(res.data.balance);
                 const formattedEntries = res.data.entries.map((entry) => ({
                     sno: entry.serial,
                     type: entry.type,
@@ -68,7 +71,7 @@ export const ViewEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
     }
 
     useEffect(() => {
-        if (heads) return;
+        if (!heads) return;
         fetchEntrySetDetails();
         // eslint-disable-next-line
     }, [heads]);
@@ -77,7 +80,9 @@ export const ViewEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
         isLoadingEntrySetDetails,
         entrySetDate,
         entrySetDataRows,
+        entrySetBalance,
         errorFetchingEntrySetDetails,
+        setEntrySetBalance,
         fetchEntrySetDetails,
         getFormattedEntrySetDate
     };

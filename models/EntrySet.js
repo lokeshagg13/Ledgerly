@@ -31,6 +31,10 @@ const entrySetSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
+    balance: {
+        type: Number,
+        required: true
+    },
     entries: [entrySchema]
 }, { timestamps: true });
 

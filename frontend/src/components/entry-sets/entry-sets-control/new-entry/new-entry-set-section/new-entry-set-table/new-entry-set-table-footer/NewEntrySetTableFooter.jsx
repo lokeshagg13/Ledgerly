@@ -1,13 +1,18 @@
-import { useContext, useMemo } from "react";
+import { useContext, useEffect, useMemo } from "react";
 
 import FirmDashboardContext from "../../../../../../../store/context/firmDashboardContext";
 import NewEntrySetContext from "../../../../../../../store/context/newEntrySetContext";
 import { formatAmountForDisplay } from "../../../../../../../utils/formatUtils";
 
 function NewEntrySetTableFooter() {
-  const { entrySetDataRows } = useContext(NewEntrySetContext);
+  const { entrySetDataRows, entrySetBalance, setEntrySetBalance } =
+    useContext(NewEntrySetContext);
   const { isLoadingOverallBalance, overallBalance } =
     useContext(FirmDashboardContext);
+
+  useEffect(() => {
+    setEntrySetBalance(overallBalance.amount);
+  }, []);
 
   const totalCredit = useMemo(
     () =>
@@ -26,20 +31,21 @@ function NewEntrySetTableFooter() {
     [entrySetDataRows]
   );
 
-  let adjustedCredit = totalCredit;
-  let adjustedDebit = totalDebit;
-  const cashRow = entrySetDataRows.find((row) => row.head === "CASH");
-  if (cashRow) {
-    const cashCredit = parseFloat(cashRow.credit) || 0;
-    const cashDebit = parseFloat(cashRow.debit) || 0;
-    if (cashCredit > 0) {
-      adjustedCredit -= cashCredit;
-    } else if (cashDebit > 0) {
-      adjustedDebit -= cashDebit;
+  useEffect(() => {
+    let adjustedCredit = totalCredit;
+    let adjustedDebit = totalDebit;
+    const cashRow = entrySetDataRows.find((row) => row.head === "CASH");
+    if (cashRow) {
+      const cashCredit = parseFloat(cashRow.credit) || 0;
+      const cashDebit = parseFloat(cashRow.debit) || 0;
+      if (cashCredit > 0) {
+        adjustedCredit -= cashCredit;
+      } else if (cashDebit > 0) {
+        adjustedDebit -= cashDebit;
+      }
     }
-  }
-
-  const balance = overallBalance.amount + adjustedCredit - adjustedDebit;
+    setEntrySetBalance(overallBalance.amount + adjustedCredit - adjustedDebit);
+  }, [totalCredit, totalDebit]);
 
   return (
     <tfoot>
@@ -54,7 +60,7 @@ function NewEntrySetTableFooter() {
               aria-hidden="true"
             ></span>
           ) : (
-            <strong>Balance: {formatAmountForDisplay(balance)}</strong>
+            <strong>Balance: {formatAmountForDisplay(entrySetBalance)}</strong>
           )}
         </td>
         <td>

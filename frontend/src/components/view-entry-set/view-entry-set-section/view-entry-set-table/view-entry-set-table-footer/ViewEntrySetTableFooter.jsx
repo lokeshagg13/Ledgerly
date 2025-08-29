@@ -1,13 +1,10 @@
 import { useContext, useMemo } from "react";
 
-import FirmDashboardContext from "../../../../../store/context/firmDashboardContext";
 import ViewEntrySetContext from "../../../../../store/context/viewEntrySetContext";
 import { formatAmountForDisplay } from "../../../../../utils/formatUtils";
 
 function ViewEntrySetTableFooter() {
-  const { entrySetDataRows } = useContext(ViewEntrySetContext);
-  const { isLoadingOverallBalance, overallBalance } =
-    useContext(FirmDashboardContext);
+  const { entrySetDataRows, entrySetBalance } = useContext(ViewEntrySetContext);
 
   const totalCredit = useMemo(
     () =>
@@ -26,36 +23,13 @@ function ViewEntrySetTableFooter() {
     [entrySetDataRows]
   );
 
-  let adjustedCredit = totalCredit;
-  let adjustedDebit = totalDebit;
-  const cashRow = entrySetDataRows.find((row) => row.head === "CASH");
-  if (cashRow) {
-    const cashCredit = parseFloat(cashRow.credit) || 0;
-    const cashDebit = parseFloat(cashRow.debit) || 0;
-    if (cashCredit > 0) {
-      adjustedCredit -= cashCredit;
-    } else if (cashDebit > 0) {
-      adjustedDebit -= cashDebit;
-    }
-  }
-
-  const balance = overallBalance.amount + adjustedCredit - adjustedDebit;
-
   return (
     <tfoot>
       <tr className="table-warning footer-row">
         <td></td>
         <td></td>
         <td>
-          {isLoadingOverallBalance ? (
-            <span
-              className="spinner-border spinner-border-sm me-2"
-              role="status"
-              aria-hidden="true"
-            ></span>
-          ) : (
-            <strong>Balance: {formatAmountForDisplay(balance)}</strong>
-          )}
+          <strong>Balance: {formatAmountForDisplay(entrySetBalance)}</strong>
         </td>
         <td>
           <strong>{formatAmountForDisplay(totalCredit)}</strong>

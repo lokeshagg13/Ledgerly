@@ -9,27 +9,7 @@ import ErrorImage from "../../../../images/chart-error.png";
 
 function ViewEntrySetTable() {
   const { entrySetDataRows } = useContext(ViewEntrySetContext);
-  const { overallBalanceError } = useContext(FirmDashboardContext);
-
-  useEffect(() => {
-    if (overallBalanceError) {
-      toast.error(overallBalanceError, {
-        position: "top-center",
-        autoClose: 10000,
-      });
-      return;
-    }
-  }, [overallBalanceError]);
-
-  if (overallBalanceError) {
-    return (
-      <div className="balance-error">
-        <img src={ErrorImage} alt="" width={150} height="auto" />
-        <p>{overallBalanceError}</p>
-      </div>
-    );
-  }
-
+  
   return (
     <div className="view-entry-set-table-wrapper" tabIndex={0}>
       <table className="table table-bordered view-entry-set-table">

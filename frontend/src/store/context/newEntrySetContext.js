@@ -14,6 +14,7 @@ const COLS = ["type", "head", "credit", "debit"];   // will also affect ref orde
 const NewEntrySetContext = createContext({
     entrySetDate: null,
     entrySetDataRows: [],
+    entrySetBalance: 0,
     menuPosition: null,
     clickedEntryRow: null,
     entryInputFieldRefs: [],
@@ -21,6 +22,7 @@ const NewEntrySetContext = createContext({
     inputFieldErrorsMap: {},
     errorSavingEntrySet: null,
     setEntrySetDate: (newVal) => { },
+    setEntrySetBalance: (newVal) => { },
     findFirstEmptyRowIndex: () => { },
     handleInsertEntryRow: (atIdx) => { },
     handleDeleteEntryRow: (atIdx) => { },
@@ -47,6 +49,7 @@ export const NewEntrySetContextProvider = ({ children }) => {
         credit: "",
         debit: "",
     })));
+    const [entrySetBalance, setEntrySetBalance] = useState(0);
     const [pendingFocus, setPendingFocus] = useState(null);
     const [menuPosition, setMenuPosition] = useState(null);
     const [clickedEntryRow, setClickedEntryRow] = useState(null);
@@ -489,7 +492,8 @@ export const NewEntrySetContextProvider = ({ children }) => {
                     type: r.type === "C" ? "credit" : "debit",
                     headId: r.headId,
                     amount: parseFloat(r.credit || r.debit)
-                }))
+                })),
+                balance: entrySetBalance
             };
             await axiosPrivate.post("/user/entrySet", JSON.stringify(payload));
             toast.success("Entry set saved successfully!", { position: "top-center", autoClose: 5000 });
@@ -542,6 +546,7 @@ export const NewEntrySetContextProvider = ({ children }) => {
     const currentContextValue = {
         entrySetDate,
         entrySetDataRows,
+        entrySetBalance,
         menuPosition,
         clickedEntryRow,
         entryInputFieldRefs,
@@ -549,6 +554,7 @@ export const NewEntrySetContextProvider = ({ children }) => {
         inputFieldErrorsMap,
         errorSavingEntrySet,
         setEntrySetDate,
+        setEntrySetBalance,
         findFirstEmptyRowIndex,
         handleInsertEntryRow,
         handleDeleteEntryRow,

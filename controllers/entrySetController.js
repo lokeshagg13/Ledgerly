@@ -10,7 +10,7 @@ const { normalizeDate } = require("./utils/formatters");
  */
 exports.createEntrySet = async (req, res) => {
     try {
-        const { date, entries } = req.body;
+        const { date, entries, balance } = req.body;
         const userId = req.userId;
 
         // Basic input validations
@@ -83,6 +83,11 @@ exports.createEntrySet = async (req, res) => {
             headIds.push(headId);
         }
 
+        // Validate balance
+        if (!balance) {
+            return res.status(400).json({ error: "Balance is required." });
+        }
+
         // Serial continuity check
         const expectedSerials = Array.from({ length: entries.length }, (_, idx) => idx + 1);
         for (const serial of expectedSerials) {
@@ -105,7 +110,8 @@ exports.createEntrySet = async (req, res) => {
         const newEntry = new EntrySetModel({
             userId,
             date: entrySetDate,
-            entries
+            entries,
+            balance
         });
 
         await newEntry.save();
@@ -170,7 +176,8 @@ exports.getAllEntriesForEntrySet = async (req, res) => {
 
         return res.status(200).json({
             date: entrySet.date,
-            entries: entrySet.entries
+            entries: entrySet.entries,
+            balance: entrySet.balance
         });
     } catch (error) {
         console.error("Error fetching entries for an entry set:", error);
