@@ -1,7 +1,7 @@
-import { formatAmountWithCommas } from "../../../../../utils/formatUtils";
+import { formatAmountForDisplay } from "../../../../../utils/formatUtils";
 
 function ViewEntrySetTableRow({ data }) {
-  const { id, sno, type, head, debit, credit } = data;
+  const { id, sno, type, headName, debit, credit } = data;
 
   return (
     <tr key={id}>
@@ -12,16 +12,26 @@ function ViewEntrySetTableRow({ data }) {
         </div>
       </td>
       <td>
-        <div className="view-entry-set-table-row-field head-field">{head}</div>
+        <div className="view-entry-set-table-row-field head-field">
+          {headName}
+        </div>
       </td>
       <td>
         <div className="view-entry-set-table-row-field credit-field">
-          {credit ? formatAmountWithCommas(credit) : "-"}
+          {credit ? (
+            formatAmountForDisplay(credit)
+          ) : (
+            <div className="no-amt"></div>
+          )}
         </div>
       </td>
       <td>
         <div className="view-entry-set-table-row-field debit-field">
-          {debit ? formatAmountWithCommas(debit) : "-"}
+          {debit ? (
+            formatAmountForDisplay(debit)
+          ) : (
+            <div className="no-amt"></div>
+          )}
         </div>
       </td>
     </tr>

@@ -1,7 +1,8 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import { axiosPrivate } from "../../api/axios";
+import HeadsContext from "./headsContext";
 
 const ViewEntrySetContext = createContext({
     isLoadingEntrySetDetails: false,
@@ -13,6 +14,7 @@ const ViewEntrySetContext = createContext({
 });
 
 export const ViewEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate, children }) => {
+    const { heads } = useContext(HeadsContext);
     const [entrySetDate, setEntrySetDate] = useState(new Date());
     const [entrySetDataRows, setEntrySetDataRows] = useState([]);
     const [isLoadingEntrySetDetails, setIsLoadingEntrySetDetails] = useState(false);
@@ -25,7 +27,17 @@ export const ViewEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
             const res = await axiosPrivate.get(`/user/entrySet/${entrySetId}`);
             if (res?.data) {
                 setEntrySetDate(res.data.date);
-                setEntrySetDataRows(res.data.entries);
+                const formattedEntries = res.data.entries.map((entry) => ({
+                    sno: entry.serial,
+                    type: entry.type,
+                    headId: entry.headId,
+                    headName: heads.find((head) => head._id === entry.headId)?.name,
+                    credit: entry.amount && entry.type === "credit" ? entry.amount : "",
+                    debit: entry.amount && entry.type === "debit" ? entry.amount : "",
+                }));
+                const sortedEntries = formattedEntries.sort((a, b) => a.serial - b.serial);
+                console.log(sortedEntries)
+                setEntrySetDataRows(sortedEntries);
             }
             if (manual) {
                 toast.success("Refresh completed!", { position: "top-center", autoClose: 1000 });
@@ -56,9 +68,10 @@ export const ViewEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
     }
 
     useEffect(() => {
+        if (heads) return;
         fetchEntrySetDetails();
         // eslint-disable-next-line
-    }, []);
+    }, [heads]);
 
     const currentContextValue = {
         isLoadingEntrySetDetails,

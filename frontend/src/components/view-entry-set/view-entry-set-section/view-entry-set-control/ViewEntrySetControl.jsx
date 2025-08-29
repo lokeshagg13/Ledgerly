@@ -17,7 +17,7 @@ function ViewEntrySetControl() {
         type="button"
         className="view-entry-set-control-btn btn-entry-sets"
         title="View all entry sets"
-        // onClick={() => handleOpenClearConfirmModal()}
+        onClick={() => handleNavigateToPath('/entry-sets')}
       >
         View all entry sets
       </Button>
