@@ -5794,13 +5794,13 @@ body,
 
 /* #region - Entry sets page */
 .entry-sets-page {
-  max-width: 600px;
+  max-width: 1000px;
   margin: 2rem auto;
   padding: 0;
   padding-bottom: 1rem;
 }
 
-@media (max-width: 632px) {
+@media (max-width: 1032px) {
   .entry-sets-page {
     margin-left: 1rem;
     margin-right: 1rem;
@@ -5834,6 +5834,8 @@ body,
   min-width: max-content;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 1rem;
   padding: 1rem 0;
 }
@@ -5898,6 +5900,7 @@ body,
   align-items: center;
   justify-content: center;
   margin-top: 0.75rem;
+  max-width: 632px;
 }
 
 .entry-sets-table {
@@ -5941,6 +5944,11 @@ body,
 /* #region - Entry set row */
 .entry-set-row {
   transition: background-color 0.2s ease;
+}
+
+.entry-set-row td {
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 .entry-set-row td:hover {

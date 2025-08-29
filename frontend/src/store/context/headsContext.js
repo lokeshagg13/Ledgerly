@@ -4,9 +4,9 @@ import { toast } from "react-toastify";
 import { axiosPrivate } from "../../api/axios";
 
 const HeadsContext = createContext({
+    isLoadingHeads: false,
     heads: [],
     selectedHeads: [],
-    isLoadingHeads: false,
     errorFetchingHeads: null,
     isAddHeadModalVisible: false,
     isDeleteSelectedHeadsModalVisible: false,
@@ -20,9 +20,9 @@ const HeadsContext = createContext({
 });
 
 export const HeadsProvider = ({ children }) => {
+    const [isLoadingHeads, setIsLoadingHeads] = useState(false);
     const [heads, setHeads] = useState([]);
     const [selectedHeads, setSelectedHeads] = useState([]);
-    const [isLoadingHeads, setIsLoadingHeads] = useState(false);
     const [errorFetchingHeads, setErrorFetchingHeads] = useState(null);
     const [isAddHeadModalVisible, setIsAddHeadModalVisible] = useState(false);
     const [isDeleteSelectedHeadsModalVisible, setIsDeleteSelectedHeadsModalVisible] = useState(false);
@@ -94,9 +94,9 @@ export const HeadsProvider = ({ children }) => {
     }, []);
 
     const currentHeadsContext = {
+        isLoadingHeads,
         heads,
         selectedHeads,
-        isLoadingHeads,
         errorFetchingHeads,
         isAddHeadModalVisible,
         isDeleteSelectedHeadsModalVisible,

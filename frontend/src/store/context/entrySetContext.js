@@ -7,14 +7,21 @@ import { toast } from "react-toastify";
 const EntrySetContext = createContext({
     isLoadingEntrySets: false,
     entrySets: [],
+    selectedEntrySets: [],
     errorFetchingEntrySets: null,
-    fetchEntrySets: async (manual) => { }
+    isDeleteSelectedEntrySetsModalVisible: false,
+    fetchEntrySets: async (manual) => { },
+    handleToggleEntrySetSelected: (entrySetId) => { },
+    handleOpenDeleteSelectedEntrySetsModal: () => { },
+    handleCloseDeleteSelectedEntrySetsModal: () => { },
 });
 
 export const EntrySetContextProvider = ({ children }) => {
     const [isLoadingEntrySets, setIsLoadingEntrySets] = useState(false);
     const [entrySets, setEntrySets] = useState([]);
+    const [selectedEntrySets, setSelectedEntrySets] = useState([]);
     const [errorFetchingEntrySets, setErrorFetchingEntrySets] = useState(null);
+    const [isDeleteSelectedEntrySetsModalVisible, setIsDeleteSelectedEntrySetsModalVisible] = useState(false);
 
     async function fetchEntrySets(manual = false) {
         setErrorFetchingEntrySets(null);
@@ -22,6 +29,7 @@ export const EntrySetContextProvider = ({ children }) => {
         try {
             const res = await axiosPrivate.get("/user/entrySet");
             if (res?.data) setEntrySets(res.data);
+            setSelectedEntrySets([]);
             if (manual) {
                 toast.success("Refresh completed.", {
                     autoClose: 1000,
@@ -49,6 +57,22 @@ export const EntrySetContextProvider = ({ children }) => {
         }
     }
 
+    function handleToggleEntrySetSelected(entrySetId) {
+        setSelectedEntrySets((prev) =>
+            prev.includes(entrySetId)
+                ? prev.filter((c) => c !== entrySetId)
+                : [...prev, entrySetId]
+        );
+    }
+
+    function handleOpenDeleteSelectedEntrySetsModal() {
+        setIsDeleteSelectedEntrySetsModalVisible(true);
+    }
+
+    function handleCloseDeleteSelectedEntrySetsModal() {
+        setIsDeleteSelectedEntrySetsModalVisible(false);
+    }
+
     useEffect(() => {
         fetchEntrySets();
         // eslint-disable-next-line
@@ -57,8 +81,13 @@ export const EntrySetContextProvider = ({ children }) => {
     const currentContextValue = {
         isLoadingEntrySets,
         entrySets,
+        selectedEntrySets,
         errorFetchingEntrySets,
-        fetchEntrySets
+        isDeleteSelectedEntrySetsModalVisible,
+        fetchEntrySets,
+        handleToggleEntrySetSelected,
+        handleOpenDeleteSelectedEntrySetsModal,
+        handleCloseDeleteSelectedEntrySetsModal
     };
 
     return (

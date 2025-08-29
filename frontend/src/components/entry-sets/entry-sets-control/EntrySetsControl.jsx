@@ -2,10 +2,17 @@ import { useContext } from "react";
 import { Button } from "react-bootstrap";
 import useAppNavigate from "../../../store/hooks/useAppNavigate";
 import EntrySetContext from "../../../store/context/entrySetContext";
+import DeleteSelectedEntrySetsModal from "../entry-sets-modals/DeleteSelectedEntrySetsModal";
 
 function EntrySetsControl() {
   const { handleNavigateToPath } = useAppNavigate();
-  const { isLoadingEntrySets, fetchEntrySets } = useContext(EntrySetContext);
+  const {
+    isLoadingEntrySets,
+    isDeleteSelectedEntrySetsModalVisible,
+    selectedEntrySets,
+    handleOpenDeleteSelectedEntrySetsModal,
+    fetchEntrySets,
+  } = useContext(EntrySetContext);
   return (
     <div className="entry-sets-controls">
       <Button
@@ -16,6 +23,15 @@ function EntrySetsControl() {
         disabled={isLoadingEntrySets}
       >
         Add a new daily entry
+      </Button>
+      <Button
+        type="button"
+        className="control-btn btn-outline-light"
+        aria-label="Delete selected entry sets"
+        onClick={handleOpenDeleteSelectedEntrySetsModal}
+        disabled={selectedEntrySets.length === 0}
+      >
+        Delete selected
       </Button>
       <Button
         type="button"
@@ -38,6 +54,9 @@ function EntrySetsControl() {
           "Refresh Entry Sets"
         )}
       </Button>
+      {isDeleteSelectedEntrySetsModalVisible && (
+        <DeleteSelectedEntrySetsModal />
+      )}
     </div>
   );
 }

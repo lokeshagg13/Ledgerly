@@ -1,9 +1,12 @@
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { Button, Form } from "react-bootstrap";
 import useAppNavigate from "../../../../store/hooks/useAppNavigate";
+import EntrySetContext from "../../../../store/context/entrySetContext";
 
 function EntrySetRow({ entrySetId, entrySetDate }) {
   const { handleNavigateToPath } = useAppNavigate();
+  const { selectedEntrySets, handleToggleEntrySetSelected } =
+    useContext(EntrySetContext);
   const formattedDate = useMemo(() => {
     const date = new Date(entrySetDate);
     return date.toLocaleDateString("en-IN", {
@@ -26,6 +29,8 @@ function EntrySetRow({ entrySetId, entrySetDate }) {
           type="checkbox"
           className="entry-set-checkbox"
           id={`entrySetCheckbox${entrySetId}`}
+          checked={selectedEntrySets.includes(entrySetId)}
+          onChange={() => handleToggleEntrySetSelected(entrySetId)}
           aria-label={`Select entry set for ${formattedDate}`}
         />
       </td>

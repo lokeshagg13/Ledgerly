@@ -178,4 +178,71 @@ exports.getAllEntriesForEntrySet = async (req, res) => {
     }
 };
 
+/**
+ * Delete single entry set by entry set ID
+ */
+exports.deleteSingleEntrySet = async (req, res) => {
+    try {
+        const { entrySetId } = req.params;
+
+        if (!entrySetId || !mongoose.Types.ObjectId.isValid(entrySetId)) {
+            return res.status(400).json({ error: "Invalid or missing entrySetId." });
+        }
+
+        const deleted = await EntrySetModel.findOneAndDelete({
+            _id: entrySetId,
+            userId: req.userId
+        });
+
+        if (!deleted) {
+            return res.status(404).json({ error: "Entry set not found." });
+        }
+
+        return res.status(200).json({ message: "Entry set deleted successfully." });
+    } catch (error) {
+        console.error("Error deleting single entry set:", error);
+        res.status(500).json({ error: "Error deleting entry set: " + error.message });
+    }
+};
+
+/**
+ * Delete multiple entry sets by entry set IDs
+ */
+exports.deleteMultipleEntrySets = async (req, res) => {
+    try {
+        let { entrySetIds } = req.body;
+
+        if (!entrySetIds) {
+            return res.status(400).json({ error: "entrySetIds is required." });
+        }
+        if (!Array.isArray(entrySetIds)) {
+            entrySetIds = [entrySetIds];
+        }
+
+        // Filter out invalid ObjectIds to avoid runtime errors
+        entrySetIds = entrySetIds.filter(id => mongoose.Types.ObjectId.isValid(id));
+        if (entrySetIds.length === 0) {
+            return res.status(400).json({ error: "No valid entrySetIds provided." });
+        }
+
+        const deletedResult = await EntrySetModel.deleteMany({
+            _id: { $in: entrySetIds },
+            userId: req.userId
+        });
+
+        if (deletedResult.deletedCount === 0) {
+            return res.status(404).json({ error: "No matching entry sets found to delete." });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: `${deletedResult.deletedCount} entry set(s) deleted successfully.`
+        });
+    } catch (error) {
+        console.error("Error deleting multiple entry sets:", error);
+        res.status(500).json({ error: "Error deleting entry sets: " + error.message });
+    }
+};
+
+
 

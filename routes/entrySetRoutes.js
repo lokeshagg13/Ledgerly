@@ -11,5 +11,7 @@ router.use(verifyFirmUser);
 router.post("/", entrySetController.createEntrySet);
 router.get("/", entrySetController.getAllEntrySets);
 router.get("/:id", entrySetController.getAllEntriesForEntrySet);
+router.delete("/:entrySetId", entrySetController.deleteSingleEntrySet);
+router.delete("/", entrySetController.deleteMultipleEntrySets);
 
 module.exports = router;
