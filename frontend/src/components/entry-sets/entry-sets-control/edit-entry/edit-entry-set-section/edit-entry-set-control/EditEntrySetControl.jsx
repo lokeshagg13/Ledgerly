@@ -1,11 +1,14 @@
 import { useContext, useState } from "react";
 import { Button } from "react-bootstrap";
 import NewEntrySetClearConfirmModal from "./edit-entry-set-clear-confirm-modal/EditEntrySetClearConfirmModal";
-import NewEntrySetContext from "../../../../../../store/context/newEntrySetContext";
+import EditEntrySetContext from "../../../../../../store/context/editEntrySetContext";
 
 function EditEntrySetControl() {
-  const { isSavingNewEntrySet, handleClearEntryRows, handleSaveNewEntrySet } =
-    useContext(NewEntrySetContext);
+  const {
+    isUpdatingEntrySetDetails,
+    handleClearEntryRows,
+    handleUpdateEntrySetDetails,
+  } = useContext(EditEntrySetContext);
   const [isClearConfirmModalVisible, setIsClearConfirmModalVisible] =
     useState(false);
 
@@ -23,34 +26,34 @@ function EditEntrySetControl() {
   };
 
   return (
-    <div className="new-entry-set-control">
+    <div className="edit-entry-set-control">
       <Button
         type="button"
-        className="new-entry-set-control-btn btn-clear"
+        className="edit-entry-set-control-btn btn-clear"
         title="Clear all"
-        disabled={isSavingNewEntrySet}
+        disabled={isUpdatingEntrySetDetails}
         onClick={() => handleOpenClearConfirmModal()}
       >
         Clear All
       </Button>
       <Button
         type="button"
-        className="new-entry-set-control-btn btn-save"
-        title="Save this entry set"
-        disabled={isSavingNewEntrySet}
-        onClick={handleSaveNewEntrySet}
+        className="edit-entry-set-control-btn btn-save"
+        title="Update this entry set"
+        disabled={isUpdatingEntrySetDetails}
+        onClick={handleUpdateEntrySetDetails}
       >
-        {isSavingNewEntrySet ? (
+        {isUpdatingEntrySetDetails ? (
           <>
             <span
               className="spinner-border spinner-border-sm me-2"
               role="status"
               aria-hidden="true"
             ></span>
-            Saving...
+            Updating...
           </>
         ) : (
-          "Save Entry Set"
+          "Update Entry Set"
         )}
       </Button>
       {isClearConfirmModalVisible && (

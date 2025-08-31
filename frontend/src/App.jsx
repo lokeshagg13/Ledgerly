@@ -24,6 +24,7 @@ import EntrySetsPage from "./pages/entry-sets-page/EntrySetsPage";
 import UploadHeadsPage from "./pages/upload-heads-page/UploadHeadsPage";
 import NewEntrySetPage from "./pages/new-entry-set-page/NewEntrySetPage";
 import ViewEntrySetPage from "./pages/view-entry-set-page/ViewEntrySetPage";
+import EditEntrySetPage from "./pages/edit-entry-set-page/EditEntrySetPage";
 
 function App() {
   const { auth } = useAuth();
@@ -167,6 +168,12 @@ function App() {
                 path="/entry-sets/view"
                 element={
                   auth?.type === "firm" ? <ViewEntrySetPage /> : <Page404 />
+                }
+              />
+              <Route
+                path="/entry-sets/edit"
+                element={
+                  auth?.type === "firm" ? <EditEntrySetPage /> : <Page404 />
                 }
               />
             </Route>

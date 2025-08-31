@@ -34,7 +34,7 @@ function NewEntrySetTableFooter() {
   useEffect(() => {
     let adjustedCredit = totalCredit;
     let adjustedDebit = totalDebit;
-    const cashRow = entrySetDataRows.find((row) => row.head === "CASH");
+    const cashRow = entrySetDataRows.find((row) => row.headName === "CASH");
     if (cashRow) {
       const cashCredit = parseFloat(cashRow.credit) || 0;
       const cashDebit = parseFloat(cashRow.debit) || 0;

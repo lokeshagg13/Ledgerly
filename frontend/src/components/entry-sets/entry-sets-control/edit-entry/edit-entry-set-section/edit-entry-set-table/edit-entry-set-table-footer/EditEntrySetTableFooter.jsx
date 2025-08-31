@@ -1,40 +1,37 @@
 import { useContext, useEffect, useMemo } from "react";
 
-import FirmDashboardContext from "../../../../../../../store/context/firmDashboardContext";
-import NewEntrySetContext from "../../../../../../../store/context/newEntrySetContext";
+import EditEntrySetContext from "../../../../../../../store/context/editEntrySetContext";
 import { formatAmountForDisplay } from "../../../../../../../utils/formatUtils";
 
 function EditEntrySetTableFooter() {
-  const { entrySetDataRows, entrySetBalance, setEntrySetBalance } =
-    useContext(NewEntrySetContext);
-  const { isLoadingOverallBalance, overallBalance } =
-    useContext(FirmDashboardContext);
-
-  useEffect(() => {
-    setEntrySetBalance(overallBalance.amount);
-  }, []);
+  const {
+    editableEntrySetDataRows,
+    editableEntrySetBalance,
+    entrySetOpeningBalance,
+    setEditableEntrySetBalance,
+  } = useContext(EditEntrySetContext);
 
   const totalCredit = useMemo(
     () =>
-      entrySetDataRows.reduce(
+      editableEntrySetDataRows.reduce(
         (sum, row) => sum + (parseFloat(row.credit) || 0),
         0
       ),
-    [entrySetDataRows]
+    [editableEntrySetDataRows]
   );
   const totalDebit = useMemo(
     () =>
-      entrySetDataRows.reduce(
+      editableEntrySetDataRows.reduce(
         (sum, row) => sum + (parseFloat(row.debit) || 0),
         0
       ),
-    [entrySetDataRows]
+    [editableEntrySetDataRows]
   );
 
   useEffect(() => {
     let adjustedCredit = totalCredit;
     let adjustedDebit = totalDebit;
-    const cashRow = entrySetDataRows.find((row) => row.head === "CASH");
+    const cashRow = editableEntrySetDataRows.find((row) => row.headName === "CASH");
     if (cashRow) {
       const cashCredit = parseFloat(cashRow.credit) || 0;
       const cashDebit = parseFloat(cashRow.debit) || 0;
@@ -44,7 +41,9 @@ function EditEntrySetTableFooter() {
         adjustedDebit -= cashDebit;
       }
     }
-    setEntrySetBalance(overallBalance.amount + adjustedCredit - adjustedDebit);
+    setEditableEntrySetBalance(
+      entrySetOpeningBalance + adjustedCredit - adjustedDebit
+    );
   }, [totalCredit, totalDebit]);
 
   return (
@@ -53,15 +52,9 @@ function EditEntrySetTableFooter() {
         <td></td>
         <td></td>
         <td>
-          {isLoadingOverallBalance ? (
-            <span
-              className="spinner-border spinner-border-sm me-2"
-              role="status"
-              aria-hidden="true"
-            ></span>
-          ) : (
-            <strong>Balance: {formatAmountForDisplay(entrySetBalance)}</strong>
-          )}
+          <strong>
+            Balance: {formatAmountForDisplay(editableEntrySetBalance)}
+          </strong>
         </td>
         <td>
           <strong>{formatAmountForDisplay(totalCredit)}</strong>

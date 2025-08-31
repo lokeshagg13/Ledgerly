@@ -9,7 +9,7 @@ import HeadsContext from "./headsContext";
 
 const DEFAULT_ROWS = 20;
 const MAX_ROWS = 1000;
-const COLS = ["type", "head", "credit", "debit"];   // will also affect ref order in row component of new entry set table
+const COLS = ["type", "headName", "credit", "debit"];   // will also affect ref order in row component of new entry set table
 
 const NewEntrySetContext = createContext({
     entrySetDate: null,
@@ -44,7 +44,7 @@ export const NewEntrySetContextProvider = ({ children }) => {
         id: uuidv4(),
         sno: i + 1,
         type: "",
-        head: "",
+        headName: "",
         headId: "",
         credit: "",
         debit: "",
@@ -74,7 +74,7 @@ export const NewEntrySetContextProvider = ({ children }) => {
                 id: uuidv4(),
                 sno: prev.length + 1,
                 type: "",
-                head: "",
+                headName: "",
                 headId: "",
                 credit: "",
                 debit: "",
@@ -114,10 +114,10 @@ export const NewEntrySetContextProvider = ({ children }) => {
 
     function findFirstEmptyRowIndex() {
         const idx = entrySetDataRows.findIndex(row => {
-            const { type, head, debit, credit } = row;
+            const { type, headName, debit, credit } = row;
             return (
                 (!type || type === "") &&
-                (!head || head === "") &&
+                (!headName || headName === "") &&
                 (!credit || credit === "") &&
                 (!debit || debit === "")
             );
@@ -141,7 +141,7 @@ export const NewEntrySetContextProvider = ({ children }) => {
         });
 
         let newValue = value;
-        if (field === "head") {
+        if (field === "headName") {
             if (value?.trim()?.toLowerCase() === "cash") {
                 const status = handleInsertCashEntryRow(rowIdx);
                 if (!status) return;
@@ -149,7 +149,7 @@ export const NewEntrySetContextProvider = ({ children }) => {
             const matchedHead = heads.find(h => h.name === value);
             setEntrySetDataRows((prev) =>
                 prev.map((row, i) =>
-                    i === rowIdx ? { ...row, head: value, headId: matchedHead ? matchedHead._id : null } : row
+                    i === rowIdx ? { ...row, headName: value, headId: matchedHead ? matchedHead._id : null } : row
                 )
             );
             return;
@@ -200,8 +200,8 @@ export const NewEntrySetContextProvider = ({ children }) => {
         });
         if (currentRow === -1 || currentCol === -1) return;
         if (e.key === "Enter") {
-            if (COLS[currentCol] === "head") {
-                const currentValue = entrySetDataRows[currentRow].head.trim().toLowerCase();
+            if (COLS[currentCol] === "headName") {
+                const currentValue = entrySetDataRows[currentRow].headName.trim().toLowerCase();
                 if (currentValue === "cash") {
                     const status = handleInsertCashEntryRow(currentRow);
                     if (!status) return;
@@ -263,7 +263,7 @@ export const NewEntrySetContextProvider = ({ children }) => {
                 }
             }
         }
-        if (e.key === "ArrowUp" && e.shiftKey && currentCol !== COLS.indexOf("head")) {
+        if (e.key === "ArrowUp" && e.shiftKey && currentCol !== COLS.indexOf("headName")) {
             e.preventDefault();
             let prevRow = currentRow - 1;
             while (prevRow >= 0) {
@@ -274,7 +274,7 @@ export const NewEntrySetContextProvider = ({ children }) => {
                 prevRow--;
             }
         }
-        if (e.key === "ArrowDown" && e.shiftKey && currentCol !== COLS.indexOf("head")) {
+        if (e.key === "ArrowDown" && e.shiftKey && currentCol !== COLS.indexOf("headName")) {
             e.preventDefault();
             let nextRow = currentRow + 1;
             while (nextRow < entrySetDataRows.length) {
@@ -319,7 +319,7 @@ export const NewEntrySetContextProvider = ({ children }) => {
 
     function handleInsertCashEntryRow(rowIdx) {
         const alreadyExists = entrySetDataRows.some((r, idx) =>
-            idx !== rowIdx && r.head.trim().toLowerCase() === "cash"
+            idx !== rowIdx && r.headName.trim().toLowerCase() === "cash"
         );
         if (alreadyExists) {
             toast.error("Cash entry already exists", { position: "top-center", autoClose: 5000 });
@@ -332,7 +332,7 @@ export const NewEntrySetContextProvider = ({ children }) => {
         if (rowIdx < entrySetDataRows.length) {
             setEntrySetDataRows(prev =>
                 prev.map((row, idx) =>
-                    idx === rowIdx ? { ...row, head: "CASH", headId: cashHeadId, type, debit, credit } : row
+                    idx === rowIdx ? { ...row, headName: "CASH", headId: cashHeadId, type, debit, credit } : row
                 )
             );
         } else {
@@ -341,7 +341,7 @@ export const NewEntrySetContextProvider = ({ children }) => {
                 {
                     sno: rowIdx + 1,
                     type,
-                    head: "CASH",
+                    headName: "CASH",
                     headId: cashHeadId,
                     debit,
                     credit
@@ -356,7 +356,7 @@ export const NewEntrySetContextProvider = ({ children }) => {
         setEntrySetDataRows(prev => prev.map((_, i) => ({
             sno: i + 1,
             type: "",
-            head: "",
+            headName: "",
             headId: "",
             credit: "",
             debit: "",
@@ -368,7 +368,7 @@ export const NewEntrySetContextProvider = ({ children }) => {
 
     function getNonEmptyEntryRows() {
         return entrySetDataRows.filter(row =>
-            row.head !== "" || row.type !== "" || row.credit !== "" || row.debit !== ""
+            row.headName !== "" || row.type !== "" || row.credit !== "" || row.debit !== ""
         );
     }
 
@@ -407,9 +407,9 @@ export const NewEntrySetContextProvider = ({ children }) => {
         const serials = [];
         rows.forEach((row) => {
             const rowErrors = {};
-            const { id, sno, type, head, credit, debit } = row;
+            const { id, sno, type, headName, credit, debit } = row;
 
-            if (!head.trim()) rowErrors.head = "Head is required.";
+            if (!headName.trim()) rowErrors.headName = "Head is required.";
             if (!type.trim()) rowErrors.type = "Type is required.";
             const upperType = type.trim().toUpperCase();
             if (type && !(upperType === "C" || upperType === "D")) {
@@ -454,7 +454,7 @@ export const NewEntrySetContextProvider = ({ children }) => {
         }
 
         // Must contain CASH entry
-        const hasCash = rows.some(r => r.head.trim().toLowerCase() === "cash");
+        const hasCash = rows.some(r => r.headName.trim().toLowerCase() === "cash");
         if (!hasCash) {
             setErrorSavingEntrySet("At least one cash entry is required.");
             return false;

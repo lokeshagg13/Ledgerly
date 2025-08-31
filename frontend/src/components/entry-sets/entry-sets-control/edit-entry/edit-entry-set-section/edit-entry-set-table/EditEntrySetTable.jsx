@@ -10,8 +10,12 @@ import EditEntrySetRowContextMenu from "./edit-entry-set-row-context-menu/EditEn
 import ErrorImage from "../../../../../../images/chart-error.png";
 
 function EditEntrySetTable() {
-  const { entrySetDataRows, menuPosition, clickedEntryRow, handleKeyPress } =
-    useContext(EditEntrySetContext);
+  const {
+    editableEntrySetDataRows,
+    menuPosition,
+    clickedEntryRow,
+    handleKeyPress,
+  } = useContext(EditEntrySetContext);
   const { overallBalanceError } = useContext(FirmDashboardContext);
   const { checkIfContextMenuVisible } = useContext(ContextMenuContext);
 
@@ -51,7 +55,7 @@ function EditEntrySetTable() {
           </tr>
         </thead>
         <tbody>
-          {entrySetDataRows.map((rowData, idx) => (
+          {editableEntrySetDataRows.map((rowData, idx) => (
             <EditEntrySetTableRow key={idx} idx={idx} data={rowData} />
           ))}
         </tbody>

@@ -6,7 +6,7 @@ import EditEntrySetContext from "../../../../../../store/context/editEntrySetCon
 function EditEntrySetHeader() {
   const { auth } = useAuth();
 
-  const { getFormattedEntrySetDate } = useContext(EditEntrySetContext);
+  const { formattedEntrySetDate } = useContext(EditEntrySetContext);
 
   return (
     <div className="edit-entry-set-header">
@@ -17,7 +17,7 @@ function EditEntrySetHeader() {
       <div className="edit-entry-set-section">
         <label className="edit-entry-set-label">Date:</label>
         <div className="edit-entry-set-value">
-          {getFormattedEntrySetDate() || "None"}
+          {formattedEntrySetDate || "None"}
         </div>
       </div>
     </div>

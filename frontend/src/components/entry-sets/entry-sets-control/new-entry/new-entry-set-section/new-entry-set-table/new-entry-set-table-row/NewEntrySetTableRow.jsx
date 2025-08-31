@@ -26,7 +26,7 @@ function WithErrorTooltip({ children, error }) {
 }
 
 function NewEntrySetTableRow({ idx, data }) {
-  const { id, sno, type, head, debit, credit } = data;
+  const { id, sno, type, headName, debit, credit } = data;
   const {
     entryInputFieldRefs,
     handleModifyFieldValue,
@@ -40,7 +40,7 @@ function NewEntrySetTableRow({ idx, data }) {
 
   const isDebitActive = type === "D";
   const isCreditActive = type === "C";
-  const isCashRow = head?.trim()?.toLowerCase() === "cash";
+  const isCashRow = headName?.trim()?.toLowerCase() === "cash";
 
   return (
     <tr
@@ -69,18 +69,18 @@ function NewEntrySetTableRow({ idx, data }) {
           />
         </WithErrorTooltip>
       </td>
-      <td className={getEntryRowFieldError(id, "head") ? "erroneous" : ""}>
-        <WithErrorTooltip error={getEntryRowFieldError(id, "head")}>
-          <div className={getEntryRowFieldError(id, "head") ? "shake" : ""}>
+      <td className={getEntryRowFieldError(id, "headName") ? "erroneous" : ""}>
+        <WithErrorTooltip error={getEntryRowFieldError(id, "headName")}>
+          <div className={getEntryRowFieldError(id, "headName") ? "shake" : ""}>
             <SearchInput
               ref={entryInputFieldRefs.current[idx]?.[1]}
               id={`entryHead${idx}`}
               options={headNames}
-              value={head}
+              value={headName}
               onChange={(_, newValue) =>
-                handleModifyFieldValue(idx, "head", newValue || "")
+                handleModifyFieldValue(idx, "headName", newValue || "")
               }
-              isInvalid={!!getEntryRowFieldError(id, "head")}
+              isInvalid={!!getEntryRowFieldError(id, "headName")}
             />
           </div>
         </WithErrorTooltip>

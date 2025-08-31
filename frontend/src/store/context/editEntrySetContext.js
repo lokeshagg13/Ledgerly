@@ -9,14 +9,17 @@ import HeadsContext from "./headsContext";
 
 const MIN_ROWS = 20;
 const MAX_ROWS = 1000;
-const COLS = ["type", "head", "credit", "debit"];
+const COLS = ["type", "headName", "credit", "debit"];
 
 const EditEntrySetContext = createContext({
     isLoadingEntrySetDetails: false,
+    entrySetId: null,
+    formattedEntrySetDate: null,
     entrySetDate: null,
     originalEntrySetDataRows: [],
     originalEntrySetBalance: 0,
     errorFetchingEntrySetDetails: null,
+    entrySetOpeningBalance: 0,
     editableEntrySetDataRows: [],
     editableEntrySetBalance: 0,
     menuPosition: null,
@@ -26,8 +29,7 @@ const EditEntrySetContext = createContext({
     inputFieldErrorsMap: {},
     errorUpdatingEntrySetDetails: null,
     fetchEntrySetDetails: async (manual) => { },
-    getFormattedEntrySetDate: () => { },
-    setEntrySetBalance: (newVal) => { },
+    setEditableEntrySetBalance: (newVal) => { },
     findFirstEmptyRowIndex: () => { },
     handleInsertEntryRow: (atIdx) => { },
     handleDeleteEntryRow: (atIdx) => { },
@@ -38,7 +40,7 @@ const EditEntrySetContext = createContext({
     handleClearEntryRows: () => { },
     handleUpdateEntrySetDetails: async () => { },
     handleResetErrorUpdatingEntrySetDetails: () => { },
-    getEntryRowFieldError: (rowIdx, fieldName) => { },
+    getEntryRowFieldError: (rowId, fieldName) => { },
 });
 
 export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate, children }) => {
@@ -47,6 +49,7 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
 
     const [isLoadingEntrySetDetails, setIsLoadingEntrySetDetails] = useState(false);
     const [entrySetDate, setEntrySetDate] = useState(new Date());
+    const [entrySetOpeningBalance, setEntrySetOpeningBalance] = useState(0);
     const [originalEntrySetDataRows, setOriginalEntrySetDataRows] = useState([]);
     const [originalEntrySetBalance, setOriginalEntrySetBalance] = useState(0);
     const [errorFetchingEntrySetDetails, setErrorFetchingEntrySetDetails] = useState(null);
@@ -60,6 +63,32 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
     const [errorUpdatingEntrySetDetails, setErrorUpdatingEntrySetDetails] = useState(null);
     const entryInputFieldRefs = useRef([]);
 
+    function calculateOpeningBalance(entryRows, finalBalance) {
+        const totalCredit = entryRows.reduce(
+            (sum, row) => sum + (parseFloat(row.credit) || 0),
+            0
+        );
+        const totalDebit = entryRows.reduce(
+            (sum, row) => sum + (parseFloat(row.debit) || 0),
+            0
+        );
+
+        let adjustedCredit = totalCredit;
+        let adjustedDebit = totalDebit;
+
+        const cashRow = entryRows.find(row => row.headName === "CASH");
+        if (cashRow) {
+            const cashCredit = parseFloat(cashRow.credit) || 0;
+            const cashDebit = parseFloat(cashRow.debit) || 0;
+            if (cashCredit > 0) {
+                adjustedCredit -= cashCredit;
+            } else if (cashDebit > 0) {
+                adjustedDebit -= cashDebit;
+            }
+        }
+        return finalBalance - (adjustedCredit - adjustedDebit);
+    }
+
     async function fetchEntrySetDetails(manual = false) {
         setErrorFetchingEntrySetDetails(null);
         setIsLoadingEntrySetDetails(true);
@@ -71,8 +100,9 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
                 setEditableEntrySetBalance(res.data.balance);
 
                 const formattedEntries = res.data.entries.map((entry) => ({
+                    id: entry._id,
                     sno: entry.serial,
-                    type: entry.type,
+                    type: entry.type === "credit" ? "C" : "D",
                     headId: entry.headId,
                     headName: heads.find((head) => head._id === entry.headId)?.name || "",
                     credit: entry.amount && entry.type === "credit" ? entry.amount : "",
@@ -82,6 +112,7 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
                 const sortedEntries = formattedEntries.sort((a, b) => a.sno - b.sno);
                 setOriginalEntrySetDataRows(sortedEntries);
                 setEditableEntrySetDataRows([...sortedEntries]);
+                setEntrySetOpeningBalance(calculateOpeningBalance(sortedEntries, res.data.balance));
             }
             if (manual) {
                 toast.success("Refresh completed!", { position: "top-center", autoClose: 1000 });
@@ -95,10 +126,6 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
         } finally {
             setIsLoadingEntrySetDetails(false);
         }
-    }
-
-    function getFormattedEntrySetDate() {
-        return formattedEntrySetDate;
     }
 
     function handleErrorFetchingEntrySetDetails(error) {
@@ -132,7 +159,7 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
                 id: uuidv4(),
                 sno: prev.length + 1,
                 type: "",
-                head: "",
+                headName: "",
                 headId: "",
                 credit: "",
                 debit: "",
@@ -172,10 +199,10 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
 
     function findFirstEmptyRowIndex() {
         const idx = editableEntrySetDataRows.findIndex(row => {
-            const { type, head, debit, credit } = row;
+            const { type, headName, debit, credit } = row;
             return (
                 (!type || type === "") &&
-                (!head || head === "") &&
+                (!headName || headName === "") &&
                 (!credit || credit === "") &&
                 (!debit || debit === "")
             );
@@ -199,7 +226,7 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
         });
 
         let newValue = value;
-        if (field === "head") {
+        if (field === "headName") {
             if (value?.trim()?.toLowerCase() === "cash") {
                 const status = handleInsertCashEntryRow(rowIdx);
                 if (!status) return;
@@ -207,7 +234,7 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
             const matchedHead = heads.find(h => h.name === value);
             setEditableEntrySetDataRows((prev) =>
                 prev.map((row, i) =>
-                    i === rowIdx ? { ...row, head: value, headId: matchedHead ? matchedHead._id : null } : row
+                    i === rowIdx ? { ...row, headName: value, headId: matchedHead ? matchedHead._id : null } : row
                 )
             );
             return;
@@ -258,8 +285,8 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
         });
         if (currentRow === -1 || currentCol === -1) return;
         if (e.key === "Enter") {
-            if (COLS[currentCol] === "head") {
-                const currentValue = editableEntrySetDataRows[currentRow].head.trim().toLowerCase();
+            if (COLS[currentCol] === "headName") {
+                const currentValue = editableEntrySetDataRows[currentRow].headName.trim().toLowerCase();
                 if (currentValue === "cash") {
                     const status = handleInsertCashEntryRow(currentRow);
                     if (!status) return;
@@ -297,7 +324,7 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
                     nextCol = 0;
                     nextRow++;
                 }
-                if (nextRow >= entrySetDataRows.length) return;
+                if (nextRow >= editableEntrySetDataRows.length) return;
                 if (!isCellDisabled(nextRow, nextCol)) {
                     handleFocusCell(nextRow, nextCol);
                     return;
@@ -321,7 +348,7 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
                 }
             }
         }
-        if (e.key === "ArrowUp" && e.shiftKey && currentCol !== COLS.indexOf("head")) {
+        if (e.key === "ArrowUp" && e.shiftKey && currentCol !== COLS.indexOf("headName")) {
             e.preventDefault();
             let prevRow = currentRow - 1;
             while (prevRow >= 0) {
@@ -332,7 +359,7 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
                 prevRow--;
             }
         }
-        if (e.key === "ArrowDown" && e.shiftKey && currentCol !== COLS.indexOf("head")) {
+        if (e.key === "ArrowDown" && e.shiftKey && currentCol !== COLS.indexOf("headName")) {
             e.preventDefault();
             let nextRow = currentRow + 1;
             while (nextRow < editableEntrySetDataRows.length) {
@@ -377,7 +404,7 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
 
     function handleInsertCashEntryRow(rowIdx) {
         const alreadyExists = editableEntrySetDataRows.some((r, idx) =>
-            idx !== rowIdx && r.head.trim().toLowerCase() === "cash"
+            idx !== rowIdx && r.headName.trim().toLowerCase() === "cash"
         );
         if (alreadyExists) {
             toast.error("Cash entry already exists", { position: "top-center", autoClose: 5000 });
@@ -390,7 +417,7 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
         if (rowIdx < editableEntrySetDataRows.length) {
             setEditableEntrySetDataRows(prev =>
                 prev.map((row, idx) =>
-                    idx === rowIdx ? { ...row, head: "CASH", headId: cashHeadId, type, debit, credit } : row
+                    idx === rowIdx ? { ...row, headName: "CASH", headId: cashHeadId, type, debit, credit } : row
                 )
             );
         } else {
@@ -399,7 +426,7 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
                 {
                     sno: rowIdx + 1,
                     type,
-                    head: "CASH",
+                    headName: "CASH",
                     headId: cashHeadId,
                     debit,
                     credit
@@ -414,7 +441,7 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
         setEditableEntrySetDataRows(prev => prev.map((_, i) => ({
             sno: i + 1,
             type: "",
-            head: "",
+            headName: "",
             headId: "",
             credit: "",
             debit: "",
@@ -426,7 +453,7 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
 
     function getNonEmptyEntryRows() {
         return editableEntrySetDataRows.filter(row =>
-            row.head !== "" || row.type !== "" || row.credit !== "" || row.debit !== ""
+            row.headName !== "" || row.type !== "" || row.credit !== "" || row.debit !== ""
         );
     }
 
@@ -451,9 +478,9 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
         const serials = [];
         rows.forEach((row) => {
             const rowErrors = {};
-            const { id, sno, type, head, credit, debit } = row;
+            const { id, sno, type, headName, credit, debit } = row;
 
-            if (!head.trim()) rowErrors.head = "Head is required.";
+            if (!headName.trim()) rowErrors.headName = "Head is required.";
             if (!type.trim()) rowErrors.type = "Type is required.";
             const upperType = type.trim().toUpperCase();
             if (type && !(upperType === "C" || upperType === "D")) {
@@ -498,7 +525,7 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
         }
 
         // Must contain CASH entry
-        const hasCash = rows.some(r => r.head.trim().toLowerCase() === "cash");
+        const hasCash = rows.some(r => r.headName.trim().toLowerCase() === "cash");
         if (!hasCash) {
             setErrorUpdatingEntrySetDetails("At least one cash entry is required.");
             return false;
@@ -551,11 +578,11 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
 
     function handleErrorUpdatingEntrySetDetails(error) {
         if (!error?.response) {
-            setErrorSavingEntrySet("Apologies for the inconvenience. We couldn’t connect to the server at the moment. This might be a temporary issue. Kindly try again shortly.");
+            setErrorUpdatingEntrySetDetails("Apologies for the inconvenience. We couldn’t connect to the server at the moment. This might be a temporary issue. Kindly try again shortly.");
         } else if (error?.response?.data?.error) {
-            setErrorSavingEntrySet(`Apologies for the inconvenience. There was an error while updating the entry set. ${error?.response?.data?.error}`);
+            setErrorUpdatingEntrySetDetails(`Apologies for the inconvenience. There was an error while updating the entry set. ${error?.response?.data?.error}`);
         } else {
-            setErrorSavingEntrySet("Apologies for the inconvenience. There was some error while updating the entry set. Please try again after some time.");
+            setErrorUpdatingEntrySetDetails("Apologies for the inconvenience. There was some error while updating the entry set. Please try again after some time.");
         }
     }
 
@@ -594,8 +621,11 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
 
     const currentContextValue = {
         isLoadingEntrySetDetails,
+        entrySetId,
+        formattedEntrySetDate,
         entrySetDate,
         errorFetchingEntrySetDetails,
+        entrySetOpeningBalance,
         editableEntrySetDataRows,
         editableEntrySetBalance,
         menuPosition,
@@ -605,15 +635,14 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
         inputFieldErrorsMap,
         errorUpdatingEntrySetDetails,
         fetchEntrySetDetails,
-        getFormattedEntrySetDate,
         setEditableEntrySetBalance,
         findFirstEmptyRowIndex,
-        handleInsertEntryRow,
-        handleDeleteEntryRow,
-        handleInsertCashEntryRow,
         handleModifyFieldValue,
         handleKeyPress,
         handleContextMenuSetup,
+        handleInsertEntryRow,
+        handleDeleteEntryRow,
+        handleInsertCashEntryRow,
         handleClearEntryRows,
         handleUpdateEntrySetDetails,
         handleResetErrorUpdatingEntrySetDetails,

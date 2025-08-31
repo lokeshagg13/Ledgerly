@@ -5,7 +5,7 @@ import ViewEntrySetContext from "../../../../store/context/viewEntrySetContext";
 function ViewEntrySetHeader() {
   const { auth } = useAuth();
 
-  const { getFormattedEntrySetDate } = useContext(ViewEntrySetContext);
+  const { formattedEntrySetDate } = useContext(ViewEntrySetContext);
 
   return (
     <div className="view-entry-set-header">
@@ -16,7 +16,7 @@ function ViewEntrySetHeader() {
       <div className="view-entry-set-section">
         <label className="view-entry-set-label">Date:</label>
         <div className="view-entry-set-value">
-          {getFormattedEntrySetDate() || "None"}
+          {formattedEntrySetDate || "None"}
         </div>
       </div>
     </div>

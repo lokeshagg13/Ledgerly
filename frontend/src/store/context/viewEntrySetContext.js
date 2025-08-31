@@ -6,12 +6,13 @@ import HeadsContext from "./headsContext";
 
 const ViewEntrySetContext = createContext({
     isLoadingEntrySetDetails: false,
+    entrySetId: null,
+    formattedEntrySetDate: null,
     entrySetDate: null,
     entrySetDataRows: [],
     entrySetBalance: 0,
     errorFetchingEntrySetDetails: null,
-    fetchEntrySetDetails: async (manual) => { },
-    getFormattedEntrySetDate: () => { },
+    fetchEntrySetDetails: async (manual) => { }
 });
 
 export const ViewEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate, children }) => {
@@ -32,7 +33,7 @@ export const ViewEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
                 setEntrySetBalance(res.data.balance);
                 const formattedEntries = res.data.entries.map((entry) => ({
                     sno: entry.serial,
-                    type: entry.type,
+                    type: entry.type === "credit" ? "C" : "D",
                     headId: entry.headId,
                     headName: heads.find((head) => head._id === entry.headId)?.name,
                     credit: entry.amount && entry.type === "credit" ? entry.amount : "",
@@ -65,10 +66,6 @@ export const ViewEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
         }
     }
 
-    function getFormattedEntrySetDate() {
-        return formattedEntrySetDate;
-    }
-
     useEffect(() => {
         if (!heads) return;
         fetchEntrySetDetails();
@@ -77,13 +74,14 @@ export const ViewEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
 
     const currentContextValue = {
         isLoadingEntrySetDetails,
+        entrySetId,
+        formattedEntrySetDate,
         entrySetDate,
         entrySetDataRows,
         entrySetBalance,
         errorFetchingEntrySetDetails,
         setEntrySetBalance,
-        fetchEntrySetDetails,
-        getFormattedEntrySetDate
+        fetchEntrySetDetails
     };
 
     return (

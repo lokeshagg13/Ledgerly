@@ -5,7 +5,7 @@ import SearchInput from "../../../../../../ui/elements/SearchInput";
 import ContextMenuContext from "../../../../../../../store/context/contextMenuContext";
 import HeadsContext from "../../../../../../../store/context/headsContext";
 import { formatAmountWithCommas } from "../../../../../../../utils/formatUtils";
-import NewEntrySetContext from "../../../../../../../store/context/newEntrySetContext";
+import EditEntrySetContext from "../../../../../../../store/context/editEntrySetContext";
 
 function WithErrorTooltip({ children, error }) {
   if (!error) return children;
@@ -15,7 +15,7 @@ function WithErrorTooltip({ children, error }) {
       placement="top"
       delay={{ show: 300, hide: 100 }}
       overlay={
-        <Tooltip className="new-entry-set-table-error error-tooltip">
+        <Tooltip className="edit-entry-set-table-error error-tooltip">
           {error}
         </Tooltip>
       }
@@ -26,13 +26,13 @@ function WithErrorTooltip({ children, error }) {
 }
 
 function EditEntrySetTableRow({ idx, data }) {
-  const { id, sno, type, head, debit, credit } = data;
+  const { id, sno, type, headName, debit, credit } = data;
   const {
     entryInputFieldRefs,
     handleModifyFieldValue,
     handleContextMenuSetup,
     getEntryRowFieldError,
-  } = useContext(NewEntrySetContext);
+  } = useContext(EditEntrySetContext);
   const { handleContextMenuToggle } = useContext(ContextMenuContext);
   const { heads } = useContext(HeadsContext);
 
@@ -40,7 +40,7 @@ function EditEntrySetTableRow({ idx, data }) {
 
   const isDebitActive = type === "D";
   const isCreditActive = type === "C";
-  const isCashRow = head?.trim()?.toLowerCase() === "cash";
+  const isCashRow = headName?.trim()?.toLowerCase() === "cash";
 
   return (
     <tr
@@ -69,18 +69,18 @@ function EditEntrySetTableRow({ idx, data }) {
           />
         </WithErrorTooltip>
       </td>
-      <td className={getEntryRowFieldError(id, "head") ? "erroneous" : ""}>
-        <WithErrorTooltip error={getEntryRowFieldError(id, "head")}>
-          <div className={getEntryRowFieldError(id, "head") ? "shake" : ""}>
+      <td className={getEntryRowFieldError(id, "headName") ? "erroneous" : ""}>
+        <WithErrorTooltip error={getEntryRowFieldError(id, "headName")}>
+          <div className={getEntryRowFieldError(id, "headName") ? "shake" : ""}>
             <SearchInput
               ref={entryInputFieldRefs.current[idx]?.[1]}
               id={`entryHead${idx}`}
               options={headNames}
-              value={head}
+              value={headName}
               onChange={(_, newValue) =>
-                handleModifyFieldValue(idx, "head", newValue || "")
+                handleModifyFieldValue(idx, "headName", newValue || "")
               }
-              isInvalid={!!getEntryRowFieldError(id, "head")}
+              isInvalid={!!getEntryRowFieldError(id, "headName")}
             />
           </div>
         </WithErrorTooltip>

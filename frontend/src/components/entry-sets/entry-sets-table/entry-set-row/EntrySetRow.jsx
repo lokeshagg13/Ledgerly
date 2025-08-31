@@ -22,6 +22,12 @@ function EntrySetRow({ entrySetId, entrySetDate }) {
     });
   };
 
+  const handleEditEntrySet = () => {
+    handleNavigateToPath("/entry-sets/edit", {
+      state: { entrySetId, formattedEntrySetDate: formattedDate },
+    });
+  };
+
   return (
     <tr className="entry-set-row">
       <td className="checkbox-cell">
@@ -44,7 +50,12 @@ function EntrySetRow({ entrySetId, entrySetDate }) {
         >
           View
         </Button>
-        <Button variant="outline-primary" size="sm" className="view-button">
+        <Button
+          variant="outline-primary"
+          size="sm"
+          className="view-button"
+          onClick={handleEditEntrySet}
+        >
           Edit
         </Button>
         <Button variant="outline-primary" size="sm" className="view-button">

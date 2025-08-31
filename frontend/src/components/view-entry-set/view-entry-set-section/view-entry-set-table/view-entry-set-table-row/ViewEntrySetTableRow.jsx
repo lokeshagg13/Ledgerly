@@ -7,9 +7,7 @@ function ViewEntrySetTableRow({ data }) {
     <tr key={id}>
       <td>{sno}</td>
       <td>
-        <div className="view-entry-set-table-row-field type-field">
-          {type === "credit" ? "C" : "D"}
-        </div>
+        <div className="view-entry-set-table-row-field type-field">{type}</div>
       </td>
       <td>
         <div className="view-entry-set-table-row-field head-field">

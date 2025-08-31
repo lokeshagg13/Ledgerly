@@ -1,23 +1,23 @@
 import { useContext } from "react";
 import ContextMenuContext from "../../../../../../../store/context/contextMenuContext";
-import NewEntrySetContext from "../../../../../../../store/context/newEntrySetContext";
+import EditEntrySetContext from "../../../../../../../store/context/editEntrySetContext";
 
 function EditEntrySetRowContextMenu() {
   const {
-    entrySetDataRows,
+    editableEntrySetDataRows,
     clickedEntryRow,
     menuPosition,
     findFirstEmptyRowIndex,
     handleInsertEntryRow,
     handleDeleteEntryRow,
     handleInsertCashEntryRow,
-  } = useContext(NewEntrySetContext);
+  } = useContext(EditEntrySetContext);
   const { handleCloseContextMenus } = useContext(ContextMenuContext);
 
   return (
     <div>
       <ul
-        className="new-entry-set-row-context-menu"
+        className="edit-entry-set-row-context-menu"
         style={{
           top: menuPosition.y,
           left: menuPosition.x,
@@ -40,7 +40,7 @@ function EditEntrySetRowContextMenu() {
         >
           Insert Row Below
         </li>
-        {entrySetDataRows.length > 1 && (
+        {editableEntrySetDataRows.length > 1 && (
           <li
             className="danger"
             onClick={() => {
