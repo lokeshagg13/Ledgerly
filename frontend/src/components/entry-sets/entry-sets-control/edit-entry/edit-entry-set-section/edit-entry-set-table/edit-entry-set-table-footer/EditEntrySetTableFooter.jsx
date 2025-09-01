@@ -31,7 +31,9 @@ function EditEntrySetTableFooter() {
   useEffect(() => {
     let adjustedCredit = totalCredit;
     let adjustedDebit = totalDebit;
-    const cashRow = editableEntrySetDataRows.find((row) => row.headName === "CASH");
+    const cashRow = editableEntrySetDataRows.find(
+      (row) => row.headName === "CASH"
+    );
     if (cashRow) {
       const cashCredit = parseFloat(cashRow.credit) || 0;
       const cashDebit = parseFloat(cashRow.debit) || 0;
@@ -44,7 +46,13 @@ function EditEntrySetTableFooter() {
     setEditableEntrySetBalance(
       entrySetOpeningBalance + adjustedCredit - adjustedDebit
     );
-  }, [totalCredit, totalDebit]);
+  }, [
+    entrySetOpeningBalance,
+    editableEntrySetDataRows,
+    setEditableEntrySetBalance,
+    totalCredit,
+    totalDebit,
+  ]);
 
   return (
     <tfoot>

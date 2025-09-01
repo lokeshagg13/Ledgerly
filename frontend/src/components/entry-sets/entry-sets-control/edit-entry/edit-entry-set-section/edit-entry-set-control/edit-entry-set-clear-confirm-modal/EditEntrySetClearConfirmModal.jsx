@@ -13,10 +13,15 @@ function EditEntrySetClearConfirmModal({ show, onClose, onConfirm }) {
         <Modal.Title>Clear All Rows</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>You are about to clear all the rows of this new entry set.</p>
+        <p>
+          You are about to clear all the rows of this entry set. This action
+          will temporarily clear all your rows in your current edit session.
+        </p>
         <div className="warning-message">
-          This action can not be undone and all your unsaved data for this new
-          entry set will be removed.
+          Note: If you wish to discard all changes and reload the last saved
+          entry set, you can use the
+          <strong> "Reset All" </strong> button at any time. This will undo all
+          removals or edits you've made so far.
         </div>
       </Modal.Body>
       <Modal.Footer>

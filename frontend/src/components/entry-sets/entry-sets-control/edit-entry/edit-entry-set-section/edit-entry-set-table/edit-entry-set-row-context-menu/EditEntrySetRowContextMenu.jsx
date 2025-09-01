@@ -11,6 +11,8 @@ function EditEntrySetRowContextMenu() {
     handleInsertEntryRow,
     handleDeleteEntryRow,
     handleInsertCashEntryRow,
+    handleResetEntryRow,
+    checkIfRowIdExistInOriginalDataRows,
   } = useContext(EditEntrySetContext);
   const { handleCloseContextMenus } = useContext(ContextMenuContext);
 
@@ -26,7 +28,7 @@ function EditEntrySetRowContextMenu() {
       >
         <li
           onClick={() => {
-            handleInsertEntryRow(clickedEntryRow);
+            handleInsertEntryRow(clickedEntryRow.idx);
             handleCloseContextMenus();
           }}
         >
@@ -34,7 +36,7 @@ function EditEntrySetRowContextMenu() {
         </li>
         <li
           onClick={() => {
-            handleInsertEntryRow(clickedEntryRow + 1);
+            handleInsertEntryRow(clickedEntryRow.idx + 1);
             handleCloseContextMenus();
           }}
         >
@@ -44,11 +46,16 @@ function EditEntrySetRowContextMenu() {
           <li
             className="danger"
             onClick={() => {
-              handleDeleteEntryRow(clickedEntryRow);
+              handleDeleteEntryRow(clickedEntryRow.idx);
               handleCloseContextMenus();
             }}
           >
             Delete Row
+          </li>
+        )}
+        {checkIfRowIdExistInOriginalDataRows(clickedEntryRow.id) && (
+          <li onClick={() => handleResetEntryRow(clickedEntryRow.id)}>
+            Reset back to original
           </li>
         )}
         <li

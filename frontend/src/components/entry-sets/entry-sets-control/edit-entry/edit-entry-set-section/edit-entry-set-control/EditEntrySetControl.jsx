@@ -8,6 +8,7 @@ function EditEntrySetControl() {
     isUpdatingEntrySetDetails,
     handleClearEntryRows,
     handleUpdateEntrySetDetails,
+    handleResetAllEntryRows,
   } = useContext(EditEntrySetContext);
   const [isClearConfirmModalVisible, setIsClearConfirmModalVisible] =
     useState(false);
@@ -35,6 +36,15 @@ function EditEntrySetControl() {
         onClick={() => handleOpenClearConfirmModal()}
       >
         Clear All
+      </Button>
+      <Button
+        type="button"
+        className="edit-entry-set-control-btn btn-reset"
+        title="Reset all"
+        disabled={isUpdatingEntrySetDetails}
+        onClick={handleResetAllEntryRows}
+      >
+        Reset All
       </Button>
       <Button
         type="button"

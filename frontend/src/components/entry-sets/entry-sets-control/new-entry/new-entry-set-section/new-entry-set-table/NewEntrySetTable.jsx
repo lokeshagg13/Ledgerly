@@ -57,7 +57,10 @@ function NewEntrySetTable() {
         </tbody>
         <NewEntrySetTableFooter />
       </table>
-      {checkIfContextMenuVisible("entry-row", clickedEntryRow?.toString()) &&
+      {checkIfContextMenuVisible(
+        "entry-row",
+        clickedEntryRow?.idx?.toString()
+      ) &&
         menuPosition && <NewEntrySetRowContextMenu />}
     </div>
   );

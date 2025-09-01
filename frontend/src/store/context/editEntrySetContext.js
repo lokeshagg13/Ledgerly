@@ -7,7 +7,6 @@ import { formatAmountForFirstTimeInput } from "../../utils/formatUtils";
 import useAppNavigate from "../hooks/useAppNavigate";
 import HeadsContext from "./headsContext";
 
-const MIN_ROWS = 20;
 const MAX_ROWS = 1000;
 const COLS = ["type", "headName", "credit", "debit"];
 
@@ -36,11 +35,14 @@ const EditEntrySetContext = createContext({
     handleInsertCashEntryRow: (rowIdx) => { },
     handleModifyFieldValue: (rowIdx, field, value) => { },
     handleKeyPress: (e) => { },
-    handleContextMenuSetup: (e, rowIdx) => { },
+    handleContextMenuSetup: (e, rowIdx, rowId) => { },
     handleClearEntryRows: () => { },
     handleUpdateEntrySetDetails: async () => { },
     handleResetErrorUpdatingEntrySetDetails: () => { },
     getEntryRowFieldError: (rowId, fieldName) => { },
+    handleResetAllEntryRows: () => { },
+    handleResetEntryRow: (rowId) => { },
+    checkIfRowIdExistInOriginalDataRows: (rowId) => { }
 });
 
 export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate, children }) => {
@@ -51,7 +53,6 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
     const [entrySetDate, setEntrySetDate] = useState(new Date());
     const [entrySetOpeningBalance, setEntrySetOpeningBalance] = useState(0);
     const [originalEntrySetDataRows, setOriginalEntrySetDataRows] = useState([]);
-    const [originalEntrySetBalance, setOriginalEntrySetBalance] = useState(0);
     const [errorFetchingEntrySetDetails, setErrorFetchingEntrySetDetails] = useState(null);
     const [editableEntrySetDataRows, setEditableEntrySetDataRows] = useState([]);
     const [editableEntrySetBalance, setEditableEntrySetBalance] = useState(0);
@@ -96,11 +97,10 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
             const res = await axiosPrivate.get(`/user/entrySet/${entrySetId}`);
             if (res?.data) {
                 setEntrySetDate(res.data.date);
-                setOriginalEntrySetBalance(res.data.balance);
                 setEditableEntrySetBalance(res.data.balance);
 
                 const formattedEntries = res.data.entries.map((entry) => ({
-                    id: entry._id,
+                    id: uuidv4(),
                     sno: entry.serial,
                     type: entry.type === "credit" ? "C" : "D",
                     headId: entry.headId,
@@ -252,6 +252,19 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
             } else {
                 return;
             }
+            setEditableEntrySetDataRows((prev) =>
+                prev.map((row, i) => {
+                    if (i !== rowIdx) return row;
+                    const updatedRow = { ...row, type: newValue };
+                    if (newValue === "C" && updatedRow.debit !== "") {
+                        updatedRow.debit = "";
+                    } else if (newValue === "D" && updatedRow.credit !== "") {
+                        updatedRow.credit = "";
+                    }
+                    return updatedRow;
+                })
+            );
+            return;
         }
         if (field === "credit" || field === "debit") {
             const rawValue = value.replace(/,/g, "");
@@ -386,9 +399,13 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
         }
     }
 
-    function handleContextMenuSetup(e, rowIdx) {
+    function handleContextMenuSetup(e, rowIdx, rowId) {
         e.preventDefault();
-        setClickedEntryRow(rowIdx);
+        console.log(rowId)
+        setClickedEntryRow({
+            idx: rowIdx,
+            id: rowId
+        });
         setMenuPosition({ x: e.clientX, y: e.clientY });
     }
 
@@ -590,8 +607,48 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
         setErrorUpdatingEntrySetDetails(null);
     }
 
-    function getEntryRowFieldError(id, fieldName) {
-        return inputFieldErrorsMap[id]?.[fieldName] || null;
+    function getEntryRowFieldError(rowId, fieldName) {
+        return inputFieldErrorsMap[rowId]?.[fieldName] || null;
+    }
+
+    function handleResetAllEntryRows() {
+        setEditableEntrySetDataRows([...originalEntrySetDataRows]);
+        setInputFieldErrorsMap({});
+        setErrorUpdatingEntrySetDetails(null);
+        toast.success("Entry set has been reset successfully.", {
+            position: "top-center",
+            autoClose: 3000
+        });
+    }
+
+    function checkIfRowIdExistInOriginalDataRows(rowId) {
+        const originalRow = originalEntrySetDataRows.find(r => r.id === rowId);
+        if (!originalRow) return false;
+        return true;
+    }
+
+    function handleResetEntryRow(rowId) {
+        console.log(rowId)
+        const originalRow = originalEntrySetDataRows.find(r => r.id === rowId);
+        if (!originalRow) return;
+
+        // Update only that row in the current editable rows
+        const updatedRows = editableEntrySetDataRows.map(r => (r.id === rowId ? originalRow : r));
+        console.log(updatedRows)
+        setEditableEntrySetDataRows(updatedRows);
+
+        // Remove errors for that row
+        setInputFieldErrorsMap((prevErrorsMap) => {
+            if (!prevErrorsMap[rowId]) return prevErrorsMap;
+            const newErrorsMap = { ...prevErrorsMap };
+            delete newErrorsMap[rowId];
+            return newErrorsMap;
+        });
+        const sno = editableEntrySetDataRows.find((r) => r.id === rowId)?.sno;
+        toast.success(`Entry row #${sno} reset successfully.`, {
+            position: "top-center",
+            autoClose: 3000
+        });
     }
 
     useEffect(() => {
@@ -647,6 +704,9 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
         handleUpdateEntrySetDetails,
         handleResetErrorUpdatingEntrySetDetails,
         getEntryRowFieldError,
+        handleResetAllEntryRows,
+        handleResetEntryRow,
+        checkIfRowIdExistInOriginalDataRows
     };
 
     return (

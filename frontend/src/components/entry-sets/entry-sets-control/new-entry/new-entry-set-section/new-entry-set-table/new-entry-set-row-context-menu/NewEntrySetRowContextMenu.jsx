@@ -26,7 +26,7 @@ function NewEntrySetRowContextMenu() {
       >
         <li
           onClick={() => {
-            handleInsertEntryRow(clickedEntryRow);
+            handleInsertEntryRow(clickedEntryRow.idx);
             handleCloseContextMenus();
           }}
         >
@@ -34,7 +34,7 @@ function NewEntrySetRowContextMenu() {
         </li>
         <li
           onClick={() => {
-            handleInsertEntryRow(clickedEntryRow + 1);
+            handleInsertEntryRow(clickedEntryRow.idx + 1);
             handleCloseContextMenus();
           }}
         >
@@ -44,7 +44,7 @@ function NewEntrySetRowContextMenu() {
           <li
             className="danger"
             onClick={() => {
-              handleDeleteEntryRow(clickedEntryRow);
+              handleDeleteEntryRow(clickedEntryRow.idx);
               handleCloseContextMenus();
             }}
           >

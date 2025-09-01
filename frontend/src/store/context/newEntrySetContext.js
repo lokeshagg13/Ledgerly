@@ -29,7 +29,7 @@ const NewEntrySetContext = createContext({
     handleInsertCashEntryRow: (rowIdx) => { },
     handleModifyFieldValue: (rowIdx, field, value) => { },
     handleKeyPress: (e) => { },
-    handleContextMenuSetup: (e, rowIdx) => { },
+    handleContextMenuSetup: (e, rowIdx, rowId) => { },
     handleClearEntryRows: () => { },
     handleSaveNewEntrySet: async () => { },
     handleResetErrorSavingEntrySet: () => { },
@@ -149,7 +149,9 @@ export const NewEntrySetContextProvider = ({ children }) => {
             const matchedHead = heads.find(h => h.name === value);
             setEntrySetDataRows((prev) =>
                 prev.map((row, i) =>
-                    i === rowIdx ? { ...row, headName: value, headId: matchedHead ? matchedHead._id : null } : row
+                    i === rowIdx
+                        ? { ...row, headName: value, headId: matchedHead ? matchedHead._id : null }
+                        : row
                 )
             );
             return;
@@ -167,6 +169,19 @@ export const NewEntrySetContextProvider = ({ children }) => {
             } else {
                 return;
             }
+            setEntrySetDataRows((prev) =>
+                prev.map((row, i) => {
+                    if (i !== rowIdx) return row;
+                    const updatedRow = { ...row, type: newValue };
+                    if (newValue === "C" && updatedRow.debit !== "") {
+                        updatedRow.debit = "";
+                    } else if (newValue === "D" && updatedRow.credit !== "") {
+                        updatedRow.credit = "";
+                    }
+                    return updatedRow;
+                })
+            );
+            return;
         }
         if (field === "credit" || field === "debit") {
             const rawValue = value.replace(/,/g, "");
@@ -301,9 +316,12 @@ export const NewEntrySetContextProvider = ({ children }) => {
         }
     }
 
-    function handleContextMenuSetup(e, rowIdx) {
+    function handleContextMenuSetup(e, rowIdx, rowId) {
         e.preventDefault();
-        setClickedEntryRow(rowIdx);
+        setClickedEntryRow({
+            idx: rowIdx,
+            id: rowId
+        });
         setMenuPosition({ x: e.clientX, y: e.clientY });
     }
 

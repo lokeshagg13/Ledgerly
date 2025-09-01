@@ -46,7 +46,7 @@ function NewEntrySetTableRow({ idx, data }) {
     <tr
       key={id}
       onContextMenu={(e) => {
-        handleContextMenuSetup(e, idx);
+        handleContextMenuSetup(e, idx, id);
         handleContextMenuToggle("entry-row", idx.toString());
       }}
     >

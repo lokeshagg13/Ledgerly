@@ -4,7 +4,6 @@ import LeftArrowIcon from "../../../ui/icons/LeftArrowIcon";
 import { HeadsProvider } from "../../../../store/context/headsContext";
 import { ContextMenuProvider } from "../../../../store/context/contextMenuContext";
 import { EditEntrySetContextProvider } from "../../../../store/context/editEntrySetContext";
-import { FirmDashboardContextProvider } from "../../../../store/context/firmDashboardContext";
 import EditEntrySetSection from "./edit-entry-set-section/EditEntrySetSection";
 
 function EditEntrySetPageContent({ entrySetId, formattedEntrySetDate }) {
@@ -16,24 +15,22 @@ function EditEntrySetPageContent({ entrySetId, formattedEntrySetDate }) {
         entrySetId={entrySetId}
         formattedEntrySetDate={formattedEntrySetDate}
       >
-        <FirmDashboardContextProvider>
-          <ContextMenuProvider>
-            <div className="edit-entry-set-page-header">
-              <Button
-                variant="outline-light"
-                className="page-back-button"
-                onClick={handleNavigateBack}
-              >
-                <LeftArrowIcon fill="white" width="0.8em" height="0.8em" />
-              </Button>
-              <h2>Edit entry set for {formattedEntrySetDate}</h2>
-            </div>
+        <ContextMenuProvider>
+          <div className="edit-entry-set-page-header">
+            <Button
+              variant="outline-light"
+              className="page-back-button"
+              onClick={handleNavigateBack}
+            >
+              <LeftArrowIcon fill="white" width="0.8em" height="0.8em" />
+            </Button>
+            <h2>Edit entry set for {formattedEntrySetDate}</h2>
+          </div>
 
-            <div className="edit-entry-set-page-body">
-              <EditEntrySetSection />
-            </div>
-          </ContextMenuProvider>
-        </FirmDashboardContextProvider>
+          <div className="edit-entry-set-page-body">
+            <EditEntrySetSection />
+          </div>
+        </ContextMenuProvider>
       </EditEntrySetContextProvider>
     </HeadsProvider>
   );

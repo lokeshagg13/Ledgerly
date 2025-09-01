@@ -12,6 +12,7 @@ function NewEntrySetTableFooter() {
 
   useEffect(() => {
     setEntrySetBalance(overallBalance.amount);
+    // eslint-disable-next-line
   }, []);
 
   const totalCredit = useMemo(
@@ -45,7 +46,13 @@ function NewEntrySetTableFooter() {
       }
     }
     setEntrySetBalance(overallBalance.amount + adjustedCredit - adjustedDebit);
-  }, [totalCredit, totalDebit]);
+  }, [
+    overallBalance.amount,
+    entrySetDataRows,
+    setEntrySetBalance,
+    totalCredit,
+    totalDebit,
+  ]);
 
   return (
     <tfoot>
