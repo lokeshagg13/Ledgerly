@@ -8,8 +8,10 @@ const EntrySetContext = createContext({
     isLoadingEntrySets: false,
     entrySets: [],
     selectedEntrySets: [],
+    filteredEntrySets: [],
     errorFetchingEntrySets: null,
     isDeleteSelectedEntrySetsModalVisible: false,
+    setFilteredEntrySets: (newValue) => { },
     fetchEntrySets: async (manual) => { },
     handleToggleEntrySetSelected: (entrySetId) => { },
     handleOpenDeleteSelectedEntrySetsModal: () => { },
@@ -20,6 +22,7 @@ export const EntrySetContextProvider = ({ children }) => {
     const [isLoadingEntrySets, setIsLoadingEntrySets] = useState(false);
     const [entrySets, setEntrySets] = useState([]);
     const [selectedEntrySets, setSelectedEntrySets] = useState([]);
+    const [filteredEntrySets, setFilteredEntrySets] = useState([]);
     const [errorFetchingEntrySets, setErrorFetchingEntrySets] = useState(null);
     const [isDeleteSelectedEntrySetsModalVisible, setIsDeleteSelectedEntrySetsModalVisible] = useState(false);
 
@@ -28,7 +31,10 @@ export const EntrySetContextProvider = ({ children }) => {
         setIsLoadingEntrySets(true);
         try {
             const res = await axiosPrivate.get("/user/entrySet");
-            if (res?.data) setEntrySets(res.data);
+            if (res?.data) {
+                setEntrySets(res.data);
+                setFilteredEntrySets(res.data);
+            }
             setSelectedEntrySets([]);
             if (manual) {
                 toast.success("Refresh completed.", {
@@ -82,8 +88,10 @@ export const EntrySetContextProvider = ({ children }) => {
         isLoadingEntrySets,
         entrySets,
         selectedEntrySets,
+        filteredEntrySets,
         errorFetchingEntrySets,
         isDeleteSelectedEntrySetsModalVisible,
+        setFilteredEntrySets,
         fetchEntrySets,
         handleToggleEntrySetSelected,
         handleOpenDeleteSelectedEntrySetsModal,

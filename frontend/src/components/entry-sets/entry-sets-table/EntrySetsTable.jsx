@@ -5,8 +5,12 @@ import EntrySetRow from "./entry-set-row/EntrySetRow";
 import ErrorImage from "../../../images/chart-error.png";
 
 function EntrySetsTable() {
-  const { isLoadingEntrySets, entrySets, errorFetchingEntrySets } =
-    useContext(EntrySetContext);
+  const {
+    isLoadingEntrySets,
+    entrySets,
+    filteredEntrySets,
+    errorFetchingEntrySets,
+  } = useContext(EntrySetContext);
 
   if (isLoadingEntrySets) {
     return (
@@ -33,6 +37,14 @@ function EntrySetsTable() {
     );
   }
 
+  if (filteredEntrySets.length === 0) {
+    return (
+      <div className="entry-sets-table-empty text-muted">
+        No matching entry sets found.
+      </div>
+    );
+  }
+
   return (
     <div className="entry-sets-table-wrapper">
       <Table
@@ -48,7 +60,7 @@ function EntrySetsTable() {
           </tr>
         </thead>
         <tbody>
-          {entrySets.map((entrySet) => (
+          {filteredEntrySets.map((entrySet) => (
             <EntrySetRow
               key={entrySet._id}
               entrySetId={entrySet._id}
