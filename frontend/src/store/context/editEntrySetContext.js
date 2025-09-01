@@ -401,7 +401,6 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
 
     function handleContextMenuSetup(e, rowIdx, rowId) {
         e.preventDefault();
-        console.log(rowId)
         setClickedEntryRow({
             idx: rowIdx,
             id: rowId
@@ -628,13 +627,11 @@ export const EditEntrySetContextProvider = ({ entrySetId, formattedEntrySetDate,
     }
 
     function handleResetEntryRow(rowId) {
-        console.log(rowId)
         const originalRow = originalEntrySetDataRows.find(r => r.id === rowId);
         if (!originalRow) return;
 
         // Update only that row in the current editable rows
         const updatedRows = editableEntrySetDataRows.map(r => (r.id === rowId ? originalRow : r));
-        console.log(updatedRows)
         setEditableEntrySetDataRows(updatedRows);
 
         // Remove errors for that row

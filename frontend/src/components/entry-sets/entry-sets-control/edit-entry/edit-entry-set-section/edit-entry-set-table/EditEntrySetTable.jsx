@@ -14,7 +14,7 @@ function EditEntrySetTable() {
     handleKeyPress,
   } = useContext(EditEntrySetContext);
   const { checkIfContextMenuVisible } = useContext(ContextMenuContext);
-console.log(editableEntrySetDataRows)
+
   return (
     <div
       className="edit-entry-set-table-wrapper"
