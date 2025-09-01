@@ -5,7 +5,7 @@ import HeadRow from "./head-row/HeadRow";
 import ErrorImage from "../../../images/chart-error.png";
 
 function HeadsTable() {
-  const { isLoadingHeads, heads, errorFetchingHeads } =
+  const { isLoadingHeads, heads, filteredHeads, errorFetchingHeads } =
     useContext(HeadsContext);
 
   if (isLoadingHeads) {
@@ -31,6 +31,14 @@ function HeadsTable() {
     );
   }
 
+  if (filteredHeads.length === 0) {
+    return (
+      <div className="heads-table-empty text-muted">
+        No matching heads found.
+      </div>
+    );
+  }
+
   return (
     <div className="heads-table-wrapper">
       <Table className="heads-table" borderless aria-label="Firm heads list">
@@ -42,7 +50,7 @@ function HeadsTable() {
           </tr>
         </thead>
         <tbody>
-          {heads.map((head) => (
+          {filteredHeads.map((head) => (
             <HeadRow key={head._id} headId={head._id} headName={head.name} />
           ))}
         </tbody>

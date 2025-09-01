@@ -7,9 +7,11 @@ const HeadsContext = createContext({
     isLoadingHeads: false,
     heads: [],
     selectedHeads: [],
+    filteredHeads: [],
     errorFetchingHeads: null,
     isAddHeadModalVisible: false,
     isDeleteSelectedHeadsModalVisible: false,
+    setFilteredHeads: (newValue) => { },
     fetchHeadsFromDB: async (manual) => { },
     handleToggleHeadSelection: (headId) => { },
     handleOpenAddHeadModal: () => { },
@@ -23,6 +25,7 @@ export const HeadsProvider = ({ children }) => {
     const [isLoadingHeads, setIsLoadingHeads] = useState(false);
     const [heads, setHeads] = useState([]);
     const [selectedHeads, setSelectedHeads] = useState([]);
+    const [filteredHeads, setFilteredHeads] = useState([]);
     const [errorFetchingHeads, setErrorFetchingHeads] = useState(null);
     const [isAddHeadModalVisible, setIsAddHeadModalVisible] = useState(false);
     const [isDeleteSelectedHeadsModalVisible, setIsDeleteSelectedHeadsModalVisible] = useState(false);
@@ -33,7 +36,10 @@ export const HeadsProvider = ({ children }) => {
             let apiCall = `/user/heads`;
             if (onlyActive) apiCall += `?active=true`;
             const res = await axiosPrivate.get(apiCall);
-            if (res?.data?.heads) setHeads(res.data.heads);
+            if (res?.data?.heads) {
+                setHeads(res.data.heads);
+                setFilteredHeads(res.data.heads);
+            }
             setSelectedHeads([]);
             if (manual) {
                 toast.success("Refresh completed.", {
@@ -97,9 +103,11 @@ export const HeadsProvider = ({ children }) => {
         isLoadingHeads,
         heads,
         selectedHeads,
+        filteredHeads,
         errorFetchingHeads,
         isAddHeadModalVisible,
         isDeleteSelectedHeadsModalVisible,
+        setFilteredHeads,
         fetchHeadsFromDB,
         handleToggleHeadSelection,
         handleOpenAddHeadModal,
