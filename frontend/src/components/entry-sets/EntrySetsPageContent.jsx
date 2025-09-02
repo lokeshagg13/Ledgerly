@@ -4,6 +4,7 @@ import LeftArrowIcon from "../ui/icons/LeftArrowIcon";
 import { EntrySetContextProvider } from "../../store/context/entrySetContext";
 import EntrySetsMainControl from "./entry-sets-main-control/EntrySetsMainControl";
 import EntrySetsTable from "./entry-sets-table/EntrySetsTable";
+import EntrySetsSelectionControl from "./entry-sets-selection-control/EntrySetsSelectionControl";
 
 function EntrySetsPageContent() {
   const { handleNavigateBack } = useAppNavigate();
@@ -24,7 +25,10 @@ function EntrySetsPageContent() {
       <div className="entry-sets-page-body-wrapper">
         <div className="entry-sets-page-body">
           <EntrySetsMainControl />
-          <EntrySetsTable />
+          <div className="heads-page-table-section">
+            <EntrySetsSelectionControl />
+            <EntrySetsTable />
+          </div>
         </div>
       </div>
     </EntrySetContextProvider>

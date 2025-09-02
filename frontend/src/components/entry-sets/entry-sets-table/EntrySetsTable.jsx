@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Spinner, Table } from "react-bootstrap";
+import { Form, Spinner, Table } from "react-bootstrap";
 import EntrySetContext from "../../../store/context/entrySetContext";
 import EntrySetRow from "./entry-set-row/EntrySetRow";
 import ErrorImage from "../../../images/chart-error.png";
@@ -10,6 +10,8 @@ function EntrySetsTable() {
     entrySets,
     filteredEntrySets,
     errorFetchingEntrySets,
+    checkIfAllEntrySetsSelected,
+    handleToggleAllEntrySetsSelected,
   } = useContext(EntrySetContext);
 
   if (isLoadingEntrySets) {
@@ -54,7 +56,18 @@ function EntrySetsTable() {
       >
         <thead>
           <tr>
-            <th></th>
+            <th scope="col">
+              <Form.Check
+                type="checkbox"
+                className="entry-sets-all-checkbox"
+                id="entrySetsAllCheckbox"
+                checked={checkIfAllEntrySetsSelected()}
+                onChange={() => handleToggleAllEntrySetsSelected()}
+                aria-label={`${
+                  checkIfAllEntrySetsSelected() ? "Unselect" : "Select"
+                } all heads`}
+              />
+            </th>
             <th scope="col">Date</th>
             <th></th>
           </tr>

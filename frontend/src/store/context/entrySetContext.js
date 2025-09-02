@@ -11,9 +11,11 @@ const EntrySetContext = createContext({
     filteredEntrySets: [],
     errorFetchingEntrySets: null,
     isDeleteSelectedEntrySetsModalVisible: false,
+    checkIfAllEntrySetsSelected: () => { },
     setFilteredEntrySets: (newValue) => { },
     fetchEntrySets: async (manual) => { },
     handleToggleEntrySetSelected: (entrySetId) => { },
+    handleToggleAllEntrySetsSelected: () => { },
     handleOpenDeleteSelectedEntrySetsModal: () => { },
     handleCloseDeleteSelectedEntrySetsModal: () => { },
 });
@@ -25,6 +27,10 @@ export const EntrySetContextProvider = ({ children }) => {
     const [filteredEntrySets, setFilteredEntrySets] = useState([]);
     const [errorFetchingEntrySets, setErrorFetchingEntrySets] = useState(null);
     const [isDeleteSelectedEntrySetsModalVisible, setIsDeleteSelectedEntrySetsModalVisible] = useState(false);
+
+    function checkIfAllEntrySetsSelected() {
+        return filteredEntrySets.every((es) => selectedEntrySets.includes(es._id));
+    }
 
     async function fetchEntrySets(manual = false) {
         setErrorFetchingEntrySets(null);
@@ -71,6 +77,14 @@ export const EntrySetContextProvider = ({ children }) => {
         );
     }
 
+    function handleToggleAllEntrySetsSelected() {
+        if (checkIfAllEntrySetsSelected()) {
+            setSelectedEntrySets([]);
+        } else {
+            setSelectedEntrySets(filteredEntrySets.map((es) => es._id));
+        }
+    }
+
     function handleOpenDeleteSelectedEntrySetsModal() {
         setIsDeleteSelectedEntrySetsModalVisible(true);
     }
@@ -91,9 +105,11 @@ export const EntrySetContextProvider = ({ children }) => {
         filteredEntrySets,
         errorFetchingEntrySets,
         isDeleteSelectedEntrySetsModalVisible,
+        checkIfAllEntrySetsSelected,
         setFilteredEntrySets,
         fetchEntrySets,
         handleToggleEntrySetSelected,
+        handleToggleAllEntrySetsSelected,
         handleOpenDeleteSelectedEntrySetsModal,
         handleCloseDeleteSelectedEntrySetsModal
     };

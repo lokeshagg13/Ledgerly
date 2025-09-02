@@ -2,18 +2,15 @@ import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import useAppNavigate from "../../../store/hooks/useAppNavigate";
 import EntrySetContext from "../../../store/context/entrySetContext";
-import DeleteSelectedEntrySetsModal from "../entry-sets-modals/DeleteSelectedEntrySetsModal";
 import { normalizeDateQuery } from "../../../utils/dateUtils";
+import CancelIcon from "../../ui/icons/CancelIcon";
 
 function EntrySetsMainControl() {
   const { handleNavigateToPath } = useAppNavigate();
   const {
     entrySets,
     isLoadingEntrySets,
-    isDeleteSelectedEntrySetsModalVisible,
-    selectedEntrySets,
     setFilteredEntrySets,
-    handleOpenDeleteSelectedEntrySetsModal,
     fetchEntrySets,
   } = useContext(EntrySetContext);
   const [searchValue, setSearchValue] = useState("");
@@ -46,7 +43,10 @@ function EntrySetsMainControl() {
         ) {
           return false;
         }
-        if (queryDate.day !== undefined && !esDay.startsWith(String(queryDate.day))) {
+        if (
+          queryDate.day !== undefined &&
+          !esDay.startsWith(String(queryDate.day))
+        ) {
           return false;
         }
         return true;
@@ -64,6 +64,27 @@ function EntrySetsMainControl() {
   return (
     <div className="entry-sets-main-control">
       <div className="entry-sets-main-control-row">
+        {entrySets.length > 0 && (
+          <div className="search-box-container">
+            <div className="search-box">
+              <input
+                type="text"
+                className="search-input"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                placeholder="Search"
+              />
+              {searchValue && (
+                <div
+                  className="search-clear-icon"
+                  onClick={() => setSearchValue("")}
+                >
+                  <CancelIcon />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
         <Button
           type="button"
           className="control-btn btn-blue"
@@ -71,16 +92,7 @@ function EntrySetsMainControl() {
           onClick={() => handleNavigateToPath("/entry-sets/new")}
           disabled={isLoadingEntrySets}
         >
-          Add a new daily entry
-        </Button>
-        <Button
-          type="button"
-          className="control-btn btn-outline-light"
-          aria-label="Delete selected entry sets"
-          onClick={handleOpenDeleteSelectedEntrySetsModal}
-          disabled={selectedEntrySets.length === 0}
-        >
-          Delete selected
+          Add an entry set
         </Button>
         <Button
           type="button"
@@ -104,30 +116,6 @@ function EntrySetsMainControl() {
           )}
         </Button>
       </div>
-      {entrySets.length > 0 && (
-        <div className="entry-sets-main-control-row search-box-container">
-          <div className="search-box">
-            <input
-              type="text"
-              className="search-input"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              placeholder="Search entry sets (year month date)"
-            />
-          </div>
-          <Button
-            type="button"
-            className="control-btn btn-blue"
-            aria-label="Clear"
-            onClick={() => setSearchValue("")}
-          >
-            Clear
-          </Button>
-        </div>
-      )}
-      {isDeleteSelectedEntrySetsModalVisible && (
-        <DeleteSelectedEntrySetsModal />
-      )}
     </div>
   );
 }
