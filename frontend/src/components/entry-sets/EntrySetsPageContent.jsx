@@ -2,7 +2,7 @@ import { Button } from "react-bootstrap";
 import useAppNavigate from "../../store/hooks/useAppNavigate";
 import LeftArrowIcon from "../ui/icons/LeftArrowIcon";
 import { EntrySetContextProvider } from "../../store/context/entrySetContext";
-import EntrySetsControl from "./entry-sets-control/EntrySetsControl";
+import EntrySetsMainControl from "./entry-sets-main-control/EntrySetsMainControl";
 import EntrySetsTable from "./entry-sets-table/EntrySetsTable";
 
 function EntrySetsPageContent() {
@@ -23,7 +23,7 @@ function EntrySetsPageContent() {
 
       <div className="entry-sets-page-body-wrapper">
         <div className="entry-sets-page-body">
-          <EntrySetsControl />
+          <EntrySetsMainControl />
           <EntrySetsTable />
         </div>
       </div>

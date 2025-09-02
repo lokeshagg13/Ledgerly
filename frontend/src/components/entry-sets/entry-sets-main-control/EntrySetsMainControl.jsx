@@ -5,7 +5,7 @@ import EntrySetContext from "../../../store/context/entrySetContext";
 import DeleteSelectedEntrySetsModal from "../entry-sets-modals/DeleteSelectedEntrySetsModal";
 import { normalizeDateQuery } from "../../../utils/dateUtils";
 
-function EntrySetsControl() {
+function EntrySetsMainControl() {
   const { handleNavigateToPath } = useAppNavigate();
   const {
     entrySets,
@@ -62,8 +62,8 @@ function EntrySetsControl() {
   }, [searchValue, entrySets, setFilteredEntrySets]);
 
   return (
-    <div className="entry-sets-controls">
-      <div className="entry-sets-controls-row">
+    <div className="entry-sets-main-control">
+      <div className="entry-sets-main-control-row">
         <Button
           type="button"
           className="control-btn btn-blue"
@@ -105,7 +105,7 @@ function EntrySetsControl() {
         </Button>
       </div>
       {entrySets.length > 0 && (
-        <div className="entry-sets-controls-row search-box-container">
+        <div className="entry-sets-main-control-row search-box-container">
           <div className="search-box">
             <input
               type="text"
@@ -132,4 +132,4 @@ function EntrySetsControl() {
   );
 }
 
-export default EntrySetsControl;
+export default EntrySetsMainControl;
