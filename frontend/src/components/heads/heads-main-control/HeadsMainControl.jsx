@@ -2,20 +2,17 @@ import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import HeadsContext from "../../../store/context/headsContext";
 import AddHeadModal from "../heads-modals/AddHeadModal";
-import DeleteSelectedHeadsModal from "../heads-modals/DeleteSelectedHeadsModal";
 import useAppNavigate from "../../../store/hooks/useAppNavigate";
+import CancelIcon from "../../ui/icons/CancelIcon";
 
-function HeadsControl() {
+function HeadsMainControl() {
   const { handleNavigateToPath } = useAppNavigate();
   const {
     heads,
     isLoadingHeads,
     isAddHeadModalVisible,
-    isDeleteSelectedHeadsModalVisible,
-    selectedHeads,
     setFilteredHeads,
     handleOpenAddHeadModal,
-    handleOpenDeleteSelectedHeadsModal,
     fetchHeadsFromDB,
   } = useContext(HeadsContext);
   const [searchValue, setSearchValue] = useState("");
@@ -40,8 +37,26 @@ function HeadsControl() {
   }, [searchValue, heads, setFilteredHeads]);
 
   return (
-    <div className="heads-controls">
-      <div className="heads-controls-row">
+    <div className="heads-main-control">
+      <div className="heads-main-control-row">
+        {heads.length > 0 && (
+          <div className="search-box-container">
+            <div className="search-box">
+              <input
+                type="text"
+                className="search-input"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                placeholder="Search Heads"
+              />
+              {searchValue && (
+                <div className="search-clear-icon" onClick={() => setSearchValue("")}>
+                  <CancelIcon />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
         <Button
           type="button"
           className="control-btn btn-blue"
@@ -59,16 +74,6 @@ function HeadsControl() {
           disabled={isLoadingHeads}
         >
           Upload Heads
-        </Button>
-        <Button
-          type="button"
-          className="control-btn btn-outline-light"
-          aria-label="Delete selected heads"
-          onClick={handleOpenDeleteSelectedHeadsModal}
-          disabled={selectedHeads.length === 0}
-        >
-          Delete Selected <br />
-          Heads
         </Button>
         <Button
           type="button"
@@ -92,31 +97,9 @@ function HeadsControl() {
           )}
         </Button>
       </div>
-      {heads.length > 0 && (
-        <div className="heads-controls-row search-box-container">
-          <div className="search-box">
-            <input
-              type="text"
-              className="search-input"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              placeholder="Search Heads"
-            />
-          </div>
-          <Button
-            type="button"
-            className="control-btn btn-blue"
-            aria-label="Clear"
-            onClick={() => setSearchValue("")}
-          >
-            Clear
-          </Button>
-        </div>
-      )}
       {isAddHeadModalVisible && <AddHeadModal />}
-      {isDeleteSelectedHeadsModalVisible && <DeleteSelectedHeadsModal />}
     </div>
   );
 }
 
-export default HeadsControl;
+export default HeadsMainControl;

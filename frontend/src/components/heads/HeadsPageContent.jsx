@@ -2,7 +2,8 @@ import { Button } from "react-bootstrap";
 import LeftArrowIcon from "../ui/icons/LeftArrowIcon";
 import useAppNavigate from "../../store/hooks/useAppNavigate";
 import { HeadsProvider } from "../../store/context/headsContext";
-import HeadsControl from "./heads-control/HeadsControl";
+import HeadsMainControl from "./heads-main-control/HeadsMainControl";
+import HeadsSelectionControl from "./heads-selection-control/HeadsSelectionControl";
 import HeadsTable from "./heads-table/HeadsTable";
 
 function HeadsPageContent() {
@@ -23,8 +24,11 @@ function HeadsPageContent() {
 
       <div className="heads-page-body-wrapper">
         <div className="heads-page-body">
-          <HeadsControl />
-          <HeadsTable />
+          <HeadsMainControl />
+          <div className="heads-page-table-section">
+            <HeadsSelectionControl />
+            <HeadsTable />
+          </div>
         </div>
       </div>
     </HeadsProvider>

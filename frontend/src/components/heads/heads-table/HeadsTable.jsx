@@ -9,7 +9,6 @@ function HeadsTable() {
     isLoadingHeads,
     heads,
     filteredHeads,
-    selectedHeads,
     errorFetchingHeads,
     checkIfAllHeadsSelected,
     handleToggleAllHeadSelections,
@@ -63,13 +62,7 @@ function HeadsTable() {
                 } all heads`}
               />
             </th>
-            <th scope="col">
-              {selectedHeads.length > 0
-                ? `${selectedHeads.length} head${
-                    selectedHeads.length > 1 ? "s" : ""
-                  } selected`
-                : "Category"}
-            </th>
+            <th scope="col">Category</th>
             <th scope="col">Opening Balance</th>
 
             <th></th>

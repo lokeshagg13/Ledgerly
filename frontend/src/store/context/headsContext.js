@@ -1,5 +1,8 @@
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import * as XLSX from "xlsx";
+import { jsPDF } from 'jspdf';
+import { autoTable } from 'jspdf-autotable';
 
 import { axiosPrivate } from "../../api/axios";
 
@@ -20,7 +23,8 @@ const HeadsContext = createContext({
     handleCloseAddHeadModal: () => { },
     handleOpenDeleteSelectedHeadsModal: () => { },
     handleCloseDeleteSelectedHeadsModal: () => { },
-
+    handleExportSelectedHeadsAsExcel: () => { },
+    handleExportSelectedHeadsAsPDF: () => { }
 });
 
 export const HeadsProvider = ({ children }) => {
@@ -92,7 +96,6 @@ export const HeadsProvider = ({ children }) => {
         }
     }
 
-
     function handleOpenAddHeadModal() {
         setIsAddHeadModalVisible(true);
     }
@@ -107,6 +110,55 @@ export const HeadsProvider = ({ children }) => {
 
     function handleCloseDeleteSelectedHeadsModal() {
         setIsDeleteSelectedHeadsModalVisible(false);
+    }
+
+    function handleExportSelectedHeadsAsExcel() {
+        if (!selectedHeads || selectedHeads.length === 0) {
+            toast.error("No heads selected to export!", {
+                position: "top-center",
+                autoClose: 5000
+            });
+            return;
+        }
+
+        const selectedHeadObjects = heads.filter((head) => selectedHeads.includes(head._id));
+        const data = selectedHeadObjects.map((head, index) => ({
+            "S. No.": index + 1,
+            "Head Name": head?.name || "",
+            "Opening Balance": head?.openingBalance?.amount || 0
+        }));
+        const worksheet = XLSX.utils.json_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Heads");
+        XLSX.writeFile(workbook, "selected_heads.xlsx");
+    }
+
+    function handleExportSelectedHeadsAsPDF() {
+        if (!selectedHeads || selectedHeads.length === 0) {
+            toast.error("No heads selected to export!", {
+                position: "top-center",
+                autoClose: 5000
+            });
+            return;
+        }
+
+        const selectedHeadObjects = heads.filter((head) => selectedHeads.includes(head._id));
+        const data = selectedHeadObjects.map((head, index) => [
+            index + 1,
+            head?.name || "",
+            head?.openingBalance?.amount || 0
+        ]);
+        const doc = new jsPDF();
+        doc.setFontSize(16);
+        doc.text("Selected Heads Report", 14, 15);
+        autoTable(doc, {
+            startY: 25,
+            head: [["S.No", "Head Name", "Opening Balance"]],
+            body: data,
+            styles: { halign: "left", valign: "middle" },
+            headStyles: { fillColor: [41, 128, 185] },
+        });
+        doc.save("selected_heads.pdf");
     }
 
     useEffect(() => {
@@ -130,7 +182,9 @@ export const HeadsProvider = ({ children }) => {
         handleOpenAddHeadModal,
         handleCloseAddHeadModal,
         handleOpenDeleteSelectedHeadsModal,
-        handleCloseDeleteSelectedHeadsModal
+        handleCloseDeleteSelectedHeadsModal,
+        handleExportSelectedHeadsAsExcel,
+        handleExportSelectedHeadsAsPDF
     };
 
     return (

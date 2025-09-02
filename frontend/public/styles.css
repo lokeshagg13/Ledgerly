@@ -5036,22 +5036,22 @@ body,
 }
 /* #endregion */
 
-/* #region - Heads control */
-.heads-controls {
+/* #region - Heads main control */
+.heads-main-control {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.heads-controls-row {
+.heads-main-control-row {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   justify-content: center;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
-.heads-controls .control-btn {
+.heads-main-control .control-btn {
   white-space: nowrap;
   font-weight: 500;
   border-radius: 6px;
@@ -5061,32 +5061,32 @@ body,
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
-.heads-controls .control-btn.btn-blue {
+.heads-main-control .control-btn.btn-blue {
   background-color: #2563eb;
   color: white;
   border: 1px solid #2563eb;
 }
 
-.heads-controls .control-btn.btn-blue:hover {
+.heads-main-control .control-btn.btn-blue:hover {
   background-color: #1d4ed8;
   border-color: #1d4ed8;
 }
 
-.heads-controls .control-btn.btn-outline-light {
+.heads-main-control .control-btn.btn-outline-light {
   background-color: white;
   color: #1f2937;
   border: 1px solid #d1d5db;
 }
 
-.heads-controls .control-btn.btn-outline-light:hover {
+.heads-main-control .control-btn.btn-outline-light:hover {
   color: #111827;
   border-color: #9ca3af;
   background-color: #f9fafb;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
-.heads-controls .control-btn:disabled,
-.heads-controls .control-btn[disabled] {
+.heads-main-control .control-btn:disabled,
+.heads-main-control .control-btn[disabled] {
   opacity: 0.4 !important;
   border-color: #d1d5db !important;
   background-color: #f3f4f6 !important;
@@ -5094,42 +5094,95 @@ body,
   box-shadow: none;
 }
 
-.heads-controls .search-box-container {
+.heads-main-control .search-box-container {
   justify-content: flex-start;
   width: 100%;
-  max-width: 500px;
+  max-width: 300px;
   align-items: stretch;
 }
 
-.heads-controls .search-box {
+.heads-main-control .search-box {
+  position: relative;
   flex: 1;
 }
 
-.heads-controls .search-input {
+.heads-main-control .search-input {
   width: 100%;
   padding: 8px 36px 8px 12px;
-  font-size: 18px;
+  font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 6px;
   outline: none;
   transition: all 0.2s ease-in-out;
+  position: relative;
 }
 
-.heads-controls .search-input:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
+.heads-main-control .search-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 3px rgba(37, 99, 235, 0.5);
 }
 
-.heads-controls .search-icon {
+.heads-main-control .search-clear-icon {
   position: absolute;
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  pointer-events: none;
   font-size: 20px;
   color: #666;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  line-height: 0;
 }
 
+.heads-main-control .search-clear-icon:hover {
+  color: #000;
+}
+/* #endregion */
+
+/* #region - Heads selection control */
+.heads-selection-control {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2rem;
+  background-color: #f9f9f9;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 14px;
+}
+
+.heads-selection-text {
+  font-weight: 500;
+  color: #333;
+}
+
+.heads-selection-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.heads-selection-control .control-btn {
+  border: 1px solid #ccc;
+  background-color: white;
+  color: #333;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 0.3rem 0.75rem;
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+}
+
+.heads-selection-control .control-btn:hover:not(:disabled) {
+  background-color: #f0f0f0;
+  border-color: #bbb;
+}
+
+.heads-selection-control .control-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 /* #endregion */
 
 /* #region - Heads table */
@@ -5853,13 +5906,13 @@ body,
 /* #endregion */
 
 /* #region - Entry sets control */
-.entry-sets-controls {
+.entry-sets-main-control {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.entry-sets-controls-row {
+.entry-sets-main-control-row {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
@@ -5867,7 +5920,7 @@ body,
   margin-bottom: 1rem;
 }
 
-.entry-sets-controls .control-btn {
+.entry-sets-main-control .control-btn {
   white-space: nowrap;
   font-weight: 500;
   border-radius: 6px;
@@ -5877,32 +5930,32 @@ body,
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
-.entry-sets-controls .control-btn.btn-blue {
+.entry-sets-main-control .control-btn.btn-blue {
   background-color: #2563eb;
   color: white;
   border: 1px solid #2563eb;
 }
 
-.entry-sets-controls .control-btn.btn-blue:hover {
+.entry-sets-main-control .control-btn.btn-blue:hover {
   background-color: #1d4ed8;
   border-color: #1d4ed8;
 }
 
-.entry-sets-controls .control-btn.btn-outline-light {
+.entry-sets-main-control .control-btn.btn-outline-light {
   background-color: white;
   color: #1f2937;
   border: 1px solid #d1d5db;
 }
 
-.entry-sets-controls .control-btn.btn-outline-light:hover {
+.entry-sets-main-control .control-btn.btn-outline-light:hover {
   color: #111827;
   border-color: #9ca3af;
   background-color: #f9fafb;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
-.entry-sets-controls .control-btn:disabled,
-.entry-sets-controls .control-btn[disabled] {
+.entry-sets-main-control .control-btn:disabled,
+.entry-sets-main-control .control-btn[disabled] {
   opacity: 0.4 !important;
   border-color: #d1d5db !important;
   background-color: #f3f4f6 !important;
@@ -5910,17 +5963,17 @@ body,
   box-shadow: none;
 }
 
-.entry-sets-controls .search-box-container {
+.entry-sets-main-control .search-box-container {
   justify-content: flex-start;
   width: 100%;
   align-items: stretch;
 }
 
-.entry-sets-controls .search-box {
+.entry-sets-main-control .search-box {
   flex: 1;
 }
 
-.entry-sets-controls .search-input {
+.entry-sets-main-control .search-input {
   width: 100%;
   padding: 8px 36px 8px 12px;
   font-size: 16px;
@@ -5930,12 +5983,12 @@ body,
   transition: all 0.2s ease-in-out;
 }
 
-.entry-sets-controls .search-input:focus {
+.entry-sets-main-control .search-input:focus {
   border-color: #007bff;
   box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
 }
 
-.entry-sets-controls .search-icon {
+.entry-sets-main-control .search-icon {
   position: absolute;
   right: 10px;
   top: 50%;
