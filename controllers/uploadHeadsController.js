@@ -5,8 +5,28 @@ const mongoose = require('mongoose');
 const HeadModel = require('../models/Head');
 
 function fetchHeadData(data) {
-    const heads = data.filter(item => /[^0-9]/.test(item));
-    return heads;
+    const isBalancePattern = data.every((item, index) => {
+        if (index % 2 === 1) {
+            return /^[0-9.,]+$/.test(item.trim());
+        }
+        return true;
+    });
+
+    if (isBalancePattern) {
+        const heads = [];
+        for (let i = 0; i < data.length; i += 2) {
+            heads.push({
+                name: data[i].trim(),
+                openingBalance: parseFloat(data[i + 1].replace(/,/g, "")) || 0,
+            });
+        }
+        return heads;
+    } else {
+        return data.map((head) => ({
+            name: head.trim(),
+            openingBalance: 0,
+        }));
+    }
 }
 
 exports.extractHeadsFromPDF = async (req, res) => {
@@ -21,9 +41,7 @@ exports.extractHeadsFromPDF = async (req, res) => {
                 if (item.text) data.push(item.text);
             });
         });
-
         const heads = fetchHeadData(data);
-
         res.status(200).json({ heads });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -58,6 +76,16 @@ exports.uploadBulkHeads = async (req, res) => {
                 return res.status(400).json({ error: `${indexLabel}: Head name must not exceed 50 characters.` });
             }
 
+            // Default openingBalance to 0 if not provided or invalid
+            let headOpeningBalance = 0;
+            if (head.openingBalance !== undefined && head.openingBalance !== null) {
+                const parsedBalance = parseFloat(head.openingBalance);
+                if (!isNaN(parsedBalance)) {
+                    headOpeningBalance = parsedBalance;
+                }
+            }
+
+            // Check for duplicates
             const duplicate = await HeadModel.findOne({ userId, name: headNameTrimmed });
             if (duplicate) {
                 return res.status(400).json({ error: `${indexLabel}: Duplicate head detected.` });
@@ -66,7 +94,11 @@ exports.uploadBulkHeads = async (req, res) => {
             normalizedHeads.push({
                 userId,
                 name: headNameTrimmed,
-                active: headActive
+                active: headActive,
+                openingBalance: {
+                    amount: headOpeningBalance,
+                    lastUpdated: new Date()
+                }
             });
         }
 

@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
-import { Form, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Form, InputGroup, OverlayTrigger, Tooltip } from "react-bootstrap";
 import BulkHeadsRowControl from "./bulk-heads-row-control/BulkHeadsRowControl";
 import HeadsUploadContext from "../../../../../store/context/headsUploadContext";
+import { formatAmountWithCommas } from "../../../../../utils/formatUtils";
 
 function WithErrorTooltip({ children, error }) {
   if (!error) return children;
@@ -22,7 +23,7 @@ function WithErrorTooltip({ children, error }) {
 }
 
 function BulkHeadsRow({ index, data }) {
-  const { _id, name, active } = data;
+  const { _id, name, openingBalance, active } = data;
 
   const {
     handleModifyHead,
@@ -33,12 +34,27 @@ function BulkHeadsRow({ index, data }) {
 
   const handleChange = (ev, id) => {
     const { name, value } = ev.target;
-    let newValue = value;
-    if (name === "active") {
-      newValue = value === "true";
+    switch (name) {
+      case "active":
+        handleModifyHead(id, name, value === "true");
+        return;
+      case "openingBalance":
+        const rawValue = value.replace(/,/g, "");
+        const isValid = /^(\d+)?(\.\d{0,2})?$/.test(rawValue);
+        const numericValue = parseFloat(rawValue);
+        if (
+          (isValid || rawValue === "") &&
+          (rawValue === "" || numericValue <= Number.MAX_SAFE_INTEGER)
+        ) {
+          handleModifyHead(id, name, rawValue);
+        }
+        return;
+      default:
+        handleModifyHead(id, name, value);
+        return;
     }
-    handleModifyHead(id, name, newValue);
   };
+
   return (
     <tr>
       {/* Multi select checkbox */}
@@ -72,6 +88,32 @@ function BulkHeadsRow({ index, data }) {
             isInvalid={!!getEditHeadFieldError(_id, "name")}
             className={getEditHeadFieldError(_id, "name") ? "shake" : ""}
           />
+        </WithErrorTooltip>
+      </td>
+
+      {/* Head Opening Balance */}
+      <td className="opening-balance">
+        <WithErrorTooltip error={getEditHeadFieldError(_id, "openingBalance")}>
+          <InputGroup>
+            <InputGroup.Text>₹</InputGroup.Text>
+            <Form.Control
+              type="text"
+              name="openingBalance"
+              id={`editBulkHeadOpeningBalance${_id}`}
+              value={
+                openingBalance !== ""
+                  ? formatAmountWithCommas(openingBalance)
+                  : ""
+              }
+              autoComplete="off"
+              onChange={(ev) => handleChange(ev, _id)}
+              placeholder="Opening Balance"
+              isInvalid={!!getEditHeadFieldError(_id, "openingBalance")}
+              className={
+                getEditHeadFieldError(_id, "openingBalance") ? "shake" : ""
+              }
+            />
+          </InputGroup>
         </WithErrorTooltip>
       </td>
 

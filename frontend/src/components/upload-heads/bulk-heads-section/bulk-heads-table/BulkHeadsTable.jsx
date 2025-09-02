@@ -30,6 +30,7 @@ function BulkHeadsTable() {
             </th>
             <th scope="col">S.No.</th>
             <th scope="col">Head Name</th>
+            <th scope="col">Opening Balance</th>
             <th scope="col">Active</th>
             <th scope="col"></th>
           </tr>

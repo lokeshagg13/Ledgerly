@@ -11,9 +11,11 @@ const HeadsContext = createContext({
     errorFetchingHeads: null,
     isAddHeadModalVisible: false,
     isDeleteSelectedHeadsModalVisible: false,
+    checkIfAllHeadsSelected: () => { },
     setFilteredHeads: (newValue) => { },
     fetchHeadsFromDB: async (manual) => { },
     handleToggleHeadSelection: (headId) => { },
+    handleToggleAllHeadSelections: () => { },
     handleOpenAddHeadModal: () => { },
     handleCloseAddHeadModal: () => { },
     handleOpenDeleteSelectedHeadsModal: () => { },
@@ -29,6 +31,10 @@ export const HeadsProvider = ({ children }) => {
     const [errorFetchingHeads, setErrorFetchingHeads] = useState(null);
     const [isAddHeadModalVisible, setIsAddHeadModalVisible] = useState(false);
     const [isDeleteSelectedHeadsModalVisible, setIsDeleteSelectedHeadsModalVisible] = useState(false);
+
+    function checkIfAllHeadsSelected() {
+        return filteredHeads.every((head) => selectedHeads.includes(head._id));
+    }
 
     async function fetchHeadsFromDB(manual = false, onlyActive = null) {
         setIsLoadingHeads(true);
@@ -78,6 +84,15 @@ export const HeadsProvider = ({ children }) => {
         );
     }
 
+    function handleToggleAllHeadSelections() {
+        if (checkIfAllHeadsSelected()) {
+            setSelectedHeads([]);
+        } else {
+            setSelectedHeads(filteredHeads.map((head) => head._id));
+        }
+    }
+
+
     function handleOpenAddHeadModal() {
         setIsAddHeadModalVisible(true);
     }
@@ -107,9 +122,11 @@ export const HeadsProvider = ({ children }) => {
         errorFetchingHeads,
         isAddHeadModalVisible,
         isDeleteSelectedHeadsModalVisible,
+        checkIfAllHeadsSelected,
         setFilteredHeads,
         fetchHeadsFromDB,
         handleToggleHeadSelection,
+        handleToggleAllHeadSelections,
         handleOpenAddHeadModal,
         handleCloseAddHeadModal,
         handleOpenDeleteSelectedHeadsModal,

@@ -5616,6 +5616,15 @@ body,
   border-color: #dc3545;
 }
 
+.bulk-heads-table td.opening-balance input {
+  text-align: right;
+}
+
+.bulk-heads-table td.opening-balance input.is-invalid {
+  padding-right: 2rem;
+  border-color: #dc3545;
+}
+
 .bulk-heads-table td.active select.is-invalid {
   border-color: #dc3545;
 }

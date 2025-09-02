@@ -1,12 +1,19 @@
 import { useContext } from "react";
-import { Spinner, Table } from "react-bootstrap";
+import { Form, Spinner, Table } from "react-bootstrap";
 import HeadsContext from "../../../store/context/headsContext";
 import HeadRow from "./head-row/HeadRow";
 import ErrorImage from "../../../images/chart-error.png";
 
 function HeadsTable() {
-  const { isLoadingHeads, heads, filteredHeads, errorFetchingHeads } =
-    useContext(HeadsContext);
+  const {
+    isLoadingHeads,
+    heads,
+    filteredHeads,
+    selectedHeads,
+    errorFetchingHeads,
+    checkIfAllHeadsSelected,
+    handleToggleAllHeadSelections,
+  } = useContext(HeadsContext);
 
   if (isLoadingHeads) {
     return (
@@ -44,9 +51,27 @@ function HeadsTable() {
       <Table className="heads-table" borderless aria-label="Firm heads list">
         <thead>
           <tr>
-            <th></th>
-            <th scope="col">Category</th>
+            <th scope="col">
+              <Form.Check
+                type="checkbox"
+                className="heads-all-checkbox"
+                id="headsAllCheckbox"
+                checked={checkIfAllHeadsSelected()}
+                onChange={() => handleToggleAllHeadSelections()}
+                aria-label={`${
+                  checkIfAllHeadsSelected() ? "Unselect" : "Select"
+                } all heads`}
+              />
+            </th>
+            <th scope="col">
+              {selectedHeads.length > 0
+                ? `${selectedHeads.length} head${
+                    selectedHeads.length > 1 ? "s" : ""
+                  } selected`
+                : "Category"}
+            </th>
             <th scope="col">Opening Balance</th>
+
             <th></th>
           </tr>
         </thead>

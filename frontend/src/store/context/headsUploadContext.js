@@ -53,7 +53,8 @@ export function HeadsUploadContextProvider({ children }) {
         if (isEditHeadSectionVisible && extractedHeads?.length > 0) {
             const headsCopy = extractedHeads.map((head, idx) => ({
                 _id: idx,
-                name: head?.trim() || "",
+                name: head?.name?.trim() || "",
+                openingBalance: head?.openingBalance ?? 0,
                 active: true,
             }));
             setEditableHeads([...headsCopy]);
@@ -187,11 +188,16 @@ export function HeadsUploadContextProvider({ children }) {
     };
 
     function handleResetHead(id) {
-        const originalName = extractedHeads[id];
+        const original = extractedHeads[id];
         setEditableHeads((prev) =>
             prev.map((head) => (
                 head._id === id
-                    ? { _id: id, name: originalName, active: true }
+                    ? {
+                        _id: id,
+                        name: original?.name?.trim() || "",
+                        openingBalance: original?.openingBalance ?? 0,
+                        active: true
+                    }
                     : head
             ))
         );
@@ -256,11 +262,18 @@ export function HeadsUploadContextProvider({ children }) {
         editableHeads.forEach((head) => {
             const errors = {};
 
-            // Name
+            // Name validation
             if (!head.name || head.name.trim().length === 0) {
                 errors.name = "Head name cannot be empty.";
             } else if (head.name.trim().length > 50) {
                 errors.name = "Head name must not exceed 50 characters.";
+            }
+
+            // Opening balance validation (must be a number, not negative)
+            if (isNaN(head.openingBalance)) {
+                errors.openingBalance = "Opening balance must be a number.";
+            } else if (Number(head.openingBalance) < 0) {
+                errors.openingBalance = "Opening balance cannot be negative.";
             }
 
             if (Object.keys(errors).length > 0) {
@@ -325,7 +338,12 @@ export function HeadsUploadContextProvider({ children }) {
         const updatedHeads = editableHeads.map((head) => {
             if (!selectedHeadIds.has(head._id)) return head;
             const original = extractedHeads[head._id];
-            return { _id: head._id, name: original?.trim() || "", active: true };
+            return {
+                _id: head._id,
+                name: original?.name?.trim() || "",
+                openingBalance: original?.openingBalance ?? 0,
+                active: true
+            };
         });
         setEditableHeads(updatedHeads);
         setInputFieldErrorsMap((prevMap) => {
@@ -362,7 +380,8 @@ export function HeadsUploadContextProvider({ children }) {
     function handleResetAllHeads() {
         const headsCopy = extractedHeads.map((head, idx) => ({
             _id: idx,
-            name: head?.trim() || "",
+            name: head?.name?.trim() || "",
+            openingBalance: head?.openingBalance ?? 0,
             active: true,
         }));
         setEditableHeads([...headsCopy]);
