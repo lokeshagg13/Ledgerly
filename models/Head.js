@@ -12,6 +12,16 @@ const headSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    openingBalance: {
+        amount: {
+            type: Number,
+            default: 0
+        },
+        lastUpdated: {
+            type: Date,
+            default: Date.now
+        }
+    },
     active: {
         type: Boolean,
         default: true

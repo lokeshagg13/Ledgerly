@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState, useCallback } from "react";
 import { Modal, Button, Form, InputGroup } from "react-bootstrap";
 import { toast } from "react-toastify";
 
@@ -6,25 +6,24 @@ import { axiosPrivate } from "../../../api/axios";
 import HeadsContext from "../../../store/context/headsContext";
 import { formatAmountWithCommas } from "../../../utils/formatUtils";
 
-function AddHeadModal() {
-  const newHeadNameRef = useRef();
-  const { isAddHeadModalVisible, fetchHeadsFromDB, handleCloseAddHeadModal } =
-    useContext(HeadsContext);
+function EditHeadModal({ show, headData, onClose }) {
+  const editHeadNameRef = useRef();
+  const { fetchHeadsFromDB } = useContext(HeadsContext);
 
-  const [addHeadFormData, setAddHeadFormData] = useState({
-    name: "",
-    openingBalance: "",
+  const [editHeadFormData, setEditHeadFormData] = useState({
+    name: headData.name,
+    openingBalance: headData.openingBalance?.amount ?? "",
   });
   const [inputFieldErrors, setInputFieldErrors] = useState({});
-  const [isAdding, setIsAdding] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [commonErrorMessage, setCommonErrorMessage] = useState("");
 
   // Focus input field on mount
   useEffect(() => {
-    if (isAddHeadModalVisible) {
-      newHeadNameRef.current?.focus();
+    if (show) {
+      editHeadNameRef.current?.focus();
     }
-  }, [isAddHeadModalVisible]);
+  }, [show]);
 
   // For hiding error messages after 6 seconds
   useEffect(() => {
@@ -38,10 +37,10 @@ function AddHeadModal() {
     return Object.keys(inputFieldErrors).includes(fieldName);
   };
 
-  const handleResetAddHeadFormData = () => {
-    setAddHeadFormData({
-      name: "",
-      openingBalance: "",
+  const handleResetEditHeadFormData = () => {
+    setEditHeadFormData({
+      name: headData.name,
+      openingBalance: headData.openingBalance,
     });
   };
 
@@ -53,7 +52,7 @@ function AddHeadModal() {
     });
     switch (name) {
       case "name":
-        setAddHeadFormData({ ...addHeadFormData, [name]: value });
+        setEditHeadFormData({ ...editHeadFormData, [name]: value });
         break;
       case "openingBalance":
         const rawValue = value.replace(/,/g, "");
@@ -63,24 +62,20 @@ function AddHeadModal() {
           (isValid || rawValue === "") &&
           (rawValue === "" || numericValue <= Number.MAX_SAFE_INTEGER)
         ) {
-          setAddHeadFormData({ ...addHeadFormData, [name]: rawValue });
+          setEditHeadFormData({ ...editHeadFormData, [name]: rawValue });
         }
         break;
       default:
     }
   };
 
-  // Keyboard support for closing modal and submitting
+  // Keyboard support for closing modal
   useEffect(() => {
-    if (isAdding) return;
+    if (isUpdating) return;
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
         e.preventDefault();
         handleCancel();
-      }
-      if (e.key === "Enter") {
-        e.preventDefault();
-        handleAddHead();
       }
     };
     document.addEventListener("keydown", handleKeyDown);
@@ -88,102 +83,101 @@ function AddHeadModal() {
       document.removeEventListener("keydown", handleKeyDown);
     };
     // eslint-disable-next-line
-  }, [isAdding]);
+  }, [isUpdating]);
 
   const validateHeadFormData = () => {
-    const { name, openingBalance } = addHeadFormData;
-    const nameTrimmed = addHeadFormData.name.trim();
-
+    const { name, openingBalance } = editHeadFormData;
+    const nameTrimmed = name.trim();
     const errors = {};
 
-    // Validate name field
     if (!nameTrimmed) errors.name = "Head name is required.";
     else if (nameTrimmed.length > 50)
       errors.name = "Head name is too long (max 50 characters).";
     else if (nameTrimmed.includes(","))
       errors.name = "Head name cannot contain commas.";
 
-    // Validate opening balance field
     if (openingBalance !== "") {
       if (isNaN(openingBalance) || Number(openingBalance) < 0)
         errors.openingBalance =
           "Opening balance must be a non-negative number.";
       else if (Number(openingBalance) > Number.MAX_SAFE_INTEGER)
-        errors.amount = "Opening balance exceeds the maximum allowed value.";
+        errors.openingBalance =
+          "Opening balance exceeds the maximum allowed value.";
     }
 
     return errors;
   };
 
   // Handle adding a new head by calling the API
-  const handleAddHead = async () => {
-    if (isAdding) return;
+  const handleUpdateHead = async () => {
+    if (isUpdating) return;
     const errors = validateHeadFormData();
     setInputFieldErrors(errors);
     if (Object.keys(errors).length > 0) return;
 
-    const { name, openingBalance } = addHeadFormData;
-    setIsAdding(true);
+    const { name, openingBalance } = editHeadFormData;
+    setIsUpdating(true);
     try {
-      await axiosPrivate.post("/user/heads", {
+      await axiosPrivate.put(`/user/heads/${headData._id}`, {
         name: name,
         openingBalance:
           openingBalance !== "" ? Number(openingBalance) : undefined,
       });
       handleCancel();
-      toast.success(`Head "${name}" added successfully.`, {
+      toast.success(`Head "${name}" updated successfully.`, {
         position: "top-center",
         autoClose: 3000,
       });
       fetchHeadsFromDB();
     } catch (error) {
       if (!error?.response) {
-        setCommonErrorMessage("Failed to add head: No server response.");
+        setCommonErrorMessage("Failed to update head: No server response.");
       } else {
         setCommonErrorMessage(
-          error?.response?.data?.error || "Failed to add head."
+          error?.response?.data?.error || "Failed to update head."
         );
       }
     } finally {
-      setIsAdding(false);
+      setIsUpdating(false);
     }
   };
 
   const handleCancel = useCallback(() => {
-    if (isAdding) return;
+    if (isUpdating) return;
     setCommonErrorMessage("");
-    handleResetAddHeadFormData();
-    handleCloseAddHeadModal();
-  }, [isAdding, handleCloseAddHeadModal]);
+    handleResetEditHeadFormData();
+    onClose();
+  }, [isUpdating, onClose]);
 
   return (
     <Modal
-      show={isAddHeadModalVisible}
+      show={show}
       onHide={handleCancel}
       centered
-      backdrop={isAdding ? "static" : true}
-      keyboard={!isAdding}
+      backdrop={isUpdating ? "static" : true}
+      keyboard={!isUpdating}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Add New Head</Modal.Title>
+        <Modal.Title>Edit Head</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
+          {/* Head Name */}
           <Form.Group className="mb-3">
             <Form.Label>Head Name</Form.Label>
             <Form.Control
-              aria-label="New head name"
+              aria-label="Edit head name"
               type="text"
               placeholder="e.g. Company Names, Account Names, etc"
               name="name"
-              id="newHeadName"
-              value={addHeadFormData.name}
+              id="editHeadName"
+              value={editHeadFormData.name}
               onChange={handleChange}
               isInvalid={checkIfInputFieldInvalid("name")}
               className={`py-1 ${
                 checkIfInputFieldInvalid("name") ? "shake" : ""
               }`}
-              ref={newHeadNameRef}
+              ref={editHeadNameRef}
               maxLength={50}
             />
             {checkIfInputFieldInvalid("name") && (
@@ -199,10 +193,10 @@ function AddHeadModal() {
               <Form.Control
                 type="text"
                 name="openingBalance"
-                id="newHeadOpeningBalance"
+                id="editHeadOpeningBalance"
                 value={
-                  addHeadFormData.openingBalance !== ""
-                    ? formatAmountWithCommas(addHeadFormData.openingBalance)
+                  editHeadFormData.openingBalance !== ""
+                    ? formatAmountWithCommas(editHeadFormData.openingBalance)
                     : ""
                 }
                 autoComplete="off"
@@ -231,26 +225,26 @@ function AddHeadModal() {
         <Button
           variant="outline-secondary"
           onClick={handleCancel}
-          disabled={isAdding}
+          disabled={isUpdating}
         >
           Cancel
         </Button>
         <Button
           className="btn-blue"
-          onClick={handleAddHead}
-          disabled={isAdding}
+          onClick={handleUpdateHead}
+          disabled={isUpdating}
         >
-          {isAdding ? (
+          {isUpdating ? (
             <>
               <span
                 className="spinner-border spinner-border-sm me-2"
                 role="status"
                 aria-hidden="true"
               ></span>
-              Adding...
+              Updating...
             </>
           ) : (
-            "Add Head"
+            "Update Head"
           )}
         </Button>
       </Modal.Footer>
@@ -258,4 +252,4 @@ function AddHeadModal() {
   );
 }
 
-export default AddHeadModal;
+export default EditHeadModal;

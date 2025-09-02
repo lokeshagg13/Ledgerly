@@ -2,19 +2,21 @@ import { useContext, useState } from "react";
 import { Form } from "react-bootstrap";
 
 import HeadsContext from "../../../../store/context/headsContext";
-import HeadName from "./head-name/HeadName";
 import HeadRowControl from "./head-row-control/HeadRowControl";
+import { formatAmountForDisplay } from "../../../../utils/formatUtils";
+import EditHeadModal from "../../heads-modals/EditHeadModal";
 
-function HeadRow({ headId, headName }) {
+function HeadRow({ headId, headData }) {
+  const { name, openingBalance } = headData;
   const { selectedHeads, handleToggleHeadSelection } = useContext(HeadsContext);
-  const [isNameEditorOn, setIsNameEditorOn] = useState(false);
+  const [isEditHeadModalVisible, setIsEditHeadModalVisible] = useState(false);
 
-  const handleOpenNameEditor = () => {
-    setIsNameEditorOn(true);
+  const handleOpenEditHeadModal = () => {
+    setIsEditHeadModalVisible(true);
   };
 
-  const handleCloseNameEditor = () => {
-    setIsNameEditorOn(false);
+  const handleCloseEditHeadModal = () => {
+    setIsEditHeadModalVisible(false);
   };
 
   return (
@@ -26,24 +28,25 @@ function HeadRow({ headId, headName }) {
           id={`head-checkbox-${headId}`}
           checked={selectedHeads.includes(headId)}
           onChange={() => handleToggleHeadSelection(headId)}
-          aria-label={`Select head ${headName}`}
+          aria-label={`Select head ${name}`}
         />
       </td>
-      <td>
-        <HeadName
-          headId={headId}
-          headName={headName}
-          isEditorOn={isNameEditorOn}
-          onCloseEditor={handleCloseNameEditor}
-        />
-      </td>
+      <td>{name}</td>
+      <td>{formatAmountForDisplay(openingBalance.amount)}</td>
       <td>
         <HeadRowControl
           headId={headId}
-          headName={headName}
-          onOpenEditor={handleOpenNameEditor}
+          headName={name}
+          onEdit={handleOpenEditHeadModal}
         />
       </td>
+      {isEditHeadModalVisible && (
+        <EditHeadModal
+          show={isEditHeadModalVisible}
+          headData={headData}
+          onClose={handleCloseEditHeadModal}
+        />
+      )}
     </tr>
   );
 }

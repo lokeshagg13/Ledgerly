@@ -20,7 +20,7 @@ exports.getHeads = async (req, res) => {
 // 2. Add a single head
 exports.addHead = async (req, res) => {
   try {
-    const { name, active } = req.body;
+    const { name, active, openingBalance } = req.body;
 
     if (!name || name.trim() === "") {
       return res.status(400).json({ error: "Head name is required." });
@@ -41,7 +41,11 @@ exports.addHead = async (req, res) => {
     const newHead = await HeadModel.create({
       name: name.trim(),
       userId: req.userId,
-      active: active !== undefined ? active : true
+      active: active !== undefined ? !!active : true,
+      openingBalance: {
+        amount: openingBalance !== undefined ? Number(openingBalance) : 0,
+        lastUpdated: new Date()
+      }
     });
 
     return res.status(201).json({ head: newHead });
@@ -50,16 +54,16 @@ exports.addHead = async (req, res) => {
   }
 };
 
-// 3. Update head (name and/or active)
+// 3. Update head (name, active, and/or opening balance)
 exports.updateHead = async (req, res) => {
   try {
     const { headId } = req.params;
-    const { newName, active } = req.body;
+    const { name, active, openingBalance } = req.body;
 
-    if (newName && newName.trim() === "") {
+    if (name && name.trim() === "") {
       return res.status(400).json({ error: "New head name cannot be empty." });
     }
-    if (newName && newName.trim().length > 50) {
+    if (name && name.trim().length > 50) {
       return res.status(400).json({ error: "Head name must be under 50 characters." });
     }
 
@@ -68,20 +72,28 @@ exports.updateHead = async (req, res) => {
       return res.status(404).json({ error: "Head not found." });
     }
 
-    if (newName && newName.trim().toLowerCase() !== current.name.toLowerCase()) {
+    // Update name if different
+    if (name && name.trim().toLowerCase() !== current.name.toLowerCase()) {
       const duplicate = await HeadModel.findOne({
         _id: { $ne: headId },
-        name: { $regex: `^${newName.trim()}$`, $options: "i" },
+        name: { $regex: `^${name.trim()}$`, $options: "i" },
         userId: req.userId
       });
       if (duplicate) {
         return res.status(409).json({ error: `Head '${duplicate.name}' already exists.` });
       }
-      current.name = newName.trim();
+      current.name = name.trim();
     }
 
+    // Update active status if provided
     if (active !== undefined) {
       current.active = !!active;
+    }
+
+    // Update opening balance if provided
+    if (openingBalance !== undefined) {
+      current.openingBalance.amount = Number(openingBalance);
+      current.openingBalance.lastUpdated = new Date();
     }
 
     await current.save();

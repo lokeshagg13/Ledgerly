@@ -46,13 +46,16 @@ function HeadsTable() {
           <tr>
             <th></th>
             <th scope="col">Category</th>
+            <th scope="col">Opening Balance</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          {filteredHeads.map((head) => (
-            <HeadRow key={head._id} headId={head._id} headName={head.name} />
-          ))}
+          {[...filteredHeads]
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((head) => (
+              <HeadRow key={head._id} headId={head._id} headData={head} />
+            ))}
         </tbody>
       </Table>
     </div>

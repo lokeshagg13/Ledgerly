@@ -28,11 +28,13 @@ function AddTransactionModal({ onClose }) {
 
   // Keyboard support for closing modal and submitting
   useEffect(() => {
+    if (isSubmitting) return;
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
+        e.preventDefault();
         onClose();
       }
-      if (e.key === "Enter" && !isSubmitting) {
+      if (e.key === "Enter") {
         e.preventDefault();
         handleSubmit();
       }

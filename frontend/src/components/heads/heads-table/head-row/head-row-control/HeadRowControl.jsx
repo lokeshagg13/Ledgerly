@@ -4,7 +4,7 @@ import DeleteHeadModal from "../../../heads-modals/DeleteHeadModal";
 import EditIcon from "../../../../ui/icons/EditIcon";
 import TrashIcon from "../../../../ui/icons/TrashIcon";
 
-function HeadRowControl({ headId, headName, onOpenEditor }) {
+function HeadRowControl({ headId, headName, onEdit }) {
   const [isDeleteHeadModalVisible, setIsDeleteHeadModalVisible] =
     useState(false);
 
@@ -29,7 +29,7 @@ function HeadRowControl({ headId, headName, onOpenEditor }) {
       >
         <Button
           className="control-btn btn-outline-light"
-          onClick={onOpenEditor}
+          onClick={onEdit}
           aria-label={`Edit head ${headName}`}
         >
           <EditIcon />
