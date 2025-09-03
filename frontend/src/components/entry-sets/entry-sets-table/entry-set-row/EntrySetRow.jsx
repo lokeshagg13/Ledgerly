@@ -2,6 +2,7 @@ import { useContext, useMemo } from "react";
 import { Button, Form } from "react-bootstrap";
 import useAppNavigate from "../../../../store/hooks/useAppNavigate";
 import EntrySetsContext from "../../../../store/context/entrySetsContext";
+import EntrySetDownloader from "./download-entry-set/EntrySetDownloader";
 
 function EntrySetRow({ entrySetId, entrySetDate }) {
   const { handleNavigateToPath } = useAppNavigate();
@@ -53,14 +54,15 @@ function EntrySetRow({ entrySetId, entrySetDate }) {
         <Button
           variant="outline-primary"
           size="sm"
-          className="view-button"
+          className="edit-button"
           onClick={handleEditEntrySet}
         >
           Edit
         </Button>
-        <Button variant="outline-primary" size="sm" className="view-button">
-          Download
-        </Button>
+        <EntrySetDownloader
+          entrySetId={entrySetId}
+          formattedEntrySetDate={formattedDate}
+        />
       </td>
     </tr>
   );
