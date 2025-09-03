@@ -87,7 +87,7 @@ exports.getTransactions = async (req, res) => {
 
         return res.status(200).json({ transactions: formatTransactions(transactions) });
     } catch (error) {
-        return res.status(500).json({ error: "Error fetching transactions: " + error.message });
+        return res.status(500).json({ error: "Server Error while fetching transactions: " + error.message });
     }
 };
 
@@ -144,7 +144,7 @@ exports.addTransaction = async (req, res) => {
         });
         return res.status(201).json({ transaction: newTransaction });
     } catch (error) {
-        return res.status(500).json({ error: "Error adding transaction: " + error.message });
+        return res.status(500).json({ error: "Server Error while adding transaction: " + error.message });
     }
 };
 
@@ -224,7 +224,7 @@ exports.updateTransaction = async (req, res) => {
         if (!updatedTxn) return res.status(404).json({ error: "Transaction not found." });
         return res.status(200).json({ transaction: updatedTxn });
     } catch (error) {
-        return res.status(500).json({ error: "Error updating transaction: " + error.message });
+        return res.status(500).json({ error: "Server Error while updating transaction: " + error.message });
     }
 };
 
@@ -244,7 +244,7 @@ exports.deleteSingleTransaction = async (req, res) => {
 
         return res.status(200).json({ message: "Transaction deleted." });
     } catch (error) {
-        return res.status(500).json({ error: "Error deleting transaction: " + error.message });
+        return res.status(500).json({ error: "Server Error while deleting transaction: " + error.message });
     }
 };
 
@@ -273,6 +273,6 @@ exports.deleteMultipleTransactions = async (req, res) => {
             message: `${deletedResult.deletedCount} transaction(s) deleted.`
         });
     } catch (error) {
-        return res.status(500).json({ error: "Error deleting transaction(s): " + error.message });
+        return res.status(500).json({ error: "Server Error while deleting transaction(s): " + error.message });
     }
 };

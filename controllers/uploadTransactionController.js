@@ -59,7 +59,7 @@ exports.extractTransactionsFromPDF = async (req, res) => {
 
         res.status(200).json({ transactions });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).json({ error: "Server Error while extracting transactions: " + error.message });
     } finally {
         fs.unlink(pdfPath, () => { });
     }
@@ -141,7 +141,7 @@ exports.uploadBulkTransactions = async (req, res) => {
         await session.abortTransaction();
         session.endSession();
         return res.status(500).json({
-            error: "Failed to upload transactions: " + error.message,
+            error: "Server Error while uploading transactions: " + error.message,
         });
     }
 }

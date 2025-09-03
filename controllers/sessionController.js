@@ -51,6 +51,6 @@ exports.handleRefreshToken = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ error: "Unknown error occurred: " + error.message });
+      .json({ error: "Server Error while refreshing session: " + error.message });
   }
 };

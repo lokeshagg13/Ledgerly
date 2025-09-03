@@ -14,9 +14,8 @@ const verifyIndividualUser = async (req, res, next) => {
         }
 
         next();
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Server error" });
+    } catch (error) {
+        res.status(500).json({ error: "Server error while verifying user: " + error.message });
     }
 };
 
@@ -34,9 +33,8 @@ const verifyFirmUser = async (req, res, next) => {
         }
 
         next();
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Server error" });
+    } catch (error) {
+        res.status(500).json({ error: "Server error while verifying user: " + error.message });
     }
 };
 

@@ -17,7 +17,7 @@ exports.getAllGrouped = async (req, res) => {
 
         return res.status(200).json({ groupedSubcategories: response });
     } catch (error) {
-        res.status(500).json({ error: "Error fetching grouped subcategories: " + error.message });
+        res.status(500).json({ error: "Server Error while fetching grouped subcategories: " + error.message });
     }
 };
 
@@ -31,7 +31,7 @@ exports.getByCategory = async (req, res) => {
 
         return res.status(200).json({ subcategories });
     } catch (error) {
-        res.status(500).json({ error: "Error fetching subcategories: " + error.message });
+        res.status(500).json({ error: "Server Error while fetching subcategories: " + error.message });
     }
 };
 
@@ -68,7 +68,7 @@ exports.addSubcategory = async (req, res) => {
 
         return res.status(201).json({ subcategory: newSubcategory });
     } catch (error) {
-        res.status(500).json({ error: "Error adding subcategory: " + error.message });
+        res.status(500).json({ error: "Server Error while adding subcategory: " + error.message });
     }
 };
 
@@ -100,7 +100,7 @@ exports.updateSubcategory = async (req, res) => {
 
         return res.status(200).json({ subcategory: updated });
     } catch (error) {
-        res.status(500).json({ error: "Error updating subcategory: " + error.message });
+        res.status(500).json({ error: "Server Error while updating subcategory: " + error.message });
     }
 };
 
@@ -132,7 +132,7 @@ exports.deleteSingleSubcategory = async (req, res) => {
 
         return res.status(200).json({ message: "Subcategory deleted successfully" });
     } catch (error) {
-        res.status(500).json({ error: "Error deleting subcategory: " + error.message });
+        res.status(500).json({ error: "Server Error while deleting subcategory: " + error.message });
     }
 };
 
@@ -185,6 +185,6 @@ exports.deleteMultipleSubcategories = async (req, res) => {
     } catch (error) {
         res
             .status(500)
-            .json({ error: "Error deleting subcategories: " + error.message });
+            .json({ error: "Server Error while deleting subcategories: " + error.message });
     }
 };

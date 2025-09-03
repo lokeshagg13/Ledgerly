@@ -9,7 +9,7 @@ exports.getCategories = async (req, res) => {
     const categories = await CategoryModel.find({ userId: req.userId });
     return res.status(200).json({ categories });
   } catch (error) {
-    res.status(500).json({ error: "Error fetching categories: " + error.message });
+    res.status(500).json({ error: "Server Error while fetching categories: " + error.message });
   }
 };
 
@@ -43,7 +43,7 @@ exports.addCategory = async (req, res) => {
 
     return res.status(201).json({ category: newCategory });
   } catch (error) {
-    res.status(500).json({ error: "Error adding category: " + error.message });
+    res.status(500).json({ error: "Server Error while adding category: " + error.message });
   }
 };
 
@@ -91,7 +91,7 @@ exports.updateCategoryName = async (req, res) => {
 
     return res.status(200).json({ category: current });
   } catch (error) {
-    res.status(500).json({ error: "Error updating category: " + error.message });
+    res.status(500).json({ error: "Server Error while updating category: " + error.message });
   }
 };
 
@@ -127,7 +127,7 @@ exports.deleteSingleCategory = async (req, res) => {
       message: "Category and its subcategories deleted"
     });
   } catch (error) {
-    res.status(500).json({ error: "Error deleting category: " + error.message });
+    res.status(500).json({ error: "Server Error while deleting category: " + error.message });
   }
 };
 
@@ -181,6 +181,6 @@ exports.deleteMultipleCategories = async (req, res) => {
       message: `${deletedResult.deletedCount} category(ies) and their subcategories deleted.`,
     });
   } catch (error) {
-    res.status(500).json({ error: "Error deleting category(ies): " + error.message });
+    res.status(500).json({ error: "Server Error while deleting category(ies): " + error.message });
   }
 };

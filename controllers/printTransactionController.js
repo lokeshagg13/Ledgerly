@@ -106,33 +106,6 @@ exports.getTransactionsWithPrintPreview = async (req, res) => {
             tablePreviewImages: tableBase64Images,
         });
     } catch (error) {
-        return res.status(500).json({ error: "Error fetching transactions and generating print preview: " + error.message });
+        return res.status(500).json({ error: "Server Error while fetching transactions and generating print preview: " + error.message });
     }
 };
-
-// const formattedTransactions = [];
-
-// const numAdd = 500;
-// for (let i = 0; i < numAdd; i++) {
-//     formattedTransactions.push({
-//         _id: `${i}1 `,
-//         type: "debit",
-//         amount: 100000000000,
-//         categoryName: "RandomCategoryOf20Ch",
-//         subcategoryName: "RandomSubcategoryOf2",
-//         date: "2022-02-01",
-//     });
-// }
-
-// const numAdd2 = 125;
-// for (let i = 0; i < numAdd2; i++) {
-//     formattedTransactions.push({
-//         _id: `${i}2`,
-//         type: "credit",
-//         amount: 900000000000,
-//         categoryName: "RandomCategoryOf20Ch",
-//         subcategoryName: "RandomSubcategoryOf2",
-//         date: "2022-02-01",
-//     });
-// }
-

@@ -50,7 +50,6 @@ export const DownloadEntrySetContextProvider = ({ entrySetId, formattedEntrySetD
             setIsDownloadingEntrySetDetails(true);
 
             const fetched = await fetchEntrySetDetails();
-            console.log(fetched)
             if (!fetched) return;
 
             const { dataRows, balance } = fetched;
@@ -99,7 +98,6 @@ export const DownloadEntrySetContextProvider = ({ entrySetId, formattedEntrySetD
 
             doc.save(`EntrySet_${formattedEntrySetDate}.pdf`);
         } catch (error) {
-            console.log(error)
             toast.error(
                 `Error occurred while downloading PDF: ${error?.response?.data?.error || error?.message || error}`,
                 { autoClose: 5000, position: "top-center" }

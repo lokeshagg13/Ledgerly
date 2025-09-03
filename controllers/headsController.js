@@ -13,7 +13,7 @@ exports.getHeads = async (req, res) => {
     const heads = await HeadModel.find(filter);
     return res.status(200).json({ heads });
   } catch (error) {
-    res.status(500).json({ error: "Error fetching heads: " + error.message });
+    res.status(500).json({ error: "Server Error while fetching heads: " + error.message });
   }
 };
 
@@ -50,7 +50,7 @@ exports.addHead = async (req, res) => {
 
     return res.status(201).json({ head: newHead });
   } catch (error) {
-    res.status(500).json({ error: "Error adding head: " + error.message });
+    res.status(500).json({ error: "Server Error while adding head: " + error.message });
   }
 };
 
@@ -99,7 +99,7 @@ exports.updateHead = async (req, res) => {
     await current.save();
     return res.status(200).json({ head: current });
   } catch (error) {
-    res.status(500).json({ error: "Error updating head: " + error.message });
+    res.status(500).json({ error: "Server Error while updating head: " + error.message });
   }
 };
 
@@ -121,7 +121,7 @@ exports.deleteSingleHead = async (req, res) => {
 
     return res.status(200).json({ message: "Head deleted successfully." });
   } catch (error) {
-    res.status(500).json({ error: "Error deleting head: " + error.message });
+    res.status(500).json({ error: "Server Error while deleting head: " + error.message });
   }
 };
 
@@ -153,6 +153,6 @@ exports.deleteMultipleHeads = async (req, res) => {
       message: `${deletedResult.deletedCount} head(s) deleted successfully.`
     });
   } catch (error) {
-    res.status(500).json({ error: "Error deleting heads: " + error.message });
+    res.status(500).json({ error: "Server Error while deleting heads: " + error.message });
   }
 };

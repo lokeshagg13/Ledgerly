@@ -250,8 +250,7 @@ exports.getFinancialYears = async (req, res) => {
         res.status(200).json(years);
 
     } catch (error) {
-        console.error("Error fetching financial years:", error);
-        res.status(500).json({ error: "Server error while fetching financial years." });
+        res.status(500).json({ error: "Server Error while fetching financial years: " + error.message });
     }
 };
 
@@ -374,8 +373,7 @@ exports.getDailyBalanceSeries = async (req, res) => {
         return res.status(200).json(series);
 
     } catch (error) {
-        console.error("Error generating daily balance series:", error);
-        res.status(500).json({ error: "Server error while generating daily balance series" });
+        res.status(500).json({ error: "Server Error while generating daily balance series: " + error.message });
     }
 };
 
@@ -453,8 +451,7 @@ exports.getMonthlySpendingSeries = async (req, res) => {
         res.status(200).json(data);
 
     } catch (error) {
-        console.error("Error fetching monthly spending chart:", error);
-        res.status(500).json({ error: "Server error while fetching monthly spending chart." });
+        res.status(500).json({ error: "Server Error while fetching monthly spending chart: " + error.message });
     }
 };
 
@@ -566,8 +563,7 @@ exports.getMonthlyBalanceSeries = async (req, res) => {
         res.status(200).json(data);
 
     } catch (error) {
-        console.error("Error generating cumulative monthly balance series:", error);
-        res.status(500).json({ error: "Server error while generating cumulative monthly balance series" });
+        res.status(500).json({ error: "Server Error while generating cumulative monthly balance series: " + error.message });
     }
 };
 

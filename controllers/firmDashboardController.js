@@ -14,7 +14,7 @@ exports.getCurrentBalance = async (req, res) => {
         // 1. Get the user's opening balance
         const user = await UserModel.findById(userId).select("openingBalance");
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({ error: "User not found" });
         }
         const openingBalance = user.openingBalance?.amount || 0;
 
@@ -53,8 +53,7 @@ exports.getCurrentBalance = async (req, res) => {
             latestEntryDate: latestDate
         });
 
-    } catch (err) {
-        console.error("Error in getCurrentBalance:", err);
-        return res.status(500).json({ message: "Server error" });
+    } catch (error) {
+        return res.status(500).json({ error: "Server Error while in fetching current balance: " + error.message });
     }
 };

@@ -56,26 +56,26 @@ exports.createEntrySet = async (req, res) => {
                 return res.status(400).json({ error: `Serial must be a positive integer (index ${i}).` });
             }
             if (serialSet.has(serial)) {
-                return res.status(400).json({ message: `Duplicate serial number found: ${serial}.` });
+                return res.status(400).json({ error: `Duplicate serial number found: ${serial}.` });
             }
             serialSet.add(serial);
 
             // Amount validation
             if (typeof amount !== "number" || isNaN(amount) || amount <= 0) {
-                return res.status(400).json({ message: `Amount must be a positive number (index ${i}).` });
+                return res.status(400).json({ error: `Amount must be a positive number (index ${i}).` });
             }
             if (amount > 1e9) { // 100 crore = 1,000,000,000
-                return res.status(400).json({ message: `Amount exceeds maximum limit (100 crore) at index ${i}.` });
+                return res.status(400).json({ error: `Amount exceeds maximum limit (100 crore) at index ${i}.` });
             }
 
             // Type validation
             if (!["credit", "debit"].includes(type)) {
-                return res.status(400).json({ message: `Invalid type: ${type} (index ${i}). Must be credit or debit.` });
+                return res.status(400).json({ error: `Invalid type: ${type} (index ${i}). Must be credit or debit.` });
             }
 
             // HeadId validation format
             if (!mongoose.Types.ObjectId.isValid(headId)) {
-                return res.status(400).json({ message: `Invalid headId format (index ${i}).` });
+                return res.status(400).json({ error: `Invalid headId format (index ${i}).` });
             }
 
             headIds.push(headId);
@@ -90,7 +90,7 @@ exports.createEntrySet = async (req, res) => {
         const expectedSerials = Array.from({ length: entries.length }, (_, idx) => idx + 1);
         for (const serial of expectedSerials) {
             if (!serialSet.has(serial)) {
-                return res.status(400).json({ message: `Missing serial number: ${serial}.` });
+                return res.status(400).json({ error: `Missing serial number: ${serial}.` });
             }
         }
 
@@ -101,7 +101,7 @@ exports.createEntrySet = async (req, res) => {
             userId
         });
         if (count !== uniqueHeadIds.length) {
-            return res.status(400).json({ message: "One or more head ids are invalid or do not exist." });
+            return res.status(400).json({ error: "One or more head ids are invalid or do not exist." });
         }
 
         // Create entry
@@ -116,8 +116,7 @@ exports.createEntrySet = async (req, res) => {
         return res.status(201).json({ message: "Entry created successfully.", entry: newEntry });
 
     } catch (error) {
-        console.error("Error creating entry:", error);
-        return res.status(500).json({ message: "Internal server error." });
+        return res.status(500).json({ error: "Server Error while creating entry set: " + error.message });
     }
 };
 
@@ -135,8 +134,7 @@ exports.getAllEntrySets = async (req, res) => {
 
         return res.status(200).json(entrySets);
     } catch (error) {
-        console.error("Error fetching all daywise entries:", error);
-        return res.status(500).json({ message: "Internal server error." });
+        return res.status(500).json({ error: "Server Error while fetching all entry sets: " + error.message });
     }
 };
 
@@ -151,12 +149,12 @@ exports.getAllEntriesForEntrySet = async (req, res) => {
         const { date } = req.query;
 
         if (!id || !mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ message: "Invalid or missing entry ID." });
+            return res.status(400).json({ error: "Invalid or missing entry ID." });
         }
 
         const entrySet = await EntrySetModel.findOne({ _id: id, userId });
         if (!entrySet) {
-            return res.status(404).json({ message: "Entry set not found." });
+            return res.status(404).json({ error: "Entry set not found." });
         }
 
         if (date) {
@@ -167,7 +165,7 @@ exports.getAllEntriesForEntrySet = async (req, res) => {
 
             if (requestDate.getTime() !== entrySetDate.getTime()) {
                 return res.status(400).json({
-                    message: "Date does not match entry ID."
+                    error: "Date does not match entry ID."
                 });
             }
         }
@@ -178,8 +176,7 @@ exports.getAllEntriesForEntrySet = async (req, res) => {
             balance: entrySet.balance
         });
     } catch (error) {
-        console.error("Error fetching entries for an entry set:", error);
-        return res.status(500).json({ message: "Internal server error." });
+        return res.status(500).json({ error: "Server Error while fetching entries for an entry set: " + error.message });
     }
 };
 
@@ -227,26 +224,26 @@ exports.updateEntrySet = async (req, res) => {
                 return res.status(400).json({ error: `Serial must be a positive integer (index ${i}).` });
             }
             if (serialSet.has(serial)) {
-                return res.status(400).json({ message: `Duplicate serial number found: ${serial}.` });
+                return res.status(400).json({ error: `Duplicate serial number found: ${serial}.` });
             }
             serialSet.add(serial);
 
             // Amount validation
             if (typeof amount !== "number" || isNaN(amount) || amount <= 0) {
-                return res.status(400).json({ message: `Amount must be a positive number (index ${i}).` });
+                return res.status(400).json({ error: `Amount must be a positive number (index ${i}).` });
             }
             if (amount > 1e9) {
-                return res.status(400).json({ message: `Amount exceeds maximum limit (100 crore) at index ${i}.` });
+                return res.status(400).json({ error: `Amount exceeds maximum limit (100 crore) at index ${i}.` });
             }
 
             // Type validation
             if (!["credit", "debit"].includes(type)) {
-                return res.status(400).json({ message: `Invalid type: ${type} (index ${i}). Must be credit or debit.` });
+                return res.status(400).json({ error: `Invalid type: ${type} (index ${i}). Must be credit or debit.` });
             }
 
             // HeadId validation format
             if (!mongoose.Types.ObjectId.isValid(headId)) {
-                return res.status(400).json({ message: `Invalid headId format (index ${i}).` });
+                return res.status(400).json({ error: `Invalid headId format (index ${i}).` });
             }
 
             headIds.push(headId);
@@ -261,7 +258,7 @@ exports.updateEntrySet = async (req, res) => {
         const expectedSerials = Array.from({ length: entries.length }, (_, idx) => idx + 1);
         for (const serial of expectedSerials) {
             if (!serialSet.has(serial)) {
-                return res.status(400).json({ message: `Missing serial number: ${serial}.` });
+                return res.status(400).json({ error: `Missing serial number: ${serial}.` });
             }
         }
 
@@ -272,7 +269,7 @@ exports.updateEntrySet = async (req, res) => {
             userId
         });
         if (count !== uniqueHeadIds.length) {
-            return res.status(400).json({ message: "One or more head ids are invalid or do not exist." });
+            return res.status(400).json({ error: "One or more head ids are invalid or do not exist." });
         }
 
         // Perform update (date remains unchanged)
@@ -286,8 +283,7 @@ exports.updateEntrySet = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Error updating entry set:", error);
-        return res.status(500).json({ message: "Internal server error." });
+        return res.status(500).json({ error: "Server Error while updating entry set: " + error.message });
     }
 };
 
@@ -313,8 +309,7 @@ exports.deleteSingleEntrySet = async (req, res) => {
 
         return res.status(200).json({ message: "Entry set deleted successfully." });
     } catch (error) {
-        console.error("Error deleting single entry set:", error);
-        res.status(500).json({ error: "Error deleting entry set: " + error.message });
+        res.status(500).json({ error: "Server Error while deleting entry set: " + error.message });
     }
 };
 
@@ -352,8 +347,7 @@ exports.deleteMultipleEntrySets = async (req, res) => {
             message: `${deletedResult.deletedCount} entry set(s) deleted successfully.`
         });
     } catch (error) {
-        console.error("Error deleting multiple entry sets:", error);
-        res.status(500).json({ error: "Error deleting entry sets: " + error.message });
+        res.status(500).json({ error: "Server Error while deleting entry sets: " + error.message });
     }
 };
 

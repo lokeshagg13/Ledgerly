@@ -64,7 +64,7 @@ exports.registerUser = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ error: "Error registering user: " + error.message });
+        res.status(500).json({ error: "Server Error while registering user: " + error.message });
     }
 };
 
@@ -112,7 +112,7 @@ exports.updateUserProfile = async (req, res) => {
             },
         });
     } catch (error) {
-        res.status(500).json({ error: "Error updating profile: " + error.message });
+        res.status(500).json({ error: "Server Error while updating profile: " + error.message });
     }
 };
 
@@ -155,9 +155,8 @@ exports.updatePassword = async (req, res) => {
             .status(200)
             .json({ message: "Password updated successfully." });
     } catch (error) {
-        console.error("Error updating password:", error);
         return res.status(500).json({
-            error: "Error updating password. Please try again later.",
+            error: "Server Error while updating password: " + error.message,
         });
     }
 };

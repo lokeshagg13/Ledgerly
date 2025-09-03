@@ -44,7 +44,7 @@ exports.extractHeadsFromPDF = async (req, res) => {
         const heads = fetchHeadData(data);
         res.status(200).json({ heads });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).json({ error: "Server Error while extracting data from PDF: " + error.message });
     } finally {
         fs.unlink(pdfPath, () => { });
     }
@@ -110,7 +110,7 @@ exports.uploadBulkHeads = async (req, res) => {
         });
     } catch (error) {
         return res.status(500).json({
-            error: "Failed to upload heads: " + error.message,
+            error: "Server Error while uploading heads: " + error.message,
         });
     }
 };
