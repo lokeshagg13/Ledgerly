@@ -30,4 +30,4 @@ const headSchema = new mongoose.Schema({
 
 headSchema.index({ userId: 1, name: 1 }, { unique: true });
 
-module.exports = mongoose.model("Head", headSchema);
+module.exports = mongoose.models.Head || mongoose.model("Head", headSchema);

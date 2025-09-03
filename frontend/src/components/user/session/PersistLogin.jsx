@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import { toast } from "react-toastify";
 
 import useAuth from "../../../store/hooks/useAuth";
 import useRefreshToken from "../../../store/hooks/useRefreshToken";
@@ -17,10 +16,7 @@ function PersistLogin() {
       try {
         await refresh();
       } catch (error) {
-        toast.error(`Error while refreshing the login: ${error.message}`, {
-          position: "top-center",
-          autoClose: 10000,
-        });
+        console.error(`Error while refreshing the login: ${error.message}`);
       } finally {
         setAuthLoading(false);
       }

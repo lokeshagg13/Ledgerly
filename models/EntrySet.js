@@ -40,5 +40,4 @@ const entrySetSchema = new mongoose.Schema({
 
 entrySetSchema.index({ userId: 1, date: 1 }, { unique: true });
 
-module.exports = mongoose.model("EntrySet", entrySetSchema);
-
+module.exports = mongoose.models.EntrySet || mongoose.model("EntrySet", entrySetSchema);
