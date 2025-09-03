@@ -62,7 +62,7 @@ function HeadsTable() {
                 } all heads`}
               />
             </th>
-            <th scope="col">Category</th>
+            <th scope="col">Heads</th>
             <th scope="col">Opening Balance</th>
 
             <th></th>

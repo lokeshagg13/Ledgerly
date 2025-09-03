@@ -33,7 +33,7 @@ function HeadsSelectionControl() {
         <Button
           type="button"
           className="control-btn btn-outline-light"
-          aria-label="Delete selected heads"
+          aria-label="Export selected heads as Excel"
           onClick={handleExportSelectedHeadsAsExcel}
           disabled={selectedHeads.length === 0}
         >
@@ -42,7 +42,7 @@ function HeadsSelectionControl() {
         <Button
           type="button"
           className="control-btn btn-outline-light"
-          aria-label="Delete selected heads"
+          aria-label="Export selected heads as PDF"
           onClick={handleExportSelectedHeadsAsPDF}
           disabled={selectedHeads.length === 0}
         >

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const EntrySet = require("../models/entrySet");
-const Head = require("../models/head");
+const EntrySetModel = require("../models/entrySet");
+const HeadModel = require("../models/head");
 const { normalizeDate } = require("./utils/formatters");
 
 exports.getBalanceSummaryForHeads = async (req, res) => {
@@ -11,7 +11,7 @@ exports.getBalanceSummaryForHeads = async (req, res) => {
         return res.status(400).json({ error: `Invalid mode for fetching balance summary: ${mode}` });
     }
     try {
-        const filter = { userId };
+        const filter = { userId: new mongoose.Types.ObjectId(userId) };
         if (mode === "filtered") {
             if (from && isNaN(Date.parse(from))) {
                 return res.status(400).json({ error: "Invalid 'from' date format." });
@@ -36,11 +36,12 @@ exports.getBalanceSummaryForHeads = async (req, res) => {
                 filter.date = { $lt: toDate };
             }
         }
-        const heads = await Head.find({ userId }).lean();
+        const heads = await HeadModel.find({ userId }).lean();
         if (!heads.length) {
             return res.status(200).json({ summary: [] });
         }
-        const entriesAgg = await EntrySet.aggregate([
+
+        const entriesAgg = await EntrySetModel.aggregate([
             { $match: filter },
             { $unwind: "$entries" },
             {
@@ -59,7 +60,6 @@ exports.getBalanceSummaryForHeads = async (req, res) => {
                 }
             }
         ]);
-        console.log(entriesAgg);
         const headTotalsMap = {};
         for (const item of entriesAgg) {
             headTotalsMap[item._id.toString()] = {
@@ -69,8 +69,8 @@ exports.getBalanceSummaryForHeads = async (req, res) => {
         }
         const summary = heads.map(head => {
             const headIdStr = head._id.toString();
-            const openingBalanceAmount = head.openingBalance.amount || 0;
-            const openingBalanceDate = head.openingBalance.lastUpdated;
+            const openingBalanceAmount = head?.openingBalance?.amount || 0;
+            const openingBalanceDate = head?.openingBalance?.lastUpdated;
             const totals = headTotalsMap[headIdStr] || { credit: 0, debit: 0 };
             const calculatedBalance =
                 openingBalanceAmount + totals.credit - totals.debit;
