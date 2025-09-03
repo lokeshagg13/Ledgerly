@@ -3,7 +3,7 @@ import { Modal, Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 import { axiosPrivate } from "../../../api/axios";
-import EntrySetContext from "../../../store/context/entrySetContext";
+import EntrySetsContext from "../../../store/context/entrySetsContext";
 
 function DeleteSelectedEntrySetsModal() {
   const {
@@ -11,7 +11,7 @@ function DeleteSelectedEntrySetsModal() {
     isDeleteSelectedEntrySetsModalVisible,
     fetchEntrySets,
     handleCloseDeleteSelectedEntrySetsModal,
-  } = useContext(EntrySetContext);
+  } = useContext(EntrySetsContext);
   const [deleting, setDeleting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 

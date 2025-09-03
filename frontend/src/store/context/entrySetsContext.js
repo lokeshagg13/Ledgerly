@@ -4,7 +4,7 @@ import { axiosPrivate } from "../../api/axios";
 import { toast } from "react-toastify";
 
 // An entry set is a set of entries of a particular date
-const EntrySetContext = createContext({
+const EntrySetsContext = createContext({
     isLoadingEntrySets: false,
     entrySets: [],
     selectedEntrySets: [],
@@ -20,7 +20,7 @@ const EntrySetContext = createContext({
     handleCloseDeleteSelectedEntrySetsModal: () => { },
 });
 
-export const EntrySetContextProvider = ({ children }) => {
+export const EntrySetsContextProvider = ({ children }) => {
     const [isLoadingEntrySets, setIsLoadingEntrySets] = useState(false);
     const [entrySets, setEntrySets] = useState([]);
     const [selectedEntrySets, setSelectedEntrySets] = useState([]);
@@ -115,11 +115,11 @@ export const EntrySetContextProvider = ({ children }) => {
     };
 
     return (
-        <EntrySetContext.Provider value={currentContextValue}>
+        <EntrySetsContext.Provider value={currentContextValue}>
             {children}
-        </EntrySetContext.Provider>
+        </EntrySetsContext.Provider>
     );
 };
 
-export default EntrySetContext;
+export default EntrySetsContext;
 

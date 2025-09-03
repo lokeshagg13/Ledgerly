@@ -1,12 +1,12 @@
 import { useContext, useMemo } from "react";
 import { Button, Form } from "react-bootstrap";
 import useAppNavigate from "../../../../store/hooks/useAppNavigate";
-import EntrySetContext from "../../../../store/context/entrySetContext";
+import EntrySetsContext from "../../../../store/context/entrySetsContext";
 
 function EntrySetRow({ entrySetId, entrySetDate }) {
   const { handleNavigateToPath } = useAppNavigate();
   const { selectedEntrySets, handleToggleEntrySetSelected } =
-    useContext(EntrySetContext);
+    useContext(EntrySetsContext);
   const formattedDate = useMemo(() => {
     const date = new Date(entrySetDate);
     return date.toLocaleDateString("en-IN", {

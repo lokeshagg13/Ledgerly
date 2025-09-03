@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Form, Spinner, Table } from "react-bootstrap";
-import EntrySetContext from "../../../store/context/entrySetContext";
+import EntrySetsContext from "../../../store/context/entrySetsContext";
 import EntrySetRow from "./entry-set-row/EntrySetRow";
 import ErrorImage from "../../../images/chart-error.png";
 
@@ -12,7 +12,7 @@ function EntrySetsTable() {
     errorFetchingEntrySets,
     checkIfAllEntrySetsSelected,
     handleToggleAllEntrySetsSelected,
-  } = useContext(EntrySetContext);
+  } = useContext(EntrySetsContext);
 
   if (isLoadingEntrySets) {
     return (

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import useAppNavigate from "../../../store/hooks/useAppNavigate";
-import EntrySetContext from "../../../store/context/entrySetContext";
+import EntrySetsContext from "../../../store/context/EntrySetsContext";
 import { normalizeDateQuery } from "../../../utils/dateUtils";
 import CancelIcon from "../../ui/icons/CancelIcon";
 
@@ -12,7 +12,7 @@ function EntrySetsMainControl() {
     isLoadingEntrySets,
     setFilteredEntrySets,
     fetchEntrySets,
-  } = useContext(EntrySetContext);
+  } = useContext(EntrySetsContext);
   const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {

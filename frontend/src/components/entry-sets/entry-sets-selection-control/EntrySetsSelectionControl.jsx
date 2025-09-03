@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Button } from "react-bootstrap";
-import EntrySetContext from "../../../store/context/entrySetContext";
+import EntrySetsContext from "../../../store/context/entrySetsContext";
 import DeleteSelectedEntrySetsModal from "../entry-sets-modals/DeleteSelectedEntrySetsModal";
 
 function EntrySetsSelectionControl() {
@@ -8,7 +8,7 @@ function EntrySetsSelectionControl() {
     selectedEntrySets,
     isDeleteSelectedEntrySetsModalVisible,
     handleOpenDeleteSelectedEntrySetsModal,
-  } = useContext(EntrySetContext);
+  } = useContext(EntrySetsContext);
 
   if (selectedEntrySets.length === 0) return <></>;
 
