@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import useAuth from "../../../../../../store/hooks/useAuth";
-import EditEntrySetContext from "../../../../../../store/context/editEntrySetContext";
+import useAuth from "../../../../../../../store/hooks/useAuth";
+import EditEntrySetContext from "../../../../../../../store/context/editEntrySetContext";
 
 function EditEntrySetHeader() {
   const { auth } = useAuth();

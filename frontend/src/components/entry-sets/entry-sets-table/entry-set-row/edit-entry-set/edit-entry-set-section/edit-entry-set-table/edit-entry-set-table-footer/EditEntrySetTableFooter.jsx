@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo } from "react";
 
-import EditEntrySetContext from "../../../../../../../store/context/editEntrySetContext";
-import { formatAmountForDisplay } from "../../../../../../../utils/formatUtils";
+import EditEntrySetContext from "../../../../../../../../store/context/editEntrySetContext";
+import { formatAmountForDisplay } from "../../../../../../../../utils/formatUtils";
 
 function EditEntrySetTableFooter() {
   const {

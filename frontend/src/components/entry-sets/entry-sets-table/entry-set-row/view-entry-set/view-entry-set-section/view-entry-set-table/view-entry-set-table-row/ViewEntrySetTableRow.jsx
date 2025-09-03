@@ -1,4 +1,4 @@
-import { formatAmountForDisplay } from "../../../../../utils/formatUtils";
+import { formatAmountForDisplay } from "../../../../../../../../utils/formatUtils";
 
 function ViewEntrySetTableRow({ data }) {
   const { id, sno, type, headName, debit, credit } = data;

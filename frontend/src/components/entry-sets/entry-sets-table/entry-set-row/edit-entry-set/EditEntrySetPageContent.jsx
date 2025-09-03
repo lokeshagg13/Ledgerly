@@ -1,9 +1,9 @@
 import { Button } from "react-bootstrap";
-import useAppNavigate from "../../../../store/hooks/useAppNavigate";
-import LeftArrowIcon from "../../../ui/icons/LeftArrowIcon";
-import { HeadsProvider } from "../../../../store/context/headsContext";
-import { ContextMenuProvider } from "../../../../store/context/contextMenuContext";
-import { EditEntrySetContextProvider } from "../../../../store/context/editEntrySetContext";
+import useAppNavigate from "../../../../../store/hooks/useAppNavigate";
+import LeftArrowIcon from "../../../../ui/icons/LeftArrowIcon";
+import { HeadsProvider } from "../../../../../store/context/headsContext";
+import { ContextMenuProvider } from "../../../../../store/context/contextMenuContext";
+import { EditEntrySetContextProvider } from "../../../../../store/context/editEntrySetContext";
 import EditEntrySetSection from "./edit-entry-set-section/EditEntrySetSection";
 
 function EditEntrySetPageContent({ entrySetId, formattedEntrySetDate }) {

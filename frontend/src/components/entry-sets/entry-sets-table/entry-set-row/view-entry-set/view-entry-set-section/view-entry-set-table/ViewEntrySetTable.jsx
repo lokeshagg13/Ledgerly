@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import ViewEntrySetContext from "../../../../store/context/viewEntrySetContext";
+import ViewEntrySetContext from "../../../../../../../store/context/viewEntrySetContext";
 import ViewEntrySetTableRow from "./view-entry-set-table-row/ViewEntrySetTableRow";
 import ViewEntrySetTableFooter from "./view-entry-set-table-footer/ViewEntrySetTableFooter";
 

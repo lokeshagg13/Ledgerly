@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import useAuth from "../../../../store/hooks/useAuth";
-import ViewEntrySetContext from "../../../../store/context/viewEntrySetContext";
+import useAuth from "../../../../../../../store/hooks/useAuth";
+import ViewEntrySetContext from "../../../../../../../store/context/viewEntrySetContext";
 
 function ViewEntrySetHeader() {
   const { auth } = useAuth();

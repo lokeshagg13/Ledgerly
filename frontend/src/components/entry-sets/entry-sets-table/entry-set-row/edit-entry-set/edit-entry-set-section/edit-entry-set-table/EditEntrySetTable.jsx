@@ -1,7 +1,7 @@
 import { useContext } from "react";
 
-import ContextMenuContext from "../../../../../../store/context/contextMenuContext";
-import EditEntrySetContext from "../../../../../../store/context/editEntrySetContext";
+import ContextMenuContext from "../../../../../../../store/context/contextMenuContext";
+import EditEntrySetContext from "../../../../../../../store/context/editEntrySetContext";
 import EditEntrySetTableRow from "./edit-entry-set-table-row/EditEntrySetTableRow";
 import EditEntrySetTableFooter from "./edit-entry-set-table-footer/EditEntrySetTableFooter";
 import EditEntrySetRowContextMenu from "./edit-entry-set-row-context-menu/EditEntrySetRowContextMenu";

@@ -92,7 +92,7 @@ function AddHeadModal() {
 
   const validateHeadFormData = () => {
     const { name, openingBalance } = addHeadFormData;
-    const nameTrimmed = addHeadFormData.name.trim();
+    const nameTrimmed = name.trim();
 
     const errors = {};
 

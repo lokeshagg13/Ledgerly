@@ -1,8 +1,8 @@
 import { Button } from "react-bootstrap";
-import useAppNavigate from "../../store/hooks/useAppNavigate";
-import LeftArrowIcon from "../ui/icons/LeftArrowIcon";
-import { HeadsProvider } from "../../store/context/headsContext";
-import { ViewEntrySetContextProvider } from "../../store/context/viewEntrySetContext";
+import useAppNavigate from "../../../../../store/hooks/useAppNavigate";
+import LeftArrowIcon from "../../../../ui/icons/LeftArrowIcon";
+import { HeadsProvider } from "../../../../../store/context/headsContext";
+import { ViewEntrySetContextProvider } from "../../../../../store/context/viewEntrySetContext";
 import ViewEntrySetSection from "./view-entry-set-section/ViewEntrySetSection";
 
 function ViewEntrySetPageContent({ entrySetId, formattedEntrySetDate }) {

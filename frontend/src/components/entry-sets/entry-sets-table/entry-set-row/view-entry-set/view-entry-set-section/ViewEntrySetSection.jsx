@@ -4,8 +4,8 @@ import { Spinner } from "react-bootstrap";
 import ViewEntrySetHeader from "./view-entry-set-header/ViewEntrySetHeader";
 import ViewEntrySetControl from "./view-entry-set-control/ViewEntrySetControl";
 import ViewEntrySetTable from "./view-entry-set-table/ViewEntrySetTable";
-import ViewEntrySetContext from "../../../store/context/viewEntrySetContext";
-import ErrorImage from "../../../images/chart-error.png";
+import ViewEntrySetContext from "../../../../../../store/context/viewEntrySetContext";
+import ErrorImage from "../../../../../../images/chart-error.png";
 
 function ViewEntrySetSection() {
   const { isLoadingEntrySetDetails, errorFetchingEntrySetDetails } =

@@ -147,6 +147,7 @@ function EditHeadModal({ show, headData, onClose }) {
     setCommonErrorMessage("");
     handleResetEditHeadFormData();
     onClose();
+    // eslint-disable-next-line
   }, [isUpdating, onClose]);
 
   return (

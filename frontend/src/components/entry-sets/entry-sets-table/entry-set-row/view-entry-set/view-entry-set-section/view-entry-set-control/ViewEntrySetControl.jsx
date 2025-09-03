@@ -1,7 +1,7 @@
 import { Button } from "react-bootstrap";
-import useAppNavigate from "../../../../store/hooks/useAppNavigate";
+import useAppNavigate from "../../../../../../../store/hooks/useAppNavigate";
 import { useContext } from "react";
-import ViewEntrySetContext from "../../../../store/context/viewEntrySetContext";
+import ViewEntrySetContext from "../../../../../../../store/context/viewEntrySetContext";
 
 function ViewEntrySetControl() {
   const { handleNavigateToPath } = useAppNavigate();

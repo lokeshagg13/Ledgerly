@@ -3,7 +3,7 @@ import { useContext, useEffect } from "react";
 import EditEntrySetControl from "./edit-entry-set-control/EditEntrySetControl";
 import EditEntrySetTable from "./edit-entry-set-table/EditEntrySetTable";
 import EditEntrySetHeader from "./edit-entry-set-header/EditEntrySetHeader";
-import EditEntrySetContext from "../../../../../store/context/editEntrySetContext";
+import EditEntrySetContext from "../../../../../../store/context/editEntrySetContext";
 
 function EditEntrySetSection() {
   const {

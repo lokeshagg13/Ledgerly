@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import ContextMenuContext from "../../../../../../../store/context/contextMenuContext";
-import EditEntrySetContext from "../../../../../../../store/context/editEntrySetContext";
+import ContextMenuContext from "../../../../../../../../store/context/contextMenuContext";
+import EditEntrySetContext from "../../../../../../../../store/context/editEntrySetContext";
 
 function EditEntrySetRowContextMenu() {
   const {

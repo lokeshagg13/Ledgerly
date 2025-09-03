@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
 
-import ViewEntrySetContext from "../../../../../store/context/viewEntrySetContext";
-import { formatAmountForDisplay } from "../../../../../utils/formatUtils";
+import ViewEntrySetContext from "../../../../../../../../store/context/viewEntrySetContext";
+import { formatAmountForDisplay } from "../../../../../../../../utils/formatUtils";
 
 function ViewEntrySetTableFooter() {
   const { entrySetDataRows, entrySetBalance } = useContext(ViewEntrySetContext);

@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Button } from "react-bootstrap";
 import NewEntrySetClearConfirmModal from "./edit-entry-set-clear-confirm-modal/EditEntrySetClearConfirmModal";
-import EditEntrySetContext from "../../../../../../store/context/editEntrySetContext";
+import EditEntrySetContext from "../../../../../../../store/context/editEntrySetContext";
 
 function EditEntrySetControl() {
   const {

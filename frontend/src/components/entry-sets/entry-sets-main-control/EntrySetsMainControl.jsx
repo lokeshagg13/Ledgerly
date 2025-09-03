@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import useAppNavigate from "../../../store/hooks/useAppNavigate";
-import EntrySetsContext from "../../../store/context/EntrySetsContext";
+import EntrySetsContext from "../../../store/context/entrySetsContext";
 import { normalizeDateQuery } from "../../../utils/dateUtils";
 import CancelIcon from "../../ui/icons/CancelIcon";
 

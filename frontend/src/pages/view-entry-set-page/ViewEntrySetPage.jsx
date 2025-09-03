@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import PageLayout from "../../components/ui/page-layout/PageLayout";
-import ViewEntrySetPageContent from "../../components/view-entry-set/ViewEntrySetPageContent";
+import ViewEntrySetPageContent from "../../components/entry-sets/entry-sets-table/entry-set-row/view-entry-set/ViewEntrySetPageContent";
 import viewEntrySetImage from "../../images/view-entry-set-bg.png";
 
 function ViewEntrySetPage() {
