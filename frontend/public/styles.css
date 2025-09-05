@@ -5703,13 +5703,18 @@ body,
   text-align: right;
 }
 
-.bulk-heads-table td.opening-balance input.is-invalid {
+.bulk-heads-table td.opening-balance div.is-invalid {
   padding-right: 2rem;
   border-color: #dc3545;
 }
 
 .bulk-heads-table td.active select.is-invalid {
   border-color: #dc3545;
+}
+
+.bulk-heads-table td.opening-balance .edit-bulk-opening-balance-type {
+  max-width: 72px;
+  background-color: #e7f3ff;
 }
 
 .bulk-heads-table td input:focus,

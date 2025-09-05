@@ -41,6 +41,7 @@ export const HeadsProvider = ({ children }) => {
     }
 
     async function fetchHeadsFromDB(manual = false, onlyActive = null) {
+        setErrorFetchingHeads(null);
         setIsLoadingHeads(true);
         try {
             let apiCall = `/user/heads`;

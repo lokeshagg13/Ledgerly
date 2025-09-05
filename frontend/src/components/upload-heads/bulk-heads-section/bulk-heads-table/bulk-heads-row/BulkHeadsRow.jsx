@@ -23,7 +23,7 @@ function WithErrorTooltip({ children, error }) {
 }
 
 function BulkHeadsRow({ index, data }) {
-  const { _id, name, openingBalance, active } = data;
+  const { _id, name, openingBalance, openingBalanceType, active } = data;
 
   const {
     handleModifyHead,
@@ -93,27 +93,47 @@ function BulkHeadsRow({ index, data }) {
 
       {/* Head Opening Balance */}
       <td className="opening-balance">
-        <WithErrorTooltip error={getEditHeadFieldError(_id, "openingBalance")}>
-          <InputGroup>
-            <InputGroup.Text>₹</InputGroup.Text>
-            <Form.Control
-              type="text"
-              name="openingBalance"
-              id={`editBulkHeadOpeningBalance${_id}`}
-              value={
-                openingBalance !== ""
-                  ? formatAmountWithCommas(openingBalance)
-                  : ""
-              }
-              autoComplete="off"
-              onChange={(ev) => handleChange(ev, _id)}
-              placeholder="Opening Balance"
-              isInvalid={!!getEditHeadFieldError(_id, "openingBalance")}
-              className={
-                getEditHeadFieldError(_id, "openingBalance") ? "shake" : ""
-              }
-            />
-          </InputGroup>
+        <WithErrorTooltip
+          error={
+            getEditHeadFieldError(_id, "openingBalance") ||
+            getEditHeadFieldError(_id, "openingBalanceType")
+          }
+        >
+          <div
+            className={
+              getEditHeadFieldError(_id, "openingBalance") ||
+              getEditHeadFieldError(_id, "openingBalanceType")
+                ? "shake is-invalid"
+                : ""
+            }
+          >
+            <InputGroup>
+              <InputGroup.Text>₹</InputGroup.Text>
+              <Form.Control
+                type="text"
+                name="openingBalance"
+                id={`editBulkHeadOpeningBalance${_id}`}
+                value={
+                  openingBalance !== ""
+                    ? formatAmountWithCommas(openingBalance)
+                    : ""
+                }
+                autoComplete="off"
+                onChange={(ev) => handleChange(ev, _id)}
+                placeholder="Opening Balance"
+              />
+              <Form.Select
+                className="edit-bulk-opening-balance-type"
+                name="openingBalanceType"
+                id={`editBulkHeadOpeningBalanceType${_id}`}
+                value={openingBalanceType}
+                onChange={(ev) => handleChange(ev, _id)}
+              >
+                <option value="credit">CR</option>
+                <option value="debit">DR</option>
+              </Form.Select>
+            </InputGroup>
+          </div>
         </WithErrorTooltip>
       </td>
 

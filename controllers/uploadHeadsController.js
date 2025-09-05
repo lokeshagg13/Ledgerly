@@ -4,20 +4,26 @@ const mongoose = require('mongoose');
 
 const HeadModel = require('../models/Head');
 
+// 1. Expects no header row, 
+// 2. Expects no page numbers in PDF
+// 3. Expects columns with 
+//     3.a. either just "Head" column 
+//     3.b. or three columns: "Head", "Opening Balance" and "Balance Type (CR/DR)"
 function fetchHeadData(data) {
     const isBalancePattern = data.every((item, index) => {
-        if (index % 2 === 1) {
-            return /^[0-9.,]+$/.test(item.trim());
+        if (index % 3 === 1) {
+            if (/^[0-9.,]+$/.test(item.trim()) === false) return /^[0-9.,]+$/.test(item.trim());
         }
         return true;
     });
 
     if (isBalancePattern) {
         const heads = [];
-        for (let i = 0; i < data.length; i += 2) {
+        for (let i = 0; i < data.length; i += 3) {
             heads.push({
                 name: data[i].trim(),
                 openingBalance: parseFloat(data[i + 1].replace(/,/g, "")) || 0,
+                openingBalanceType: data[i + 2]?.trim().toUpperCase() === "DR" ? "debit" : "credit"
             });
         }
         return heads;
@@ -25,6 +31,7 @@ function fetchHeadData(data) {
         return data.map((head) => ({
             name: head.trim(),
             openingBalance: 0,
+            openingBalanceType: "credit"
         }));
     }
 }
@@ -76,7 +83,7 @@ exports.uploadBulkHeads = async (req, res) => {
                 return res.status(400).json({ error: `${indexLabel}: Head name must not exceed 50 characters.` });
             }
 
-            // Default openingBalance to 0 if not provided or invalid
+            // Default openingBalance to 0 if not provided or invalid, if negative, then debit and if positive, then credit
             let headOpeningBalance = 0;
             if (head.openingBalance !== undefined && head.openingBalance !== null) {
                 const parsedBalance = parseFloat(head.openingBalance);

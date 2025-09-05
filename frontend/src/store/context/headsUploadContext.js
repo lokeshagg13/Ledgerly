@@ -55,6 +55,7 @@ export function HeadsUploadContextProvider({ children }) {
                 _id: idx,
                 name: head?.name?.trim() || "",
                 openingBalance: head?.openingBalance ?? 0,
+                openingBalanceType: head?.openingBalanceType ?? "credit",
                 active: true,
             }));
             setEditableHeads([...headsCopy]);
@@ -196,6 +197,7 @@ export function HeadsUploadContextProvider({ children }) {
                         _id: id,
                         name: original?.name?.trim() || "",
                         openingBalance: original?.openingBalance ?? 0,
+                        openingBalanceType: original?.openingBalanceType ?? "credit",
                         active: true
                     }
                     : head
@@ -276,6 +278,10 @@ export function HeadsUploadContextProvider({ children }) {
                 errors.openingBalance = "Opening balance cannot be negative.";
             }
 
+            if (head.openingBalanceType && !["credit", "debit"].includes(head.openingBalanceType)) {
+                errors.openingBalanceType = "Opening balance type is invalid.";
+            }
+
             if (Object.keys(errors).length > 0) {
                 errorsMap[head._id] = errors;
             }
@@ -300,8 +306,18 @@ export function HeadsUploadContextProvider({ children }) {
         }
 
         setIsUploadingBulkHeads(true);
+        const editableHeadsToUpload = editableHeads.map((head, idx) => ({
+            _id: idx,
+            name: head?.name?.trim() || "",
+            openingBalance: Number(
+                head?.openingBalanceType === "debit"
+                    ? -Math.abs(head.openingBalance || 0)
+                    : Math.abs(head.openingBalance || 0)
+            ),
+            active: true,
+        }));
         try {
-            await axiosPrivate.post("/user/heads/upload", { heads: editableHeads });
+            await axiosPrivate.post("/user/heads/upload", { heads: editableHeadsToUpload });
             toast.success("Heads uploaded successfully.", {
                 position: "top-center",
                 autoClose: 3000
@@ -342,6 +358,7 @@ export function HeadsUploadContextProvider({ children }) {
                 _id: head._id,
                 name: original?.name?.trim() || "",
                 openingBalance: original?.openingBalance ?? 0,
+                openingBalanceType: original?.openingBalanceType ?? "credit",
                 active: true
             };
         });
@@ -382,6 +399,7 @@ export function HeadsUploadContextProvider({ children }) {
             _id: idx,
             name: head?.name?.trim() || "",
             openingBalance: head?.openingBalance ?? 0,
+            openingBalanceType: head?.openingBalanceType ?? "credit",
             active: true,
         }));
         setEditableHeads([...headsCopy]);
