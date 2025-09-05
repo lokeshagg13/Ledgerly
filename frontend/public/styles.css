@@ -5256,11 +5256,27 @@ body,
 
 .heads-table td:nth-child(3) {
   text-align: right;
-  padding-right: 2rem;
+  padding-right: 0;
 }
 
 .heads-table tbody tr:last-child td {
   border-bottom: none;
+}
+
+.head-row-opening-balance {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.head-row-opening-balance-amount {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.head-row-opening-balance-type {
+  display: flex;
+  align-items: center;
 }
 /* #endregion */
 
@@ -5328,6 +5344,20 @@ body,
   background-color: #f3f4f6 !important;
   cursor: not-allowed;
   box-shadow: none;
+}
+/* #endregion */
+
+/* #region - Add new head modal */
+#newHeadOpeningBalanceType {
+  max-width: 72px;
+  background-color: #e7f3ff;
+}
+/* #endregion */
+
+/* #region - Edit new head modal */
+#editHeadOpeningBalanceType {
+  max-width: 72px;
+  background-color: #e7f3ff;
 }
 /* #endregion */
 

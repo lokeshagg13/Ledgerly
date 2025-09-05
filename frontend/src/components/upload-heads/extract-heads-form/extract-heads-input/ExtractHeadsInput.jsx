@@ -35,7 +35,7 @@ function ExtractHeadsInput() {
             onClick={handleOpenFileUploadDialogBox}
             disabled={isEditHeadSectionVisible}
           >
-            <UploadIcon fillColor="green" width="1.1rem" height="1.1rem" />
+            <UploadIcon fill="green" width="1.1rem" height="1.1rem" />
           </button>
           {headsFile && (
             <button
@@ -43,7 +43,7 @@ function ExtractHeadsInput() {
               onClick={handleClearUploadedFile}
               disabled={isEditHeadSectionVisible}
             >
-              <ClearIcon fillColor="red" width="1.1rem" height="1.1rem" />
+              <ClearIcon fill="red" width="1.1rem" height="1.1rem" />
             </button>
           )}
         </div>

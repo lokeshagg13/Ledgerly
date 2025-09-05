@@ -121,12 +121,24 @@ export const HeadsProvider = ({ children }) => {
             return;
         }
 
-        const selectedHeadObjects = heads.filter((head) => selectedHeads.includes(head._id));
-        const data = selectedHeadObjects.map((head, index) => ({
-            "S. No.": index + 1,
-            "Head Name": head?.name || "",
-            "Opening Balance": head?.openingBalance?.amount || 0
-        }));
+        let selectedHeadObjects = heads.filter((head) => selectedHeads.includes(head._id));
+
+        // 🔹 Sort alphabetically by head name
+        selectedHeadObjects = selectedHeadObjects.sort((a, b) =>
+            (a?.name || "").localeCompare(b?.name || "")
+        );
+
+        const data = selectedHeadObjects.map((head, index) => {
+            const amount = head?.openingBalance?.amount ?? 0;
+            const isDebit = amount < 0;
+            return {
+                "S. No.": index + 1,
+                "Head Name": head?.name || "",
+                "Opening Balance": Math.abs(amount),
+                "Balance Type": amount === 0 ? "-" : isDebit ? "DR" : "CR",
+            };
+        });
+
         const worksheet = XLSX.utils.json_to_sheet(data);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Heads");
@@ -142,22 +154,50 @@ export const HeadsProvider = ({ children }) => {
             return;
         }
 
-        const selectedHeadObjects = heads.filter((head) => selectedHeads.includes(head._id));
-        const data = selectedHeadObjects.map((head, index) => [
-            index + 1,
-            head?.name || "",
-            head?.openingBalance?.amount || 0
-        ]);
+        let selectedHeadObjects = heads.filter((head) => selectedHeads.includes(head._id));
+
+        // 🔹 Sort alphabetically by head name
+        selectedHeadObjects = selectedHeadObjects.sort((a, b) =>
+            (a?.name || "").localeCompare(b?.name || "")
+        );
+
+        const data = selectedHeadObjects.map((head, index) => {
+            const amount = head?.openingBalance?.amount ?? 0;
+            const isDebit = amount < 0;
+            return [
+                index + 1,
+                head?.name || "",
+                Math.abs(amount).toLocaleString("en-IN"),
+                amount === 0 ? "-" :
+                    isDebit ? { content: "DR", styles: { textColor: [200, 0, 0] } } :
+                        { content: "CR", styles: { textColor: [0, 150, 0] } }
+            ];
+        });
+
         const doc = new jsPDF();
         doc.setFontSize(16);
         doc.text("Selected Heads Report", 14, 15);
+
         autoTable(doc, {
             startY: 25,
-            head: [["S.No", "Head Name", "Opening Balance"]],
+            head: [["S.No", "Head Name", "Opening Balance", "Balance Type"]],
             body: data,
-            styles: { halign: "left", valign: "middle" },
-            headStyles: { fillColor: [41, 128, 185] },
+            styles: { fontSize: 10, valign: "middle" },
+            headStyles: {
+                fillColor: [41, 128, 185],
+                textColor: [255, 255, 255],
+                halign: "center",
+                fontStyle: "bold"
+            },
+            bodyStyles: { halign: "left" },
+            columnStyles: {
+                0: { halign: "center", cellWidth: 20 }, // S.No
+                2: { halign: "right", cellWidth: 40 }, // Opening Balance
+                3: { halign: "center", cellWidth: 25 }, // Balance Type
+            },
+            alternateRowStyles: { fillColor: [245, 245, 245] },
         });
+
         doc.save("selected_heads.pdf");
     }
 

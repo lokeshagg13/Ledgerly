@@ -64,7 +64,6 @@ function HeadsTable() {
             </th>
             <th scope="col">Heads</th>
             <th scope="col">Opening Balance</th>
-
             <th></th>
           </tr>
         </thead>

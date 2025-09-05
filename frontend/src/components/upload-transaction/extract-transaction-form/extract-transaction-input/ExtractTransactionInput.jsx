@@ -35,7 +35,7 @@ function ExtractTransactionInput() {
             onClick={handleOpenFileUploadDialogBox}
             disabled={isEditTransactionSectionVisible}
           >
-            <UploadIcon fillColor="green" width="1.1rem" height="1.1rem" />
+            <UploadIcon fill="green" width="1.1rem" height="1.1rem" />
           </button>
           {transactionFile && (
             <button
@@ -43,7 +43,7 @@ function ExtractTransactionInput() {
               onClick={handleClearUploadedFile}
               disabled={isEditTransactionSectionVisible}
             >
-              <ClearIcon fillColor="red" width="1.1rem" height="1.1rem" />
+              <ClearIcon fill="red" width="1.1rem" height="1.1rem" />
             </button>
           )}
         </div>

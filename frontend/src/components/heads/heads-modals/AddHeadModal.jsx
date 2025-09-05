@@ -14,6 +14,7 @@ function AddHeadModal() {
   const [addHeadFormData, setAddHeadFormData] = useState({
     name: "",
     openingBalance: "",
+    openingBalanceType: "credit", // credit = positive, debit = negative
   });
   const [inputFieldErrors, setInputFieldErrors] = useState({});
   const [isAdding, setIsAdding] = useState(false);
@@ -42,6 +43,7 @@ function AddHeadModal() {
     setAddHeadFormData({
       name: "",
       openingBalance: "",
+      openingBalanceType: "credit",
     });
   };
 
@@ -65,6 +67,9 @@ function AddHeadModal() {
         ) {
           setAddHeadFormData({ ...addHeadFormData, [name]: rawValue });
         }
+        break;
+      case "openingBalanceType":
+        setAddHeadFormData({ ...addHeadFormData, [name]: value });
         break;
       default:
     }
@@ -122,13 +127,18 @@ function AddHeadModal() {
     setInputFieldErrors(errors);
     if (Object.keys(errors).length > 0) return;
 
-    const { name, openingBalance } = addHeadFormData;
+    const { name, openingBalance, openingBalanceType } = addHeadFormData;
+    const finalOpeningBalance =
+      openingBalance === ""
+        ? undefined
+        : Number(
+            openingBalanceType === "debit" ? -openingBalance : openingBalance
+          );
     setIsAdding(true);
     try {
       await axiosPrivate.post("/user/heads", {
-        name: name,
-        openingBalance:
-          openingBalance !== "" ? Number(openingBalance) : undefined,
+        name,
+        openingBalance: finalOpeningBalance,
       });
       handleCancel();
       toast.success(`Head "${name}" added successfully.`, {
@@ -213,6 +223,15 @@ function AddHeadModal() {
                   checkIfInputFieldInvalid("openingBalance") ? "shake" : ""
                 }
               />
+              <Form.Select
+                name="openingBalanceType"
+                id="newHeadOpeningBalanceType"
+                value={addHeadFormData.openingBalanceType}
+                onChange={handleChange}
+              >
+                <option value="credit">CR</option>
+                <option value="debit">DR</option>
+              </Form.Select>
             </InputGroup>
             {checkIfInputFieldInvalid("openingBalance") && (
               <div className="text-danger">

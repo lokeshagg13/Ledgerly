@@ -11,12 +11,36 @@ function EditHeadModal({ show, headData, onClose }) {
   const { fetchHeadsFromDB } = useContext(HeadsContext);
 
   const [editHeadFormData, setEditHeadFormData] = useState({
-    name: headData.name,
-    openingBalance: headData.openingBalance?.amount ?? "",
+    name: "",
+    openingBalance: "",
+    openingBalanceType: "credit", // credit = positive, debit = negative
   });
   const [inputFieldErrors, setInputFieldErrors] = useState({});
   const [isUpdating, setIsUpdating] = useState(false);
   const [commonErrorMessage, setCommonErrorMessage] = useState("");
+
+  // Initialize form data from headData
+  useEffect(() => {
+    if (headData) {
+      const ob = headData.openingBalance?.amount ?? "";
+      let type = "credit";
+      let value = "";
+      if (ob !== "") {
+        if (Number(ob) < 0) {
+          type = "debit";
+          value = Math.abs(Number(ob)).toString();
+        } else {
+          type = "credit";
+          value = Number(ob).toString();
+        }
+      }
+      setEditHeadFormData({
+        name: headData.name || "",
+        openingBalance: value,
+        openingBalanceType: type,
+      });
+    }
+  }, [headData]);
 
   // Focus input field on mount
   useEffect(() => {
@@ -38,9 +62,22 @@ function EditHeadModal({ show, headData, onClose }) {
   };
 
   const handleResetEditHeadFormData = () => {
+    const ob = headData.openingBalance?.amount ?? "";
+    let type = "credit";
+    let value = "";
+    if (ob !== "") {
+      if (Number(ob) < 0) {
+        type = "debit";
+        value = Math.abs(Number(ob)).toString();
+      } else {
+        type = "credit";
+        value = Number(ob).toString();
+      }
+    }
     setEditHeadFormData({
-      name: headData.name,
-      openingBalance: headData.openingBalance,
+      name: headData.name || "",
+      openingBalance: value,
+      openingBalanceType: type,
     });
   };
 
@@ -64,6 +101,9 @@ function EditHeadModal({ show, headData, onClose }) {
         ) {
           setEditHeadFormData({ ...editHeadFormData, [name]: rawValue });
         }
+        break;
+      case "openingBalanceType":
+        setEditHeadFormData({ ...editHeadFormData, [name]: value });
         break;
       default:
     }
@@ -108,20 +148,26 @@ function EditHeadModal({ show, headData, onClose }) {
     return errors;
   };
 
-  // Handle adding a new head by calling the API
+  // Handle updating the head by calling the API
   const handleUpdateHead = async () => {
     if (isUpdating) return;
     const errors = validateHeadFormData();
     setInputFieldErrors(errors);
     if (Object.keys(errors).length > 0) return;
 
-    const { name, openingBalance } = editHeadFormData;
+    const { name, openingBalance, openingBalanceType } = editHeadFormData;
+    const finalOpeningBalance =
+      openingBalance === ""
+        ? undefined
+        : Number(
+            openingBalanceType === "debit" ? -openingBalance : openingBalance
+          );
+
     setIsUpdating(true);
     try {
       await axiosPrivate.put(`/user/heads/${headData._id}`, {
-        name: name,
-        openingBalance:
-          openingBalance !== "" ? Number(openingBalance) : undefined,
+        name,
+        openingBalance: finalOpeningBalance,
       });
       handleCancel();
       toast.success(`Head "${name}" updated successfully.`, {
@@ -208,6 +254,16 @@ function EditHeadModal({ show, headData, onClose }) {
                   checkIfInputFieldInvalid("openingBalance") ? "shake" : ""
                 }
               />
+              <Form.Select
+                name="openingBalanceType"
+                id="editHeadOpeningBalanceType"
+                value={editHeadFormData.openingBalanceType}
+                onChange={handleChange}
+                style={{ maxWidth: "90px" }}
+              >
+                <option value="credit">CR</option>
+                <option value="debit">DR</option>
+              </Form.Select>
             </InputGroup>
             {checkIfInputFieldInvalid("openingBalance") && (
               <div className="text-danger">

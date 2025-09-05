@@ -33,7 +33,7 @@ function HeadsSelectionControl() {
         <Button
           type="button"
           className="control-btn btn-outline-light"
-          aria-label="Export selected heads as Excel"
+          aria-label="Export selected heads as XLSX"
           onClick={handleExportSelectedHeadsAsExcel}
           disabled={selectedHeads.length === 0}
         >
