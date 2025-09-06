@@ -1,139 +1,203 @@
-# 🔁 Switching Between DEV and PROD for Cookie, Proxy, and CORS Handling
+# Ledgerly
 
-This guide documents the **exact changes** needed to switch your setup **back and forth** between **Development (local)** and **Production (deployed)** environments.
+Ledgerly is a full-stack accounting and transaction management application built with **Node.js + Express + MongoDB** (backend) and **React.js** (frontend).
 
----
+It provides **two modes of login**:
 
-## ✅ Client-Side Configuration (React - Create React App)
+- **Individual Mode** 🧑
 
-### 📦 `package.json`
+  - Setup opening balance.
+  - Track transactions of your bank account.
+  - Categorize and subcategorize transactions.
+  - Upload and extract transactions.
+  - View detailed and customizable dashboards with charts and analysis.
 
-#### ✅ DEV Mode
+- **Firm Mode** 🏢
 
-```json
-"proxy": "http://localhost:9000"
-```
-
-> This allows API requests like `/api/user/login` to be proxied to `localhost:9000` in development.
-
-#### 🚫 PROD Mode
-
-- ❌ **Remove** or comment the `proxy` field.
-- ✅ Use **full backend URL** (e.g. `https://api.myapp.com`) in API calls.
-
----
-
-### 📁 `axios.js` or API base URL setup
-
-#### ✅ DEV Mode
-
-```js
-const backend = "/api";
-```
-
-#### ✅ PROD Mode
-
-```js
-const backend = "https://api.myapp.com"; // Replace with actual domain
-```
-
-> Make this switch dynamic using `.env` files:
-
-```js
-const backend = process.env.REACT_APP_API_URL;
-```
+  - Setup opening balance for the firm.
+  - Manage **Heads** (like categories).
+  - Add **Entry Sets** to group transactions made with heads in a day.
+  - Manage balance summary of all heads.
+  - Get business-level dashboards and analysis.
 
 ---
 
-### 📁 `.env` Files
+## 🚀 Features
 
-#### ✅ `.env.development`
+- User authentication with JWT-based sessions.
+- Separate workflows for Individuals and Firms.
+- Transaction and head/category management.
+- Upload bulk transactions and heads via CSV/PDF parsing.
+- Advanced dashboards (charts, summaries, customizable filters).
+- Export and print transaction reports.
+- Mobile-responsive React frontend.
+
+---
+
+## 🛠 Tech Stack
+
+- **Backend**: Node.js, Express, MongoDB, Mongoose
+- **Frontend**: React.js, React Router DOM, Bootstrap, MUI, Recharts, Axios
+- **Authentication**: JWT, Cookies
+- **File Uploads**: Multer
+- **Other Utilities**: PDFReader, XLSX, jsPDF
+
+---
+
+## 📂 Project Structure
+
+```
+LEDGERLY/
+│── config/                # CORS, token, allowed origins setup
+│── controllers/           # Route controllers
+│── dbScripts/             # DB migration scripts
+│── middlewares/           # Custom middlewares (auth, logger, error handling)
+│── models/                # Mongoose models
+│── routes/                # Express routes
+│── uploads/               # Uploaded files (gitignored)
+│── frontend/              # React frontend app
+│   ├── src/
+│   │   ├── components/    # UI components
+│   │   ├── pages/         # Page-level components
+│   │   ├── store/         # Context API + hooks
+│   │   ├── utils/         # Utility functions
+│   │   ├── images/        # Static images
+│   │   └── index.jsx
+│   └── package.json
+│── server.js              # Express entry point
+│── package.json           # Backend package.json
+│── .env                   # Environment variables (not committed)
+└── README.md
+```
+
+---
+
+## ⚙️ Environment Variables
+
+Create a `.env` file in the project root (`/LEDGERLY`).
+
+Example:
 
 ```env
-REACT_APP_API_URL=/api
-REACT_APP_ENV=DEV
-```
+# General
+NODE_ENV=development
+PORT=9000
 
-#### ✅ `.env.production`
+# Database
+MONGO_URI=mongodb+srv://<user>:<password>@cluster-url/ledgerly
 
-```env
-REACT_APP_API_URL=https://api.myapp.com
-REACT_APP_ENV=PROD
-```
+# JWT
+ACCESS_TOKEN_SECRET=your_access_token_secret
+REFRESH_TOKEN_SECRET=your_refresh_token_secret
 
----
-
-## ✅ Server-Side Configuration (Express Backend)
-
-### ⚙️ `res.cookie` Setup (in authController, logoutController, etc.)
-
-#### ✅ DEV Mode (local HTTP, no HTTPS)
-
-```js
-res.cookie("refreshToken", token, {
-  httpOnly: true,
-  secure: false,
-  sameSite: "Lax",
-});
-```
-
-#### ✅ PROD Mode (HTTPS with custom domain)
-
-```js
-res.cookie("refreshToken", token, {
-  httpOnly: true,
-  secure: true,
-  sameSite: "None",
-});
-```
-
-> 🔐 Safari blocks `SameSite=None` cookies without `Secure: true`.
-
----
-
-### ⚙️ CORS Configuration
-
-#### ✅ Example (inside Express app):
-
-```js
-const allowedOrigins = [
-  "http://localhost:3000",
-  "http://localhost:9000",
-  "http://192.168.1.11:3000",
-  "http://192.168.1.11:9000",
-  "https://your-production-domain.com",
-];
-
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  })
-);
+# CORS
+ALLOWED_ORIGINS=http://localhost:3000,https://yourdomain.com
 ```
 
 ---
 
-## 🔄 Switching Checklist
+## 🖥 Development Setup
 
-| Config Area     | DEV                                | PROD                                      |
-| --------------- | ---------------------------------- | ----------------------------------------- |
-| `proxy`         | `http://localhost:9000`            | ❌ Remove it                              |
-| API base URL    | `/api`                             | Full URL (e.g. `https://api.example.com`) |
-| Cookie settings | `secure: false`, `sameSite: "Lax"` | `secure: true`, `sameSite: "None"`        |
-| Allowed origins | `localhost`, `192.168.x.x`         | Your production domain only               |
-| HTTPS           | ❌ Not needed                      | ✅ Required for secure cookies            |
+### Backend
+
+```bash
+cd LEDGERLY
+npm install
+npm run dev   # starts backend with nodemon
+```
+
+### Frontend
+
+```bash
+cd LEDGERLY/frontend
+npm install
+npm start     # runs React frontend on http://localhost:3000
+```
+
+The frontend **proxy** is set in `frontend/package.json` to forward API requests to backend (`http://localhost:9000`).
 
 ---
 
-## 🧪 Testing Tips
+## 🌍 Production Setup
 
-- Always test from **mobile browser (Safari/Chrome)** using your **laptop's IP**.
-- Check cookies in Safari Dev Tools: `Develop > [iPhone] > Inspect`
-- Use `console.log(document.cookie)` in browser dev tools to confirm storage.
+On **Render** (or any cloud hosting):
+
+1. Create a **Web Service** for the backend (`server.js`).
+
+   - Set `Build Command`: `npm install`
+   - Set `Start Command`: `node server.js`
+   - Add environment variables from `.env`.
+
+2. Create a **Static Site** for the frontend (`frontend`).
+
+   - Set `Build Command`: `npm run build`
+   - Publish directory: `build/`
+   - Set `REACT_APP_API_URL=https://your-backend.onrender.com/api` in Render environment variables.
+   - Update `axios.js` in frontend to use:
+
+     ```js
+     const BASE_URL =
+       process.env.REACT_APP_API_URL || "http://localhost:9000/api";
+     ```
+
+3. Remove or adjust `"proxy"` in `frontend/package.json` for production.
+
+4. Commit and push changes. Render will auto-deploy.
+
+---
+
+## 📸 Assets
+
+All static images are stored in:
+`/frontend/src/images/`
+
+React will handle them automatically when importing (e.g., `import logo from './images/logo.png'`).
+
+No path changes are needed unless you directly reference `/public/`.
+
+---
+
+## 🧪 Running Modes
+
+- **Development**:
+
+  ```
+  NODE_ENV=development
+  ```
+
+  Uses `localhost` URLs and proxy.
+
+- **Production**:
+
+  ```
+  NODE_ENV=production
+  ```
+
+  Uses Render deployment URLs and env variables.
+
+Switching environments only requires changing `NODE_ENV` and relevant `.env` vars.
+
+---
+
+## 📊 Dashboards
+
+- **Individual Dashboard**:
+
+  - Daily balance chart
+  - Monthly spending analysis
+  - Spending categories pie chart
+  - Overall balance card
+
+- **Firm Dashboard**:
+
+  - Head-wise balance summary
+  - Entry set tracking
+  - Overall financial analysis
+
+---
+
+## ✅ Future Improvements
+
+- Multi-user firms with role-based access.
+- Bank API integration for auto-sync transactions.
+- Mobile app version (React Native).
