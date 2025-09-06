@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const EntrySetModel = require("../models/entrySet");
-const HeadModel = require("../models/head");
+const EntrySetModel = require("../models/EntrySet");
+const HeadModel = require("../models/Head");
 const { normalizeDate } = require("./utils/formatters");
 
 exports.getBalanceSummaryForHeads = async (req, res) => {
