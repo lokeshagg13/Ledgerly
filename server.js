@@ -43,6 +43,7 @@ app.use(cookieParser());
 app.use(logger);
 
 // Mounting Routers
+
 app.use("/api/user", userRouter);
 app.use("/api/user", authRouter);
 app.use("/api/user", sessionRouter);
@@ -58,6 +59,10 @@ app.use("/api/user/summary", summaryRouter);
 
 app.use("/api/user/dashboard/individual", individualDashboardRouter);
 app.use("/api/user/dashboard/firm", firmDashboardRouter);
+
+app.get("/", (req, res) => {
+    res.send("👋 Welcome to Ledgerly Backend!");
+});
 
 // Custom Middleware for handling invalid api paths
 app.all("*", (req, res, next) => {
