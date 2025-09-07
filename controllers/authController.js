@@ -67,13 +67,20 @@ exports.loginUser = async (req, res) => {
     // Refresh tokens will be HTTP only so that they cant be accessed within Javascript
     console.log(process.env.NODE_ENV === "production" ? "None" : "Lax")
     console.log(process.env.NODE_ENV === "production")
-    
-    res.cookie("jwt", refreshToken, {
+
+    const cookieOptions = {
       httpOnly: true,
       sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
       secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
-    });
+      maxAge: 24 * 60 * 60 * 1000
+    };
+
+    // only add domain in production
+    if (process.env.NODE_ENV === "production") {
+      cookieOptions.domain = process.env.DOMAIN_NAME;
+    }
+
+    res.cookie("jwt", refreshToken, cookieOptions);
 
     // ✅ Send accessToken + user name + email
     res.status(200).json({
