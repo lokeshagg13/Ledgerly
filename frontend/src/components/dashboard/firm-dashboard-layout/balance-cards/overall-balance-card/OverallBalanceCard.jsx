@@ -35,7 +35,7 @@ function OverallBalanceCard() {
           </h4>
           {overallBalance?.latestEntryDate && (
             <h6 className="balance-date">
-              Latest transaction:{" "}
+              Latest entry set date:{" "}
               {formatDateForDisplay(overallBalance.latestEntryDate, "-", true)}
             </h6>
           )}
