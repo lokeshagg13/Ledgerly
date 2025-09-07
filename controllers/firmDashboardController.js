@@ -4,8 +4,8 @@ const UserModel = require("../models/User"); // Adjust path as needed
 
 /**
  * Get current balance for logged-in user
- * openingBalance + sum(credits) - sum(debits)
- * Also returns latest entry date
+ * - If entry sets exist: return balance from the latest entry set
+ * - If no entry sets exist: return opening balance from user
  */
 exports.getCurrentBalance = async (req, res) => {
     try {
@@ -18,35 +18,15 @@ exports.getCurrentBalance = async (req, res) => {
         }
         const openingBalance = user.openingBalance?.amount || 0;
 
-        // 2. Aggregate all credits and debits from entries
-        const result = await EntrySetModel.aggregate([
-            { $match: { userId: new mongoose.Types.ObjectId(userId) } },
-            { $unwind: "$entries" },
-            {
-                $group: {
-                    _id: "$entries.type",
-                    total: { $sum: "$entries.amount" }
-                }
-            }
-        ]);
-
-        let totalCredits = 0;
-        let totalDebits = 0;
-        result.forEach(r => {
-            if (r._id === "credit") totalCredits = r.total;
-            else if (r._id === "debit") totalDebits = r.total;
-        });
-
-        // 3. Get latest entry date
-        const latestEntry = await EntrySetModel.findOne({ userId })
+        // 2. Find the latest entry set
+        const latestEntrySet = await EntrySetModel.findOne({ userId })
             .sort({ date: -1 })
-            .select("date")
+            .select("balance date")
             .lean();
 
-        const latestDate = latestEntry ? latestEntry.date : null;
-
-        // 4. Compute balance
-        const currentBalance = openingBalance + totalCredits - totalDebits;
+        // 3. Decide balance
+        const currentBalance = latestEntrySet ? latestEntrySet.balance : openingBalance;
+        const latestDate = latestEntrySet ? latestEntrySet.date : null;
 
         return res.status(200).json({
             balance: currentBalance,
@@ -54,6 +34,6 @@ exports.getCurrentBalance = async (req, res) => {
         });
 
     } catch (error) {
-        return res.status(500).json({ error: "Server Error while in fetching current balance: " + error.message });
+        return res.status(500).json({ error: "Server Error while fetching current balance: " + error.message });
     }
 };
