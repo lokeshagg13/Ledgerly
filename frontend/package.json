@@ -1,6 +1,6 @@
 {
   "name": "ledgerly-frontend",
-  "homepage": "https://lokeshagg13.github.io/Ledgerly",
+  "homepage": ".",
   "main": "src/index.jsx",
   "proxy": "http://localhost:9000",
   "version": "0.1.0",

@@ -8,6 +8,7 @@ const backend =
 // Axios server handle for simpler requests (login and register)
 export default axios.create({
   baseURL: `${backend}`,
+  withCredentials: true
 });
 
 // Axios server handle for protected requests (protected routes and  logout)
