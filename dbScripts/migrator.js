@@ -1,9 +1,42 @@
-const mongoose = require("mongoose");
+const { MongoClient } = require("mongodb");
 const UserModel = require("../models/User");
 const CategoryModel = require("../models/Category");
 require("dotenv").config();
 
 const MONGO_URI = process.env.MONGO_URI;
+
+async function migrateDB() {
+    try {
+        const uri = "mongodb+srv://admin:Lucky%40%40131197@ledgerly-account-mgmt.usntwid.mongodb.net"
+        const client = new MongoClient(uri);
+        await client.connect();
+
+        const oldDb = client.db("test");
+        const newDb = client.db("ledgerly");
+
+        const collections = await oldDb.listCollections().toArray();
+        console.log("📂 Collections in old DB:", collections.map(c => c.name));
+
+        for (let col of collections) {
+            const name = col.name;
+            const docs = await oldDb.collection(name).find().toArray();
+
+            if (docs.length) {
+                // optional: clear target collection first
+                await newDb.collection(name).deleteMany({});
+
+                await newDb.collection(name).insertMany(docs);
+                console.log(`✅ Migrated ${docs.length} docs from ${name}`);
+            }
+        }
+
+        await client.close();
+        console.log("🎉 Migration completed successfully!");
+    } catch (error) {
+        console.error("❌ Migration failed:", error);
+        process.exit(1);
+    }
+}
 
 async function migrateUsers() {
     try {
@@ -72,7 +105,7 @@ async function renameCollection() {
     mongoose.connection.close();
 }
 
-
+migrateDB();
 // migrateUsers();
 // migrateCategories();
-renameCollection();
+// renameCollection();

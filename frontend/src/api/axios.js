@@ -1,6 +1,10 @@
 import axios from "axios";
 
-const backend = "/api";
+const backend =
+  process.env.NODE_ENV === "production"
+    ? "https://ledgerly-y6sp.onrender.com/api"
+    : "http://localhost:9000/api";
+
 // Axios server handle for simpler requests (login and register)
 export default axios.create({
   baseURL: `${backend}`,
