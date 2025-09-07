@@ -118,31 +118,43 @@ The frontend **proxy** is set in `frontend/package.json` to forward API requests
 
 ---
 
-## 🌍 Production Setup
+## 🚀 Deployment Instructions
 
-On **Render** (or any cloud hosting):
+### 🔹 Backend (Render)
 
-1. Create a **Web Service** for the backend (`server.js`).
+- Backend is deployed on **Render** under the account: `lokesh.ujjawalfc@gmail.com`.
+- The Render service is already connected to the GitHub repo of the backend.
+- To deploy changes:
 
-   - Set `Build Command`: `npm install`
-   - Set `Start Command`: `node server.js`
-   - Add environment variables from `.env`.
+  1. Commit and push your code to GitHub.
+  2. Go to the Render dashboard → your backend service.
+  3. Click **Manual Deploy → Deploy latest commit**.
 
-2. Create a **Static Site** for the frontend (`frontend`).
+- Render will pull the latest code from GitHub and redeploy the backend automatically.
 
-   - Set `Build Command`: `npm run build`
-   - Publish directory: `build/`
-   - Set `REACT_APP_API_URL=https://your-backend.onrender.com/api` in Render environment variables.
-   - Update `axios.js` in frontend to use:
+---
 
-     ```js
-     const BASE_URL =
-       process.env.REACT_APP_API_URL || "http://localhost:9000/api";
+### 🔹 Frontend (GitHub Pages)
+
+- Frontend is deployed on **GitHub Pages** under the GitHub username: `lokeshagg13`.
+- The deployment branch is managed using `gh-pages`.
+- To deploy changes:
+
+  1. Commit and push your code to GitHub.
+  2. In `frontend/` directory, run:
+
+     ```bash
+     npm run deploy
      ```
 
-3. Remove or adjust `"proxy"` in `frontend/package.json` for production.
+  3. This will build the React app and publish it to the `gh-pages` branch, making it live on GitHub Pages.
 
-4. Commit and push changes. Render will auto-deploy.
+---
+
+✅ With this setup:
+
+- **Backend changes** → push to GitHub + manual deploy on Render.
+- **Frontend changes** → push to GitHub + run `npm run deploy`.
 
 ---
 
