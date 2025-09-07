@@ -19,7 +19,7 @@ function fetchTransactionData(data) {
     let counter = 1;
     const transactions = [];
     while (true) {
-        const regex = new RegExp(`\\s+${counter}\\s+(\\d{2}/\\d{2}/\\d{4})\\s+(\\d{2}/\\d{2}/\\d{4})\\s+((?:.|\\s)*?)\\s+(\\d+[.]\\d{1,2})\\s+(\\d+[.]\\d{1,2})\\s+(\\d+[.]\\d{1,2})`, 'gm');
+        const regex = new RegExp(`\\s+${counter}\\s+(\\d{2}/\\d{2}/\\d{4})\\s+(\\d{2}/\\d{2}/\\d{4})\\s+((?:.|\\s)*?)\\s+(\\d+[.]\\d{1,2})\\s+(\\d+[.]\\d{1,2})\\s+([-]?\\d+[.]\\d{1,2})`, 'gm');
         const match = regex.exec(dataStr);
         if (!match) break;
 
