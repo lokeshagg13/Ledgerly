@@ -7,6 +7,7 @@ require("dotenv").config();
 exports.logoutUser = async (req, res) => {
   try {
     const cookies = req.cookies;
+    console.log(req.cookies);
     // Check if jwt cookie exist in the request
     if (!cookies?.jwt) {
       return res.status(401).json({ error: "Auth failed" });
