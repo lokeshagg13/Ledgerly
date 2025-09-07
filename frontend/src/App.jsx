@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -30,162 +30,166 @@ function App() {
   const { auth } = useAuth();
 
   return (
-    <div className="app-wrapper">
-      <NavbarComponent />
+    <BrowserRouter basename="/Ledgerly">
+      <div className="app-wrapper">
+        <NavbarComponent />
 
-      <div className="app-content">
-        <Routes>
-          <Route path="/home" element={<HomePage />} />
+        <div className="app-content">
+          <Routes>
+            <Route path="/home" element={<HomePage />} />
 
-          {/* Protected Routes */}
-          <Route element={<PersistLogin />}>
-            <Route
-              exact
-              path="/"
-              element={
-                auth?.email && auth?.accessToken ? (
-                  <Navigate to="/dashboard" replace />
-                ) : (
-                  <Navigate to="/home" replace />
-                )
-              }
-            />
-
-            <Route
-              path="/login"
-              element={
-                auth?.email && auth?.accessToken ? (
-                  <Navigate to="/dashboard" replace />
-                ) : (
-                  <LoginOptionsPage />
-                )
-              }
-            />
-
-            <Route
-              path="/login/individual"
-              element={
-                auth?.email && auth?.accessToken ? (
-                  <Navigate to="/dashboard" replace />
-                ) : (
-                  <LoginIndividualPage />
-                )
-              }
-            />
-
-            <Route
-              path="/login/firm"
-              element={
-                auth?.email && auth?.accessToken ? (
-                  <Navigate to="/dashboard" replace />
-                ) : (
-                  <LoginFirmPage />
-                )
-              }
-            />
-
-            <Route
-              path="/register"
-              element={
-                auth?.email && auth?.accessToken ? (
-                  <Navigate to="/dashboard" replace />
-                ) : (
-                  <RegisterPage />
-                )
-              }
-            />
-
-            <Route element={<RequireAuth />}>
-              <Route path="/user/profile" element={<UserProfilePage />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
-
-              {/* Individual-only routes */}
+            {/* Protected Routes */}
+            <Route element={<PersistLogin />}>
               <Route
-                path="/transactions"
+                exact
+                path="/"
                 element={
-                  auth?.type === "individual" ? (
-                    <TransactionPage />
+                  auth?.email && auth?.accessToken ? (
+                    <Navigate to="/dashboard" replace />
                   ) : (
-                    <Page404 />
+                    <Navigate to="/home" replace />
                   )
                 }
               />
+
               <Route
-                path="/transactions/print"
+                path="/login"
                 element={
-                  auth?.type === "individual" ? (
-                    <PrintTransactionPage />
+                  auth?.email && auth?.accessToken ? (
+                    <Navigate to="/dashboard" replace />
                   ) : (
-                    <Page404 />
+                    <LoginOptionsPage />
                   )
-                }
-              />
-              <Route
-                path="/transactions/upload"
-                element={
-                  auth?.type === "individual" ? (
-                    <UploadTransactionPage />
-                  ) : (
-                    <Page404 />
-                  )
-                }
-              />
-              <Route
-                path="/categories"
-                element={
-                  auth?.type === "individual" ? <CategoryPage /> : <Page404 />
                 }
               />
 
-              {/* Firm-only routes */}
               <Route
-                path="/heads"
-                element={auth?.type === "firm" ? <HeadsPage /> : <Page404 />}
-              />
-              <Route
-                path="/entry-sets"
+                path="/login/individual"
                 element={
-                  auth?.type === "firm" ? <EntrySetsPage /> : <Page404 />
+                  auth?.email && auth?.accessToken ? (
+                    <Navigate to="/dashboard" replace />
+                  ) : (
+                    <LoginIndividualPage />
+                  )
                 }
               />
+
               <Route
-                path="/summary"
-                element={auth?.type === "firm" ? <SummaryPage /> : <Page404 />}
-              />
-              <Route
-                path="/heads/upload"
+                path="/login/firm"
                 element={
-                  auth?.type === "firm" ? <UploadHeadsPage /> : <Page404 />
+                  auth?.email && auth?.accessToken ? (
+                    <Navigate to="/dashboard" replace />
+                  ) : (
+                    <LoginFirmPage />
+                  )
                 }
               />
+
               <Route
-                path="/entry-sets/new"
+                path="/register"
                 element={
-                  auth?.type === "firm" ? <NewEntrySetPage /> : <Page404 />
+                  auth?.email && auth?.accessToken ? (
+                    <Navigate to="/dashboard" replace />
+                  ) : (
+                    <RegisterPage />
+                  )
                 }
               />
-              <Route
-                path="/entry-sets/view"
-                element={
-                  auth?.type === "firm" ? <ViewEntrySetPage /> : <Page404 />
-                }
-              />
-              <Route
-                path="/entry-sets/edit"
-                element={
-                  auth?.type === "firm" ? <EditEntrySetPage /> : <Page404 />
-                }
-              />
+
+              <Route element={<RequireAuth />}>
+                <Route path="/user/profile" element={<UserProfilePage />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
+
+                {/* Individual-only routes */}
+                <Route
+                  path="/transactions"
+                  element={
+                    auth?.type === "individual" ? (
+                      <TransactionPage />
+                    ) : (
+                      <Page404 />
+                    )
+                  }
+                />
+                <Route
+                  path="/transactions/print"
+                  element={
+                    auth?.type === "individual" ? (
+                      <PrintTransactionPage />
+                    ) : (
+                      <Page404 />
+                    )
+                  }
+                />
+                <Route
+                  path="/transactions/upload"
+                  element={
+                    auth?.type === "individual" ? (
+                      <UploadTransactionPage />
+                    ) : (
+                      <Page404 />
+                    )
+                  }
+                />
+                <Route
+                  path="/categories"
+                  element={
+                    auth?.type === "individual" ? <CategoryPage /> : <Page404 />
+                  }
+                />
+
+                {/* Firm-only routes */}
+                <Route
+                  path="/heads"
+                  element={auth?.type === "firm" ? <HeadsPage /> : <Page404 />}
+                />
+                <Route
+                  path="/entry-sets"
+                  element={
+                    auth?.type === "firm" ? <EntrySetsPage /> : <Page404 />
+                  }
+                />
+                <Route
+                  path="/summary"
+                  element={
+                    auth?.type === "firm" ? <SummaryPage /> : <Page404 />
+                  }
+                />
+                <Route
+                  path="/heads/upload"
+                  element={
+                    auth?.type === "firm" ? <UploadHeadsPage /> : <Page404 />
+                  }
+                />
+                <Route
+                  path="/entry-sets/new"
+                  element={
+                    auth?.type === "firm" ? <NewEntrySetPage /> : <Page404 />
+                  }
+                />
+                <Route
+                  path="/entry-sets/view"
+                  element={
+                    auth?.type === "firm" ? <ViewEntrySetPage /> : <Page404 />
+                  }
+                />
+                <Route
+                  path="/entry-sets/edit"
+                  element={
+                    auth?.type === "firm" ? <EditEntrySetPage /> : <Page404 />
+                  }
+                />
+              </Route>
             </Route>
-          </Route>
 
-          {/* Invalid Paths */}
-          <Route path="*" element={<Page404 />} />
-        </Routes>
+            {/* Invalid Paths */}
+            <Route path="*" element={<Page404 />} />
+          </Routes>
 
-        <ToastContainer />
+          <ToastContainer />
+        </div>
       </div>
-    </div>
+    </BrowserRouter>
   );
 }
 

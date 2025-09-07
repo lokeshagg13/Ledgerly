@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/Ledgerly/static/css/main.2a9a26f2.css",
-    "main.js": "/Ledgerly/static/js/main.498a1254.js",
+    "main.js": "/Ledgerly/static/js/main.b5895a89.js",
     "static/js/239.26fbc437.chunk.js": "/Ledgerly/static/js/239.26fbc437.chunk.js",
     "static/js/977.62cf4942.chunk.js": "/Ledgerly/static/js/977.62cf4942.chunk.js",
     "static/js/455.1c23be20.chunk.js": "/Ledgerly/static/js/455.1c23be20.chunk.js",
@@ -24,13 +24,13 @@
     "static/media/logo.png": "/Ledgerly/static/media/logo.1c97a168522eb8b43eeb.png",
     "index.html": "/Ledgerly/index.html",
     "main.2a9a26f2.css.map": "/Ledgerly/static/css/main.2a9a26f2.css.map",
-    "main.498a1254.js.map": "/Ledgerly/static/js/main.498a1254.js.map",
+    "main.b5895a89.js.map": "/Ledgerly/static/js/main.b5895a89.js.map",
     "239.26fbc437.chunk.js.map": "/Ledgerly/static/js/239.26fbc437.chunk.js.map",
     "977.62cf4942.chunk.js.map": "/Ledgerly/static/js/977.62cf4942.chunk.js.map",
     "455.1c23be20.chunk.js.map": "/Ledgerly/static/js/455.1c23be20.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.2a9a26f2.css",
-    "static/js/main.498a1254.js"
+    "static/js/main.b5895a89.js"
   ]
 }
