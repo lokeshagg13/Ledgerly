@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const path = require("path");
 
 const logger = require("./middlewares/logger");
 const errorHandler = require("./middlewares/errorHandler");
@@ -42,8 +43,10 @@ app.use(cookieParser());
 // logger middleware
 app.use(logger);
 
-// Mounting Routers
+// static files
+app.use(express.static(path.join(__dirname, "frontend", "build")));
 
+// Mounting Routers
 app.use("/api/user", userRouter);
 app.use("/api/user", authRouter);
 app.use("/api/user", sessionRouter);
@@ -60,16 +63,20 @@ app.use("/api/user/summary", summaryRouter);
 app.use("/api/user/dashboard/individual", individualDashboardRouter);
 app.use("/api/user/dashboard/firm", firmDashboardRouter);
 
-app.get("/", (req, res) => {
-    res.send("👋 Welcome to Ledgerly Backend!");
+// app.get("/", (req, res) => {
+//     res.send("👋 Welcome to Ledgerly Backend!");
+// });
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "frontend", "build", "index.html"));
 });
 
 // Custom Middleware for handling invalid api paths
-app.all("*", (req, res, next) => {
-    next(
-        new errorHandler(`Can't find ${req.originalUrl} that was requested`, 404)
-    );
-});
+// app.all("*", (req, res, next) => {
+//     next(
+//         new errorHandler(`Can't find ${req.originalUrl} that was requested`, 404)
+//     );
+// });
 
 // DB connection
 mongoose.connect(process.env.MONGO_URI)
