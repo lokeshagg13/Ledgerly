@@ -32,7 +32,7 @@ function OpeningBalanceLine() {
       Manage your opening balance from{" "}
       <button
         className="link-btn"
-        onClick={() => handleNavigateToPath("/user/profile")}
+        onClick={() => handleNavigateToPath("/user-profile")}
       >
         here
       </button>

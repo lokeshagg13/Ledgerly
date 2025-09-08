@@ -18,7 +18,7 @@ function IndividualCTAControl() {
       </button>
       <button
         className="cta-button"
-        onClick={() => handleNavigateToPath("/transactions/print")}
+        onClick={() => handleNavigateToPath("/print-transactions")}
       >
         <span className="cta-icon">
           <DownloadIcon />

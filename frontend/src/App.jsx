@@ -63,7 +63,7 @@ function App() {
             />
 
             <Route
-              path="/login/individual"
+              path="/individual-login"
               element={
                 auth?.email && auth?.accessToken ? (
                   <Navigate to="/dashboard" replace />
@@ -74,7 +74,7 @@ function App() {
             />
 
             <Route
-              path="/login/firm"
+              path="/firm-login"
               element={
                 auth?.email && auth?.accessToken ? (
                   <Navigate to="/dashboard" replace />
@@ -96,7 +96,7 @@ function App() {
             />
 
             <Route element={<RequireAuth />}>
-              <Route path="/user/profile" element={<UserProfilePage />} />
+              <Route path="/user-profile" element={<UserProfilePage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
 
               {/* Individual-only routes */}
@@ -111,7 +111,7 @@ function App() {
                 }
               />
               <Route
-                path="/transactions/print"
+                path="/print-transactions"
                 element={
                   auth?.type === "individual" ? (
                     <PrintTransactionPage />
@@ -121,7 +121,7 @@ function App() {
                 }
               />
               <Route
-                path="/transactions/upload"
+                path="/upload-transactions"
                 element={
                   auth?.type === "individual" ? (
                     <UploadTransactionPage />
@@ -153,25 +153,25 @@ function App() {
                 element={auth?.type === "firm" ? <SummaryPage /> : <Page404 />}
               />
               <Route
-                path="/heads/upload"
+                path="/upload-heads"
                 element={
                   auth?.type === "firm" ? <UploadHeadsPage /> : <Page404 />
                 }
               />
               <Route
-                path="/entry-sets/new"
+                path="/new-entry-set"
                 element={
                   auth?.type === "firm" ? <NewEntrySetPage /> : <Page404 />
                 }
               />
               <Route
-                path="/entry-sets/view"
+                path="/view-entry-set"
                 element={
                   auth?.type === "firm" ? <ViewEntrySetPage /> : <Page404 />
                 }
               />
               <Route
-                path="/entry-sets/edit"
+                path="/edit-entry-set"
                 element={
                   auth?.type === "firm" ? <EditEntrySetPage /> : <Page404 />
                 }

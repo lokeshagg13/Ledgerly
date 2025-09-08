@@ -89,7 +89,7 @@ function EntrySetsMainControl() {
           type="button"
           className="control-btn btn-blue"
           aria-label="Add a new daily entry"
-          onClick={() => handleNavigateToPath("/entry-sets/new")}
+          onClick={() => handleNavigateToPath("/new-entry-set")}
           disabled={isLoadingEntrySets}
         >
           Add an entry set

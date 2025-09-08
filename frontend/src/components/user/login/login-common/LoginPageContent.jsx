@@ -20,7 +20,7 @@ function LoginPageContent({ userType }) {
           className="link-btn"
           onClick={() =>
             handleNavigateToPath(
-              userType === "individual" ? "/login/firm" : "/login/individual"
+              userType === "individual" ? "/firm-login" : "/individual-login"
             )
           }
         >

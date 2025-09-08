@@ -18,13 +18,13 @@ function EntrySetRow({ entrySetId, entrySetDate }) {
   }, [entrySetDate]);
 
   const handleViewEntrySet = () => {
-    handleNavigateToPath("/entry-sets/view", {
+    handleNavigateToPath("/view-entry-set", {
       state: { entrySetId, formattedEntrySetDate: formattedDate },
     });
   };
 
   const handleEditEntrySet = () => {
-    handleNavigateToPath("/entry-sets/edit", {
+    handleNavigateToPath("/edit-entry-set", {
       state: { entrySetId, formattedEntrySetDate: formattedDate },
     });
   };

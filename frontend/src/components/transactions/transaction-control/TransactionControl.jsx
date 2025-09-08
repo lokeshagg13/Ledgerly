@@ -32,7 +32,7 @@ function TransactionControl() {
         type="button"
         className="control-btn btn-outline-light"
         aria-label="Upload transactions"
-        onClick={() => handleNavigateToPath("/transactions/upload")}
+        onClick={() => handleNavigateToPath("/upload-transactions")}
         disabled={isLoadingTransactions}
       >
         Upload Transactions
@@ -41,7 +41,7 @@ function TransactionControl() {
         type="button"
         className="control-btn btn-outline-light"
         aria-label="Add a new transaction"
-        onClick={() => handleNavigateToPath("/transactions/print")}
+        onClick={() => handleNavigateToPath("/print-transactions")}
         disabled={isLoadingTransactions}
       >
         Print Transactions

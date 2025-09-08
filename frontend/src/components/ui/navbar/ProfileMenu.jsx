@@ -36,13 +36,13 @@ function ProfileMenu({ handleNavCollapse }) {
   };
 
   const handleNavigateToProfileInfoSection = () => {
-    handleNavigateToPath("/user/profile#profile-info");
+    handleNavigateToPath("/user-profile#profile-info");
     handleCloseMenu();
     handleNavCollapse();
   };
 
   const handleNavigateToChangePasswordSection = () => {
-    handleNavigateToPath("/user/profile#change-password");
+    handleNavigateToPath("/user-profile#change-password");
     handleCloseMenu();
     handleNavCollapse();
   };

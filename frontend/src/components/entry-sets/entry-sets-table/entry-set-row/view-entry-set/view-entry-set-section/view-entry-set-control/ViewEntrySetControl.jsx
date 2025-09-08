@@ -8,7 +8,7 @@ function ViewEntrySetControl() {
   const { entrySetId, formattedEntrySetDate } = useContext(ViewEntrySetContext);
 
   const handleEditEntrySet = () => {
-    handleNavigateToPath("/entry-sets/edit", {
+    handleNavigateToPath("/edit-entry-set", {
       state: { entrySetId, formattedEntrySetDate },
     });
   };

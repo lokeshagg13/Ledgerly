@@ -134,27 +134,28 @@ The frontend **proxy** is set in `frontend/package.json` to forward API requests
 
 ---
 
-### 🔹 Frontend (GitHub Pages)
+### 🔹 Frontend (Render)
 
-- Frontend is deployed on **GitHub Pages** under the GitHub username: `lokeshagg13`.
-- The deployment branch is managed using `gh-pages`.
+- Frontend is also deployed on **Render** under the same web service as backend in the account: `lokesh.ujjawalfc@gmail.com`.
 - To deploy changes:
 
   1. Commit and push your code to GitHub.
   2. In `frontend/` directory, run:
 
      ```bash
-     npm run deploy
+     npm run build
      ```
 
-  3. This will build the React app and publish it to the `gh-pages` branch, making it live on GitHub Pages.
+  3. Commit and push your code to GitHub.
+  4. Go to the Render dashboard → your backend service.
+  5. Click **Manual Deploy → Deploy latest commit**.
 
 ---
 
 ✅ With this setup:
 
 - **Backend changes** → push to GitHub + manual deploy on Render.
-- **Frontend changes** → push to GitHub + run `npm run deploy`.
+- **Frontend changes** → push to GitHub + run `npm run build` + manual deploy on Render.
 
 ---
 

@@ -17,7 +17,7 @@ function LoginOptionsPageContent() {
           type="button"
           variant="outline-primary"
           className="login-button login-individual-button"
-          onClick={() => handleNavigateToPath("/login/individual")}
+          onClick={() => handleNavigateToPath("/individual-login")}
         >
           Login as Individual
         </Button>
@@ -25,7 +25,7 @@ function LoginOptionsPageContent() {
           type="button"
           variant="outline-primary"
           className="login-button login-firm-button"
-          onClick={() => handleNavigateToPath("/login/firm")}
+          onClick={() => handleNavigateToPath("/firm-login")}
         >
           Login as Firm
         </Button>

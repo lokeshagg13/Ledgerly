@@ -70,7 +70,7 @@ function HeadsMainControl() {
           type="button"
           className="control-btn btn-outline-light"
           aria-label="Upload bulk heads"
-          onClick={() => handleNavigateToPath("/heads/upload")}
+          onClick={() => handleNavigateToPath("/upload-heads")}
           disabled={isLoadingHeads}
         >
           Upload Heads

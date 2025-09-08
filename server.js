@@ -63,20 +63,9 @@ app.use("/api/user/summary", summaryRouter);
 app.use("/api/user/dashboard/individual", individualDashboardRouter);
 app.use("/api/user/dashboard/firm", firmDashboardRouter);
 
-// app.get("/", (req, res) => {
-//     res.send("👋 Welcome to Ledgerly Backend!");
-// });
-
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "frontend", "build", "index.html"));
 });
-
-// Custom Middleware for handling invalid api paths
-// app.all("*", (req, res, next) => {
-//     next(
-//         new errorHandler(`Can't find ${req.originalUrl} that was requested`, 404)
-//     );
-// });
 
 // DB connection
 mongoose.connect(process.env.MONGO_URI)
