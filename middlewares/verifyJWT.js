@@ -4,7 +4,6 @@ require("dotenv").config();
 // Verify JWT middleware for verifying auth header on protected incoming requests
 const verifyJWT = (req, res, next) => {
   const authHeader = req.headers["authorization"];
-  console.log(authHeader)
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ error: "Auth failed" });
   }
@@ -19,7 +18,6 @@ const verifyJWT = (req, res, next) => {
       next();
     });
   } catch (error) {
-    console.log(error)
     return res.status(401).json({ error: "Auth failed" });
   }
 };

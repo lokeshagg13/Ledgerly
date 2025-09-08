@@ -65,9 +65,6 @@ exports.loginUser = async (req, res) => {
       { $set: { refreshToken } }
     );
     // Refresh tokens will be HTTP only so that they cant be accessed within Javascript
-    console.log(process.env.NODE_ENV === "production" ? "None" : "Lax")
-    console.log(process.env.NODE_ENV === "production")
-
     const cookieOptions = {
       httpOnly: true,
       sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",

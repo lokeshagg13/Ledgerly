@@ -9,7 +9,6 @@ exports.handleRefreshToken = async (req, res) => {
 
     // Check if JWT cookie exist in request body
     const cookies = req.cookies;
-    console.log(req.cookies)
     if (!cookies?.jwt) {
       return res.status(401).json({ error: "Auth failed" });
     }
