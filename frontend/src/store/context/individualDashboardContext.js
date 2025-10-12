@@ -254,12 +254,14 @@ export function IndividualDashboardContextProvider({ children }) {
         let chartData = [];
         try {
             setIsLoadingSpendingPieChart(true);
-            const res = await axiosPrivate.get("/user/transactions?type=debit");
+            const res = await axiosPrivate.get("/user/transactions");
             const transactions = res?.data?.transactions || [];
+            // 0. Filter out the credit transactions and only keep debit transactions
+            const debitTransactions = transactions.filter(txn => txn.type === "debit");
 
             // 1. Aggregate totals by category
             const categoryTotals = {};
-            for (const txn of transactions) {
+            for (const txn of debitTransactions) {
                 const categoryName = txn.categoryName || "Others";
                 categoryTotals[categoryName] = (categoryTotals[categoryName] || 0) + txn.amount;
             }
