@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Head = require("./Head");
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -66,13 +67,12 @@ const userSchema = new mongoose.Schema({
                 return {
                     title: "Filtered Balance",
                     filters: {
-                        uptoDate: null,
-                        selectedCategories: []
+                        uptoDate: null,selectedCategories: []
                     }
                 };
             }
             return undefined;
-
+            
         },
         validate: {
             validator: function (value) {
@@ -83,12 +83,35 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-// Optional: pre-save hook to automatically remove it if type is firm
+// Pre-save: clear customBalanceCard for firms
 userSchema.pre("save", function (next) {
     if (this.type === "firm") {
         this.customBalanceCard = undefined;
     }
     next();
+});
+
+// Post-save: auto-create CASH head for firm users
+userSchema.post("save", async function (doc, next) {
+    try {
+        if (doc.isNew && doc.type === "firm") {
+            const existing = await Head.findOne({ userId: doc._id, name: "CASH" });
+            if (!existing) {
+                await Head.create({
+                    userId: doc._id,
+                    name: "CASH",
+                    openingBalance: {
+                        amount: 0,
+                        lastUpdated: new Date()
+                    }
+                });
+            }
+        }
+        next();
+    } catch (err) {
+        console.error("Error creating CASH head:", err);
+        next(err); // or next() to avoid blocking user save
+    }
 });
 
 userSchema.index({ email: 1, type: 1 }, { unique: true });

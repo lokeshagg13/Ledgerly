@@ -10,24 +10,37 @@ export function formatAmountWithCommas(amount) {
     }
 }
 
+// Helper: parse a number-ish input into sign/int/dec parts
+function parseAmountParts(input) {
+  if (input == null || Number.isNaN(input)) return null;
+  const num = Number(input);
+  if (Number.isNaN(num)) return null;
+  return num;
+}
+
+// Rounds to given decimal places
+function roundTo(num, places = 2) {
+  const factor = Math.pow(10, places);
+  return Math.round(num * factor) / factor;
+}
+
 export function formatAmountForDisplay(amount, includeCurrency = true) {
-    if (amount == null || Number.isNaN(amount)) return "";
-    if (typeof amount === "number") amount = amount.toString();
-    const [intPart, decimalPart] = amount.split(".");
-    const formattedInt = parseInt(intPart).toLocaleString("en-IN");
-    return `${includeCurrency ? "₹ " : ""}${formattedInt}.${decimalPart ? decimalPart.padEnd(2, "0") : "00"}`;
+  const num = parseAmountParts(amount);
+  if (num == null) return "";
+
+  const rounded = roundTo(num, 2);              // ✅ rounding
+  const [intPart, decPartRaw = ""] = rounded.toFixed(2).split(".");
+  const formattedInt = Number(intPart).toLocaleString("en-IN");
+
+  return `${num < 0 ? "-" : ""}${includeCurrency ? "₹ " : ""}${formattedInt}.${decPartRaw}`;
 }
 
 export function formatAmountForFirstTimeInput(amount) {
-    if (typeof amount === "number") amount = amount.toString();
-    if (!amount.includes('.')) {
-        const formattedInt = parseInt(amount).toString();
-        return `${formattedInt}.00`;
-    }
-    const [intPart, decimalPartRaw] = amount.split(".");
-    const formattedInt = parseInt(intPart).toString();
-    let decimalPart = (decimalPartRaw || "").padEnd(2, "0").slice(0, 2);
-    return `${formattedInt}.${decimalPart}`;
+  const num = parseAmountParts(amount);
+  if (num == null) return "";
+
+  const rounded = roundTo(num, 2);              // ✅ rounding
+  return rounded.toFixed(2);                    // plain "123.45"
 }
 
 export function formatCustomDateFormatForCalendarInput(dateString, inputFormat = "dd/mm/yyyy") {

@@ -54,6 +54,7 @@ function NewEntrySetTableFooter() {
     totalDebit,
   ]);
 
+  console.log(formatAmountForDisplay(totalCredit));
   return (
     <tfoot>
       <tr className="table-warning footer-row">
